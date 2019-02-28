@@ -66,10 +66,10 @@ export default {
           id: 51,
           headName: "密码有效期",
           menuId: null,
-          topType: "deadline",
+          topType: "p_eff_date",
           isFixed: 0,
           name: null,
-          inputType: "deadline",
+          inputType: "date",
           ids: null
         },
         {
@@ -79,7 +79,7 @@ export default {
           topType: "1",
           isFixed: 0,
           name: null,
-          inputType: "str",
+          inputType: "Autocomplete",
           ids: null
         },
         {
@@ -104,12 +104,12 @@ export default {
           ids: null
         }
       ],
-      false_selectedId: [13, 12, 51],
+      false_selectedId: [13, 12, 51,50],
     };
   },
   watch: {
     tableTitle() {
-      console.log(this.tableTitle);
+      //console.log(this.tableTitle);
     }
   },
   components: {
@@ -121,6 +121,8 @@ export default {
   },
   async mounted() {
     this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
+    console.log(this.tableTitle);
+    
     //如果为空 =false 直接返回不走下面
     if (!this.tableTitle) {
       return;
@@ -149,6 +151,8 @@ export default {
     //封装分页请求
     async pagination(data) {
       const res = await getRegional(data);
+      console.log(res);
+      
       if (res.code === 200) {
         //赋值 然后显示
         pUtils.pageInfo(res, data);

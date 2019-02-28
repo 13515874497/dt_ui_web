@@ -20,6 +20,10 @@ export default {
   pageInfo (result, pageData) {
     const data = result.data
 
+    data.dataList.sort((a,b)=>{
+      return a-b;
+    })
+    console.log(data.dataList);
     //
     data.dataList.forEach((item,index) => {
       if(item.systemLogStatus){
