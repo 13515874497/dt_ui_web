@@ -205,7 +205,8 @@
           checkedUserAlways: false, //用户始终有效  checked
           checkedPwdAlways: false, //密码始终有效 checked
           pwdAlwaysInput: '', //密码有效期
-          effectiveDate: '' //用户有效期
+          effectiveDate: '', //用户有效期,
+          version: 0
         },
         accountStatusOptions: [{
           id: 0,
@@ -319,6 +320,8 @@
           this.userForm['rid'] = item.rId
           this.userForm['pwdAlwaysInput'] = item.pwdStatus
           this.userForm['effectiveDate'] = item.effectiveDate
+          this.userForm['version'] = item.version
+
         })
         //密码有效期
         if (this.userForm.pwdAlwaysInput === 0) {
@@ -387,12 +390,12 @@
             resultUserInfo.then((result) => {
               console.log(resultUserInfo)
               if (result.code === -1) {
-                message.errorMessage('你没有权限修改数据')
+                message.errorMessage(result.msg)
               } else if (result.code === 200) {
-                message.successMessage('更新成功~')
+                message.successMessage(result.msg)
                 this.upFormValue = false
               } else {
-                message.infoMessage('系统错误~')
+                message.infoMessage(result.msg)
               }
             })
           } else {

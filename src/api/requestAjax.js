@@ -13,6 +13,9 @@ export default {
         loadingInstance.close()
         return null
       }
+      resultHead.data.sort((a,b)=>{
+        return a.topOrder-b.topOrder;
+      })
       loadingInstance.close()
       return resultHead.data
     }

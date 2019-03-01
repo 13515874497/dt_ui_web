@@ -19,7 +19,6 @@ export default {
    */
   pageInfo (result, pageData) {
     const data = result.data
-
     //
     data.dataList.forEach((item,index) => {
       if(item.systemLogStatus){

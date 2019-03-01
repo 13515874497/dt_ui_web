@@ -26,20 +26,22 @@
   </div>
 </template>
 <script>
+import InputQuery from "../../components/ElementUi/InputQuery";
+import Query2 from "../../components/ElementUi/Query2";
+
 import { getRegional } from "../../api";
 import PubSub_Cle from "pubsub-js";
 import pUtils from "../../utils/PageUtils";
 import Table from "../../components/ElementUi/Table";
 import AddDelUpButton from "../../components/ElementUi/AddDelUpButton";
-import InputQuery from "../../components/ElementUi/InputQuery";
-import Query2 from "../../components/ElementUi/Query2";
+
 import requestAjax from "../../api/requestAjax";
 import Pagination from "../../components/ElementUi/Pagination";
 //公司
 export default {
   data() {
     return {
-      isTableTitle: true, //如果table表头的长度是 0
+      isTableTitle: false, //如果table表头的长度是 0
       msgInput: "", //当选择后获得第一个下拉框的id
       tableTitle: [], //表头信息
       multipleSelection: [], //更新按钮数组收集
@@ -66,10 +68,10 @@ export default {
           id: 51,
           headName: "密码有效期",
           menuId: null,
-          topType: "deadline",
+          topType: "p_eff_date",
           isFixed: 0,
           name: null,
-          inputType: "deadline",
+          inputType: "date",
           ids: null
         },
         {
@@ -79,7 +81,7 @@ export default {
           topType: "1",
           isFixed: 0,
           name: null,
-          inputType: "str",
+          inputType: "Autocomplete",
           ids: null
         },
         {
@@ -104,12 +106,12 @@ export default {
           ids: null
         }
       ],
-      false_selectedId: [13, 12, 51],
+      false_selectedId: [13, 12, 51,50],
     };
   },
   watch: {
     tableTitle() {
-      console.log(this.tableTitle);
+      //console.log(this.tableTitle);
     }
   },
   components: {
@@ -121,11 +123,16 @@ export default {
   },
   async mounted() {
     this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
+    console.log(this.tableTitle);
+    console.log(11);
+    
     //如果为空 =false 直接返回不走下面
     if (!this.tableTitle) {
       return;
     }
     this.isTableTitle = true;
+    
+    
     this.pagination(this.regional);
   },
   methods: {
@@ -149,6 +156,8 @@ export default {
     //封装分页请求
     async pagination(data) {
       const res = await getRegional(data);
+      console.log(res);
+      
       if (res.code === 200) {
         //赋值 然后显示
         pUtils.pageInfo(res, data);

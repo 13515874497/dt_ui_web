@@ -1,7 +1,11 @@
 <template>
   <div id="Account">
     <!--多选输入框选择输入-->
+    
     <div id="printCheck" v-if="isTableTitle">
+      <Query2 :tableTitle="tableTitle" @getValue="getValue2"></Query2>
+      <inputQuery :tableTitle="tableTitle" :selectedIds="msgInput_list" :querySuggestionsMethod="repUsers" :autoCompleteData="user"></inputQuery>
+      
       <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
       <div class="check2">
         <el-input
@@ -37,7 +41,7 @@
           :maxlength="i_max_length"
         ></el-input>
 
-        <el-select v-show="msgInput===12" v-model="user.accountStatus" value laceholder="请输入账号状态">
+        <el-select v-show="msgInput===17" v-model="user.accountStatus" value laceholder="请输入账号状态">
           <el-option
             v-for="(item,index) in accountStatusOptions"
             :key="index"
@@ -151,6 +155,7 @@
         <Pagination :data="user" v-on:pageData="pageData"/>
       </div>
     </div>
+    <el-input v-model="user.userName" placeholder="请输入内容" @change="getData"></el-input>
     <!--隐藏新增用户记录from表单-->
     <UserItemAdd/>
     <!--隐藏修改from表单-->
@@ -160,6 +165,9 @@
   </div>
 </template>
 <script>
+import Query2 from "../../components/ElementUi/Query2";
+import InputQuery from "../../components/ElementUi/InputQuery";
+
 import { repUsers, repDelUserInfo } from "../../api";
 import UserItemAdd from "../../components/UserItem/UserItemAdd";
 import UserItemUp from "../../components/UserItem/UserItemUp";
@@ -178,6 +186,7 @@ export default {
     return {
       i_max_length: 20, //设置输入款最大长度
       msgInput: "", //当选择后获得第一个下拉框的id
+      msgInput_list:[],
       inputValue: "", //序号
       isTableTitle: false, //如果table表头的长度是 0
       tableTitle: [], //表头信息
@@ -199,10 +208,11 @@ export default {
         accountStatus: "", //用户状态
         currentPage: 1, //当前页
         total_size: 0, //总的页
-        pageSize: 5, //显示最大的页
+        pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
         pwdAlways: false, //是否勾选始终密码始终有效
-        uAlways: false //是否勾选密码始终有效
+        uAlways: false, //是否勾选密码始终有效
+        // version: ""
       },
       accountStatusOptions: [
         {
@@ -227,7 +237,9 @@ export default {
     Pagination,
     Table,
     AddDelUpButton,
-    Query
+    Query,
+    Query2,
+    InputQuery
   },
   async mounted() {
     this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
@@ -239,6 +251,12 @@ export default {
     this.pagination(this.user);
   },
   methods: {
+    getValue2(val){
+      this.msgInput_list = val;
+    },
+    getData(){
+       this.pagination(this.user);
+    },
     //table按钮选择 传参
     checkboxValue: function(value) {
       this.multipleSelection = value;
@@ -254,7 +272,7 @@ export default {
     //点击修改的时候 获得 Checkbox中 的属性
     up() {
       //发布订阅消息 修改
-      PubSub.publish("upSelection", this.upSelection);
+      PubSub.publish("upSelection", this.multipleSelection);
     },
     //新增用户信息
     save() {
@@ -301,6 +319,9 @@ export default {
         this.user.effectiveDate = "";
       }
     },
+    repUsers(data){
+      return repUsers(data);
+    },
     //封装分页请求
     async pagination(data) {
       const resultUsers = await repUsers(data);
@@ -324,10 +345,10 @@ export default {
       this.user.pwdAlways = false; //是否勾选始终密码始终有效
       this.user.uAlways = false; //是否勾选密码始终有效
     },
-    //关闭 某属性
+//关闭 某属性
     cUserName() {
       this.user.userName = "";
-    },
+    },    
     cName() {
       this.user.name = "";
     },

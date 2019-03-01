@@ -24,10 +24,7 @@
     },
     methods: {
       //获得第一个input框里的id 通过id去判断显示哪个输入框
-      getValue (selVal) {
-        let sel =  this.tableTitle.find((item)=>{
-          return item.id == selVal
-        });
+      getValue (sel) {
         this.$emit('getValue', sel)
       }
     }
