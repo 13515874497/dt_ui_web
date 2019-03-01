@@ -14,6 +14,7 @@
           v-model="data[index]['_value']"
           :fetch-suggestions="queryAutocomplete"
           :placeholder="'请输入 ' + tableTitle.headName"
+          @focus="curr_search_field=tableTitle.topType"
         ></el-autocomplete>
       </div>
 
@@ -57,6 +58,7 @@ export default {
     selectedIds: Array, //用户要筛选的条件
     autoCompleteMethod: Function, //模糊查询的方法
     autoCompleteData: Object //模糊查询的配置对象
+    
   },
   data() {
     return {
@@ -178,7 +180,8 @@ export default {
           address: "普陀区金沙江路1699号鑫乐惠美食广场A13"
         },
         { value: "南拳妈妈", address: "普陀区金沙江路1699号鑫乐惠美食广场A13" }
-      ]
+      ],
+      curr_search_field: '', //当前模糊查询的字段
     };
   },
   watch: {
@@ -195,6 +198,7 @@ export default {
   },
   computed: {
     _autoCompleteData() {
+      //配置模糊查询
       let data = { ...this.autoCompleteData };
       data.pageSize = 50;
       data.currentPage = 1;
@@ -219,26 +223,17 @@ export default {
       this.data = data;
     },
     //查询 搜索建议下拉列表
-    async queryAutocomplete(queryString, cb) {
-      // let res = this.false_queryAutocompleteRes; //这里需要后台提供api查询
-      // var results = queryString
-      //   ? res.filter(this.createFilter(queryString))
-      //   : res;
-      let res = await this.autoCompleteMethod(this._autoCompleteData);
-
-      console.log(res);
-      console.log(res.data.dataList);
+    async queryAutocomplete(queryString, cb,e) {
+      let search_data = {...this._autoCompleteData};
+      search_data[this.curr_search_field] = queryString;
       
-      cb(res.data.dataList);
+      let res = await this.autoCompleteMethod(search_data);
+
+      var data = res.data.dataList.map((item)=>{
+        return {value:item[this.curr_search_field]};
+      })
+      cb(data);
     },
-    // createFilter(queryString) {
-    //   return restaurant => {
-    //     return (
-    //       restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) !==
-    //       -1
-    //     );
-    //   };
-    // },
 
     //是否显示
     isShow(id) {
