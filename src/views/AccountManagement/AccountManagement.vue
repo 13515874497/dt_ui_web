@@ -100,7 +100,8 @@
         <el-button type="primary" @click="reset">重置</el-button>
       </div>
       <!-- 显示输入参数div-->
-      <div style="padding-top: 30px" class="box-card">
+      <!-- <div style="padding-top: 30px" class="box-card"> -->
+        <div class="box-card">
         <el-tag v-show="user.userName!==''" closable @close="cUserName()">账号:{{user.userName}}</el-tag>
         <el-tag v-show="user.name!==''" closable @close="cName()">姓名:{{user.name}}</el-tag>
         <el-tag v-show="user.rName!==''" closable @close="cRole()">角色名称:{{user.rName}}</el-tag>
@@ -371,5 +372,24 @@ export default {
 .box-card {
   /* float: right; */
   width: 500px;
+}
+.el-tag{
+  height:40px;
+  line-height:40px;
+}
+.el-checkbox{
+  line-height: 40px;
+  margin: 0 10px;
+}
+.block{
+  float: right;
+  margin-right:10px;
+  overflow: hidden;
+}
+#printCheck{
+  height:60px;
+}
+.check1{
+  margin-right: 10px;
 }
 </style>

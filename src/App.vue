@@ -28,13 +28,13 @@ body .el-table--enable-row-hover .el-table__body tr:hover>td {
 //表格上方条件筛选行
 #printCheck {
   width: 100%;
-  height: 30px;
+  // height: 30px;
   position: relative;
-  margin-bottom: 25px;
+  // margin-bottom: 25px;
 }
 #printCheck > div {
   float: left;
-  margin-left: 25px;
+  // margin-left: 25px;
 }
 #printCheck > .el-row {
   float: none;

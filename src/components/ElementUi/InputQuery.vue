@@ -100,6 +100,7 @@ export default {
   min-width: 32px;
 }
 .check2 > .wrap.deadline {
-    width: 350px;
+    // width: 350px;
+    width:455px;
 }
 </style>
