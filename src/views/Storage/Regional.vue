@@ -26,20 +26,22 @@
   </div>
 </template>
 <script>
+import InputQuery from "../../components/ElementUi/InputQuery";
+import Query2 from "../../components/ElementUi/Query2";
+
 import { getRegional } from "../../api";
 import PubSub_Cle from "pubsub-js";
 import pUtils from "../../utils/PageUtils";
 import Table from "../../components/ElementUi/Table";
 import AddDelUpButton from "../../components/ElementUi/AddDelUpButton";
-import InputQuery from "../../components/ElementUi/InputQuery";
-import Query2 from "../../components/ElementUi/Query2";
+
 import requestAjax from "../../api/requestAjax";
 import Pagination from "../../components/ElementUi/Pagination";
 //公司
 export default {
   data() {
     return {
-      isTableTitle: true, //如果table表头的长度是 0
+      isTableTitle: false, //如果table表头的长度是 0
       msgInput: "", //当选择后获得第一个下拉框的id
       tableTitle: [], //表头信息
       multipleSelection: [], //更新按钮数组收集
@@ -122,12 +124,15 @@ export default {
   async mounted() {
     this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
     console.log(this.tableTitle);
+    console.log(11);
     
     //如果为空 =false 直接返回不走下面
     if (!this.tableTitle) {
       return;
     }
     this.isTableTitle = true;
+    
+    
     this.pagination(this.regional);
   },
   methods: {

@@ -2,16 +2,10 @@
   <div id="Account">
     <!--多选输入框选择输入-->
     
-
-
-
     <div id="printCheck" v-if="isTableTitle">
       <Query2 :tableTitle="tableTitle" @getValue="getValue2"></Query2>
-      <inputQuery :tableTitle="tableTitle" :selectedIds="msgInput_list" :autoCompleteMethod="repUsers" :autoCompleteData="user"></inputQuery>
-
-
-
-
+      <inputQuery :tableTitle="tableTitle" :selectedIds="msgInput_list" :querySuggestionsMethod="repUsers" :autoCompleteData="user"></inputQuery>
+      
       <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
       <div class="check2">
         <el-input
@@ -47,7 +41,7 @@
           :maxlength="i_max_length"
         ></el-input>
 
-        <el-select v-show="msgInput===12" v-model="user.accountStatus" value laceholder="请输入账号状态">
+        <el-select v-show="msgInput===17" v-model="user.accountStatus" value laceholder="请输入账号状态">
           <el-option
             v-for="(item,index) in accountStatusOptions"
             :key="index"
@@ -216,7 +210,8 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
         pwdAlways: false, //是否勾选始终密码始终有效
-        uAlways: false //是否勾选密码始终有效
+        uAlways: false, //是否勾选密码始终有效
+        // version: ""
       },
       accountStatusOptions: [
         {
