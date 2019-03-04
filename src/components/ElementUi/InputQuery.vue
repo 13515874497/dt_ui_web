@@ -63,7 +63,8 @@
 </template>
 
 <script>
-import PubSub from "pubsub-js";
+import PubSub from 'pubsub-js';
+import {unique} from '../../utils/Arrays';
 
 export default {
   props: {
@@ -106,10 +107,11 @@ export default {
     }
   },
   computed: {
+    //直接调用表格的查询 这里改下配置就是模糊查询
     _querySuggestionsConfig() {
-      //配置模糊查询
+      
       let data = { ...this.querySuggestionsConfig };
-      data.pageSize = 50;
+      data.pageSize = 50; //最大显示50条
       data.currentPage = 1;
       return data;
     }
@@ -137,16 +139,14 @@ export default {
       let field = this.curr_query_field;
       query[field] = queryString;
       let res = await this.querySuggestionsMethod(query);
-
       let data = res.data.dataList.map(item => {
+        
         return item[field];
       });
-
-      console.log(data);
-      
-      // let data = res.data.dataList.map(item => {
-      //   return { value: item[field] };
-      // });
+      data = unique(data);
+      data = data.map(item => {
+        return { value: item };
+      });
       cb(data);
     },
     //是否显示
