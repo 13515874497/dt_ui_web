@@ -1,24 +1,145 @@
 <template>
   <div id="Account">
     <!--多选输入框选择输入-->
-    <div id="printCheck" class="clearfix" v-if="isTableTitle">
-      <el-row>
-        <el-col :span="4">
-          <Query2 :tableTitle="tableTitle" @getValue="getValue2"></Query2>
-        </el-col>
-        <el-col :span="16">
-          <inputQuery
-            @changeQuery="setQuery"
-            :tableTitle="tableTitle"
-            :selectedIds="msgInput_list"
-            :querySuggestionsMethod="repUsers"
-            :querySuggestionsConfig="user"
-          ></inputQuery>
-        </el-col>
-        <el-col :span="4">
-          <SearchReset @search="searchUser"></SearchReset>
-        </el-col>
-      </el-row>
+    
+    <div id="printCheck" v-if="isTableTitle">
+      <Query2 :tableTitle="tableTitle" @getValue="getValue2"></Query2>
+      <inputQuery :tableTitle="tableTitle" :selectedIds="msgInput_list" :querySuggestionsMethod="repUsers" :autoCompleteData="user"></inputQuery>
+      
+      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
+      <SearchReset></SearchReset>
+      <div class="check2">
+        <el-input
+          v-show="msgInput===7"
+          v-model="user.userName"
+          placeholder="请输入账号"
+          prefix-icon="el-icon-search"
+          clearable
+          :maxlength="i_max_length"
+        ></el-input>
+        <el-input
+          v-show="msgInput===8"
+          v-model="user.name"
+          placeholder="请输入姓名"
+          prefix-icon="el-icon-search"
+          clearable
+          :maxlength="i_max_length"
+        ></el-input>
+        <el-input
+          v-show="msgInput===10"
+          v-model="user.rName"
+          placeholder="请输入角色名称"
+          prefix-icon="el-icon-search"
+          clearable
+          :maxlength="i_max_length"
+        ></el-input>
+        <el-input
+          v-show="msgInput===14"
+          v-model="user.computerName"
+          placeholder="请输入计算机名"
+          prefix-icon="el-icon-search"
+          clearable
+          :maxlength="i_max_length"
+        ></el-input>
+
+        <el-select v-show="msgInput===17" v-model="user.accountStatus" value laceholder="请输入账号状态">
+          <el-option
+            v-for="(item,index) in accountStatusOptions"
+            :key="index"
+            :label="item.name"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+
+        <el-input
+          v-show="msgInput===9"
+          v-model="user.mobilePhone"
+          placeholder="请输入手机号"
+          prefix-icon="el-icon-search"
+          clearable
+          :maxlength="i_max_length"
+        ></el-input>
+        <div class="block" v-show="msgInput===11">
+          <el-date-picker
+            v-model="user.createDate"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="选择日期时间"
+          ></el-date-picker>
+        </div>
+        <!-- `checked` 为 true 或 false -->
+        <el-checkbox
+          v-show="msgInput===51"
+          v-model="user.pwdAlways"
+          @change="pwd_always_events"
+        >始终有效</el-checkbox>
+        <div class="block" v-if="user.pwdAlways===false   && msgInput===51">
+          <el-date-picker
+            v-model="user.pwdStatus"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="选择密码有效期"
+          ></el-date-picker>
+        </div>
+        <div class="block" v-show="msgInput===13">
+          <el-date-picker
+            v-model="user.landingTime"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="选择最近登陆时间"
+          ></el-date-picker>
+        </div>
+        <!-- `checked` 为 true 或 false -->
+        <el-checkbox v-show="msgInput===50" v-model="user.uAlways" @change="user_always_events">始终有效</el-checkbox>
+        <div class="block" v-show="user.uAlways===false && msgInput===50">
+          <el-date-picker
+            v-model="user.effectiveDate"
+            type="datetime"
+            value-format="timestamp"
+            placeholder="选择用户有效期"
+          ></el-date-picker>
+        </div>
+      </div>
+      <div class="check7" style="padding-right: 10px">
+        <el-button type="primary" icon="el-icon-search" @click="searchUser">查询</el-button>
+        <el-button type="primary" @click="reset">重置</el-button>
+      </div>    
+      <!-- 显示输入参数div-->
+      <div style="padding-top: 30px" class="box-card">
+        <el-tag v-show="user.userName!==''" closable @close="cUserName()">账号:{{user.userName}}</el-tag>
+        <el-tag v-show="user.name!==''" closable @close="cName()">姓名:{{user.name}}</el-tag>
+        <el-tag v-show="user.rName!==''" closable @close="cRole()">角色名称:{{user.rName}}</el-tag>
+        <el-tag
+          v-show="user.createDate!==''"
+          closable
+          @close="cCreate()"
+        >创建时间:{{user.createDate | date-format}}</el-tag>
+        <el-tag v-show="user.pwdAlways" closable @close="cPwdAlways()">密码有效期:始终有效</el-tag>
+        <el-tag v-show="user.pwdStatus!=='' && !user.pwdAlways" closable @close="cPwdDate()">
+          密码有效期:{{user.pwdStatus |
+          date-format}}
+        </el-tag>
+        <el-tag v-show="user.uAlways" closable @close="cUAlways()">用户有效期:始终有效</el-tag>
+        <el-tag v-show="user.effectiveDate!=='' && !user.uAlways" closable @close="cUDate()">
+          用户有效期:{{user.effectiveDate
+          |
+          date-format}}
+        </el-tag>
+        <el-tag v-show="user.landingTime!==''" closable @close="cLanding()">
+          最近登陆时间:{{user.landingTime |
+          date-format}}
+        </el-tag>
+        <el-tag v-show="user.accountStatus!==''" closable @close="cUStatus()">
+          账号状态:{{user.accountStatus === 0 ? '正常' : user.accountStatus === 1 ? '冻结' : user.accountStatus === 2 ? '禁用' :
+          '无条件'}}
+        </el-tag>
+        <el-tag v-show="user.mobilePhone!==''" closable @close="cPhone()">手机号:{{user.mobilePhone}}</el-tag>
+        <el-tag
+          v-show="user.computerName!==''"
+          closable
+          @close="cComputer()"
+        >计算机名:{{user.computerName}}</el-tag>
+      </div>
     </div>
     <!--table表格显示-->
     <div id="userTable">
@@ -66,7 +187,7 @@ export default {
     return {
       i_max_length: 20, //设置输入款最大长度
       msgInput: "", //当选择后获得第一个下拉框的id
-      msgInput_list: [],
+      msgInput_list:[],
       inputValue: "", //序号
       isTableTitle: false, //如果table表头的长度是 0
       tableTitle: [], //表头信息
@@ -91,7 +212,8 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
         pwdAlways: false, //是否勾选始终密码始终有效
-        uAlways: false //是否勾选密码始终有效
+        uAlways: false, //是否勾选密码始终有效
+        // version: ""
       },
       accountStatusOptions: [
         {
@@ -119,7 +241,7 @@ export default {
     Query,
     Query2,
     InputQuery,
-    SearchReset
+    SearchReset,
   },
   async mounted() {
     this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
@@ -131,24 +253,11 @@ export default {
     this.pagination(this.user);
   },
   methods: {
-    setQuery($event) {
-      let user = $event[0];
-      console.log(user);
-      
-      for (let key in user) {
-        let value = user[key];
-
-        this.user[key] = value;
-      }
-      console.log(user);
-      console.log(this.user);
-      
-    },
-    getValue2(val) {
+    getValue2(val){
       this.msgInput_list = val;
     },
-    getData() {
-      this.pagination(this.user);
+    getData(){
+       this.pagination(this.user);
     },
     //table按钮选择 传参
     checkboxValue: function(value) {
@@ -198,9 +307,6 @@ export default {
     },
     //点击查询获得table的值
     async searchUser() {
-      console.log(11);
-      console.log(this.user);
-      
       this.pagination(this.user);
     },
     //触发密码始终有效
@@ -215,7 +321,7 @@ export default {
         this.user.effectiveDate = "";
       }
     },
-    repUsers(data) {
+    repUsers(data){
       return repUsers(data);
     },
     //封装分页请求
@@ -241,10 +347,10 @@ export default {
       this.user.pwdAlways = false; //是否勾选始终密码始终有效
       this.user.uAlways = false; //是否勾选密码始终有效
     },
-    //关闭 某属性
+//关闭 某属性
     cUserName() {
       this.user.userName = "";
-    },
+    },    
     cName() {
       this.user.name = "";
     },

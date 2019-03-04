@@ -84,10 +84,17 @@
         //成功执行后续
         if (userName && pwd) {
           const result = await repLoginUser(users)
+          
           if (result.code === 200) {
+            console.log(result);
+            
             const uData = result.data
             this.setCookie('token', uData.token, 7)
             this.setCookie('name', uData.user.name, 7)
+
+            if(uData.user.firstLogin){
+              // this.$router.replace('/uppwd')
+            }
             // // 同步记录用户信息
             // this.$store.dispatch('recordUser', uData)
             // 去个主界面

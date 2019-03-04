@@ -171,6 +171,15 @@ export default {
 
 
 <style lang="scss">
+#printCheck{
+  height:60px;
+}
 .check1 {
+  margin-right: 10px;
+}
+
+.el-checkbox{
+  line-height:40px;
+
 }
 </style>

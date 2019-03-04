@@ -161,4 +161,10 @@ export default {
   max-width: 500px;
   line-height: 180%;
 }
+.check2,.check1{
+margin-right:10px;
+}
+#printCheck{
+  height: 60px;
+}
 </style>
