@@ -91,9 +91,8 @@
             const uData = result.data
             this.setCookie('token', uData.token, 7)
             this.setCookie('name', uData.user.name, 7)
-
             if(uData.user.firstLogin){
-              this.$router.replace('/index/registerUser/')
+              this.$router.replace('/registerUser')
             }
             // // 同步记录用户信息
             // this.$store.dispatch('recordUser', uData)
