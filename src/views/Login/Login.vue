@@ -93,7 +93,7 @@
             this.setCookie('name', uData.user.name, 7)
 
             if(uData.user.firstLogin){
-              // this.$router.replace('/uppwd')
+              this.$router.replace('/index/registerUser/')
             }
             // // 同步记录用户信息
             // this.$store.dispatch('recordUser', uData)

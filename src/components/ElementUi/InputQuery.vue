@@ -10,6 +10,7 @@
           :label="tableTitle.headName"
           v-if="tableTitle.inputType === 0"
           v-show="isShow(tableTitle.id)"
+          
         >
           <el-autocomplete
             class="inline-input"
@@ -42,13 +43,13 @@
           v-show="isShow(tableTitle.id)"
         >
           <el-checkbox
-            v-if="tableTitle.topType == 'pEffDate'"
+            v-if="tableTitle.topType == 'pwdValidityPeriod'"
             v-model="data[index]['pwdAlways']"
             @change="isValid($event,data[index])"
           >始终有效</el-checkbox>
 
           <el-checkbox
-            v-if="tableTitle.topType == 'uEffDate'"
+            v-if="tableTitle.topType == 'userExpirationDate'"
             v-model="data[index]['uAlways']"
             @change="isValid($event,data[index])"
           >始终有效</el-checkbox>
@@ -115,7 +116,12 @@ export default {
   data() {
     return {
       data: [],
-      curr_query_field: "" //当前查询搜索建议的字段
+      curr_query_field: "", //当前查询搜索建议的字段
+      rules: {
+        str: [
+          {require: false,message: '请输入字符',trigger: 'blur'}
+        ]
+      }
     };
   },
   watch: {
@@ -192,11 +198,11 @@ export default {
       if (tableTitle.inputType == 2) {
         switch (tableTitle.topType) {
           //用户有效期
-          case "uEffDate":
+          case "":
             tableTitle.uAlways = false;
             break;
           //密码有效期
-          case "pEffDate":
+          case "":
             tableTitle.pwdAlways = false;
             break;
         }

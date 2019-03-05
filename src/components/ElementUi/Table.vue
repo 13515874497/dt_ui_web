@@ -9,6 +9,7 @@
     border
     @header-dragend="handleHeaderDragend"
   >
+
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column
       :aa = 
@@ -19,7 +20,7 @@
     </el-table-column>
     <template v-for="title  in tableTitle">
       <!--特殊字段 -->
-      <el-table-column v-if="title.topType==='create_date'" :label="title.headName" width="180">
+      <el-table-column v-if="title.topType==='createDate'" :label="title.headName" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
@@ -28,29 +29,29 @@
 
       <el-table-column
         width="150"
-        v-else-if="title.topType==='u_eff_date'"
+        v-else-if="title.topType==='userExpirationDate'"
         sortable
         :label="title.headName"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.effectiveDate!==0">{{ scope.row.effectiveDate | date-format}}</span>
-          <span v-if="scope.row.effectiveDate===0">始终有效</span>
+          <span v-if="scope.row.userExpirationDate!==0">{{ scope.row.userExpirationDate | date-format}}</span>
+          <span v-if="scope.row.userExpirationDate===0">始终有效</span>
         </template>
       </el-table-column>
       <el-table-column
         width="150"
-        v-else-if="title.topType==='p_eff_date'"
+        v-else-if="title.topType==='pwdValidityPeriod'"
         sortable
         :label="title.headName"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.pwdStatus!==0">{{ scope.row.pwdStatus | date-format}}</span>
-          <span v-if="scope.row.pwdStatus===0">始终有效</span>
+          <span v-if="scope.row.pwdValidityPeriod!==0">{{ scope.row.pwdValidityPeriod | date-format}}</span>
+          <span v-if="scope.row.pwdValidityPeriod===0">始终有效</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        v-else-if="title.topType==='landing_time'"
+        v-else-if="title.topType==='landingTime'"
         :label="title.headName"
         width="180"
       >
@@ -60,15 +61,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-else-if="title.topType==='e_date'" :label="title.headName" width="180">
+      <el-table-column v-else-if="title.topType==='eDate'" :label="title.headName" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span>{{ scope.row.effectiveDate | date-format}}</span>
+          <span>{{ scope.row.userExpirationDate | date-format}}</span>
         </template>
       </el-table-column>
 
       <el-table-column
-        v-else-if="title.topType==='modify_date'"
+        v-else-if="title.topType==='modifyDate'"
         :label="title.headName"
         width="180"
       >
@@ -79,7 +80,7 @@
       </el-table-column>
 
       <el-table-column
-        v-else-if="title.topType==='create_date'"
+        v-else-if="title.topType==='createDate'"
         :label="title.headName"
         width="180"
       >
@@ -89,7 +90,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-else-if="title.topType==='audit_date'" :label="title.headName" width="180">
+      <el-table-column v-else-if="title.topType==='auditDate'" :label="title.headName" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
@@ -97,7 +98,7 @@
       </el-table-column>
 
       <el-table-column
-        v-else-if="title.topType==='account_status'"
+        v-else-if="title.topType==='accountStatus'"
         :label="title.headName"
         width="180"
         :formatter="account"
