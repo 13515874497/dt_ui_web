@@ -49,25 +49,25 @@
     </div>
 
   <!-- 点击编辑按钮新增菜单编辑弹框 -->
-    <el-dialog
+    <el-dialog v-if="data"
             title="提示"
             :visible.sync="updateMenu"
             width="75%"
             center>
        <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="菜单信息" name="first">
-          <el-form ref="form" :model="form" label-width="80px">
+          <el-form ref="form" :model="data" label-width="80px">
             <el-form-item label="菜单名称">
-              <el-input v-model="form.name" placeholder="公共资料"></el-input>
+              <el-input v-model="data.name" placeholder="公共资料"></el-input>
             </el-form-item>
-            <el-form-item label="URL">
-              <el-input v-model="form.route" placeholder="请输入监管方式简称"></el-input>
+            <el-form-item label="URL" v-show="!data.childMenus">
+              <el-input v-model="data.url" placeholder="请输入监管方式简称"></el-input>
             </el-form-item>
             <el-form-item label="图标">
-              <el-select v-model="form.icon" placeholder="请选择图标">
+              <!-- <el-select  placeholder="请选择图标">
                 <el-option label="图标一" value="shanghai"></el-option>
                 <el-option label="图标二" value="beijing"></el-option>
-              </el-select>
+              </el-select> -->
             </el-form-item>
             <el-form-item>
               <el-button @click="updateMenu = false">取 消</el-button>
@@ -77,59 +77,15 @@
         </el-tab-pane>
 
         <el-tab-pane label="字段信息" name="second">
-          <el-table
-            :data="tableData"
-            style="width: 100%"          
-            >
-            <el-table-column
-              type="selection"
-              width="55">
-            </el-table-column>
-            <el-table-column
-              sortable
-              width="180"
-              v-for="(item,index) in tableData" :key="index" :label="item.name" prop="date">
-            </el-table-column>
-            <!-- <el-table-column
-              prop="name"
-              label="公司名称"
-              width="180">
-            </el-table-column>
-            <el-table-column
-              prop="shorter"
-              label="公司简称"
-              :formatter="formatter">
-            </el-table-column>
-            <el-table-column
-              prop="address"
-              label="标示"
-              :formatter="formatter">
-            </el-table-column> -->
-            <!-- <el-table-column label="操作">
-              <template slot-scope="scope">
-                 <el-button
-                  size="mini"
-                  type="success"
-                  @click="handleAdd(scope.$index, scope.row)">新增</el-button>
-                   <el-button
-                  size="mini"
-                  type="info"
-                  @click="handleQuote(scope.$index, scope.row)">引用</el-button>
-                <el-button
-                  size="mini"
-                  type="primary"
-                  @click="handleEdit(scope.$index, scope.row)">修改</el-button>
-                <el-button
-                  size="mini"
-                  type="danger"
-                  @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-              </template>
-            </el-table-column> -->
-        </el-table>
+        <Table
+        :tableData="menu.tableData"
+        :tableTitle="tableTitle"
+        v-on:checkboxValue="checkboxValue"
+      />
         <div>
           <AddDelUpBtn :edit="edit" :del="del" :save="save" :recording="recording"/>
            <!--分页-->
-          <Pagination :data="role" v-on:pageData="pageData"/>
+          <Pagination :data="menu" v-on:pageData="pageData"/>
         </div>      
         </el-tab-pane>
       </el-tabs>
@@ -156,6 +112,15 @@
                 <el-button type="primary" @click="editUserSubmit('editUserForm')">确 定</el-button>
             </div>
         </el-dialog>
+
+        <!-- 点击新增菜单 -->
+        <el-dialog title="新增菜单表头" :visible.sync="addDialogFormVisible">           
+                <el-input v-model="menuHead" auto-complete="off" ></el-input>             
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="addDialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="addUserSubmit">确 定</el-button>
+            </div>
+        </el-dialog>
   </div>
 </template>
 
@@ -167,15 +132,15 @@
 import storage from "../../utils/storageUtils";
 import { repUpMenuInfo, repMenu } from "../../api";
 import message from "../../utils/Message";
-
-import Pagination from '../../components/ElementUi/Pagination'; // 分页组件
+import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
 import AddDelUpBtn from "../../components/ElementUi/AddDelUpBtn"; //增删改组件
 import requestAjax from "../../api/requestAjax";
-
+import Table from "../../components/ElementUi/Table";
 let id = 1000; //假菜单ID
 export default {
   data() {
     return {
+      data: null,
       userName: "", //读取缓存名字
       addNewMenu: [], //新添加传递到后台的数组
       menuIds: [],
@@ -184,64 +149,74 @@ export default {
       menuList: [],
       resetMenuList: [], //保留一份重置数据
       centerDialogVisible: false,
+      tableTitle: [
+        {
+          headName: "编号"
+        },
+        {
+          headName: "公司名称"
+        },
+        {
+          headName: "公司简称"
+        }
+      ], //表头信息
       isTableTitle: false, //如果table表头的长度是 0
-      tableTitle: [], //表头信息
+      multipleSelection: [],
+      menuTableTitle: {}, //菜单查询到的表头信息
       updateMenu: false, //修改菜单，
       activeName: "first",
-       role: {
+      menu: {
         page_sizes: [2, 10, 15, 20, 25],
         currentPage: 1, //当前页
         total_size: 0, //总的页
-        pageSize: 2 //显示最大的页
-      },
-      form: {
-        name: "",
-        icon: "",
-        route: ""
+        pageSize: 2, //显示最大的页
+        tableData: [
+          {
+            headName: '2016-05-02',
+            name: '王小虎',
+            address: '上海市普陀区金沙江路 1518 弄'
+          },
+        ] //表单信息
+
       },
       // 控制编辑用户对话框显示隐藏
       editDialogFormVisible: false,
-       // 存储编辑的用户信息
-       editForm: {
-         number: '',
-         name: '',
-         shorter: '',
-         mark: ''
-            },
+      //新增添加菜单
+      addDialogFormVisible: false,
+      // 存储编辑的用户信息
+      editForm: {
+        number: "",
+        name: "",
+        shorter: "",
+        mark: ""
+      },
+      //新增菜单表头
+      menuHead:"",
+  
       defaultProps: {
         //转换参数
         children: "childMenus",
         label: "name"
-      },
-       tableData: [{
-          date: '1',
-         name:'mingchneg'
-        }, {
-          date: '2',
-         name:'mingchneg'
-        }, {
-          date: '3',
-         name:'mingchneg'
-        }, {
-          date: '4',
-         name:'mingchneg'
-        }]
+      }
     };
   },
-    components: { 
+  components: {
     Pagination,
     AddDelUpBtn,
+    Table
   },
-   async mounted() {
-    this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
-    console.log(this.tableTitle)
+  async mounted() {
+    //  this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
+    //   console.log(this.tableTitle);
 
     this.userName = this.getCookie("name");
     //读取本地缓存
     const menu = storage.readData(this.userName + "menu");
     this.menuList = menu;
     this.resetMenuList = menu;
+    console.log(menu);
   },
+
   methods: {
     //添加 菜单
     append(data) {
@@ -330,26 +305,22 @@ export default {
     //修改
     update(data) {
       console.log(data);
-      
-      // console.log(data);
-      // if (data.url !== null) {
-      //   message.errorMessage("这目录下有url----->不能添加子目录");
-      //   return;
-      // }
+      this.data = data;
       this.updateMenu = true;
     },
 
-      formatter(row, column) {
-        return row.address;
-      },
-      //修改隐藏框
+    formatter(row, column) {
+      return row.address;
+    },
+    //修改隐藏框
     edit() {
       console.log("修改");
       // 显示编辑用户对话框
-            this.editDialogFormVisible = true
+      this.editDialogFormVisible = true;
     },
     save() {
       console.log("新增角色");
+      this.addDialogFormVisible = true;
     },
     del() {
       console.log("删除");
@@ -357,10 +328,23 @@ export default {
     recording() {
       console.log("删除记录");
     },
-      //分页参数传递
+    //分页参数传递
     pageData: function(data) {
       this.pagination(data);
     },
+    //点击选项 Checkbox 按钮 获得val赋值给 multipleSelection
+    checkboxValue(val) {
+      this.multipleSelection = val;
+    },
+
+    addUserSubmit() {
+      console.log(this.menuHead);
+      if(this.menuHead == ""){
+        alert('请输入菜单表头')
+      }
+      this.addDialogFormVisible = false  
+      this.tableTitle.push({headName:this.menuHead})          
+    }
   }
 };
 </script>
@@ -379,3 +363,4 @@ export default {
   padding-right: 8px;
 }
 </style>
+

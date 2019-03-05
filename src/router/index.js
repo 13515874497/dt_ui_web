@@ -105,6 +105,8 @@ import Tariff_rate from '../views/Storage/Tariff_rate'//关税税率
 import Additional_tariff from '../views/Storage/Additional_tariff'//附加税率
 import SKU from '../views/Storage/SKU'//SUK信息表
 import Star_level from '../views/Storage/Star_level'//星级
+
+import RegisterUser from '../views/Register/RegisterUser.vue'  //注册页面
 Vue.use(Router)
 
 
@@ -539,6 +541,11 @@ export default new Router({
     {
       path: '/',
       redirect: '/login'
+    },
+    {
+      path: '/registerUser',
+      name: 'RegisterUser',
+      component: RegisterUser //注册用户
     }
   ],
 

@@ -123,6 +123,7 @@ export default {
   },
   async mounted() {
     this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
+    console.log( this.tableTitle)
     //如果为空 =false 直接返回不走下面
     if (!this.tableTitle) {
       return;
@@ -288,6 +289,6 @@ export default {
 
 .box-card {
   /* float: right; */
-  width: 500px;
+  width: 500px; 
 }
 </style>
