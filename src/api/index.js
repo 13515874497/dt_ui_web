@@ -5,6 +5,11 @@ import ajax from './ajax'
 
 const BASE_URL = '/api'
 
+//修改密码
+// export const register = ({userName,pwd,uid}) => ajax(BASE_URL + `/user/upPwd`, {userName,pwd,uid}, 'POST')
+
+
+
 // 查询国家
 export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
 

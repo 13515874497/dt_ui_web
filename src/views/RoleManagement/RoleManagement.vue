@@ -163,6 +163,7 @@ export default {
 }
 .check2,.check1{
 margin-right:10px;
+float: left;
 }
 #printCheck{
   height: 60px;
