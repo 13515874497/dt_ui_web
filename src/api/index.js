@@ -4,6 +4,8 @@
 import ajax from './ajax'
 
 const BASE_URL = '/api'
+//获取图标icon/getIconInfo 
+export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`,'get')
 
 //用户修改密码
 export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')

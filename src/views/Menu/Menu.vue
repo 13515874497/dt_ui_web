@@ -63,14 +63,11 @@
             <el-form-item label="URL" v-show="!data.childMenus">
               <el-input v-model="data.url" placeholder="请输入监管方式简称"></el-input>
             </el-form-item>
-            <el-form-item label="图标">
-              <!-- <el-select  placeholder="请选择图标">
-                <el-option label="图标一" value="shanghai"></el-option>
-                <el-option label="图标二" value="beijing"></el-option>
-              </el-select> -->
-              <el-card shadow="hover">
-               {{data.icon}}
-              </el-card>
+            <el-form-item label="图标">          
+              <el-select  placeholder="请选择图标" v-model="value">
+                <el-option v-for="item in options" :key="item.iId" :label="item.icon" :value="item.iId"><i :class="item.icon"></i></el-option>
+              </el-select>  
+             
             </el-form-item>
             <el-form-item>
               <el-button @click="updateMenu = false">取 消</el-button>
@@ -124,16 +121,22 @@
                 <el-button type="primary" @click="addUserSubmit">确 定</el-button>
             </div>
         </el-dialog>
+
+        <!-- 引入其他菜单表头 -->
+          <el-dialog title="引入其他菜单表头" :visible.sync="IntroDialogFormVisible">   
+                 
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="IntroDialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="IntroUserSubmit()">确 定</el-button>
+            </div>
+        </el-dialog>
   </div>
 </template>
-
-
-
-
 
 <script>
 import storage from "../../utils/storageUtils";
 import { repUpMenuInfo, repMenu } from "../../api";
+import { icons } from "../../api";
 import message from "../../utils/Message";
 import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
 import AddDelUpBtn from "../../components/ElementUi/AddDelUpBtn"; //增删改组件
@@ -144,6 +147,9 @@ export default {
   data() {
     return {
       data: null,
+      cols:null,
+      options: [],
+      value: "",
       userName: "", //读取缓存名字
       addNewMenu: [], //新添加传递到后台的数组
       menuIds: [],
@@ -173,13 +179,14 @@ export default {
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 2, //显示最大的页
-        tableData: [] //表单信息
-
+        tableData: [{ headName: 1 }] //表单信息
       },
       // 控制编辑用户对话框显示隐藏
       editDialogFormVisible: false,
-      //新增添加菜单
+      //新增添加菜单显示隐藏
       addDialogFormVisible: false,
+      //引入别的菜单表头显示隐藏
+      IntroDialogFormVisible: false,
       // 存储编辑的用户信息
       editForm: {
         number: "",
@@ -188,13 +195,13 @@ export default {
         mark: ""
       },
       //新增菜单表头
-      menuHead:"",
-  
+      menuHead: "",
+
       defaultProps: {
         //转换参数
         children: "childMenus",
         label: "name"
-      }
+      },
     };
   },
   components: {
@@ -213,7 +220,14 @@ export default {
     this.resetMenuList = menu;
     console.log(menu);
   },
-
+  //添加图标
+  async created() {
+    const result = await icons();
+    console.log(result);
+    if (result.code === 200) {
+      this.options = result.data;
+    }
+  },
   methods: {
     //添加 菜单
     append(data) {
@@ -324,6 +338,7 @@ export default {
     },
     recording() {
       console.log("引用菜单表头");
+      this.IntroDialogFormVisible = true;
     },
     //分页参数传递
     pageData: function(data) {
@@ -336,14 +351,15 @@ export default {
 
     addUserSubmit() {
       console.log(this.menuHead);
-      if(this.menuHead == ""){
-        alert('请输入菜单表头')
+      if (this.menuHead == "") {
+        alert("请输入菜单表头");
+        return;
       }
-      this.addDialogFormVisible = false  
-      this.tableTitle.push({headName:this.menuHead})          
+      this.addDialogFormVisible = false;
+      this.tableTitle.push({ headName: this.menuHead });
     },
- 
-   }
+    }
+  
 };
 </script>
 
