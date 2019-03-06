@@ -1,3 +1,16 @@
+export const isNumber = (rule, value, cb) => {
+  console.log(value);
+  let re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/ 
+  let val = Number(value);
+  
+  if (!re.test(val)) {
+    cb(new Error('请输入数字'));
+  } else {
+    cb();
+  }
+}
+
+
 
 
 
