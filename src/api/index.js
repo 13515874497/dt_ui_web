@@ -23,16 +23,22 @@ export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/a
 //获得所有用户信息
 export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
 //获取用户管理信息
-export const repUsers = ({
-                           currentPage, pageSize, userName, name,
-                           createDate, pwdStatus, landingTime,
-                           effectiveDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
-                         }) =>
-  ajax(BASE_URL + `/user/show`, {
-    currentPage, pageSize, userName, name,
-    createDate, pwdStatus, landingTime,
-    effectiveDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
-  }, 'POST')
+// userName
+// mobilePhone
+// rName
+// createDate
+// accountStatus
+// landingTime
+// pc
+// uEffDate
+// pEffDate
+// {
+//   currentPage, pageSize, userName, name,
+//   createDate, pwdStatus, landingTime,
+//   effectiveDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
+// }
+export const repUsers = (data) =>
+  ajax(BASE_URL + `/user/show`, data, 'POST')
 
 //通过menu_id查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})

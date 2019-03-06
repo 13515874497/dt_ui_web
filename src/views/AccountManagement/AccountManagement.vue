@@ -83,8 +83,8 @@ export default {
         mobilePhone: "", //手机
         landingTime: "", //登陆时间
         createDate: "", //创建时间
-        pwdStatus: "", //密码有效期
-        effectiveDate: "", //用户有效期
+        pwdValidityPeriod: "", //密码有效期
+        userExpirationDate: "", //用户有效期
         accountStatus: "", //用户状态
         currentPage: 1, //当前页
         total_size: 0, //总的页
@@ -134,16 +134,10 @@ export default {
   methods: {
     setQuery($event) {
       let user = $event[0];
-      console.log(user);
-      
       for (let key in user) {
         let value = user[key];
-
         this.user[key] = value;
       }
-      console.log(user);
-      console.log(this.user);
-      
     },
     getValue2(val) {
       this.msgInput_list = val;
@@ -199,21 +193,19 @@ export default {
     },
     //点击查询获得table的值
     async searchUser() {
-      console.log(11);
-      console.log(this.user);
-      
+ 
       this.pagination(this.user);
     },
     //触发密码始终有效
     pwd_always_events(value) {
       if (value) {
-        this.user.pwdStatus = "";
+        this.user.pwdValidityPeriod = "";
       }
     },
     //触发用户始终有效
     user_always_events(value) {
       if (value) {
-        this.user.effectiveDate = "";
+        this.user.userExpirationDate = "";
       }
     },
     repUsers(data) {
@@ -221,6 +213,8 @@ export default {
     },
     //封装分页请求
     async pagination(data) {
+      console.log(data);
+      
       const resultUsers = await repUsers(data);
       if (resultUsers.code === 200) {
         //赋值 然后显示
@@ -236,8 +230,8 @@ export default {
       this.user.computerName = ""; //计算机名
       this.user.landingTime = ""; //登陆时间
       this.user.createDate = ""; //创建时间
-      this.user.pwdStatus = ""; //密码有效期
-      this.user.effectiveDate = ""; //用户有效期
+      this.user.pwdValidityPeriod = ""; //密码有效期
+      this.user.userExpirationDate = ""; //用户有效期
       this.user.accountStatus = ""; //用户状态
       this.user.pwdAlways = false; //是否勾选始终密码始终有效
       this.user.uAlways = false; //是否勾选密码始终有效
@@ -256,7 +250,7 @@ export default {
       this.user.createDate = "";
     },
     cPwdDate() {
-      this.user.pwdStatus = "";
+      this.user.pwdValidityPeriod = "";
     },
     cPwdAlways() {
       this.user.pwdAlways = false;
@@ -265,7 +259,7 @@ export default {
       this.user.uAlways = false;
     },
     cUDate() {
-      this.user.effectiveDate = "";
+      this.user.userExpirationDate = "";
     },
     cLanding() {
       this.user.landingTime = "";

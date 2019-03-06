@@ -19,7 +19,7 @@ export default {
    */
   pageInfo (result, pageData) {
     const data = result.data
-    //
+
     data.dataList.forEach((item,index) => {
       if(item.systemLogStatus){
         for(let key in item.systemLogStatus){
@@ -28,7 +28,6 @@ export default {
         delete item.systemLogStatus;
       }  
     });
-    console.log(data.dataList);
     
     pageData.tableData = data.dataList  
     pageData.currentPage = data.current_page
