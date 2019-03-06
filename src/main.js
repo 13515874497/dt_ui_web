@@ -134,6 +134,14 @@ Vue.prototype.getCookie = function (c_name) {
 }
 router.beforeEach((to, from, next) => {
   let rep =repIndex()
+  
+  
+  console.log(to);
+  console.log(from);
+
+
+
+  
   rep.then((res)=>{
     console.log(to.fullPath==='/login')
     console.log(res)
@@ -142,6 +150,26 @@ router.beforeEach((to, from, next) => {
         next({path: '/index'})
         return
       }
+    }
+    switch(from.path){
+      case '/userModifiesPwd':
+      let isFirstLogin = Vue.prototype.getCookie('isFirstLogin');
+      console.log(isFirstLogin);
+      
+      console.log(99999999);
+      
+      if(isFirstLogin === 'false'){
+        next({path: '/userModifiesPwd'});
+        return Message({
+          showClose: true,
+          message: '首次登陆需要先修改密码！',
+          type: 'error'
+        })
+      }
+      break;
+    }
+    if(from.path === '/userModifiesPwd') {
+     
     }
     if (to.matched.some(m => m.meta.showLogin)) {
       if (res.code === 200 && res.msg === 'ok') {

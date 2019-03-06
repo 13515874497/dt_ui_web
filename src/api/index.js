@@ -8,7 +8,7 @@ const BASE_URL = '/api'
 export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`,'get')
 
 //用户修改密码
-export const register = ({userName,pwd}) => ajax(BASE_URL + `/user/upPwd`, {userName,pwd}, 'POST')
+export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')
 
 // 查询国家
 export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
