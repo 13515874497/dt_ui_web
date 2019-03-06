@@ -1,26 +1,33 @@
 <template>
+  <div class="div-two">
+    <div class="register-box">
+      <div style="width: 390px;margin: 0 auto;">
+        <p class="register_pwd">新密码</p>
+        <el-input
+          class="input register_input"
+          type="pwd"
+          placeholder="请输入密码"
+          v-focus
+          prefix-icon="iconfont icon_dt-suo"
+          v-model="form.pwd"
+        ></el-input>
 
-    <div class="div-two">
-      <div class="register-box" >
-        <div style="width: 390px;margin: 0 auto;">
+        <p class="register_pwd">确认密码</p>
+        <el-input
+          class="input register_input"
+          type="pwd"
+          placeholder="请确认密码"
+          v-focus
+          prefix-icon="iconfont icon_dt-suo"
+          v-model="form.checkPass"
+        ></el-input>
 
-          <p class="register_pwd">新密码</p>
-          <el-input class="input register_input" type="pwd"  placeholder="请输入密码" v-focus
-                    prefix-icon="iconfont icon_dt-suo" v-model="form.pwd">
-          </el-input>
-
-          <p class="register_pwd">确认密码</p>
-            <el-input class="input register_input" type="pwd" placeholder="请确认密码" v-focus
-                    prefix-icon="iconfont icon_dt-suo" v-model="form.checkPass">
-          </el-input>
-
-          <div style="margin-top: 60px">
-            <el-button type="primary" class="loading" @click="register">确定</el-button>
-          </div>
-
+        <div style="margin-top: 60px">
+          <el-button type="primary" class="loading" @click="register">确定</el-button>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -35,7 +42,7 @@ export default {
     };
   },
   methods: {
-   async register() {
+    async register() {
       if (this.form.pwd === "" || this.form.checkPass === "") {
         alert("请输入用户名或密码");
       } else {
@@ -45,14 +52,15 @@ export default {
           userName: this.getCookie("name")
         };
         const res = await register(uInfo);
-        console.log(res)
-        if(res.code === 200){
-        alert('修改密码成功')
-        this.$router.replace('/login')
+        console.log(res);
+        if (res.code === 200) {
+          this.setCookie('isFirstLogin',true);
+          alert("修改密码成功");
+          this.$router.replace("/login");
         }
       }
-    },
     }
+  }
 };
 </script>
 

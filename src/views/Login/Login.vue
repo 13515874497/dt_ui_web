@@ -100,6 +100,7 @@
             const uData = result.data;
             this.setCookie("token", uData.token, 7);
             this.setCookie("name", uData.user.name, 7);
+            this.setCookie('isFirstLogin', uData.user.firstLogin);
             //如果是首次登陆 跳转到修改密码的页面
             if (!uData.user.firstLogin) {
               this.$router.replace("/userModifiesPwd");
