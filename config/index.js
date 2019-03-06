@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': { // 匹配所有以 '/api'开头的请求路径
-        target: 'http://192.168.208.109:9002', // 代理目标的基础路径
+        target: 'http://192.168.208.109:9001', // 代理目标的基础路径
         changeOrigin: true, // 支持跨域
         pathRewrite: {// 重写路径: 去掉路径中开头的'/api'
           '^/api': ''
@@ -19,7 +19,7 @@ module.exports = {
       }
     },
     //192.168.1.191  192.168.208.109 192.168.208.123
-    host: '192.168.208.123', // can be overwritten by process.env.HOST
+    host: '127.0.0.1', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
