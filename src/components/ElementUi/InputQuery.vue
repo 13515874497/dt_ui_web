@@ -140,23 +140,6 @@ export default {
       },
       deep: true
     },
-    // data: {
-    //   handler() {
-    //     let obj = {};
-    //     this.data.forEach(item => {
-    //       obj[item.topType] = item._value ? item._value : "";
-    //       if (item.hasOwnProperty("uAlways")) {
-    //         obj.uAlways = item.uAlways;
-    //       }
-    //       if (item.hasOwnProperty("pwdAlways")) {
-    //         obj.pwdAlways = item.pwdAlways;
-    //       }
-    //     });
-    //     this.$emit("changeQuery", [obj]);
-    //     console.log(obj);
-    //   },
-    //   deep: true
-    // },
     //根据勾选顺序对展示的查询列表进行排序
     selectedIds(val, old) {
       const self = this;
@@ -191,20 +174,6 @@ export default {
       data.currentPage = 1;
       return data;
     }
-    //需要绑定向上回传的数据
-    // data_model() {
-    //   let obj = {};
-    //   this.data.forEach(item => {
-    //     obj[item.topType] = item._value ? item._value : "";
-    //     if (item.hasOwnProperty("uAlways")) {
-    //       obj.uAlways = item.uAlways;
-    //     }
-    //     if (item.hasOwnProperty("pwdAlways")) {
-    //       obj.pwdAlways = item.pwdAlways;
-    //     }
-    //   });
-    //   return obj;
-    // }
   },
   methods: {
     //根据父组件传递的数据生成对应的查询列表数据

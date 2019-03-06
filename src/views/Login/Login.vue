@@ -42,7 +42,7 @@
   import message from "../../utils/Message";
   import login_intercept from "../../utils/login_intercept";
   import loading from "../../utils/loading";
-
+  
   export default {
     data() {
       return {
@@ -101,6 +101,8 @@
             this.setCookie("token", uData.token, 7);
             this.setCookie("name", uData.user.name, 7);
             this.setCookie('isFirstLogin', uData.user.firstLogin);
+            console.log(Vue);
+            
             //如果是首次登陆 跳转到修改密码的页面
             if (!uData.user.firstLogin) {
               this.$router.replace("/userModifiesPwd");

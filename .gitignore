@@ -5,6 +5,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+#避免频繁修改ip
+/src/config/index.js
+
 # Editor directories and files
 .idea
 .vscode
