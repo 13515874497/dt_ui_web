@@ -68,6 +68,9 @@
                 <el-option label="图标一" value="shanghai"></el-option>
                 <el-option label="图标二" value="beijing"></el-option>
               </el-select> -->
+              <el-card shadow="hover">
+               {{data.icon}}
+              </el-card>
             </el-form-item>
             <el-form-item>
               <el-button @click="updateMenu = false">取 消</el-button>
@@ -170,13 +173,7 @@ export default {
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 2, //显示最大的页
-        tableData: [
-          {
-            headName: '2016-05-02',
-            name: '王小虎',
-            address: '上海市普陀区金沙江路 1518 弄'
-          },
-        ] //表单信息
+        tableData: [] //表单信息
 
       },
       // 控制编辑用户对话框显示隐藏
@@ -326,7 +323,7 @@ export default {
       console.log("删除");
     },
     recording() {
-      console.log("删除记录");
+      console.log("引用菜单表头");
     },
     //分页参数传递
     pageData: function(data) {
@@ -344,8 +341,9 @@ export default {
       }
       this.addDialogFormVisible = false  
       this.tableTitle.push({headName:this.menuHead})          
-    }
-  }
+    },
+ 
+   }
 };
 </script>
 
