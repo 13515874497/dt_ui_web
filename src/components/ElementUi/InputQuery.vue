@@ -241,18 +241,15 @@ export default {
     },
     //查询 搜索建议下拉列表
     async getQuerySuggestions(queryString, cb) {
+
+
+      // this.$refs['validateField'].validateField(function(['']){
+
+      // });
       console.log( this.$refs['data_model']);
       console.log(1111);
       
-      this.$refs['data_model'].validate(valid => {
-        console.log(valid);
-        
-        if (valid) {
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
+     
       let query = JSON.parse(JSON.stringify(this._querySuggestionsConfig));
       // let query = { ...this._querySuggestionsConfig };
 
