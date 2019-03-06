@@ -71,6 +71,7 @@
   export default {
     data () {
       var userName = (rule, value, callback) => {
+        console.log(value)
         var reUserName = /^[a-zA-Z][0-9a-zA-Z_]{3,9}$/
         if (!value) {
           return callback(new Error('账号不能为空~'))

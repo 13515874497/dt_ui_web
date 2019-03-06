@@ -84,10 +84,10 @@
         //成功执行后续
         if (userName && pwd) {
           const result = await repLoginUser(users)
-          
+          console.log(result);
           if (result.code === 200) {
-            console.log(result);
-            
+
+
             const uData = result.data
             this.setCookie('token', uData.token, 7)
             this.setCookie('name', uData.user.name, 7)

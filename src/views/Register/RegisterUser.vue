@@ -3,16 +3,16 @@
     <div class="div-two">
       <div class="register-box" >
         <div style="width: 390px;margin: 0 auto;">
-          
-          <p class="register_name">用户名</p>    
+
+          <p class="register_name">用户名</p>
           <el-input  class="register_input" placeholder="请输入账号"
                     prefix-icon="iconfont icon_dt-icon_zhanghao" v-model="form.userName">
           </el-input>
 
-          <p class="register_pwd">新密码</p> 
+          <p class="register_pwd">新密码</p>
           <el-input class="input register_input" type="pwd"  placeholder="请输入密码" v-focus
                     prefix-icon="iconfont icon_dt-suo" v-model="form.pwd">
-          </el-input> 
+          </el-input>
 
           <p class="register_pwd">确认密码</p>
             <el-input class="input register_input" type="pwd" placeholder="请确认密码" v-focus
@@ -20,9 +20,9 @@
           </el-input>
 
           <div style="margin-top: 60px">
-            <el-button type="primary" class="loading" @click="register">确定</el-button>    
+            <el-button type="primary" class="loading" @click="register">确定</el-button>
           </div>
-   
+
         </div>
       </div>
     </div>
@@ -31,14 +31,14 @@
 <script>
 import axios from "axios";
 export default {
-  data() {    
+  data() {
       return {
         form: {
           userName: "",
           pwd: "",
           checkPass: "",
           changePass:""
-        },     
+        },
       };
   },
   methods:{
