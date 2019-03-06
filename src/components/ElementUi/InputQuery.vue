@@ -1,15 +1,14 @@
 <template>
   <div class="check2">
-    <el-form :inline="true" class="demo-form-inline">
-
-      <template v-for="(tableTitle,index) in data">
-
-        <!-- 0: str,  1: int, 2:date 3: status -->
+    <el-form :inline="true"  class="demo-form-inline">
+      <template v-for="(tableTitle,index) in data" :model="data[index]">
+        <!-- 0: str,  1: int, 2:date 3: status 4.deadline-->
         <!-- 带有搜索建议的输入框    字符型-->
         <el-form-item
           :label="tableTitle.headName"
           v-if="tableTitle.inputType === 0"
           v-show="isShow(tableTitle.id)"
+          prop="0"
         >
           <el-autocomplete
             class="inline-input"
@@ -25,6 +24,8 @@
           :label="tableTitle.headName"
           v-if="tableTitle.inputType === 1"
           v-show="isShow(tableTitle.id)"
+          prop="_value"
+          :rules="ruls.number"
         >
           <el-autocomplete
             class="inline-input"
@@ -42,13 +43,13 @@
           v-show="isShow(tableTitle.id)"
         >
           <el-checkbox
-            v-if="tableTitle.topType == 'pEffDate'"
+            v-if="tableTitle.topType == 'pwdValidityPeriod'"
             v-model="data[index]['pwdAlways']"
             @change="isValid($event,data[index])"
           >始终有效</el-checkbox>
 
           <el-checkbox
-            v-if="tableTitle.topType == 'uEffDate'"
+            v-if="tableTitle.topType == 'userExpirationDate'"
             v-model="data[index]['uAlways']"
             @change="isValid($event,data[index])"
           >始终有效</el-checkbox>
@@ -61,7 +62,6 @@
             placeholder="选择日期"
           ></el-date-picker>
         </el-form-item>
-
 
         <!-- 带时间段的日期 -->
         <!-- <div
@@ -79,8 +79,6 @@
             :end-placeholder="tableTitle.headName+' 结束日期'"
           ></el-date-picker>
         </div>-->
-
-
         <!-- 状态选择 -->
         <el-form-item
           :label="tableTitle.headName"
@@ -102,6 +100,7 @@
 </template>
 
 <script>
+import {isNumber} from '../../utils/verify.js';
 import PubSub from "pubsub-js";
 import { unique } from "../../utils/Arrays";
 
@@ -113,9 +112,31 @@ export default {
     querySuggestionsConfig: Object //模糊查询的配置对象
   },
   data() {
+    const isNumber = (rule, value, cb) => {
+  let re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/ 
+  let val = Number(value);
+  
+  if (!re.test(val)) {
+    cb(new Error('请输入数字'));
+  } else {
+    cb();
+  }
+}
     return {
       data: [],
-      curr_query_field: "" //当前查询搜索建议的字段
+      curr_query_field: "", //当前查询搜索建议的字段
+      rules: {
+        0: [
+          { required: true, message: "请输入字符", trigger: "blur" },
+        ],
+        number: [
+           {validator:isNumber, trigger: "blur" },
+        ],
+        name: [
+          { required: true, message: "请输入活动名称", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ]
+      }
     };
   },
   watch: {
@@ -137,7 +158,6 @@ export default {
         });
         this.$emit("changeQuery", [obj]);
         console.log(obj);
-        
       },
       deep: true
     },
@@ -192,11 +212,11 @@ export default {
       if (tableTitle.inputType == 2) {
         switch (tableTitle.topType) {
           //用户有效期
-          case "uEffDate":
+          case "":
             tableTitle.uAlways = false;
             break;
           //密码有效期
-          case "pEffDate":
+          case "":
             tableTitle.pwdAlways = false;
             break;
         }
