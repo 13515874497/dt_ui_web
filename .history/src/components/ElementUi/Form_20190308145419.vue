@@ -7,7 +7,7 @@
         :prop="item.key"
         :rules="item.required? rules._str:rules.str"
       >
-        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder" :disabled="item.disabled"></el-input>
+        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder"></el-input>
       </el-form-item>
 
       <el-form-item
@@ -16,23 +16,7 @@
         :prop="item.key"
         :rules="item.required? rules._number : rules.number"
       >
-        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder" :disabled="item.disabled"></el-input>
-      </el-form-item>
-
-      <el-form-item
-        v-else-if="item.type == 'input-switch-number'"
-        :label="item.label"
-        :prop="item.key"
-        :rules="item.required? rules._number : rules.number"
-      >
-        <el-switch
-          v-model="data_model[item.key]"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          :active-value="item.activeValue"
-          :inactive-value="item.inactiveValue"
-          :disabled="item.disabled"
-        ></el-switch>
+        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder"></el-input>
       </el-form-item>
 
       <el-form-item
@@ -41,7 +25,12 @@
         :prop="item.key"
         :rules="item.required? rules._boolean : rules.boolean"
       >
-        <el-switch v-model="data_model[item.key]" active-color="#13ce66" inactive-color="#ff4949" :disabled="item.disabled"></el-switch>
+        <el-switch
+          v-model="data_model[item.key]"
+          :value="false"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        ></el-switch>
       </el-form-item>
     </template>
   </el-form>
@@ -59,10 +48,7 @@ export default {
     //         key: 'name',//*
     //         type: 'input-str',//*
     //         required: true, //是否必填
-    //         placeholder: '0:String, 1:int, 2:Data, 3,statusOption, 4:timeLine', //占位符
-    //         activeValue: 1,   //仅当type为input-switch-number时生效 且必填
-    //         inactiveValue: 0, //仅当type为input-switch-number时生效 且必填
-    //         disabled: true
+    //         placeholder: '0:String, 1:int, 2:Data, 3,statusOption, 4:timeLine' //占位符
     //     }
     // ],
     formItems: Array,
@@ -77,7 +63,7 @@ export default {
   computed: {
     data() {
       console.log(this.formItems);
-
+      
       return [...this.formItems];
     }
   },
@@ -85,44 +71,30 @@ export default {
     data_model: {
       handler(val) {
         console.log(val);
-        if (this.isVerifyPass()) this.passData();
       },
       deep: true
     }
   },
   methods: {
+    change() {
+      this.$emit("change", [this.data_model]);
+    },
     initData_model() {
       let self = this;
       if (this.formData) {
-        this.data_model = { ...this.formData };
+        this.data_model = {...this.formData};
         return;
       }
       this.data.forEach(item => {
-        switch (item.type) {
-          case "input-switch":
-            self.$set(this.data_model, item.key, false);
-            break;
-            case 'input-switch-number':
-             self.$set(this.data_model, item.key, item.inactiveValue);
-            break;
-          default:
-            self.$set(this.data_model, item.key, "");
-            break;
+        switch(item.type){
+          case 'input-switch':
+          self.$set(this.data_model, item.key, false);
+          break;
         }
+        self.$set(this.data_model, item.key, "");
       });
       console.log(this.data_model);
-    },
-    isVerifyPass() {
-      this.$refs["data_model"].validate(valid => {
-        if (valid) {
-          return true;
-        } else {
-          return false;
-        }
-      });
-    },
-    passData() {
-      this.$emit("passData", [this.data_model]);
+      
     }
   },
   created() {

@@ -7,7 +7,7 @@
         :prop="item.key"
         :rules="item.required? rules._str:rules.str"
       >
-        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder" :disabled="item.disabled"></el-input>
+        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder"></el-input>
       </el-form-item>
 
       <el-form-item
@@ -16,7 +16,7 @@
         :prop="item.key"
         :rules="item.required? rules._number : rules.number"
       >
-        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder" :disabled="item.disabled"></el-input>
+        <el-input v-model="data_model[item.key]" :placeholder="item.placeholder"></el-input>
       </el-form-item>
 
       <el-form-item
@@ -30,8 +30,7 @@
           active-color="#13ce66"
           inactive-color="#ff4949"
           :active-value="item.activeValue"
-          :inactive-value="item.inactiveValue"
-          :disabled="item.disabled"
+          :inactive-value="item.activeValue"
         ></el-switch>
       </el-form-item>
 
@@ -41,8 +40,13 @@
         :prop="item.key"
         :rules="item.required? rules._boolean : rules.boolean"
       >
-        <el-switch v-model="data_model[item.key]" active-color="#13ce66" inactive-color="#ff4949" :disabled="item.disabled"></el-switch>
+        <el-switch
+          v-model="data_model[item.key]"
+          active-color="#13ce66"
+          inactive-color="#ff4949"
+        ></el-switch>
       </el-form-item>
+
     </template>
   </el-form>
 </template>
@@ -102,13 +106,8 @@ export default {
           case "input-switch":
             self.$set(this.data_model, item.key, false);
             break;
-            case 'input-switch-number':
-             self.$set(this.data_model, item.key, item.inactiveValue);
-            break;
-          default:
-            self.$set(this.data_model, item.key, "");
-            break;
         }
+        self.$set(this.data_model, item.key, "");
       });
       console.log(this.data_model);
     },

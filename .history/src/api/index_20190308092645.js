@@ -44,11 +44,6 @@ export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
 export const repUsers = (data) =>
   ajax(BASE_URL + `/user/show`, data, 'POST')
 
-
-
-//字段排序
-export const upHeadSort = ({mId,sort})=> ajax(BASE_URL + '/upHeadSort',{mId,sort},'POST')
-
 //通过menu_id查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 

@@ -158,8 +158,7 @@ import {
   repMenu,
   repHead,
   repGetHeadList,
-  icons,
-  upHeadSort
+  icons
 } from "../../api";
 import message from "../../utils/Message";
 import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
@@ -507,18 +506,15 @@ export default {
       let data = this.menu.tableData.map((item,index)=>{
         return {
           id: item.id,
-          topOrder: item.topOrder,
-          index: index,
-          menuId: item.menuId
+          topOrder: index
         }
       });
       console.log(data);
       
       let ajaxData = {
-        mId: this.data.menuId,
+        menuId: this.data.menuId,
         sort: data
       }
-      upHeadSort(ajaxData);
       console.log(ajaxData);
       
     }

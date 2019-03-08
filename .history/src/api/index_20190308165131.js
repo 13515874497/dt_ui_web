@@ -47,7 +47,7 @@ export const repUsers = (data) =>
 
 
 //字段排序
-export const upHeadSort = ({mId,sort})=> ajax(BASE_URL + '/upHeadSort',{mId,sort},'POST')
+export const upHeadSort = ({menuId,sort})=> ajax(BASE_URL + '/upHeadSort',{menuId,sort},'POST')
 
 //通过menu_id查询table头信息
 export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})

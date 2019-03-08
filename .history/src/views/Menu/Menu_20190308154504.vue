@@ -60,7 +60,7 @@
                 <el-option
                   v-for="item in iconOptions"
                   :key="item.iId"
-                  :label="item.icon"
+                  :label="'<i :class="'+"item.icon"+'''">'</i>"
                   :value="item.iId"
                 >
                   <i :class="item.icon"></i>
@@ -74,23 +74,15 @@
           </el-form>
         </el-tab-pane>
 
-        <el-tab-pane
-          style="min-width:600px"
-          v-if="data.url"
-          label="字段信息"
-          class="field-tree"
-          name="second"
-        >
+        <el-tab-pane style="min-width:600px" v-if="data.url" label="字段信息" name="second">
           <el-row>
             <el-col :span="12">
               <el-tree
                 :data="menu.tableData"
+                show-checkbox
                 node-key="id"
                 default-expand-all
                 :expand-on-click-node="false"
-                draggable
-                :allow-drop="allowDrop"
-                @node-drop="handleDrop"
               >
                 <span class="custom-tree-node" slot-scope="{ node, data }">
                   <span>{{ data.headName }}</span>
@@ -158,8 +150,7 @@ import {
   repMenu,
   repHead,
   repGetHeadList,
-  icons,
-  upHeadSort
+  icons
 } from "../../api";
 import message from "../../utils/Message";
 import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
@@ -489,44 +480,12 @@ export default {
       console.log(data);
       this.data_field = data;
       this.editDialogFormVisible = true;
-    },
-    //拖拽跟踪 防止拖到内部
-    allowDrop(draggingNode, dropNode, type) {
-      if (type == "inner") return false;
-      return true;
-    },
-
-    handleDrop(draggingNode, dropNode, dropType, ev) {
-      console.log(111222);
-      
-      console.log(draggingNode);
-      console.log(dropNode);
-      console.log(dropType);
-      console.log(ev);
-      console.log(this.menu.tableData);
-      let data = this.menu.tableData.map((item,index)=>{
-        return {
-          id: item.id,
-          topOrder: item.topOrder,
-          index: index,
-          menuId: item.menuId
-        }
-      });
-      console.log(data);
-      
-      let ajaxData = {
-        mId: this.data.menuId,
-        sort: data
-      }
-      upHeadSort(ajaxData);
-      console.log(ajaxData);
-      
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 .content {
   width: 300px;
 }
@@ -538,9 +497,6 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
-}
-.field-tree .custom-tree-node {
-  cursor: move;
 }
 </style>
 

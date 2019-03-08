@@ -18,18 +18,13 @@
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label}}</span>
           <span>
-            <el-button v-if="!data.url" type="text" size="mini" @click="() => append(data)">
+            <el-button type="text" size="mini" @click="() => append(data)">
               <i class="el-icon-plus"></i>
             </el-button>
             <el-button type="text" size="mini" @click="() => update(data)">
               <i class="el-icon-edit"></i>
             </el-button>
-            <el-button
-              v-if="!data.childMenus || (data.childMenus && !data.childMenus.length)"
-              type="text"
-              size="mini"
-              @click="() => remove(node, data)"
-            >
+            <el-button type="text" size="mini" @click="() => remove(node, data)">
               <i class="el-icon-delete"></i>
             </el-button>
           </span>
@@ -44,8 +39,8 @@
       </el-dialog>
     </div>
 
-    <!-- 点击编辑按钮打开菜单编辑弹框 -->
-    <el-dialog v-if="data" title="提示" :visible.sync="updateMenu" width="75%" center>
+    <!-- 点击编辑按钮新增菜单编辑弹框 -->
+    <el-dialog  width="75%" center>
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="菜单信息" name="first">
           <el-form ref="form" :model="data" label-width="80px">
@@ -56,9 +51,9 @@
               <el-input v-model="data.url" placeholder="请输入监管方式简称"></el-input>
             </el-form-item>
             <el-form-item label="图标">
-              <el-select placeholder="请选择图标" v-model="data.iId">
+              <el-select placeholder="请选择图标" v-model="value">
                 <el-option
-                  v-for="item in iconOptions"
+                  v-for="item in options"
                   :key="item.iId"
                   :label="item.icon"
                   :value="item.iId"
@@ -74,57 +69,62 @@
           </el-form>
         </el-tab-pane>
 
-        <el-tab-pane
-          style="min-width:600px"
-          v-if="data.url"
-          label="字段信息"
-          class="field-tree"
-          name="second"
-        >
-          <el-row>
-            <el-col :span="12">
-              <el-tree
-                :data="menu.tableData"
-                node-key="id"
-                default-expand-all
-                :expand-on-click-node="false"
-                draggable
-                :allow-drop="allowDrop"
-                @node-drop="handleDrop"
-              >
-                <span class="custom-tree-node" slot-scope="{ node, data }">
-                  <span>{{ data.headName }}</span>
-                  <span>
-                    <el-button type="text" size="mini" @click="() => editField(data)">
-                      <i class="el-icon-edit"></i>
-                    </el-button>
-                    <el-button type="text" size="mini" @click="() => removeField(data)">
-                      <i class="el-icon-delete"></i>
-                    </el-button>
-                  </span>
-                </span>
-              </el-tree>
-            </el-col>
-          </el-row>
-          <AddDelUpBtn :edit="edit" :del="del" :save="save" :recording="recording"/>
+        <el-tab-pane label="字段信息" name="second">
+
+          <!-- <el-tree
+            :data="menuList"
+            show-checkbox
+            node-key="menuId"
+            :default-expand-all="false"
+            :expand-on-click-node="false"
+            :props="defaultProps"
+          >
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span>{{ node.label}}</span>
+              <span>
+                <el-button type="text" size="mini" @click="() => append(data)">
+                  <i class="el-icon-plus"></i>
+                </el-button>
+                <el-button type="text" size="mini" @click="() => update(data)">
+                  <i class="el-icon-edit"></i>
+                </el-button>
+                <el-button type="text" size="mini" @click="() => remove(node, data)">
+                  <i class="el-icon-delete"></i>
+                </el-button>
+              </span>
+            </span>
+          </el-tree> -->
+
           <!-- <Table
             :tableData="menu.tableData"
             :tableTitle="tableTitle"
             v-on:checkboxValue="checkboxValue"
           />-->
-          <!-- 分页
           <div>
             <AddDelUpBtn :edit="edit" :del="del" :save="save" :recording="recording"/>
+            <!--分页-->
             <Pagination :data="menu" v-on:pageData="pageData"/>
-          </div>-->
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
 
-    <!-- 字段列表 =>  修改 -->
+    <!--编辑字段信息 -->
     <el-dialog title="编辑字段" :visible.sync="editDialogFormVisible">
-      <Form :formItems="formItems" :formData="data_field"></Form>
-
+      <el-form :model="editForm" label-width="80px" ref="editUserForm">
+        <el-form-item label="编号" prop="number">
+          <el-input v-model="editForm.number" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="公司名称" prop="name">
+          <el-input v-model="editForm.name" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="公司简称" prop="shorter">
+          <el-input v-model="editForm.shorter" auto-complete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="标示" prop="mark">
+          <el-input v-model="editForm.mark" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="editUserSubmit('editUserForm')">确 定</el-button>
@@ -134,6 +134,7 @@
     <!-- 点击新增菜单 -->
     <el-dialog title="新增菜单表头" :visible.sync="addDialogFormVisible">
       <Form :formItems="formItems"></Form>
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUserSubmit">确 定</el-button>
@@ -153,14 +154,8 @@
 
 <script>
 import storage from "../../utils/storageUtils";
-import {
-  repUpMenuInfo,
-  repMenu,
-  repHead,
-  repGetHeadList,
-  icons,
-  upHeadSort
-} from "../../api";
+import { repUpMenuInfo, repMenu, repHead, repGetHeadList } from "../../api";
+import { icons } from "../../api";
 import message from "../../utils/Message";
 import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
 import AddDelUpBtn from "../../components/ElementUi/AddDelUpBtn"; //增删改组件
@@ -171,10 +166,10 @@ let id = 1000; //假菜单ID
 export default {
   data() {
     return {
-      data: null, //菜单列表选中的数据对象
-      data_field: {}, //字段列表选中的数据对象
+      data: null,
       cols: null,
-      iconOptions: [],
+      options: [],
+      value: "",
       userName: "", //读取缓存名字
       addNewMenu: [], //新添加传递到后台的数组
       menuIds: [],
@@ -247,55 +242,44 @@ export default {
       addDialogFormVisible: false,
       //引入别的菜单表头显示隐藏
       IntroDialogFormVisible: false,
-      //字段表头
+      // 存储编辑的用户信息
+      editForm: {
+        number: "",
+        name: "",
+        shorter: "",
+        mark: ""
+      },
+      //新增菜单表头
       formItems: [
         {
-          label: "name",
+          label: "名称",
           key: "name",
-          type: "input-str",
-          required: false
+          type: "input-str"
         },
         {
-          label: "topType",
+          label: "字段名称",
           key: "topType",
-          type: "input-str",
-          required: true
+          type: "input-str"
         },
-        // {
-        //   label: "menuId",
-        //   key: "menuId",
-        //   type: "input-number",
-        //   required: true,
-        //   disabled: true
-        // },
+        {
+          label: "menuId",
+          key: "menuId",
+          type: "input-number"
+        },
         {
           label: "topOrder",
           key: "topOrder",
-          type: "input-str",
-          required: true
+          type: "input-str"
         },
         {
-          label: "fixed",
+          label: "是否固定",
           key: "fixed",
-          type: "input-switch-number",
-          required: true,
-          activeValue: 1,
-          inactiveValue: 0
+          type: "input-switch"
         },
         {
-          label: "inputType",
+          label: "类型",
           key: "inputType",
-          type: "input-number",
-          required: true,
-          placeholder: "0:String, 1:int, 2:Data, 3,statusOption, 4:timeLine"
-        },
-        {
-          label: "isRef",
-          key: "isRef",
-          type: "input-switch-number",
-          required: true,
-          activeValue: 1,
-          inactiveValue: 0
+          type: "input-number"
         }
       ],
       defaultProps: {
@@ -329,7 +313,7 @@ export default {
     const result = await icons();
     console.log(result);
     if (result.code === 200) {
-      this.iconOptions = result.data;
+      this.options = result.data;
     }
   },
   methods: {
@@ -417,17 +401,20 @@ export default {
       //获得删除的菜单ID
       this.menuIds.push(data.menuId);
     },
-    //菜单列表 => 编辑 => 字段信息
+    //点击编辑 => 字段信息
     async update(data) {
       this.data = data;
+
       console.log(data);
       let menuId = data.menuId;
       let res = await repHead(menuId);
       if (res.code == 200) {
         this.menu.tableData = res.data;
       }
+      console.log(111);
+
       console.log(res);
-      this.activeName = "first";
+
       this.updateMenu = true;
     },
 
@@ -482,51 +469,12 @@ export default {
       }
       this.addDialogFormVisible = false;
       this.tableTitle.push({ headName: this.menuHead });
-    },
-    //编辑字段
-    editField(data) {
-      console.log("编辑字段");
-      console.log(data);
-      this.data_field = data;
-      this.editDialogFormVisible = true;
-    },
-    //拖拽跟踪 防止拖到内部
-    allowDrop(draggingNode, dropNode, type) {
-      if (type == "inner") return false;
-      return true;
-    },
-
-    handleDrop(draggingNode, dropNode, dropType, ev) {
-      console.log(111222);
-      
-      console.log(draggingNode);
-      console.log(dropNode);
-      console.log(dropType);
-      console.log(ev);
-      console.log(this.menu.tableData);
-      let data = this.menu.tableData.map((item,index)=>{
-        return {
-          id: item.id,
-          topOrder: item.topOrder,
-          index: index,
-          menuId: item.menuId
-        }
-      });
-      console.log(data);
-      
-      let ajaxData = {
-        mId: this.data.menuId,
-        sort: data
-      }
-      upHeadSort(ajaxData);
-      console.log(ajaxData);
-      
     }
   }
 };
 </script>
 
-<style lang="scss">
+<style>
 .content {
   width: 300px;
 }
@@ -538,9 +486,6 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
-}
-.field-tree .custom-tree-node {
-  cursor: move;
 }
 </style>
 

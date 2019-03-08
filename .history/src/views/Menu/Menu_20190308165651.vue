@@ -508,14 +508,13 @@ export default {
         return {
           id: item.id,
           topOrder: item.topOrder,
-          index: index,
-          menuId: item.menuId
+          index: index
         }
       });
       console.log(data);
       
       let ajaxData = {
-        mId: this.data.menuId,
+        menuId: this.data.menuId,
         sort: data
       }
       upHeadSort(ajaxData);

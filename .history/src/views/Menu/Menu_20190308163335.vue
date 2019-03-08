@@ -158,8 +158,7 @@ import {
   repMenu,
   repHead,
   repGetHeadList,
-  icons,
-  upHeadSort
+  icons
 } from "../../api";
 import message from "../../utils/Message";
 import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
@@ -493,9 +492,11 @@ export default {
     //拖拽跟踪 防止拖到内部
     allowDrop(draggingNode, dropNode, type) {
       if (type == "inner") return false;
+      console.log(draggingNode);
+      console.log(dropNode);
+      console.log(type);
       return true;
     },
-
     handleDrop(draggingNode, dropNode, dropType, ev) {
       console.log(111222);
       
@@ -504,22 +505,7 @@ export default {
       console.log(dropType);
       console.log(ev);
       console.log(this.menu.tableData);
-      let data = this.menu.tableData.map((item,index)=>{
-        return {
-          id: item.id,
-          topOrder: item.topOrder,
-          index: index,
-          menuId: item.menuId
-        }
-      });
-      console.log(data);
       
-      let ajaxData = {
-        mId: this.data.menuId,
-        sort: data
-      }
-      upHeadSort(ajaxData);
-      console.log(ajaxData);
       
     }
   }
