@@ -89,7 +89,7 @@
                 ></el-date-picker>
                 <el-checkbox
                   @change="checkedAlways"
-                  v-model="userForm.checkedPwdAlways"
+                  v-model="userForm.pwdAlways"
                   :disabled="isCheFlgAlways"
                 >密码始终有效</el-checkbox>
               </div>
@@ -201,7 +201,7 @@ export default {
       }
     };
     var pwdValidityPeriod = (rule, value, callback) => {
-      if (this.userForm.checkedPwdAlways !== true) {
+      if (this.userForm.pwdAlways !== true) {
         if (value === "" || value === null) {
           callback(new Error("必须选择一个时间~"));
         } else {
@@ -250,7 +250,7 @@ export default {
         checkedPwd: false, //密码满足复杂度要求  checked
         checkedUpPwd: false, //首次登陆修改密码修改  checked
         uAlways: false, //用户始终有效  checked
-        checkedPwdAlways: false, //密码始终有效 checked
+        pwdAlways: false, //密码始终有效 checked
         pwdValidityPeriod: "", //密码有效期
         userExpirationDate: "", //用户有效期,
         version: 0
@@ -334,8 +334,9 @@ export default {
       this.isAlwaysFlg = false; //密码有效期 判断标识
       this.isUserFlg = false; //用户有效期 判断标识
       this.userForm.uAlways = false; //用户始终有效  checked
-      this.userForm.checkedPwdAlways = false; //密码始终有效 checked
-
+      this.userForm.pwdAlways = false; //密码始终有效 checked
+      console.log(upSelection);
+      
       const userSaveSelection = upSelection;
       if (userSaveSelection.length <= 0) {
         message.errorMessage("必须选中一条修改");
@@ -348,6 +349,8 @@ export default {
       //将数组转换成对象
       userSaveSelection.forEach(item => {
         //获得老的userFrom对象 到时候比较监听的时候用
+        console.log(item);
+        
         this.oldUserForm = item;
         this.userForm["userName"] = item.userName;
         this.userForm["name"] = item.name;
@@ -356,17 +359,17 @@ export default {
         this.userForm["mobilePhone"] = item.mobilePhone;
         this.userForm["uid"] = item.uid;
         this.userForm["rid"] = item.rId;
-        this.userForm["pwdValidityPeriod"] = item.pwdStatus;
+        this.userForm["pwdValidityPeriod"] = item.pwdValidityPeriod;
         this.userForm["userExpirationDate"] = item.userExpirationDate;
         this.userForm["version"] = item.version;
       });
       //密码有效期
       if (this.userForm.pwdValidityPeriod === 0) {
-        this.userForm.checkedPwdAlways = true;
+        this.userForm.pwdAlways = true;
         this.isAlwaysFlg = true;
         this.userForm.pwdValidityPeriod = "";
       } else {
-        this.userForm.checkedPwdAlways = false;
+        this.userForm.pwdAlways = false;
         this.isCheFlgAlways = true;
       }
       //用户有效期

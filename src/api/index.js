@@ -39,7 +39,7 @@ export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
 // {
 //   currentPage, pageSize, userName, name,
 //   createDate, pwdStatus, landingTime,
-//   effectiveDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
+//   userExpirationDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
 // }
 export const repUsers = (data) =>
   ajax(BASE_URL + `/user/show`, data, 'POST')
@@ -76,19 +76,19 @@ export const repCheckMenuToken = () => ajax(BASE_URL + `/menu/token/menu`)
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
 
 //更新用户信息
-export const repUpUserInfo = ({pwd, accountStatus, uid, pwdAlwaysInput, effectiveDate, uName, checkedUpPwd, checkedPwdAlways, checkedUserAlways, name, uMobilePhone,version}) => ajax(BASE_URL + `/user/upUserInfo`,
+export const repUpUserInfo = ({pwd, accountStatus, uid, pwdValidityPeriod, userExpirationDate, userName, checkedUpPwd, pwdAlways, uAlways, name, mobilePhone,version}) => ajax(BASE_URL + `/user/upUserInfo`,
   {
     pwd,
     accountStatus,
     uid,
-    pwdAlwaysInput,
-    effectiveDate,
-    uName,
+    pwdValidityPeriod,
+    userExpirationDate,
+    userName,
     checkedUpPwd,
-    checkedPwdAlways,
-    checkedUserAlways,
+    pwdAlways,
+    uAlways,
     name,
-    uMobilePhone,
+    mobilePhone,
     version
   }, 'POST')
 
@@ -160,10 +160,10 @@ export const repGetUserName = (userName) => ajax(BASE_URL + `/user/getUserName`,
 //新增用户信息
 export const repSaveUserInfo = ({
                                   userName, pwd, confirmPwd, checkedPwd, checkedUpPwd,
-                                  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, effectiveDate
+                                  uAlways, pwdAlways, rolesId, staffValue, pwdValidityPeriod, userExpirationDate
                                 }) => ajax(BASE_URL + '/user/saveUserInfo', {
   userName, pwd, confirmPwd, checkedPwd, checkedUpPwd,
-  checkedUserAlways, checkedPwdAlways, rolesId, staffValue, pwdAlwaysInput, effectiveDate
+  uAlways, pwdAlways, rolesId, staffValue, pwdValidityPeriod, userExpirationDate
 }, 'POST')
 
 //新增角色

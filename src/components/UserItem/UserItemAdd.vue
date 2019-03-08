@@ -19,24 +19,24 @@
                      :value="item.sId"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="用户有效期:" prop="effectiveDate" class="date1">
+      <el-form-item label="用户有效期:" prop="userExpirationDate" class="date1">
         <div class="block">
           <el-date-picker
             style="width: 250px"
             type="datetime"
             :disabled="isUserFlg"
             value-format="timestamp"
-            @change="changeSearchForEffectiveDate" v-model="addForm.effectiveDate">
+            @change="changeSearchForuserExpirationDate" v-model="addForm.userExpirationDate">
           </el-date-picker>
-          <el-checkbox @change="checkedUser" v-model="addForm.checkedUserAlways" :disabled="isCheFlgUser">用户始终有效
+          <el-checkbox @change="checkedUser" v-model="addForm.uAlways" :disabled="isCheFlgUser">用户始终有效
           </el-checkbox>
         </div>
       </el-form-item>
-      <el-form-item label="密码有效期:" prop="pwdAlwaysInput" class="date2">
+      <el-form-item label="密码有效期:" prop="pwdValidityPeriod" class="date2">
         <el-input clearable @blur="blurSearchForAlways" style="width: 250px" :disabled="isAlwaysFlg"
-                  v-model.number="addForm.pwdAlwaysInput" maxlength="4"></el-input>
+                  v-model.number="addForm.pwdValidityPeriod" maxlength="4"></el-input>
         <span>天</span>
-        <el-checkbox @change="checkedAlways" v-model="addForm.checkedPwdAlways" :disabled="isCheFlgAlways">密码始终有效
+        <el-checkbox @change="checkedAlways" v-model="addForm.pwdAlways" :disabled="isCheFlgAlways">密码始终有效
         </el-checkbox>
       </el-form-item>
       <el-form-item prop="rolesId" class="transfers">
@@ -114,8 +114,8 @@
           callback()
         }
       }
-      var pwdAlwaysInput = (rule, value, callback) => {
-        if (this.addForm.checkedPwdAlways !== true) {
+      var pwdValidityPeriod = (rule, value, callback) => {
+        if (this.addForm.pwdAlways !== true) {
           if (!value) {
             return callback(new Error('天数不能为空'))
           }
@@ -137,8 +137,8 @@
           callback()
         }
       }
-      var effectiveDate = (rule, value, callback) => {
-        if (this.addForm.checkedUserAlways !== true) {
+      var userExpirationDate = (rule, value, callback) => {
+        if (this.addForm.uAlways !== true) {
           if (value === '' || value === null) {
             callback(new Error('必须选择一个时间~'))
           } else {
@@ -169,12 +169,12 @@
           confirmPwd: '',//确认密码
           checkedPwd: false, //密码满足复杂度要求  checked
           checkedUpPwd: false, //首次登陆修改密码 修改  checked
-          checkedUserAlways: false, //用户始终有效  checked
-          checkedPwdAlways: false, //密码始终有效 checked
+          uAlways: false, //用户始终有效  checked
+          pwdAlways: false, //密码始终有效 checked
           rolesId: [], //角色 ids
           staffValue: '', //员工对象
-          pwdAlwaysInput: '', //密码有效期
-          effectiveDate: '' //用户有效期
+          pwdValidityPeriod: '', //密码有效期
+          userExpirationDate: '' //用户有效期
         },
         rules: {
           userName: [
@@ -186,14 +186,14 @@
           confirmPwd: [
             {validator: confirmPwd, trigger: 'blur'}
           ],
-          pwdAlwaysInput: [
-            {validator: pwdAlwaysInput, trigger: 'blur'}
+          pwdValidityPeriod: [
+            {validator: pwdValidityPeriod, trigger: 'blur'}
           ],
           staffValue: [
             {validator: staffValue, trigger: 'blur'}
           ],
-          effectiveDate: [
-            {validator: effectiveDate, trigger: 'blur'}
+          userExpirationDate: [
+            {validator: userExpirationDate, trigger: 'blur'}
           ],
           rolesId: [
             {validator: rolesId, trigger: 'blur'}
@@ -249,11 +249,11 @@
       },
       //blurSearchForAlways 失去焦点时 判断值是否为空 如果不为空 锁定按钮
       blurSearchForAlways () {
-        this.isCheFlgAlways = !!this.addForm.pwdAlwaysInput
+        this.isCheFlgAlways = !!this.addForm.pwdValidityPeriod
       },
       //用户有效期 失去焦点时 判断值是否为空 如果不为空 锁定按钮
-      changeSearchForEffectiveDate () {
-        this.isCheFlgUser = !!this.addForm.effectiveDate
+      changeSearchForuserExpirationDate () {
+        this.isCheFlgUser = !!this.addForm.userExpirationDate
       },
       //点击确定
       determine (formName) {
