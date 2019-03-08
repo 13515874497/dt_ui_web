@@ -23,7 +23,7 @@
         <!-- 带有搜索建议的输入框    数值型-->
         <el-form-item
           :label="tableTitle.headName"
-          v-if="tableTitle.inputType === 1"
+          v-else-if="tableTitle.inputType === 1"
           v-show="isShow(tableTitle.id)"
           :prop="tableTitle.topType"
           :rules="rules.number"
@@ -40,10 +40,26 @@
         <!-- 日期 -->
         <el-form-item
           :label="tableTitle.headName"
-          v-if="tableTitle.inputType === 2"
+          v-else-if="tableTitle.inputType === 2"
           v-show="isShow(tableTitle.id)"
           :prop="tableTitle.topType"
           :rules="rules.date"
+        >
+          <el-date-picker
+            v-show="tableTitle._isShow"
+            value-format="timestamp"
+            v-model="data_model[tableTitle.topType]"
+            type="datetime"
+            placeholder="选择日期"
+          ></el-date-picker>
+        </el-form-item>
+
+        <!-- 带时间段的日期 -->
+        <el-form-item
+          :label="tableTitle.headName"
+          v-else-if="tableTitle.inputType === 4"
+          v-show="isShow(tableTitle.id)"
+          :prop="tableTitle.topType"
         >
           <el-checkbox
             v-if="tableTitle.topType == 'pwdValidityPeriod'"
@@ -56,36 +72,20 @@
             v-model="data_model['uAlways']"
             @change="isValid($event,data[index])"
           >始终有效</el-checkbox>
-
           <el-date-picker
             v-show="tableTitle._isShow"
+            v-model="data_model[tableTitle.topType+'s']"
+            type="datetimerange"
             value-format="timestamp"
-            v-model="data_model[tableTitle.topType]"
-            type="date"
-            placeholder="选择日期"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期"
           ></el-date-picker>
         </el-form-item>
-
-        <!-- 带时间段的日期 -->
-        <!-- <div
-          class="wrap deadline"
-          v-else-if="tableTitle.inputType == 'deadline'"
-          v-show="isShow(tableTitle.id)"
-        >
-          <el-checkbox @change="isValid($event,data[index])">始终有效</el-checkbox>
-          <el-date-picker
-            v-show="tableTitle._value !== ''"
-            v-model="data[index]['_value']"
-            type="daterange"
-            range-separator="至"
-            :start-placeholder="tableTitle.headName+' 开始日期'"
-            :end-placeholder="tableTitle.headName+' 结束日期'"
-          ></el-date-picker>
-        </div>-->
         <!-- 状态选择 -->
         <el-form-item
           :label="tableTitle.headName"
-          v-if="tableTitle.inputType === 3"
+          v-else-if="tableTitle.inputType === 3"
           v-show="isShow(tableTitle.id)"
           :prop="tableTitle.topType"
           :rules="rules.status"
@@ -193,7 +193,7 @@ export default {
         // this.data_model[key] = '';
         // tableTitle._value = "";
         this.$set(this.data_model, key, "");
-        if (tableTitle.inputType == 2) {
+        if (tableTitle.inputType == 4) {
           switch (tableTitle.topType) {
             //用户有效期
             case "userExpirationDate":
@@ -210,22 +210,18 @@ export default {
     },
     //查询 搜索建议下拉列表
     async getQuerySuggestions(queryString, cb) {
-
-
       // this.$refs['validateField'].validateField(function(['']){
 
       // });
-      console.log( this.$refs['data_model']);
+      console.log(this.$refs["data_model"]);
       console.log(1111);
-      
-     
+
       let query = JSON.parse(JSON.stringify(this._querySuggestionsConfig));
       // let query = { ...this._querySuggestionsConfig };
 
-      
       let field = this.curr_query_field;
       query[field] = queryString;
-      
+
       let res = await this.querySuggestionsMethod(query);
 
       let data = res.data.dataList.map(item => {
@@ -262,22 +258,7 @@ export default {
 </script>
 
 <style lang="scss" >
-.check2 > .wrap {
-  display: inline-block;
-  vertical-align: top;
-  width: 200px;
-}
-.check2 > .wrap ~ .wrap {
-  margin-left: 10px;
-  vertical-align: top;
-}
-.check2 > .wrap .el-date-editor .el-range-separator {
+.check2 .el-date-editor .el-range-separator {
   min-width: 32px;
-}
-.check2 > .wrap.date {
-  width: 220px;
-}
-.check2 > .wrap.deadline {
-  width: 350px;
 }
 </style>

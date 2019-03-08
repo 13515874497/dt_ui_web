@@ -61,6 +61,10 @@ import {
 } from 'element-ui'
 import {repIndex} from './api'
 import moment from 'moment'
+import form from './components/ElementUi/Form.vue'
+
+
+
 Vue.component(Badge.name,Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
@@ -110,8 +114,14 @@ Vue.component(Autocomplete.name, Autocomplete)
 Vue.component(Tabs.name, Tabs)
 Vue.component(TabPane.name, TabPane)
 Vue.component(Tooltip.name, Tooltip)
+Vue.component('Form',form);
 Vue.use(focus)
 Vue.use(VueResource)
+
+
+
+
+
 // 设置Cookie
 Vue.prototype.setCookie = function (c_name, value, expiredays) {
   var exdate = new Date()
@@ -213,6 +223,9 @@ new Vue({
   loading,
   render: h => h(App),
   template: '<App/>',
-  router
+  router,
+  components: {
+    Form: form
+  }
 })
 

@@ -9,15 +9,8 @@
     border
     @header-dragend="handleHeaderDragend"
   >
-
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column
-      :aa = 
-      v-if="isHideNumber"
-      type="index"
-      width="50"
-      fixed>
-    </el-table-column>
+    <el-table-column v-if="isHideNumber" type="index" width="50" fixed></el-table-column>
     <template v-for="title  in tableTitle">
       <!--特殊字段 -->
       <el-table-column v-if="title.topType==='createDate'" :label="title.headName" width="180">
@@ -34,7 +27,9 @@
         :label="title.headName"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.userExpirationDate!==0">{{ scope.row.userExpirationDate | date-format}}</span>
+          <span
+            v-if="scope.row.userExpirationDate!==0"
+          >{{ scope.row.userExpirationDate | date-format}}</span>
           <span v-if="scope.row.userExpirationDate===0">始终有效</span>
         </template>
       </el-table-column>
@@ -45,7 +40,9 @@
         :label="title.headName"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.pwdValidityPeriod!==0">{{ scope.row.pwdValidityPeriod | date-format}}</span>
+          <span
+            v-if="scope.row.pwdValidityPeriod!==0"
+          >{{ scope.row.pwdValidityPeriod | date-format}}</span>
           <span v-if="scope.row.pwdValidityPeriod===0">始终有效</span>
         </template>
       </el-table-column>
@@ -68,22 +65,14 @@
         </template>
       </el-table-column>
 
-      <el-table-column
-        v-else-if="title.topType==='modifyDate'"
-        :label="title.headName"
-        width="180"
-      >
+      <el-table-column v-else-if="title.topType==='modifyDate'" :label="title.headName" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.modifyDate | date-format}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column
-        v-else-if="title.topType==='createDate'"
-        :label="title.headName"
-        width="180"
-      >
+      <el-table-column v-else-if="title.topType==='createDate'" :label="title.headName" width="180">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
@@ -103,6 +92,14 @@
         width="180"
         :formatter="account"
       ></el-table-column>
+
+      <el-table-column
+        v-else-if="title.topType==='statusOptions'"
+        :label="title.headName"
+        width="180"
+        :formatter="statusOptions"
+      ></el-table-column>
+
       <el-table-column
         v-else
         sortable
@@ -125,14 +122,14 @@ export default {
   },
   methods: {
     //是否隐藏编号
-    isHideNumber(){
+    isHideNumber() {
       let flag = false;
-      this.tableTitle.forEach((item) => {
-        if(item.headName == "编号"){
+      this.tableTitle.forEach(item => {
+        if (item.headName == "编号") {
           flag = true;
         }
       });
-      return flag ;
+      return flag;
     },
     //tabale表头上下箭头 排序
     arraySpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -168,6 +165,18 @@ export default {
         : row.accountStatus === 2
         ? "禁用"
         : "";
+    },
+    statusOptions: function(row) {
+      if (row.statusOptions.length) {
+        console.log(row);
+        return row.statusOptions
+          .map(item => {
+            return item.name;
+          })
+          .join(",");
+      } else {
+        return "";
+      }
     }
   }
 };

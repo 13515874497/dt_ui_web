@@ -4,8 +4,7 @@
 import ajax from './ajax'
 
 const BASE_URL = '/api'
-//获取图标icon/getIconInfo 
-export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`,'get')
+
 
 //用户修改密码
 export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')
@@ -14,6 +13,11 @@ export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')
 export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
 
 
+
+//获取图标icon/getIconInfo 
+export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`,'get')
+//获取在线人数
+export const getOnlineNumber = () => ajax(BASE_URL + '/uCount')
 // 获取用户登陆信息
 export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/ajaxLogin`, {
   userName,
@@ -46,6 +50,8 @@ export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 //通过menuIds查询table头List集合
 export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}, 'POST')
 
+//查询所有表头信息
+export const repGetHeadList = () => ajax(BASE_URL + '/getHeadsList');
 //查询所有表头信息 然后service 层通过mid来区别对应的表头信息
 export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {mId})
 
