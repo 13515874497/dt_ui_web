@@ -107,6 +107,8 @@ import SKU from '../views/Storage/SKU'//SUK信息表
 import Star_level from '../views/Storage/Star_level'//星级
 
 import UserModifiesPwd from '../views/ModifiesPassword/UserModifiesPwd.vue'  //修改密码
+
+import exportDeclaration from '../views/Template/exportDeclaration.vue'  //修改密码
 Vue.use(Router)
 
 
@@ -545,6 +547,10 @@ export default new Router({
     {
       path: '/userModifiesPwd',
       component: UserModifiesPwd //用户修改密码
+    },
+    {
+      path: '/exportDeclaration',
+      component: exportDeclaration //用户修改密码
     }
   ],
 
