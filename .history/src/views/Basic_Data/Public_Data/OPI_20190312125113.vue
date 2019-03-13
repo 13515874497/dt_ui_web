@@ -50,6 +50,10 @@
       }
     },
     mounted(){
+      setInterval(()=>{
+        console.log(this.data_tree[0].productsName);
+        
+      },1000)
     }
   }
 </script>

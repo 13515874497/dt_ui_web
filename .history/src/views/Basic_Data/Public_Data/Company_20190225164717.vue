@@ -24,7 +24,7 @@
   import requestAjax from '../../../api/requestAjax'
   import Pagination from '../../../components/ElementUi/Pagination'
   import PubSub_com from 'pubsub-js'
-  import Query2 from '../../../components/ElementUi/Query2'
+  import Query from '../../../components/ElementUi/Query'
 //公司
   export default {
     data () {
@@ -48,7 +48,7 @@
       Table,
       Pagination,
       AddDelUpButton,
-      Query2
+      Query
     },
     async mounted () {
       this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id)

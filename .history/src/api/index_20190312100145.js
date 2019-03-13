@@ -10,7 +10,8 @@ const BASE_URL = '/api'
 //用户修改密码
 export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')
 
-
+// 查询国家
+export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
 
 
 
@@ -26,9 +27,21 @@ export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/a
 }, 'POST')
 //获得所有用户信息
 export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
-
-
-//用户信息列表分页查询
+//获取用户管理信息
+// userName
+// mobilePhone
+// rName
+// createDate
+// accountStatus
+// landingTime
+// pc
+// uEffDate
+// pEffDate
+// {
+//   currentPage, pageSize, userName, name,
+//   createDate, pwdStatus, landingTime,
+//   userExpirationDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
+// }
 export const repUsers = (data) =>
   ajax(BASE_URL + `/user/show`, data, 'POST')
 
@@ -124,16 +137,13 @@ export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL 
  * 
  * 基础资料 => 公共资料
  */
-//获取产品类目
-export const findByListProducts = () => ajax(BASE_URL + '/pro/findByListProducts')
+//获取产品信息表头
+export const findByListProducts = () => ajax(BASE_URL + 'findByListProducts')
 
-//查询产品信息分页 /product/findByListProduct
-export const  findByListProduct = (data) => ajax(BASE_URL + '/product/findByListProduct',data,'POST');
 
-// 查询国家分页
-export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
 
-// 查询公司分页
+//获取公司的所有信息
+// export const repGetCompanyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/company/findByListCompany',{currentPage, pageSize},'POST')
 export const repGetCompanyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/company/findByListCompany', {
   currentPage,
   pageSize

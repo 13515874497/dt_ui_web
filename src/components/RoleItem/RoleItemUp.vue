@@ -183,7 +183,11 @@
             const resultMenuList = repMenu()
             resultMenuList.then((result) => {
               if (result.code === 200) {
+                console.log(999999);
+                console.log(result);
+                
                 this.menuDateList = result.data
+                this.getMenuId(result.data,[])
               }
             })
           }

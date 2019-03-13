@@ -16,7 +16,7 @@
           ></inputQuery>
         </el-col>
         <el-col :span="4">
-          <SearchReset @search="searchUser" @reset="reset"></SearchReset>
+          <SearchReset @search="searchUser"></SearchReset>
         </el-col>
       </el-row>
     </div>
@@ -34,6 +34,7 @@
         <Pagination :data="user" v-on:pageData="pageData"/>
       </div>
     </div>
+    <el-input v-model="user.userName" placeholder="请输入内容" @change="getData"></el-input>
     <!--隐藏新增用户记录from表单-->
     <UserItemAdd/>
     <!--隐藏修改from表单-->
@@ -130,7 +131,6 @@ export default {
     this.isTableTitle = true;
     this.pagination(this.user);
   },
-
   methods: {
     setQuery($event) {
       let user = $event[0];
@@ -220,10 +220,56 @@ export default {
     },
     //重置
     reset() {
-      this.tableTitle = [...this.tableTitle]
-      this.msgInput_list = [];
+      this.user.userName = "";
+      this.user.name = "";
+      this.user.rName = "";
+      this.user.mobilePhone = "";
+      this.user.computerName = ""; //计算机名
+      this.user.landingTime = ""; //登陆时间
+      this.user.createDate = ""; //创建时间
+      this.user.pwdValidityPeriod = ""; //密码有效期
+      this.user.userExpirationDate = ""; //用户有效期
+      this.user.accountStatus = ""; //用户状态
+      this.user.pwdAlways = false; //是否勾选始终密码始终有效
+      this.user.uAlways = false; //是否勾选密码始终有效
     },
-
+    //关闭 某属性
+    cUserName() {
+      this.user.userName = "";
+    },
+    cName() {
+      this.user.name = "";
+    },
+    cRole() {
+      this.user.rName = "";
+    },
+    cCreate() {
+      this.user.createDate = "";
+    },
+    cPwdDate() {
+      this.user.pwdValidityPeriod = "";
+    },
+    cPwdAlways() {
+      this.user.pwdAlways = false;
+    },
+    cUAlways() {
+      this.user.uAlways = false;
+    },
+    cUDate() {
+      this.user.userExpirationDate = "";
+    },
+    cLanding() {
+      this.user.landingTime = "";
+    },
+    cUStatus() {
+      this.user.accountStatus = "";
+    },
+    cPhone() {
+      this.user.mobilePhone = "";
+    },
+    cComputer() {
+      this.user.computerName = "";
+    }
   }
 };
 </script>

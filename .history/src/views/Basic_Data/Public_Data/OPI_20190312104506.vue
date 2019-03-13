@@ -46,10 +46,11 @@
       let res = await findByListProducts();
       console.log(res);
       if(res.code == 200){
-        this.data_tree = res.data;
+        this.data_tree = res;
       }
     },
     mounted(){
+      
     }
   }
 </script>

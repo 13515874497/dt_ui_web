@@ -1,5 +1,5 @@
 <template>
-  <Tree :data="data_tree" :props="defaultProps" :nodeKey="'productsId'"></Tree>
+  <!-- <Tree :data="data_tree" :props="defaultProps" :node-key="productsId"></Tree> -->
 </template>
 
 
@@ -28,8 +28,8 @@
       return {
         data_tree:[],
         defaultProps: {
-          children: 'childPros',
-          label: 'productsName'
+          children: childPros,
+          label: productsName
         }
       }
     },
@@ -46,10 +46,8 @@
       let res = await findByListProducts();
       console.log(res);
       if(res.code == 200){
-        this.data_tree = res.data;
+        this.data_tree = res;
       }
-    },
-    mounted(){
     }
   }
 </script>
