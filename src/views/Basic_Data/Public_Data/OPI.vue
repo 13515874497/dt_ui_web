@@ -1,88 +1,141 @@
 <template>
-
-  <div id="Opi">
-    <div id="printCheck" v-if="isTableTitle">
-      <Query :tableTitle="tableTitle" v-on:getValue="getValue"/>
+  <div id="data">
+    <!--多选输入框选择输入-->
+    <div id="printCheck" class="clearfix" v-if="tableTitle.length">
+      <el-row :gutter="20">
+        <el-col :span="4">
+          <Query2 :tableTitle="tableTitle" @getValue="getValue" ></Query2>
+        </el-col>
+        <el-col :span="16">
+          <inputQuery
+            @changeQuery="setQuery"
+            :tableTitle="tableTitle"
+            :selectedIds="msgInput_list"
+            :querySuggestionsConfig="data"
+            :querySuggestionsMethod="findByListProduct"
+          ></inputQuery>
+        </el-col>
+        <el-col :span="4">
+          <SearchReset @search="search" @reset="reset"></SearchReset>
+        </el-col>
+      </el-row>
+      
     </div>
     <!--table表格显示-->
-    <div id="roleTable">
-      <Table :tableData="region.tableData" :tableTitle="tableTitle" v-on:checkboxValue="checkboxValue"  v-if="isTableTitle"/>
-      <div class="block" style="display: inline-block" v-if="isTableTitle">
+    <div id="dataTable">
+      <Table
+        :tableData="data.tableData"
+        :tableTitle="tableTitle"
+        v-on:checkboxValue="checkboxValue"
+        v-if="tableTitle.length"
+      />
+      <div v-if="tableTitle.length">
         <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
         <!--分页-->
-        <Pagination :data="region" v-on:pageData="pageData"/>
+        <Pagination :data="data" v-on:pageData="pagination"/>
       </div>
     </div>
-    <OPI_Add></OPI_Add>
+    <!--隐藏新增用户记录from表单-->
   </div>
 </template>
 <script>
-  import {} from '../../../api/index'
-  import OPI_Add from '../../../components/Basic_Data_modify/OpiItem/OPI_Add'
-  import PubSub_OPI from 'pubsub-js'
-  import Table from '../../../components/ElementUi/Table'
-  import requestAjax from '../../../api/requestAjax'
-  import Pagination from '../../../components/ElementUi/Pagination'
-  import pUtils from '../../../utils/PageUtils'
-  import AddDelUpButton from '../../../components/ElementUi/AddDelUpButton'
-  import Query from '../../../components/ElementUi/Query'
-  //公司
-  export default {
-    data () {
-      return {
-        isTableTitle: false, //如果table表头的长度是 0
-        msgInput: '',//当选择后获得第一个下拉框的id
-        inputValue: '',//序号
-        tableTitle: [],//表头信息
-        multipleSelection: [],//更新按钮数组收集
-        FormValue_OPI: false,//新增隐藏form
-        opi: {
-          tableData: [],//表信息
-          currentPage: 1,//当前页
-          total_size: 0,//总的页
-          pageSize: 2,//显示最大的页
-          page_sizes: [2, 10, 15, 20, 25]
-        }
+import Query2 from "../../../components/ElementUi/Query2";
+import InputQuery from "../../../components/ElementUi/InputQuery";
+import SearchReset from "../../../components/ElementUi/SearchReset";
+
+import { findByListProduct } from "../../../api";
+
+import Message from "../../../utils/Message";
+import pUtils from "../../../utils/PageUtils";
+import Pagination from "../../../components/ElementUi/Pagination";
+import Table from "../../../components/ElementUi/Table";
+import AddDelUpButton from "../../../components/ElementUi/AddDelUpButton";
+import requestAjax from "../../../api/requestAjax";
+
+export default {
+  data() {
+    return {
+      msgInput_list: [],
+
+      tableTitle: [], //表头信息
+
+      multipleSelection: [], //更新按钮数组收集
+
+      data: {
+        tableData: [], //表信息
+        currentPage: 1, //当前页
+        total_size: 0, //总的页
+        pageSize: 10, //显示最大的页
+        page_sizes: [5, 10, 15, 20, 25]
+      }
+    };
+  },
+  components: {
+    Pagination,
+    Table,
+    AddDelUpButton,
+    Query2,
+    InputQuery,
+    SearchReset
+  },
+  async mounted() {
+    console.log(this.$route.params.id);
+
+    this.tableTitle =
+      (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+    console.log(this.tableTitle);
+
+     this.pagination(this.data);
+  },
+  methods: {
+    setQuery($event) {
+      let query = $event[0];
+      for (let key in query) {
+        let value = query[key];
+        this.data[key] = value;
       }
     },
-    components:{
-      OPI_Add,
-      Table,
-      Pagination,
-      AddDelUpButton,
-      Query
+    //获得input框里的id列表
+    getValue(val) {
+      this.msgInput_list = val;
     },
-    async mounted () {
-      this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id)
-      //如果为空 =false 直接返回不走下面
-      if (!this.tableTitle) {
-        return
-      }
-      this.isTableTitle = true
-      this.pagination(this.region)
+    //table按钮选择 传参
+    checkboxValue: function(value) {
+      this.multipleSelection = value;
     },
-    methods: {
-      save () {
-        this.FormValue_OPI = true
-        //发布搜索消息
-        PubSub_OPI.publish('saveFormValue_OPI', this.FormValue_OPI)
-      },
-      //点击修改的时候 获得 Checkbox中 的属性
-      up () {
-        //发布订阅消息 修改
-        PubSub_OPI.publish('multipleSelection', this.multipleSelection)
-      },
-      //封装分页请求
-      async pagination (data) {
-        // //获得店铺信息
-        // const resultGetRegion = await repGetRegionInfo(data)
-        // pUtils.pageInfo(resultGetRegion, data)
+    up() {},
+    save() {},
+    //删除历史记录查看
+    async recording() {},
+    //删除or 批量删除
+    async del() {},
+    //点击查询获得table的值
+    async search() {
+      this.pagination(this.data);
+    },
+    findByListProduct(data) {
+      return findByListProduct(data);
+    },
+    //封装分页请求
+    async pagination(data) {
+      console.log(data);
+
+      const res = await findByListProduct(data);
+      if (res.code === 200) {
+        //赋值 然后显示
+        pUtils.pageInfo(res, data);
       }
+    },
+    reset(){
+      console.log(11);
+      
+      this.tableTitle = [...this.tableTitle]
+      this.msgInput_list = [];
     }
   }
+};
 </script>
 
 
-<style>
-
+<style lang="scss">
 </style>

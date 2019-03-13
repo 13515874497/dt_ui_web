@@ -2,6 +2,7 @@
 包含N个接口请求函数的模块
  */
 import ajax from './ajax'
+import { rejects } from 'assert';
 
 const BASE_URL = '/api'
 
@@ -9,8 +10,7 @@ const BASE_URL = '/api'
 //用户修改密码
 export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')
 
-// 查询国家
-export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
+
 
 
 
@@ -26,31 +26,37 @@ export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/a
 }, 'POST')
 //获得所有用户信息
 export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
-//获取用户管理信息
-// userName
-// mobilePhone
-// rName
-// createDate
-// accountStatus
-// landingTime
-// pc
-// uEffDate
-// pEffDate
-// {
-//   currentPage, pageSize, userName, name,
-//   createDate, pwdStatus, landingTime,
-//   userExpirationDate, computerName, accountStatus, mobilePhone, rName, pwdAlways, uAlways
-// }
+
+
+//用户信息列表分页查询
 export const repUsers = (data) =>
   ajax(BASE_URL + `/user/show`, data, 'POST')
 
 
 
 //字段排序
-export const upHeadSort = ({mId,sort})=> ajax(BASE_URL + '/upHeadSort',{mId,sort},'POST')
+export const upHeadSort = ({mId,sort},successMsg)=> ajax(BASE_URL + '/upHeadSort',{mId,sort},'POST',successMsg)
 
 //通过menu_id查询table头信息
-export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
+export const repHead = (menu_id) => {
+  return new Promise((resolve,rejects)=>{
+    ajax(BASE_URL + '/head', {menu_id}).then((res)=>{
+      if(res.code == 200){
+        res.data.sort(function(a,b){
+          return a.index - b.index
+        });
+        resolve(res);
+      }
+    })
+
+  });
+}
+
+//修改菜单
+export const upMenu = ({menuId,name,icon,url}) => ajax(BASE_URL + '/menu/upMenu',{menuId,name,icon,url},'POST','修改菜单成功')
+
+
+// export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
 
 //通过menuIds查询table头List集合
 export const repGetHead = ({menuIds}) => ajax(BASE_URL + '/getByHead', {menuIds}, 'POST')
@@ -114,8 +120,20 @@ export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL 
   pageSize
 }, 'POST')
 
-//获取公司的所有信息
-// export const repGetCompanyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/company/findByListCompany',{currentPage, pageSize},'POST')
+/**
+ * 
+ * 基础资料 => 公共资料
+ */
+//获取产品类目
+export const findByListProducts = () => ajax(BASE_URL + '/pro/findByListProducts')
+
+//查询产品信息分页 /product/findByListProduct
+export const  findByListProduct = (data) => ajax(BASE_URL + '/product/findByListProduct',data,'POST');
+
+// 查询国家分页
+export const getRegional = ({currentPage,pageSize}) => ajax(BASE_URL + `/country/findCountryInfo`, {currentPage,pageSize}, 'POST')
+
+// 查询公司分页
 export const repGetCompanyInfo = ({currentPage, pageSize}) => ajax(BASE_URL + '/company/findByListCompany', {
   currentPage,
   pageSize

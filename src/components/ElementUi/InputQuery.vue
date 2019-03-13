@@ -106,7 +106,6 @@
 
 <script>
 import { isNumber } from "../../utils/verify.js";
-import PubSub from "pubsub-js";
 import { unique } from "../../utils/Arrays";
 
 export default {
@@ -190,8 +189,6 @@ export default {
     initValue(tableTitle) {
       if (tableTitle) {
         let key = tableTitle.topType;
-        // this.data_model[key] = '';
-        // tableTitle._value = "";
         this.$set(this.data_model, key, "");
         if (tableTitle.inputType == 4) {
           switch (tableTitle.topType) {
@@ -205,19 +202,15 @@ export default {
               break;
           }
           tableTitle._isShow = true;
+          this.$set(this.data_model, key+'s',[]);
         }
       }
     },
     //查询 搜索建议下拉列表
     async getQuerySuggestions(queryString, cb) {
-      // this.$refs['validateField'].validateField(function(['']){
-
-      // });
-      console.log(this.$refs["data_model"]);
-      console.log(1111);
 
       let query = JSON.parse(JSON.stringify(this._querySuggestionsConfig));
-      // let query = { ...this._querySuggestionsConfig };
+
 
       let field = this.curr_query_field;
       query[field] = queryString;

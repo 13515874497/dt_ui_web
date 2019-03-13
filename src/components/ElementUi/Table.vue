@@ -167,7 +167,8 @@ export default {
         : "";
     },
     statusOptions: function(row) {
-      if (row.statusOptions.length) {
+
+      if (row.statusOptions && row.statusOptions.length) {
         console.log(row);
         return row.statusOptions
           .map(item => {
@@ -182,9 +183,10 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style scoped lang="scss" scoped>
 .el-tooltip__popper {
   max-width: 500px;
   line-height: 180%;
 }
+
 </style>
