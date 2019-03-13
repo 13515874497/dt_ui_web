@@ -29,7 +29,7 @@
                         <input type="text">
                     </span>
                 </div> 
-                <!-- <div class="content2">
+                <div class="content2">
                     <span class="cont2-span1">
                         <p>境内收货人</p>
                         <input type="text">
@@ -132,7 +132,70 @@
                         <p>标记唛码及备注</p>
                         <textarea rows="" cols="" ></textarea>
                     </span>
-                </div>   -->
+                </div>
+                
+                <table class="content-table">
+                  <tr>
+                    <th>项号</th>
+                    <th>商品编号</th>
+                    <th>商品名称及规格型号 </th>
+                    <th>数量及单位</th>
+                    <th>单价/总价/币制 </th>
+                    <th>原产国（地区）</th>
+                    <th>最终目的国（地区）</th>
+                    <th>境内货源地 </th>
+                    <th>征免</th>
+                  </tr>
+                  <tr>
+                    <td></td>
+                    <td>4201000090</td>
+                    <td class="classify">
+                      <span>DOG HARNESS</span>
+                      <span>狗背带</span>
+                    </td> 
+                    <td class="classify">
+                       <span>1</span>
+                      <span>2</span>
+                    </td>
+                    <td>7.642/37406/美金</td>
+                    <td>中国</td>
+                    <td>美国</td>
+                    <td>浙江</td>
+                    <td></td>    
+                  </tr>               
+                   <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>1</td>    
+                  </tr>
+                </table>
+
+                <div class="footerOne">
+                  <span>特殊关系确认:</span>
+                  <span>价格影响确认:</span>
+                  <span>支付特许权使用费确认：</span>
+                  <span>自报自缴：</span>
+                </div>
+                
+                <div class="footerTwo">
+                  <div class="footerLeft">
+                    <span style="width:15%">报关人员</span>
+                    <span style="width:20%">报关人员证号</span>
+                    <span style="width:20%">电话</span>
+                    <span style="width:45%">兹申明对以上内容承担如实申报、依法纳税之法律责任</span>
+                    <span style="width:60%">申报单位</span>
+                    <span style="width:40%">申报单位（签章）</span>
+                  </div>
+                  <div class="footerRight">
+                    <p>海关批注及签章</p>
+                  </div>
+                </div>
            </div>
            <button @click="printContent">dayin</button>
     </div>
@@ -166,9 +229,9 @@ export default {
 </script>
 
 <style>
-*{
-padding:0;
-margin:0;
+* {
+  padding: 0;
+  margin: 0;
 }
 
 #exportBox {
@@ -177,7 +240,7 @@ margin:0;
 }
 .ex-title {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   font-size: 16px;
   font-weight: bolder;
 }
@@ -188,8 +251,9 @@ margin:0;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 14px;
 }
-.table-title .title1{
+.table-title .title1 {
   padding-left: 8px;
   width: 45%;
   float: left;
@@ -222,38 +286,35 @@ input {
 }
 .cont-span1 {
   width: 35%;
+  border-right: 1px solid black;
 }
 .cont-span2 {
   width: 20%;
+  border-right: 1px solid black;
 }
 .cont-span3,
 .cont-span4,
 .cont-span5 {
   width: 15%;
+  border-right: 1px solid black;
 }
 span {
   float: left;
-  height: 40px; 
-}
-.cont-span1,
-{
-border-right: 1px solid black;
+  height: 40px;
 }
 p {
-  width: 100%;
-  margin: 0 0 3px;
+  margin: 0;
 }
 input {
   width: 100%;
   border: none;
   outline: none;
 }
-
-span:nth-child(5) {
+.cont-span5 {
   border-right: none;
 }
 
-/* .content2 {
+.content2 {
   width: 100%;
   border: 1px solid black;
   border-top: none;
@@ -261,68 +322,47 @@ span:nth-child(5) {
 }
 .cont2-span1 {
   width: 35%;
+  border-right: 1px solid black;
 }
 .cont2-span2 {
   width: 20%;
+  border-right: 1px solid black;
 }
 .cont2-span3 {
   width: 15%;
+  border-right: 1px solid black;
 }
 .cont2-span4 {
   width: 30%;
-}
-span {
-  float: left;
-  height: 40x;
   border-right: 1px solid black;
 }
-p {
-  width: 100%;
-  margin: 0 0 3px;
-}
-input {
-  width: 100%;
-  border: none;
-  outline: none;
-}
 
-span:nth-child(4) {
+.cont2-span4 {
   border-right: none;
 }
 
 .content3 {
   width: 100%;
-  border: 1px solid black;
   overflow: hidden;
+  border: 1px solid black;
   border-top: none;
 }
 .cont3-span1 {
   width: 35%;
+  border-right: 1px solid black;
 }
 .cont3-span2 {
   width: 20%;
+  border-right: 1px solid black;
 }
 .cont3-span3,
 .cont3-span4,
 .cont3-span5 {
   width: 15%;
-}
-span {
-  float: left;
-  height: 40x;
   border-right: 1px solid black;
 }
-p {
-  width: 100%;
-  margin: 0 0 3px;
-}
-input {
-  width: 100%;
-  border: none;
-  outline: none;
-}
 
-span:nth-child(5) {
+.cont3-span5 {
   border-right: none;
 }
 .content4 {
@@ -333,36 +373,26 @@ span:nth-child(5) {
 }
 .cont4-span1 {
   width: 35%;
+  border-right: 1px solid black;
 }
 .cont4-span2,
 .cont4-span3 {
   width: 10%;
+  border-right: 1px solid black;
 }
 .cont4-span4,
 .cont4-span5 {
   width: 10%;
+  border-right: 1px solid black;
 }
 .cont4-span6,
 .cont4-span7,
 .cont4-span8 {
   width: 8%;
-}
-span {
-  float: left;
-  height: 40x;
   border-right: 1px solid black;
 }
-p {
-  width: 100%;
-  margin: 0 0 3px;
-}
-input {
-  width: 100%;
-  border: none;
-  outline: none;
-}
 
-span:nth-child(8) {
+.cont4-span8 {
   border-right: none;
 }
 
@@ -370,36 +400,77 @@ span:nth-child(8) {
   width: 100%;
   border: 1px solid black;
   border-top: none;
-}
-p {
-  width: 100%;
-  margin: 0 0 3px;
-}
-input {
-  width: 100%;
-  border: none;
-  outline: none;
+  overflow: hidden;
 }
 
 .content6 {
   width: 100%;
-  height: 80px;
+  height: 60px;
   border: 1px solid black;
   border-top: none;
 }
-p {
-  width: 100%;
-  margin: 0 0 3px;
-}
+
 textarea {
   resize: none;
   width: 100%;
-  height: 55px;
+  height: 45px;
   max-width: 100%;
-  max-height: 55px;
+  max-height: 35px;
   border: none;
   outline: none;
-} */
+}
+.content-table {
+  width: 100%;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.content-table th {
+  text-align: center;
+}
+.content-table tr {
+  border: 1px dashed black;
+  line-height: 40px;
+}
+.classify span{
+  width:100%;
+  display: block;
+  height:30px;
+}
+.footerOne{
+  width:100%;
+  height:25px;
+  border:1px solid black;
+  display: flex;
+}
+.footerOne span{
+ width:25%;
+ height:100%;
+ padding-left:30px;
+}
+.footerTwo{
+  width:100%;
+  height: 90px;
+  display: flex;
+ border: 1px solid black;
+}
+.footerTwo .footerLeft{
+  width:75%;
+  height: 100%;
+  border-right: 1px solid black;
+}
+.footerTwo .footerLeft span{
+  display: inline-block;
+  padding-left:10px;
+  line-height: 40px;
+}
+.footerTwo .footerRight{
+  width:25%;
+  height: 100%
+}
+.footerTwo .footerRight p{
+  padding-left:15px;
+}
 </style>
 
 

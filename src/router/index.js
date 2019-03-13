@@ -108,7 +108,11 @@ import Star_level from '../views/Storage/Star_level'//星级
 
 import UserModifiesPwd from '../views/ModifiesPassword/UserModifiesPwd.vue'  //修改密码
 
-import exportDeclaration from '../views/Template/exportDeclaration.vue'  //修改密码
+import exportDeclaration from '../views/Template/exportDeclaration.vue'  //报关单
+import packingList from '../views/Template/packingList.vue'  //装箱单
+import invoice from '../views/Template/invoice.vue'  //装箱单
+import declaration from '../views/Template/declaration.vue'  //申报要素
+import salesConfirmation from '../views/Template/salesConfirmation.vue'  //申报要素
 Vue.use(Router)
 
 
@@ -550,8 +554,25 @@ export default new Router({
     },
     {
       path: '/exportDeclaration',
-      component: exportDeclaration //用户修改密码
-    }
+      component: exportDeclaration //报关单
+    },
+    {
+      path: '/packingList',
+      component: packingList //装箱单
+    },
+    {
+      path: '/invoice',
+      component: invoice //发票
+    },
+    {
+      path: '/declaration',
+      component: declaration //申报要素
+    },
+    {
+      path: '/salesConfirmation',
+      component: salesConfirmation //售货确认书
+    },
+    
   ],
 
 })
