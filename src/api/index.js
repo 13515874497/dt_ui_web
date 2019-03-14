@@ -35,7 +35,7 @@ export const repUsers = (data) =>
 
 
 //字段排序
-export const upHeadSort = ({mId,sort},successMsg)=> ajax(BASE_URL + '/upHeadSort',{mId,sort},'POST',successMsg)
+export const upHeadSort = ({mId,sort},successMsg)=> ajax(BASE_URL + '/upHeadSort',{mId,sort},'POST',["修改排序成功"])
 
 //通过menu_id查询table头信息
 export const repHead = (menu_id) => {
@@ -53,7 +53,7 @@ export const repHead = (menu_id) => {
 }
 
 //修改菜单
-export const upMenu = ({menuId,name,icon,url}) => ajax(BASE_URL + '/menu/upMenu',{menuId,name,icon,url},'POST','修改菜单成功')
+export const upMenu = ({menuId,name,icon,url}) => ajax(BASE_URL + '/menu/upMenu',{menuId,name,icon,url},'POST',['修改菜单成功'])
 
 
 // export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
@@ -83,8 +83,11 @@ export const repUpMenuInfo = ({newMenu, idsMenu}) => ajax(BASE_URL + '/menu/up/m
 //校验菜单是否已更新接口
 export const repCheckMenuToken = () => ajax(BASE_URL + `/menu/token/menu`)
 
-//通过角色id来获取菜单id
+//角色修改页面 包含删除菜单、修改菜单
 export const repGetMenus = ({rid, menuIds, menuFlg}) => ajax(BASE_URL + '/rm/upMenus', {rid, menuIds, menuFlg}, 'POST')
+
+//通过角色id来获取菜单id
+export const roleMenu = ({rid}) => ajax(BASE_URL + '/menu/role/menu',{rid})
 
 //更新用户信息
 export const repUpUserInfo = ({pwd, accountStatus, uid, pwdValidityPeriod, userExpirationDate, userName, checkedUpPwd, pwdAlways, uAlways, name, mobilePhone,version}) => ajax(BASE_URL + `/user/upUserInfo`,
@@ -124,8 +127,14 @@ export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL 
  * 
  * 基础资料 => 公共资料
  */
-//获取产品类目
+
+//查询仓库tree
+export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')
+//查询产品类目tree
 export const findByListProducts = () => ajax(BASE_URL + '/pro/findByListProducts')
+
+//查询关税税率分页 /tax/findByListTax
+export const  findByListTax = (data) => ajax(BASE_URL + '/tax/findByListTax',data,'POST');
 
 //查询产品信息分页 /product/findByListProduct
 export const  findByListProduct = (data) => ajax(BASE_URL + '/product/findByListProduct',data,'POST');

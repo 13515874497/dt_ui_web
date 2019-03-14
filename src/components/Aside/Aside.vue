@@ -16,13 +16,13 @@
                     :key="index">
           <template slot="title">
             <i :class="menu.icon ? menu.icon : 'el-icon-loading'"></i>
-            <span id="spans">{{menu.name}}</span>
+            <span id="spans">{{menu.mName}}</span>
           </template>
 
           <!--判断一级菜单下的子菜单有url的-->
           <el-menu-item-group v-if="cMenu.url" v-for="(cMenu,indexChild) in menu.childMenus" :key="indexChild">
-            <el-menu-item :index="cMenu.url+'/'+cMenu.menuId+'/'+cMenu.name"><span><i :class="cMenu.icon"></i></span>
-              {{cMenu.name}}
+            <el-menu-item :index="cMenu.url+'/'+cMenu.menuId+'/'+cMenu.mName"><span><i :class="cMenu.icon"></i></span>
+              {{cMenu.mName}}
             </el-menu-item>
           </el-menu-item-group>
 
@@ -31,13 +31,13 @@
             <el-submenu :index="index+'-'+cMenu.menuId">
               <template slot="title">
                 <span><i :class="cMenu.icon ? cMenu.icon : 'el-icon-loading'"></i>
-                </span> {{cMenu.name}}
+                </span> {{cMenu.mName}}
               </template>
 
               <!--判断二级菜单下的子菜单有url的-->
               <el-menu-item-group v-if="sMenu.url" v-for="(sMenu,indexSun) in cMenu.childMenus" :key="indexSun">
-                <el-menu-item :index="sMenu.url+'/'+sMenu.menuId+'/'+sMenu.name"><span><i
-                  :class="sMenu.icon? sMenu.icon : 'el-icon-loading'"></i></span> {{sMenu.name}}
+                <el-menu-item :index="sMenu.url+'/'+sMenu.menuId+'/'+sMenu.mName"><span><i
+                  :class="sMenu.icon? sMenu.icon : 'el-icon-loading'"></i></span> {{sMenu.mName}}
                 </el-menu-item>
               </el-menu-item-group>
               <!--判断二级菜单下的子菜单没有url的-->
@@ -45,13 +45,13 @@
                 <el-submenu :index="index+'-'+sMenu.menuId">
                   <template slot="title">
                 <span><i :class="sMenu.icon ? sMenu.icon : 'el-icon-loading'"></i>
-                </span> {{sMenu.name}}
+                </span> {{sMenu.mName}}
                   </template>
                   <!--三级下的菜单显示 -->
-                  <el-menu-item :index="ssMenu.url+'/'+ssMenu.menuId+'/'+ssMenu.name"
+                  <el-menu-item :index="ssMenu.url+'/'+ssMenu.menuId+'/'+ssMenu.mName"
                                 v-for="(ssMenu,indexSuns) in sMenu.childMenus" :key="indexSuns">
                     <span><i :class="ssMenu.icon"></i></span>
-                    {{ssMenu.name}}
+                    {{ssMenu.mName}}
                   </el-menu-item>
                 </el-submenu>
               </el-menu-item-group>
@@ -60,9 +60,9 @@
         </el-submenu>
 
         <!--判断父菜单有url的-->
-        <el-submenu v-else :index="menu.url+'/'+menu.menuId+'/'+menu.name" v-show="isRole">
+        <el-submenu v-else :index="menu.url+'/'+menu.menuId+'/'+menu.mName" v-show="isRole">
           <i :class="menu.icon"></i>
-          <span>{{menu.name}}</span>
+          <span>{{menu.mName}}</span>
         </el-submenu>
       </el-menu>
 

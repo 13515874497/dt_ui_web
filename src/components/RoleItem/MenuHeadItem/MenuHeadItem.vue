@@ -49,6 +49,8 @@
         this.menuHeadFrom.ids = []
         this.menuHeadUpVisible = true
         this.menuHeadFrom.menuId = row.menuId
+        console.log(row);
+        
         const resultHeads = repFindByHeads(this.menuHeadFrom.menuId)
         resultHeads.then((result) => {
           console.log(result)

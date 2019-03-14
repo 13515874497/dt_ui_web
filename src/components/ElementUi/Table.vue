@@ -8,12 +8,18 @@
     stripe
     border
     @header-dragend="handleHeaderDragend"
+    @header-click="headerClick"
   >
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column v-if="isHideNumber" type="index" width="50" fixed></el-table-column>
     <template v-for="title  in tableTitle">
       <!--特殊字段 -->
-      <el-table-column v-if="title.topType==='createDate'" :label="title.headName" width="180">
+      <el-table-column
+        v-if="title.topType==='createDate'"
+        :label="title.headName"
+        width="180"
+        :fixed="isFixed(title)"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
@@ -25,6 +31,7 @@
         v-else-if="title.topType==='userExpirationDate'"
         sortable
         :label="title.headName"
+        :fixed="isFixed(title)"
       >
         <template slot-scope="scope">
           <span
@@ -38,6 +45,7 @@
         v-else-if="title.topType==='pwdValidityPeriod'"
         sortable
         :label="title.headName"
+        :fixed="isFixed(title)"
       >
         <template slot-scope="scope">
           <span
@@ -51,6 +59,7 @@
         v-else-if="title.topType==='landingTime'"
         :label="title.headName"
         width="180"
+        :fixed="isFixed(title)"
       >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
@@ -58,28 +67,48 @@
         </template>
       </el-table-column>
 
-      <el-table-column v-else-if="title.topType==='eDate'" :label="title.headName" width="180">
+      <el-table-column
+        v-else-if="title.topType==='eDate'"
+        :label="title.headName"
+        width="180"
+        :fixed="isFixed(title)"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.userExpirationDate | date-format}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-else-if="title.topType==='modifyDate'" :label="title.headName" width="180">
+      <el-table-column
+        v-else-if="title.topType==='modifyDate'"
+        :label="title.headName"
+        width="180"
+        :fixed="isFixed(title)"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.modifyDate | date-format}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-else-if="title.topType==='createDate'" :label="title.headName" width="180">
+      <el-table-column
+        v-else-if="title.topType==='createDate'"
+        :label="title.headName"
+        width="180"
+        :fixed="isFixed(title)"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
         </template>
       </el-table-column>
 
-      <el-table-column v-else-if="title.topType==='auditDate'" :label="title.headName" width="180">
+      <el-table-column
+        v-else-if="title.topType==='auditDate'"
+        :label="title.headName"
+        width="180"
+        :fixed="isFixed(title)"
+      >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
@@ -91,6 +120,7 @@
         :label="title.headName"
         width="180"
         :formatter="account"
+        :fixed="isFixed(title)"
       ></el-table-column>
 
       <el-table-column
@@ -98,12 +128,13 @@
         :label="title.headName"
         width="180"
         :formatter="statusOptions"
+        :fixed="isFixed(title)"
       ></el-table-column>
 
       <el-table-column
         v-else
         sortable
-        :fixed="!!title.isFixed"
+        :fixed="isFixed(title)"
         :label="title.headName"
         :prop="title.topType"
         :show-overflow-tooltip="true"
@@ -114,7 +145,10 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      menuId: this.$route.params.id,
+      fixedCache: {}
+    };
   },
   props: {
     tableData: Array,
@@ -145,17 +179,7 @@ export default {
     handleSelectionChange(val) {
       this.$emit("checkboxValue", val);
     },
-    //当拖动表头改变了列的宽度的时候会触发该事件
-    handleHeaderDragend(newWidth, oldWidth, column, event) {
-      //内边距左右各10  每个字符宽度按 15的宽度计算
-      column.minWidth = column.label.length * 15 + 20;
-      //如果有排序的图标则加24  排序的箭头宽度 26
-      if (column.sortable) {
-        column.minWidth += 24;
-      }
-      column.width =
-        column.width < column.minWidth ? column.minWidth : column.width;
-    },
+
     //table 账号状态 转换显示
     account: function(row) {
       return row.accountStatus === 0
@@ -167,7 +191,6 @@ export default {
         : "";
     },
     statusOptions: function(row) {
-
       if (row.statusOptions && row.statusOptions.length) {
         console.log(row);
         return row.statusOptions
@@ -178,7 +201,59 @@ export default {
       } else {
         return "";
       }
+    },
+
+    //当拖动表头改变了列的宽度的时候会触发该事件
+    handleHeaderDragend(newWidth, oldWidth, column, event) {
+      //内边距左右各10  每个字符宽度按 15的宽度计算
+      column.minWidth = column.label.length * 15 + 20;
+      //如果有排序的图标则加24  排序的箭头宽度 26
+      if (column.sortable) {
+        column.minWidth += 24;
+      }
+      column.width =
+        column.width < column.minWidth ? column.minWidth : column.width;
+    },
+    //根据本地缓存cacheFixed判断里否固定表头
+    isFixed(title) {
+      if (title.topType === "createDate") {
+        console.log(title);
+      }
+
+      return (
+        !!title.isFixed || this.fixedCache[this.menuId].includes(title.headName)
+      );
+    },
+    //点击表头固定字段并缓存到本地
+    headerClick(column, event) {
+      let cache = this.fixedCache[this.menuId] || [];
+      let key = column.label;
+      console.log(column.label);
+
+      if (cache.indexOf(key) > -1) {
+        let index = cache.indexOf(key);
+        cache.splice(index, 1);
+      } else {
+        cache.push(key);
+      }
+      this.fixedCache[this.menuId] = cache;
+      localStorage.setItem("fixedCache", JSON.stringify(this.fixedCache));
+    },
+    readFixedCache() {
+      let fixedCache = localStorage.getItem("fixedCache");
+      if (fixedCache) {
+        fixedCache = JSON.parse(fixedCache);
+      } else {
+        fixedCache = {};
+      }
+      fixedCache[this.menuId] = fixedCache[this.menuId]
+        ? fixedCache[this.menuId]
+        : [];
+      this.fixedCache = fixedCache;
     }
+  },
+  created() {
+    this.readFixedCache();
   }
 };
 </script>
@@ -188,5 +263,4 @@ export default {
   max-width: 500px;
   line-height: 180%;
 }
-
 </style>

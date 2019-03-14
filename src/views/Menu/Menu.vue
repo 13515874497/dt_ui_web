@@ -528,7 +528,7 @@ export default {
     },
     async sort() {
       console.log("保存排序接口");
-      let res = await upHeadSort(this.sortedAjaxObj, "修改排序成功");
+      let res = await upHeadSort(this.sortedAjaxObj);
       console.log(res);
 
       // if(res.code == 200){
