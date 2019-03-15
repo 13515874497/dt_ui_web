@@ -108,19 +108,21 @@ export default {
     async search() {
       this.pagination(this.data);
     },
-    queryPage(data) {
-      // 提供一个查询分页的接口 如下
-      // return findByListProduct(data);
-    },
+    // queryPage(data) {
+    //   // 提供一个查询分页的接口 例如:
+    //   // return findByListProduct(data);
+    // },
     //封装分页请求
     async pagination(data) {
       const res = await this.queryPage(data);
+      console.log(res);
       if (res.code === 200) {
         //赋值 然后显示
         pUtils.pageInfo(res, data);
       }
     },
     reset() {
+      //触发下表头变更 让子组件初始化
       this.tableTitle = [...this.tableTitle];
       this.queryIds = [];
     }

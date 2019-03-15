@@ -133,6 +133,11 @@ export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')
 //查询产品类目tree
 export const findByListProducts = () => ajax(BASE_URL + '/pro/findByListProducts')
 
+
+//查询导入模板分页 http://127.0.0.1:9001/ctx/getTemplate
+
+
+export const getTemplate = (data) => ajax(BASE_URL + '/ctx/getTemplate',data,'POST');
 //查询关税税率分页 /tax/findByListTax
 export const  findByListTax = (data) => ajax(BASE_URL + '/tax/findByListTax',data,'POST');
 

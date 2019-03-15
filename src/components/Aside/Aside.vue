@@ -43,7 +43,6 @@ export default {
     },
     async getRepMenu() {
       let res = await repMenu();
-      console.log(res);
 
       if (res.code === 200) {
         storage.saveData(this.userName + "menu", res.data);
@@ -81,14 +80,12 @@ export default {
           );
         }
       });
-      console.log(arr);
 
       return arr;
     }
   },
 
   async mounted() {
-    console.log(this.userName);
 
     //传给后台校验接口
     const resultCheck = await repCheckMenuToken();
