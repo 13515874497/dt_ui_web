@@ -9,19 +9,16 @@
             <div class="invoiceLeft">
                 <div class="company">
                     <span class="companyTo">To:</span>
-                    <textarea class="inputText" > GLOBEGOU USA CO., 
-                       LTD245 EAST MAIN STREET, SUITE 115, ALHAMBRA  CA 91801 
+                    <input type="text" v-model="gongsi" class="companInput">
+                    <textarea class="inputText"v-model="dizhi"> 
                     </textarea>
                 </div>
-                <div class="einBox">
-                  <span class="einBoxspan">EIN No.:</span>
-                  <input type="text" class="einInput">
-                </div>
+               
             </div>
             <div class="invoiceRight">
                <div class="invoiceNum">
                     <span class="invoiceNumspan">INV.NO.:</span>
-                    <input type="text" class="invoiceNuminput">
+                    <input type="text" class="invoiceNuminput"v-model="fapiaohao">
                 </div>
                  <div class="invoiceTitle">
                     <span class="invoiceNum">DATE:</span>
@@ -29,26 +26,21 @@
                 </div>
             </div>
         </div>
+        <div class="einBox">
+          <span class="einBoxspan">EIN No.:</span>
+          <input type="text" class="einInput" >
+        </div>
         <div class="delAddress">
           <div class="delTitle">DELIVERY ADDRESS:</div>
           <div class="delText">
-            <textarea>
-              Amazon.com.kydc, LLC
-              33333 LBJ FWY
-              Dallas, TX 75241-7203
-              US (FTW1)
+            <textarea v-model="texta">
             </textarea>
           </div>
         </div>
         <div class="tableBox">
           <div class="tableBox1">
             <div class="boxTitle1">MARKS:</div>
-            <textarea class="boxText">dsgd hfds hs hhndajgbdjbgbdjgbsjdbgjbgnbcnbvc
-              gfjsdhn jgnjfn fa-borderdsg mdkgn
-              dgkfdhngfjd 
-              dkhgjd fa-bor
-              frkd hgd fa-border
-              fdgknfdng
+            <textarea class="boxText" v-model="boxText">
             </textarea>
           </div>
           <div class="tableBox2">
@@ -110,19 +102,26 @@
           <div class="tableFooter5">37406</div>
         </div>
         <div class="invfooter">
-          TOTAL VALUE SAY US FREIGHT6489 AND PREMIUM 41 ONLY
+          TOTAL VALUE SAY US FREIGHT<span>6489 </span>AND PREMIUM <span>41</span>ONLY
         </div>
-         <button @click="printContent">dayin</button>
+         <button @click="printContent" id="printBtn">dayin</button>
   </div>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {
+      gongsi:'GLOBEGOU WZ CO.,LTD  ',
+      dizhi:' 245 EAST MAIN STREET, SUITE 115, ALHAMBRA  CA 91801 ',
+      texta:"这是地址",
+      fapiaohao:'123456',
+      boxText:'zheshiyixiemark'
+    };
   },
   methods: {
     // 打印
-    printContent(e) {
+    printContent() {
+       document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("invoiceBox");
       // console.log(subOutputRankPrint.innerHTML);
       let newContent = subOutputRankPrint.innerHTML;
@@ -132,8 +131,26 @@ export default {
       // window.location.reload();
       // document.body.innerHTML = oldContent;
       // return false;
+    },
+     bindData(){
+       let subOutputRankPrint = document.getElementById("invoiceBox");
+       let oInputs = subOutputRankPrint.getElementsByTagName('input');
+       let otextarea = subOutputRankPrint.getElementsByTagName('textarea'); 
+       console.log(oInputs); 
+      console.log(otextarea);    
+
+       for (var i=0;i<oInputs.length;i++){
+          oInputs[i].setAttribute("value",oInputs[i].value)
+        
+       for (var i=0;i<otextarea.length;i++){
+         otextarea[i].innerHTML = otextarea[i].value
+       } ;  
     }
   }
+  },
+  mounted(){
+    this.bindData()
+  },
 };
 </script>
 <style>
@@ -163,8 +180,9 @@ export default {
 }
 .invoiceContent {
   width: 100%;
-  height: 170px;
+  /* height: 170px; */
   display: flex;
+  border:1px solid red;
 }
 
 .invoiceContent .invoiceLeft {
@@ -179,6 +197,15 @@ export default {
   width: 100%;
   height: 120px;
   display: flex;
+  position: relative;
+}
+.companInput{
+  position: absolute;
+  top:10px;
+  left:20%;
+  width:73%;
+  border:none;
+  outline:none;
 }
 .companyTo {
   line-height: 40px;
@@ -188,22 +215,25 @@ export default {
   width: 20%;
 }
 .inputText {
-  height: 100px;
-  max-height: 100px;
-  width: 75%;
+  height: 80px;
+  max-height: 80px;
+  width: 73%;
   resize: none;
   font-size: 14px;
   overflow: hidden;
   outline: none;
   border: none;
   text-align: left;
+  position:absolute;
+  left:20%;
+  top:40px;
 }
 .einBox {
   width: 100%;
   height: 40px;
 }
 .einBoxspan {
-  width: 20%;
+  width: 10%;
   display: inline-block;
   /* padding-left: 25px; */
 }
@@ -291,9 +321,11 @@ export default {
 }
 .boxTitle1 {
   border-bottom: 1px solid black;
+    text-align: center;
 }
 .boxTitle2 {
   border-bottom: 1px solid black;
+  text-align: center;
 }
 .boxTitle3 {
   border-bottom: 1px solid black;
@@ -415,5 +447,10 @@ text-align: center;
   font-weight: bold;
 }
 </style>
-
+<style media="print">
+@page {
+  size: auto A4 landscape;
+  margin: 5mm 8mm;
+}
+</style>
 
