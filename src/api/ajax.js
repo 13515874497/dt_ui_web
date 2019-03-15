@@ -5,7 +5,7 @@ import axios from 'axios'
 import {
   Message
 } from 'element-ui'
-export default function ajax(url, data = {}, type = 'GET', successMsg) {
+export default function ajax(url, data = {}, type = 'GET', msg) {
 
   return new Promise(function (resolve, reject) {
     // 执行异步ajax请求
@@ -86,19 +86,27 @@ export default function ajax(url, data = {}, type = 'GET', successMsg) {
     promise.then(function (response) {
       // 成功了调用resolve()
       resolve(response.data)
-      if (successMsg) {
+
+
+      if (msg) {
         if (response.data.code == 200) {
-          Message({
-            showClose: true,
-            message: successMsg,
-            type: "success"
-          });
+          if (msg[0]) {
+            Message({
+              showClose: true,
+              message: msg[0],
+              type: "success"
+            });
+          }
+
         } else {
-          Message({
-            showClose: true,
-            message: response.msg,
-            type: "error"
-          });
+          if (msg[1]) {
+            Message({
+              showClose: true,
+              message: msg[1] ||  response.msg,
+              type: "error"
+            });
+          }
+
         }
 
       }

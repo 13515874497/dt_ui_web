@@ -40,6 +40,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { repLoginUser } from "../../api";
 import message from "../../utils/Message";
 import login_intercept from "../../utils/login_intercept";
@@ -103,6 +104,8 @@ export default {
         const result = await repLoginUser(users);
         if (result.code === 200) {
           const uData = result.data;
+          
+          axios.defaults.headers.common['token'] = uData.token;
           this.setCookie("token", uData.token, 7);
           this.setCookie("name", uData.user.name, 7);
           this.setCookie("isFirstLogin", uData.user.firstLogin);
