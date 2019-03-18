@@ -170,13 +170,13 @@ export default {
   }
 };
 </script>
-<style>
+<style scoped>
 
 #packBox {
   height: 100%;
-  width: 210mm;
+  /* width: 210mm;
   margin: 0 auto;
-  padding: 5mm 7mm;
+  padding: 5mm 7mm; */
 }
 .packTitle,
 .translation {
