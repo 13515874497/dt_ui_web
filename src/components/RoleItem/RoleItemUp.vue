@@ -242,6 +242,9 @@ export default {
       const menuId = { menuIds };
       const resultHead = await repGetHead(menuId);
       if (resultHead.code === 200) {
+        console.log(1111111);
+        console.log(resultHead);
+        
         this.menuTableTitleData = resultHead.data;
       }
     },

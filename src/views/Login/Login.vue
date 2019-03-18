@@ -106,14 +106,11 @@ export default {
         console.log(result);
         if (result.code === 200) {
           const uData = result.data;
-
+          
           console.log(uData.token);
 
-          this.setCookie("token", uData.token, 7);
           this.setCookie("name", uData.user.name, 7);
           this.setCookie("isFirstLogin", uData.user.firstLogin);
-
-          axios.defaults.headers.common["token"] = uData.token;
 
           //如果是首次登陆 跳转到修改密码的页面
           if (!uData.user.firstLogin) {

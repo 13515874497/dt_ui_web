@@ -123,6 +123,23 @@ export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL 
   pageSize
 }, 'POST')
 
+
+
+/**
+ * 
+ * 基础资料 => 物流管理
+ */
+//查询运输性质分页
+//http://127.0.0.1:9002/api/v1/property/findByListProperty?pageSize=10&currentPage=10   运输性质
+export const findByListProperty = (data) => ajax(BASE_URL + '/property/findByListProperty',data,'POST');
+
+
+
+
+
+
+
+
 /**
  * 
  * 基础资料 => 公共资料
