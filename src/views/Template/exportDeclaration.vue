@@ -1,16 +1,19 @@
 <template>
     <div id="exportBox">
+            <div class="logoBox">
+            <img src="./img/logo.jpg" alt="" class="exlogo">
             <h2 class="ex-title">中华人民共和国海关出口货物报关单</h2>
+            </div>
             <div class="main">
                 <div class="table-title">
-                    <span class="title1">预录入编号：<input type="text" class="ex-input"></span>
-                    <span class="title2">海关编号：<input type="text" class="ex-input2"></span>
-                    <span class="title3">页码/页数：<input type="text" class="ex-input3"></span>
+                    <span class="title1">预录入编号：<input type="text" class="ex-input" v-model="luru"></span>
+                    <span class="title2">海关编号：<input  type="text" class="ex-input2" v-model="haiguan"></span>
+                    <span class="title3">页码/页数：<input  type="text" class="ex-input3" v-model="yema"></span>
                 </div>
                 <div class="content1">
                     <span class="cont-span1">
                         <p class="Consignor">境内发货人</p>
-                        <input type="text">
+                        <input type="text" v-model="diantu">
                     </span>
                        <span class="cont-span2">
                         <p>出境关别</p>
@@ -32,11 +35,11 @@
                 <div class="content2">
                     <span class="cont2-span1">
                         <p>境内收货人</p>
-                        <input type="text">
+                        <input type="text" v-model="shouhuo">
                     </span>
                        <span class="cont2-span2">
                         <p>运输方式</p>
-                        <input type="text">
+                        <input type="text" v-model="yunshu">
                     </span>
                        <span class="cont2-span3">
                         <p>运输工具名称及航次号</p>
@@ -130,7 +133,7 @@
                 <div class="content6">
                     <span class="cont6-span1">
                         <p>标记唛码及备注</p>
-                        <textarea rows="" cols="" ></textarea>
+                        <input type="text" :value="wenben"></input>
                     </span>
                 </div>
                 
@@ -197,23 +200,28 @@
                   </div>
                 </div>
            </div>
-           <button @click="printContent">dayin</button>
+           <button @click="printContent" id="printBtn">dayin</button>
     </div>
     
 </template>
-
-
-
-
-
 <script>
 export default {
   data() {
-    return {};
+    return {
+      luru:'123',
+      haiguan:'234',
+      yema:'456',
+      diantu:"温州电兔电子商务有限公司",
+      wenben:'这是个文本输入框',
+      shouhuo:'GLOBEGOU USA CO.,LTD ',
+      yunshu:'集装箱'
+    };
   },
   methods: {
+  
     // 打印
-    printContent(e) {
+    printContent() {
+       document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("exportBox");
       // console.log(subOutputRankPrint.innerHTML);
       let newContent = subOutputRankPrint.innerHTML;
@@ -223,7 +231,19 @@ export default {
       // window.location.reload();
       // document.body.innerHTML = oldContent;
       // return false;
+    },
+    bindData(){
+       let subOutputRankPrint = document.getElementById("exportBox");
+       var oInputs = subOutputRankPrint.getElementsByTagName('input');
+       console.log(oInputs);     
+       for (var i=0;i<oInputs.length;i++){
+          oInputs[i].setAttribute("value",oInputs[i].value)
+       } ;  
     }
+
+  },
+  mounted(){
+    this.bindData()
   }
 };
 </script>
@@ -240,9 +260,10 @@ export default {
 }
 .ex-title {
   text-align: center;
-  margin-bottom: 10px;
   font-size: 16px;
   font-weight: bolder;
+  line-height:80px;
+  margin:0;
 }
 .table-title {
   width: 100%;
@@ -409,13 +430,12 @@ input {
   border: 1px solid black;
   border-top: none;
 }
-
-textarea {
-  resize: none;
+.cont6-span1 {
+  width:100%;
+}
+.cont6-span1 input {
   width: 100%;
-  height: 45px;
-  max-width: 100%;
-  max-height: 35px;
+  height: 100%;
   border: none;
   outline: none;
 }
@@ -471,8 +491,26 @@ textarea {
 .footerTwo .footerRight p{
   padding-left:15px;
 }
-</style>
+.exlogo{
+  width:60px;
+  height:60px;
+  position: absolute;
+  left:0;
+  top:0;
+}
+.logoBox{
+  width:100%;
+position: relative;
+height:80px;
 
+}
+</style>
+<style media="print">
+@page {
+  size: auto A4 landscape;
+  margin: 5mm 8mm;
+}
+</style>
 
 
 
