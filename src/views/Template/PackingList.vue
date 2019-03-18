@@ -27,53 +27,6 @@
                 </div>
             </div>
         </div>
-        <!-- <table border="1" class="tableLists">
-                <tr>
-                    <th>NOS.</th>
-                    <th>SPECIFICATION</th>
-                    <th>CARTON</th>
-                    <th>QUANTITY</th>
-                    <th>GR.WT.</th>
-                    <th>NET.WT</th>
-                    <th>MEAS.</th>
-                </tr>
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>(PCS)</td>
-                    <td>(KGS)</td>
-                    <td>(KGS)</td>
-                    <td>(CBM)</td>
-                </tr>
-                 <tr>
-                    <td></td>
-                    <td>DOG HARNESS</td>
-                    <td></td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
-                </tr>
-                 <tr>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>(PCS)</td>
-                    <td>(KGS)</td>
-                    <td>(KGS)</td>
-                    <td>(CBM)</td>
-                </tr>
-                 <tr>
-                    <td></td>
-                    <td> TOTAL:</td>
-                    <td></td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                    <td>2</td>
-                </tr>
-        </table> -->
               <el-table
                 :data="tableData6"
                 border
@@ -84,41 +37,42 @@
                 <el-table-column
                   prop="NOS."
                   label="NOS."
-                  width="80"
+                
                   >
                 </el-table-column>
                 <el-table-column
                   prop="SPECIFICATION"
                   label="SPECIFICATION"
-                   width="180"
+                  
                   >
                 </el-table-column>
                 <el-table-column
                   prop="CARTON"
                   label="CARTON"
-                  width="150"
+                  
                   >
                 </el-table-column>
                 <el-table-column
                   prop="QUANTITY"
                   label="QUANTITY"
-                  width="150"
+                   
                   >
                 </el-table-column>
                 <el-table-column
                   prop="GR_WT"
                   label="GR.WT."
-                  width="150">
+                  >
                 </el-table-column>
                 <el-table-column
                   prop="NET_WT"
                   label="NET.WT"
-                  width="180">
+                  >
                 </el-table-column>
                 <el-table-column
                   prop="MEAS"
                   label="MEAS."
-                  width="180">
+                
+                  >
                 </el-table-column>
               </el-table>
 
@@ -128,97 +82,101 @@
 </template>
 <script>
 export default {
-    data(){
-       return{
-         shijian:'2019-01-01',
-          tableData6: [{
-          NOS: '',
-          SPECIFICATION: '',
-          CARTON: '',
-          QUANTITY: '(PCS)',
-          GR_WT: '  (KGS)',
-          NET_WT:'(KGS)',
-          MEAS:'(CBM)',
+  data() {
+    return {
+      shijian: "2019-01-01",
+      tableData6: [
+        {
+          NOS: "",
+          SPECIFICATION: "",
+          CARTON: "",
+          QUANTITY: "(PCS)",
+          GR_WT: "  (KGS)",
+          NET_WT: "(KGS)",
+          MEAS: "(CBM)"
         },
         {
-          NOS: '',
-          SPECIFICATION: 'DOG HARNESS',
-          CARTON: '65',
-          QUANTITY: '4895',
-          GR_WT: '1406',
-          NET_WT:'1341',
-          MEAS:'5.71',
+          NOS: "",
+          SPECIFICATION: "DOG HARNESS",
+          CARTON: "65",
+          QUANTITY: "4895",
+          GR_WT: "1406",
+          NET_WT: "1341",
+          MEAS: "5.71"
         },
-         {
-          NOS: '',
-          SPECIFICATION: 'DOG HARNESS',
-          CARTON: '65',
-          QUANTITY: '4895',
-          GR_WT: '1406',
-          NET_WT:'1341',
-          MEAS:'5.71',
-        },]
-       } 
-    },
-    methods:{  
-         // 打印
+        {
+          NOS: "",
+          SPECIFICATION: "DOG HARNESS",
+          CARTON: "65",
+          QUANTITY: "4895",
+          GR_WT: "1406",
+          NET_WT: "1341",
+          MEAS: "5.71"
+        }
+      ]
+    };
+  },
+  methods: {
+    // 打印
     printContent() {
-      document.getElementById('printBtn').style.display="none";
+      document.getElementById("printBtn").style.display = "none";
       let subOutputRankPrint = document.getElementById("packBox");
       // console.log(subOutputRankPrint.innerHTML);
       let newContent = subOutputRankPrint.innerHTML;
       let oldContent = document.body.innerHTML;
       document.body.innerHTML = newContent;
       window.print();
-      // window.location.reload();
-      // document.body.innerHTML = oldContent;
-      // return false;
+      window.location.reload();
+      document.body.innerHTML = oldContent;
+      return false;
     },
-     bindData(){
-       let subOutputRankPrint = document.getElementById("packBox");
-       var oInputs = subOutputRankPrint.getElementsByTagName('input');
-       console.log(oInputs);     
-       for (var i=0;i<oInputs.length;i++){
-          oInputs[i].setAttribute("value",oInputs[i].value)
-       } ;  
+    bindData() {
+      let subOutputRankPrint = document.getElementById("packBox");
+      var oInputs = subOutputRankPrint.getElementsByTagName("input");
+      console.log(oInputs);
+      for (var i = 0; i < oInputs.length; i++) {
+        oInputs[i].setAttribute("value", oInputs[i].value);
+      }
     },
     getSummaries(param) {
-        const { columns, data } = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 1) {
-            sums[index] = ' TOTAL:';
-            return;
-          }
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr);
-              if (!isNaN(value)) {
-                return prev + curr;
-              } else {
-                return prev;
-              }
-            }, 0);
-            sums[index] += ' ';
-          } else {
-            sums[index] = '';
-          }
-        });
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 1) {
+          sums[index] = " TOTAL:";
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+          sums[index] += " ";
+        } else {
+          sums[index] = "";
+        }
+      });
 
-        return sums;
-      }
-    
-    },
-    mounted(){
-      this.bindData()
+      return sums;
     }
+  },
+  mounted() {
+    this.bindData()
+  }
 };
 </script>
 <style>
+
 #packBox {
-  width: 100%;
   height: 100%;
+  width: 210mm;
+  margin: 0 auto;
+  padding: 5mm 7mm;
 }
 .packTitle,
 .translation {
@@ -257,7 +215,7 @@ export default {
   height: 50%;
   text-align: right;
 }
-.titleDate .invoiceNum{
+.titleDate .invoiceNum {
   padding-right: 14px;
 }
 .titleNum input {
@@ -270,17 +228,16 @@ export default {
   border: none;
   outline: none;
 }
-.tableLists{
-    width:100%;
-   
+.tableLists {
+  /* width: 100%; */
 }
-.tableLists th{
-     text-align: center;
-     line-height: 40px;
+.tableLists th {
+  text-align: center;
+  line-height: 40px;
 }
-.tableLists td{
-    text-align: center;
-     line-height: 40px; 
+.tableLists td {
+  text-align: center;
+  line-height: 40px;
 }
 </style>
 <style media="print">
@@ -288,26 +245,32 @@ export default {
   size: auto A4 landscape;
   margin: 5mm 8mm;
 }
-.el-table--border{
-  border:1px solid black;
+.el-table--border {
+  border: 1px solid black;
 }
-.el-table--border th{
-  text-align:center;
-  border-right:1px solid black;
+.el-table--border th {
+  text-align: center;
+  border-right: 1px solid black;
 }
 
-.el-table td, .el-table th.is-leaf{
-  border-bottom:1px solid black;
+.el-table td,
+.el-table th.is-leaf {
+  border-bottom: 1px solid black;
 }
-.el-table--border td{
-  border-right:1px solid black;
-  text-align:center;
+.el-table--border td {
+  border-right: 1px solid black;
+  text-align: center;
 }
 .el-table__footer-wrapper td {
-  border-top:1px solid black;
+  border-top: 1px solid black;
 }
-.el-table__footer-wrapper tbody td, .el-table__header-wrapper tbody td{
-  background-color:#fff;
+.el-table__footer-wrapper tbody td,
+.el-table__header-wrapper tbody td {
+  background-color: #fff;
+}
+.el-main {
+    width: 210mm;
+    margin: 0 auto;   
 }
 </style>
 
