@@ -11,6 +11,8 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
 
   return new Promise(function (resolve, reject) {
     let token = Vue.prototype.getCookie('token');
+    console.log(token);
+    
     axios.defaults.headers.common['token'] = token;
     // 执行异步ajax请求
     let promise
@@ -91,8 +93,6 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
       // 成功了调用resolve()
       
       if(response.data.code == -1){
-        console.log(response);
-        
         // router.push('/login');
       }
 
