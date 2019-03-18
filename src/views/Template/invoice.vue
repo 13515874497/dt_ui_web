@@ -18,17 +18,17 @@
             <div class="invoiceRight">
                <div class="invoiceNum">
                     <span class="invoiceNumspan">INV.NO.:</span>
-                    <input type="text" class="invoiceNuminput"v-model="fapiaohao">
+                    <input type="text" class="invoiceNuminput"v-model="hao">
                 </div>
                  <div class="invoiceTitle">
                     <span class="invoiceNum">DATE:</span>
-                    <input type="text" class="invoiceTitleinput">
+                    <input type="text" class="invoiceTitleinput" v-model="shijian">
                 </div>
             </div>
         </div>
         <div class="einBox">
           <span class="einBoxspan">EIN No.:</span>
-          <input type="text" class="einInput" >
+          <input type="text" class="einInput" v-model="bbb">
         </div>
         <div class="delAddress">
           <div class="delTitle">DELIVERY ADDRESS:</div>
@@ -114,8 +114,10 @@ export default {
       gongsi:'GLOBEGOU WZ CO.,LTD  ',
       dizhi:' 245 EAST MAIN STREET, SUITE 115, ALHAMBRA  CA 91801 ',
       texta:"这是地址",
-      fapiaohao:'123456',
-      boxText:'zheshiyixiemark'
+      hao:'123456',
+      boxText:'zheshiyixiemark',
+      bbb:'111',
+      shijian:'2019-01-01'
     };
   },
   methods: {
@@ -182,7 +184,7 @@ export default {
   width: 100%;
   /* height: 170px; */
   display: flex;
-  border:1px solid red;
+  /* border:1px solid red; */
 }
 
 .invoiceContent .invoiceLeft {
