@@ -2,12 +2,16 @@
 ajax请求函数模块
 */
 import axios from 'axios'
+import router from '../router'
+import Vue from 'vue'
 import {
   Message
 } from 'element-ui'
 export default function ajax(url, data = {}, type = 'GET', msg) {
 
   return new Promise(function (resolve, reject) {
+    let token = Vue.prototype.getCookie('token');
+    axios.defaults.headers.common['token'] = token;
     // 执行异步ajax请求
     let promise
     if (type === 'GET') {
@@ -85,6 +89,13 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     // })
     promise.then(function (response) {
       // 成功了调用resolve()
+      
+      if(response.data.code == -1){
+        console.log(response);
+        
+        // router.push('/login');
+      }
+
       resolve(response.data)
 
 

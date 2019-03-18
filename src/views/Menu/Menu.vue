@@ -310,7 +310,7 @@ export default {
       defaultProps: {
         //转换参数
         children: "childMenus",
-        label: "name"
+        label: "mName"
       },
       //引入菜单表头的数据
       introList: []

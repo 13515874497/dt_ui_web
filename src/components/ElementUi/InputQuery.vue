@@ -2,7 +2,7 @@
   <div class="check2">
     <el-form :model="data_model" ref="data_model" :inline="true" class="demo-form-inline">
       <template v-for="(tableTitle,index) in data">
-        <!-- 0: str,  1: int, 2:date 3: status 4.deadline-->
+        <!-- 0: str,1: int, 2:date 3: status 4.deadline(起止时间段) 5.boolean-->
         <!-- 带有搜索建议的输入框    字符型-->
         <el-form-item
           :label="tableTitle.headName"
@@ -95,7 +95,7 @@
               v-for="(item,index) in tableTitle.statusOptions"
               :key="index"
               :label="item.name"
-              :value="item.id"
+              :value="item.selectId"
             ></el-option>
           </el-select>
         </el-form-item>

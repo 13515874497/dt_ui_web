@@ -102,13 +102,17 @@ export default {
       //成功执行后续
       if (userName && pwd) {
         const result = await repLoginUser(users);
+          const uData = result.data;
+         console.log(result);
         if (result.code === 200) {
           const uData = result.data;
           
-          axios.defaults.headers.common['token'] = uData.token;
+          console.log(uData);
+          
           this.setCookie("token", uData.token, 7);
           this.setCookie("name", uData.user.name, 7);
           this.setCookie("isFirstLogin", uData.user.firstLogin);
+          
           //如果是首次登陆 跳转到修改密码的页面
           if (!uData.user.firstLogin) {
             this.$router.replace("/userModifiesPwd");

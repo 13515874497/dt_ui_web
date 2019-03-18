@@ -213,6 +213,8 @@ export default {
       console.log(data);
       
       const resultUsers = await repUsers(data);
+      console.log(resultUsers);
+      
       if (resultUsers.code === 200) {
         //赋值 然后显示
         pUtils.pageInfo(resultUsers, data);

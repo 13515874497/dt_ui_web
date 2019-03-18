@@ -10,12 +10,37 @@
     @header-dragend="handleHeaderDragend"
     @header-click="headerClick"
   >
+    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段)-->
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column v-if="isHideNumber" type="index" width="50" fixed></el-table-column>
     <template v-for="title  in tableTitle">
       <!--特殊字段 -->
+      <!-- 根据选项获取值的字段 -->
       <el-table-column
-        v-if="title.topType==='createDate'"
+        v-if="title.inputType==3"
+        :label="title.headName"
+        width="100"
+        :fixed="isFixed(title)"
+        :formatter="statusOptions"
+        :prop="title.topType"
+      ></el-table-column>
+
+      <!-- <el-table-column
+        v-else-if="title.inputType==2"
+        :label="title.headName"
+        width="180"
+        :fixed="isFixed(title)"
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span>{{ scope.row.createDate | date-format}}</span>
+        </template>
+      </el-table-column> -->
+
+
+
+      <el-table-column
+        v-else-if="title.topType==='createDate'"
         :label="title.headName"
         width="180"
         :fixed="isFixed(title)"
@@ -116,22 +141,6 @@
       </el-table-column>
 
       <el-table-column
-        v-else-if="title.topType==='accountStatus'"
-        :label="title.headName"
-        width="180"
-        :formatter="account"
-        :fixed="isFixed(title)"
-      ></el-table-column>
-
-      <el-table-column
-        v-else-if="title.topType==='statusOptions'"
-        :label="title.headName"
-        width="180"
-        :formatter="statusOptions"
-        :fixed="isFixed(title)"
-      ></el-table-column>
-
-      <el-table-column
         v-else
         sortable
         :fixed="isFixed(title)"
@@ -147,7 +156,8 @@ export default {
   data() {
     return {
       menuId: this.$route.params.id,
-      fixedCache: {}
+      fixedCache: {},
+      options: {} //存放各种类型的状态
     };
   },
   props: {
@@ -179,27 +189,25 @@ export default {
     handleSelectionChange(val) {
       this.$emit("checkboxValue", val);
     },
-
-    //table 账号状态 转换显示
-    account: function(row) {
-      return row.accountStatus === 0
-        ? "正常"
-        : row.accountStatus === 1
-        ? "冻结"
-        : row.accountStatus === 2
-        ? "禁用"
-        : "";
+    initOptions() {
+      let self = this;
+      this.tableTitle.forEach(item => {
+        if (item.inputType == 3 && item.statusOptions.length) {
+          self.options[item.topType] = item.statusOptions;
+        }
+      });
     },
-    statusOptions: function(row) {
-      if (row.statusOptions && row.statusOptions.length) {
-        console.log(row);
-        return row.statusOptions
-          .map(item => {
-            return item.name;
-          })
-          .join(",");
+    statusOptions: function(row, column, cellValue) {
+      let topType = column.property;
+      let options = this.options[topType];
+
+      let option = options.find(item => {
+        return cellValue == item.selectId;
+      });
+      if (!option) {
+        return null;
       } else {
-        return "";
+        return option.name;
       }
     },
 
@@ -239,6 +247,7 @@ export default {
       this.fixedCache[this.menuId] = cache;
       localStorage.setItem("fixedCache", JSON.stringify(this.fixedCache));
     },
+    //读取用户自定义固定的表头
     readFixedCache() {
       let fixedCache = localStorage.getItem("fixedCache");
       if (fixedCache) {
@@ -254,6 +263,7 @@ export default {
   },
   created() {
     this.readFixedCache();
+    this.initOptions();
   }
 };
 </script>

@@ -49,7 +49,7 @@
                 <el-button type="primary" @click="upMenuRole" circle>确 定</el-button>
               </span>
               <el-table :data="menuTableTitleData" border style="width: 50%" v-if="menuHedaFlg">
-                <el-table-column prop="name" label="菜单名称" width="120"></el-table-column>
+                <el-table-column prop="mName" label="菜单名称" width="120"></el-table-column>
                 <el-table-column
                   prop="headName"
                   label="拥有的头信息"
@@ -132,7 +132,7 @@ export default {
       },
       defaultProps: {
         children: "childMenus",
-        label: "name"
+        label: "mName"
       },
       rules: {
         rNameAdd: [{ validator: rNameAdd, trigger: "blur" }],
@@ -147,7 +147,6 @@ export default {
       this.menuHedaFlg = false;
       this.isCViewMenu = true;
       const roleUpSelection = roleSelection;
-      console.log(roleUpSelection);
 
       if (roleUpSelection.length <= 0) {
         message.errorMessage("必须选中一条修改");
@@ -164,8 +163,6 @@ export default {
       });
       const resultUsers = repGetUsers();
       resultUsers.then(result => {
-        console.log("repGetUsers");
-        console.log(result);
 
         if (result.code === 200) {
           const generateData = _ => {
@@ -193,9 +190,7 @@ export default {
             }
           });
           roleMenu({ rid: this.roleFrom.rId }).then(res => {
-            console.log(res);
             this.getMenuId(res.data, this.noUrlCheckedKeys);
-            console.log(this.noUrlCheckedKeys);
           });
         }
       });
@@ -229,13 +224,21 @@ export default {
     async lookMenuHead() {
       this.isCViewMenu = false;
       this.menuHedaFlg = true;
-      //获得当前选中的menuIds
-      let keys = this.$refs.tree.getCheckedKeys();
-      //获得当前半选中的menuIds
-      let menuIds = this.$refs.tree.getHalfCheckedKeys();
-      keys.forEach(i => {
-        menuIds.push(i);
-      });
+      // //获得当前选中的menuIds
+      // let keys = this.$refs.tree.getCheckedKeys();
+      // //获得当前半选中的menuIds
+      // let menuIds = this.$refs.tree.getHalfCheckedKeys();
+      //获得当前选中的节点对象
+      let sel_nodes = this.$refs.tree.getCheckedNodes();
+      // 筛选没有url的并返回menuId的数组
+      let menuIds = sel_nodes.filter((item)=>{
+        return item.url
+      }).map(item => item.menuId);
+      // keys.forEach(i => {
+      //   menuIds.push(i);
+      // });
+     
+      
       const menuId = { menuIds };
       const resultHead = await repGetHead(menuId);
       if (resultHead.code === 200) {
@@ -248,7 +251,7 @@ export default {
     },
     //indeterminate节点的子数有没有被选中
     async checkChange(data, daraArr) {
-      console.log(data, daraArr);
+      
       if (daraArr.checkedNodes.length <= 0) {
         this.isViewMenu = true;
         this.menuHedaFlg = false;
@@ -272,8 +275,6 @@ export default {
         const rid = this.roleFrom.rId;
         const menuFlg = this.menuFlg;
         const menuRole = { rid, menuIds, menuFlg };
-        console.log(menuRole);
-        
         const result = await repGetMenus(menuRole);
         if (result.code === 200) {
           this.roleUpVisible = false;
@@ -283,7 +284,6 @@ export default {
     //编辑
     handleClick(row) {
       PubSub.publish("upMenuHead", row);
-      console.log(row);
     },
     // //递归遍历菜单获取id 点击修改的时候自动勾选
     // getMenuId(arr, noUrlMenuList) {

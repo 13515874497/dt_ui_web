@@ -4,7 +4,7 @@
 import ajax from './ajax'
 import { rejects } from 'assert';
 
-const BASE_URL = '/api'
+const BASE_URL = '/api/api/v1'
 
 
 //用户修改密码
@@ -17,9 +17,9 @@ export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')
 //获取图标icon/getIconInfo 
 export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`,'get')
 //获取在线人数
-export const getOnlineNumber = () => ajax(BASE_URL + '/uCount')
+export const getOnlineNumber = () => ajax('/login/uCount')
 // 获取用户登陆信息
-export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(BASE_URL + `/ajaxLogin`, {
+export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(`api/login/ajaxLogin`, {
   userName,
   pwd,
   rememberMe
@@ -70,7 +70,7 @@ export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {mId})
 export const repIndex = () => ajax(BASE_URL + `/index`)
 
 //注销请求
-export const repLogout = () => ajax(BASE_URL + `/logout`)
+export const repLogout = () => ajax(`login/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {type})
@@ -133,6 +133,11 @@ export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')
 //查询产品类目tree
 export const findByListProducts = () => ajax(BASE_URL + '/pro/findByListProducts')
 
+
+//查询导入模板分页 http://127.0.0.1:9001/ctx/getTemplate
+
+
+export const getTemplate = (data) => ajax(BASE_URL + '/ctx/getTemplate',data,'POST');
 //查询关税税率分页 /tax/findByListTax
 export const  findByListTax = (data) => ajax(BASE_URL + '/tax/findByListTax',data,'POST');
 

@@ -142,69 +142,69 @@ Vue.prototype.getCookie = function (c_name) {
   }
   return ''
 }
-router.beforeEach((to, from, next) => {
-  let rep =repIndex()
+// router.beforeEach((to, from, next) => {
+//   let rep =repIndex()
   
   
-  console.log(to);
-  console.log(from);
+//   console.log(to);
+//   console.log(from);
 
 
 
   
-  rep.then((res)=>{
-    console.log(to.fullPath==='/login')
-    console.log(res)
-    if(to.fullPath === '/login'){
-      if (res.code === 200 && res.msg === 'ok') {
-        next({path: '/index'})
-        return
-      }
-    }
-    switch(from.path){
-      case '/userModifiesPwd':
-      let isFirstLogin = Vue.prototype.getCookie('isFirstLogin');
-      console.log(isFirstLogin);
+//   rep.then((res)=>{
+//     console.log(to.fullPath==='/login')
+//     console.log(res)
+//     if(to.fullPath === '/login'){
+//       if (res.code === 200 && res.msg === 'ok') {
+//         next({path: '/index'})
+//         return
+//       }
+//     }
+//     switch(from.path){
+//       case '/userModifiesPwd':
+//       let isFirstLogin = Vue.prototype.getCookie('isFirstLogin');
+//       console.log(isFirstLogin);
       
-      console.log(99999999);
+//       console.log(99999999);
       
-      if(isFirstLogin === 'false'){
-        next({path: '/userModifiesPwd'});
-        return Message({
-          showClose: true,
-          message: '首次登陆需要先修改密码！',
-          type: 'error'
-        })
-      }
-      break;
-    }
-    if(from.path === '/userModifiesPwd') {
+//       if(isFirstLogin === 'false'){
+//         next({path: '/userModifiesPwd'});
+//         return Message({
+//           showClose: true,
+//           message: '首次登陆需要先修改密码！',
+//           type: 'error'
+//         })
+//       }
+//       break;
+//     }
+//     if(from.path === '/userModifiesPwd') {
      
-    }
-    if (to.matched.some(m => m.meta.showLogin)) {
-      if (res.code === 200 && res.msg === 'ok') {
-        // console.log("检测顺利进入")
-        next()
-      } else if (to.path !== '/') {
-        next({path: '/login'})
-        return Message({
-          showClose: true,
-          message: '检测到您还未登录,请登录后操作！',
-          type: 'error'
-        })
-      }
-    } else {
-      // console.log("无检测进入")
-      next()
-    }
-  }).catch(()=>{
-    return Message({
-      showClose: true,
-      message: '数据异常，请联系后台管理员！',
-      type: 'error'
-    })
-  })
-})
+//     }
+//     if (to.matched.some(m => m.meta.showLogin)) {
+//       if (res.code === 200 && res.msg === 'ok') {
+//         // console.log("检测顺利进入")
+//         next()
+//       } else if (to.path !== '/') {
+//         next({path: '/login'})
+//         return Message({
+//           showClose: true,
+//           message: '检测到您还未登录,请登录后操作！',
+//           type: 'error'
+//         })
+//       }
+//     } else {
+//       // console.log("无检测进入")
+//       next()
+//     }
+//   }).catch(()=>{
+//     return Message({
+//       showClose: true,
+//       message: '数据异常，请联系后台管理员！',
+//       type: 'error'
+//     })
+//   })
+// })
 //时间过滤器
 Vue.filter('date-format',(value,formatStr='YYYY-MM-DD HH:mm:ss')=>{
   return moment(value).format(formatStr)
