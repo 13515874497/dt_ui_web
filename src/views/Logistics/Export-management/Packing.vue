@@ -37,25 +37,21 @@
                 <el-table-column
                   prop="NOS."
                   label="NOS."
-                
                   >
                 </el-table-column>
                 <el-table-column
                   prop="SPECIFICATION"
-                  label="SPECIFICATION"
-                  
+                  label="SPECIFICATION"  
                   >
                 </el-table-column>
                 <el-table-column
                   prop="CARTON"
-                  label="CARTON"
-                  
+                  label="CARTON"       
                   >
                 </el-table-column>
                 <el-table-column
                   prop="QUANTITY"
-                  label="QUANTITY"
-                   
+                  label="QUANTITY"             
                   >
                 </el-table-column>
                 <el-table-column
@@ -70,8 +66,7 @@
                 </el-table-column>
                 <el-table-column
                   prop="MEAS"
-                  label="MEAS."
-                
+                  label="MEAS."     
                   >
                 </el-table-column>
               </el-table>
@@ -119,6 +114,7 @@ export default {
   methods: {
     // 打印
     printContent() {
+      this.bindData()
       document.getElementById("printBtn").style.display = "none";
       let subOutputRankPrint = document.getElementById("packBox");
       // console.log(subOutputRankPrint.innerHTML);
@@ -126,9 +122,9 @@ export default {
       let oldContent = document.body.innerHTML;
       document.body.innerHTML = newContent;
       window.print();
-      // window.location.reload();
-      // document.body.innerHTML = oldContent;
-      // return false;
+      window.location.reload();
+      document.body.innerHTML = oldContent;
+      return false;
     },
     bindData() {
       let subOutputRankPrint = document.getElementById("packBox");
@@ -171,14 +167,16 @@ export default {
 };
 </script>
 <style scoped>
-
-
-/* #packBox {
+#packBox {
   height: 100%;
   width: 210mm;
   margin: 0 auto;
   padding: 5mm 7mm;
-} */
+}
+.el-main {
+    width: 210mm;
+    /* margin: 0 auto;    */
+}
 .packTitle,
 .translation {
   text-align: center;
@@ -269,9 +267,6 @@ export default {
 .el-table__header-wrapper tbody td {
   background-color: #fff;
 }
-.el-main {
-    width: 210mm;
-    margin: 0 auto;   
-}
+
 </style>
 
