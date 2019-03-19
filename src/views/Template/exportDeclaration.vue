@@ -208,7 +208,7 @@
 export default {
   data() {
     return {
-      luru:'123',
+      luru:'',
       haiguan:'234',
       yema:'456',
       diantu:"温州电兔电子商务有限公司",

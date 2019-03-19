@@ -6,7 +6,7 @@
             </div>
             <div class="main">
                 <div class="table-title">
-                    <span class="title1">预录入编号：<input type="text" class="ex-input" v-model="luru"></span>
+                    <span class="title1">预录入编号：<input type="text" class="ex-input" ></span>
                     <span class="title2">海关编号：<input  type="text" class="ex-input2" v-model="haiguan"></span>
                     <span class="title3">页码/页数：<input  type="text" class="ex-input3" v-model="yema"></span>
                 </div>
@@ -208,7 +208,7 @@
 export default {
   data() {
     return {
-      luru:'123',
+     
       haiguan:'234',
       yema:'456',
       diantu:"温州电兔电子商务有限公司",
@@ -221,6 +221,7 @@ export default {
   
     // 打印
     printContent() {
+      this.bindData()
        document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("exportBox");
       // console.log(subOutputRankPrint.innerHTML);
@@ -228,9 +229,9 @@ export default {
       let oldContent = document.body.innerHTML;
       document.body.innerHTML = newContent;
       window.print();
-      window.location.reload();
-      document.body.innerHTML = oldContent;
-      return false;
+      // window.location.reload();
+      // document.body.innerHTML = oldContent;
+      // return false;
     },
     bindData(){
        let subOutputRankPrint = document.getElementById("exportBox");
