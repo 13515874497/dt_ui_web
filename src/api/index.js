@@ -130,10 +130,12 @@ export const repDelHistoryUserInfo = ({currentPage, pageSize}) => ajax(BASE_URL 
  * 基础资料 => 物流管理
  */
 //查询运输性质分页
-//http://127.0.0.1:9002/api/v1/property/findByListProperty?pageSize=10&currentPage=10   运输性质
-export const findByListProperty = (data) => ajax(BASE_URL + '/property/findByListProperty',data,'POST');
-
-
+export const findByListProperty = (data) => ajax(BASE_URL + '/property/findByListProperty',data);
+//查询运输类型tree
+export const findByListType = (data) => ajax(BASE_URL + '/type/findByListType',data);
+//查询货运公司分页
+//http://127.0.0.1:9002/api/v1/freight/findByListFreight post 货运公司
+export const findByListFreight = (data) => ajax(BASE_URL + '/freight/findByListFreight',data);
 
 
 
