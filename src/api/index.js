@@ -211,24 +211,37 @@ export const repDelHistoryUserInfo = ({
  */
 
 
-//查询亚马逊描述分页  http://127.0.0.1:9001/api/v1/description/findByListDescription post
+//查询亚马逊描述分页 
 export const findByListDescription = (data) => ajax(BASE_URL + '/description/findByListDescription', data,'POST');
-//查询付款类型分页  http://127.0.0.1:9001/api/v1/pay/findByListProperty?pageSize=2&currentPage=1 get
+//查询付款类型分页  
 export const findPayByListProperty = (data) => ajax(BASE_URL + '/pay/findByListProperty', data);
-//查询订单处理类  http://127.0.0.1:9001/api/v1/handling/findByListHandling post
+//查询订单处理类分页  
 export const findByListHandling = (data) => ajax(BASE_URL + '/handling/findByListHandling', data,'POST');
 
 
-//亚马逊type 订单类型 http://127.0.0.1:9001/api/v1/type/findByListAmazon post
+//查询亚马逊type(订单类型)分页
 export const findByListAmazon = (data) => ajax(BASE_URL + '/type/findByListAmazon', data,'POST');
-//亚马逊仓库  http://127.0.0.1:9001/api/v1/amazon/war/findByListWarehouse post
-export const findByListWarehouse = (data) => ajax(BASE_URL + '/war/findByListWarehouse', data,'POST');
+//查询亚马逊仓库分页  
+export const findByListWarehouse = (data) => ajax(BASE_URL + '/amazon/war/findByListWarehouse', data,'POST');
+
+
+
+
+/**
+ * 
+ * 基础资料 => 运营管理 => 辅助资料
+ */
 
 //发货方式   http://127.0.0.1:9001/api/v1/deli/findByListDelivery?pageSize=3&currentPage=3 get
 export const findByListDelivery = (data) => ajax(BASE_URL + '/deli/findByListDelivery', data);
 
 //星级    http://127.0.0.1:9001/api/v1/star/findByListStarLevel?pageSize=10&currentPage=3 get
 export const findByListStarLevel = (data) => ajax(BASE_URL + '/star/findByListStarLevel', data);
+
+
+
+
+
 
 /**
  * 
