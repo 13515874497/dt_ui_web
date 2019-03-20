@@ -35,7 +35,7 @@ export default {
   methods: {
     readCache() {
       const menu = storage.readData(this.userName + "menu");
-      if (!menu.length) {
+      if (!menu || !menu.length) {
         this.getRepMenu();
         return;
       }

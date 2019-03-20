@@ -8,11 +8,11 @@
     stripe
     border
     @header-dragend="handleHeaderDragend"
-    @header-click="headerClick"
+    @header-contextmenu	="headerClick"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段)-->
     <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column v-if="isHideNumber" type="index" width="50" fixed></el-table-column>
+    <el-table-column v-if="isShowNumber()" type="index" width="50"></el-table-column>
     <template v-for="title  in tableTitle">
       <!--特殊字段 -->
       <!-- 根据选项获取值的字段 -->
@@ -23,23 +23,38 @@
         :fixed="isFixed(title)"
         :formatter="statusOptions"
         :prop="title.topType"
+        :render-header="renderHeader"
       ></el-table-column>
 
-      <!-- <el-table-column
-        v-else-if="title.inputType==2"
-        :label="title.headName"
-        width="180"
+
+
+
+
+
+<!-- sortable
         :fixed="isFixed(title)"
+        :label="title.headName"
+        :prop="title.topType"
+        :show-overflow-tooltip="true"
+        :render-header="renderHeader" -->
+
+
+
+
+      <el-table-column
+        v-else-if="title.inputType==4"
+        :fixed="isFixed(title)"
+        :label="title.headName"
+        :prop="title.topType"
+        :show-overflow-tooltip="true"
+        :render-header="renderHeader"
       >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
         </template>
-      </el-table-column> -->
-
-
-
-      <el-table-column
+      </el-table-column>
+      <!-- <el-table-column
         v-else-if="title.topType==='createDate'"
         :label="title.headName"
         width="180"
@@ -49,7 +64,7 @@
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         width="150"
@@ -80,7 +95,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column
+      <!-- <el-table-column
         v-else-if="title.topType==='landingTime'"
         :label="title.headName"
         width="180"
@@ -90,7 +105,7 @@
           <i class="el-icon-time"></i>
           <span>{{ scope.row.landingTime | date-format}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         v-else-if="title.topType==='eDate'"
@@ -104,7 +119,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column
+      <!-- <el-table-column
         v-else-if="title.topType==='modifyDate'"
         :label="title.headName"
         width="180"
@@ -114,9 +129,9 @@
           <i class="el-icon-time"></i>
           <span>{{ scope.row.modifyDate | date-format}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column
+      <!-- <el-table-column
         v-else-if="title.topType==='createDate'"
         :label="title.headName"
         width="180"
@@ -126,9 +141,9 @@
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column
+      <!-- <el-table-column
         v-else-if="title.topType==='auditDate'"
         :label="title.headName"
         width="180"
@@ -138,7 +153,7 @@
           <i class="el-icon-time"></i>
           <span>{{ scope.row.createDate | date-format}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
       <el-table-column
         v-else
@@ -147,6 +162,7 @@
         :label="title.headName"
         :prop="title.topType"
         :show-overflow-tooltip="true"
+        :render-header="renderHeader"
       ></el-table-column>
     </template>
   </el-table>
@@ -166,11 +182,11 @@ export default {
   },
   methods: {
     //是否隐藏编号
-    isHideNumber() {
-      let flag = false;
+    isShowNumber() {
+      let flag = true;
       this.tableTitle.forEach(item => {
         if (item.headName == "编号") {
-          flag = true;
+          flag = false;
         }
       });
       return flag;
@@ -210,34 +226,40 @@ export default {
         return option.name;
       }
     },
-
-    //当拖动表头改变了列的宽度的时候会触发该事件
-    handleHeaderDragend(newWidth, oldWidth, column, event) {
+    renderHeader(h, { column, $index }) {
+      console.log(h);
+      console.log(column);
+      console.log($index);
+      this.setHeaderMinWidth(column);
+      return column.label;
+    },
+    setHeaderMinWidth(column) {
       //内边距左右各10  每个字符宽度按 15的宽度计算
-      column.minWidth = column.label.length * 15 + 20;
+      let minWidth = column.label.length * 15 + 20;
       //如果有排序的图标则加24  排序的箭头宽度 26
       if (column.sortable) {
-        column.minWidth += 24;
+        minWidth += 24;
       }
-      column.width =
-        column.width < column.minWidth ? column.minWidth : column.width;
+      column.minWidth = minWidth;
+      column.width = column.width < minWidth ? minWidth : column.width;
+        // column.width < minWidth ? minWidth : column.width;
+    },
+    //当拖动表头改变了列的宽度的时候会触发该事件
+    handleHeaderDragend(newWidth, oldWidth, column, event) {
+      this.setHeaderMinWidth(column);
     },
     //根据本地缓存cacheFixed判断里否固定表头
     isFixed(title) {
-      if (title.topType === "createDate") {
-        console.log(title);
-      }
-
       return (
         !!title.isFixed || this.fixedCache[this.menuId].includes(title.headName)
       );
     },
     //点击表头固定字段并缓存到本地
     headerClick(column, event) {
+      console.log(event);
+      
       let cache = this.fixedCache[this.menuId] || [];
       let key = column.label;
-      console.log(column.label);
-
       if (cache.indexOf(key) > -1) {
         let index = cache.indexOf(key);
         cache.splice(index, 1);
@@ -264,13 +286,31 @@ export default {
   created() {
     this.readFixedCache();
     this.initOptions();
+  },
+  mounted(){
+    console.log();
+    
+    // document.querySelector('thead')[0].oncontextmenu = function(){
+    //   return false ;
+    // }
   }
 };
+
+
 </script>
 
-<style scoped lang="scss" scoped>
+<style lang="scss" >
 .el-tooltip__popper {
   max-width: 500px;
   line-height: 180%;
+}
+
+.el-table thead {
+    color: #336b22;
+    font-weight: 500;
+}
+.el-table td,
+.el-table th {
+  padding: 6px 0;
 }
 </style>

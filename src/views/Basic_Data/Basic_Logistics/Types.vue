@@ -1,4 +1,3 @@
-
 <script>
 import {findByListType} from '../../../api/index'
 import MxTree from "../../../components/Mixins/MxTree";
@@ -25,11 +24,3 @@ export default {
 
 <style>
 </style>
-
-
-
-
-
-
-
-

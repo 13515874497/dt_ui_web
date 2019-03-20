@@ -14,6 +14,9 @@ export default {
   //写入
   saveData (dataKey, data) {
     localStorage.setItem(dataKey, JSON.stringify(data))
+  },
+  removeData(key){
+    localStorage.removeItem(key);
   }
 }
 

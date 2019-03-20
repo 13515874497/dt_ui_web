@@ -17,7 +17,7 @@ export const register = ({pwd}) => ajax(BASE_URL + `/user/upPwd`, {pwd}, 'POST')
 //获取图标icon/getIconInfo 
 export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`,'get')
 //获取在线人数
-export const getOnlineNumber = () => ajax('/login/uCount')
+export const getOnlineNumber = () => ajax('api/login/uCount')
 // 获取用户登陆信息
 export const repLoginUser = ({userName, pwd, rememberMe}) => ajax(`api/login/ajaxLogin`, {
   userName,
@@ -53,7 +53,7 @@ export const repHead = (menu_id) => {
 }
 
 //修改菜单
-export const upMenu = ({menuId,name,icon,url}) => ajax(BASE_URL + '/menu/upMenu',{menuId,name,icon,url},'POST',['修改菜单成功'])
+export const upMenu = ({menuId,mName,icon,url}) => ajax(BASE_URL + '/menu/upMenu',{menuId,mName,icon,url},'POST',['修改菜单成功'])
 
 
 // export const repHead = (menu_id) => ajax(BASE_URL + '/head', {menu_id})
@@ -70,7 +70,7 @@ export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {mId})
 export const repIndex = () => ajax(BASE_URL + `/index`)
 
 //注销请求
-export const repLogout = () => ajax(`login/logout`)
+export const repLogout = () => ajax(`api/login/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {type})
@@ -134,18 +134,31 @@ export const findByListProperty = (data) => ajax(BASE_URL + '/property/findByLis
 //查询运输类型tree
 export const findByListType = (data) => ajax(BASE_URL + '/type/findByListType',data);
 //查询货运公司分页
-//http://127.0.0.1:9002/api/v1/freight/findByListFreight post 货运公司
-export const findByListFreight = (data) => ajax(BASE_URL + '/freight/findByListFreight',data);
+export const findByListFreight = (data) => ajax(BASE_URL + '/freight/findByListFreight',data,'POST');
+//查询异常类型tree http://127.0.0.1:9002/api/v1/abnormal/findByListAbnormal
+export const findByListAbnormal = (data) => ajax(BASE_URL + '/abnormal/findByListAbnormal',data);
 
 
-
-
-
+/**
+ * 
+ * 基础资料 => 人事管理
+ */
+//查询学历分页  /staff/getEducation
+export const getEducation = (data) => ajax(BASE_URL + '/staff/getEducation',data,'POST');
+//查询职员类型 员工类型  /staff/getEmployee
+export const getEmployee = (data) => ajax(BASE_URL + '/staff/getEmployee',data,'POST');
+//查询学历分页  staff/getEmployment
+export const getEmployment = (data) => ajax(BASE_URL + '/staff/getEmployment',data,'POST');
 
 /**
  * 
  * 基础资料 => 公共资料
  */
+//查询SKU信息分页
+export const findByListSku = (data) => ajax(BASE_URL + '/sku/findByListSku',data,'POST');
+
+//查询VAT附加税分页
+export const findByListSur = (data) => ajax(BASE_URL + '/sur/findByListSur',data,'POST');
 
 //查询仓库tree
 export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')

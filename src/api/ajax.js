@@ -127,13 +127,15 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
           "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWRlb1Rva2VuIiwiaWQiOjM2NywibmFtZSI6InZ2dnYiLCJzdGF0dXMiOjEsImlhdCI6MTU1Mjg5Nzg4OSwiZXhwIjoxNTUzNTAyNjg5fQ.Sn1b9HlCtIUoSlZWGWyM7Vm_1nWBH7m16rBbumdNCYQ"
         }
       }
-      if (response.data.code == -2) {
-        router.push('/login');
-        Message({
-          showClose: true,
-          message: response.data.msg,
-          type: "error"
-        });
+      switch (response.data.code) {
+        case -2:
+          router.push('/login');
+          Message({
+            showClose: true,
+            message: response.data.msg,
+            type: "error"
+          });
+          break;
       }
 
       resolve(response.data)

@@ -23,6 +23,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
+    .searchReset {
+        white-space:nowrap;
+    }
 </style>
