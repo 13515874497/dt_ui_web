@@ -12,7 +12,7 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
   return new Promise(function (resolve, reject) {
     let token = Vue.prototype.getCookie('token');
     console.log(token);
-    
+
     axios.defaults.headers.common['token'] = token;
     // 执行异步ajax请求
     let promise
@@ -91,9 +91,51 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     // })
     promise.then(function (response) {
       // 成功了调用resolve()
-      
-      if(response.data.code == -1){
-        // router.push('/login');
+      data = {
+        "code": 200,
+        "msg": "success",
+        "data": {
+          "user": {
+            "uid": 367,
+            "userName": "vvvv",
+            "pwd": null,
+            "status": 1,
+            "accountStatus": 0,
+            "createIdUser": 1,
+            "upIdUser": null,
+            "createDate": 1550215905999,
+            "upDate": null,
+            "userExpirationDate": 0,
+            "pwdValidityPeriod": 0,
+            "userStatus": null,
+            "version": null,
+            "name": null,
+            "roles": null,
+            "rName": null,
+            "rId": null,
+            "landingTime": 1552897889645,
+            "mobilePhone": null,
+            "menuName": null,
+            "delUser": 0,
+            "delDate": null,
+            "restoreDate": null,
+            "uIds": null,
+            "type": null,
+            "computerName": null,
+            "firstLogin": true
+          },
+          "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWRlb1Rva2VuIiwiaWQiOjM2NywibmFtZSI6InZ2dnYiLCJzdGF0dXMiOjEsImlhdCI6MTU1Mjg5Nzg4OSwiZXhwIjoxNTUzNTAyNjg5fQ.Sn1b9HlCtIUoSlZWGWyM7Vm_1nWBH7m16rBbumdNCYQ"
+        }
+      }
+      switch (response.data.code) {
+        case -2:
+          router.push('/login');
+          Message({
+            showClose: true,
+            message: response.data.msg,
+            type: "error"
+          });
+          break;
       }
 
       resolve(response.data)
@@ -113,7 +155,7 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
           if (msg[1]) {
             Message({
               showClose: true,
-              message: msg[1] ||  response.msg,
+              message: msg[1] || response.msg,
               type: "error"
             });
           }

@@ -104,6 +104,8 @@ import Menu_header from '../views/Storage/Menu_header'//菜单头部
 import Tariff_rate from '../views/Storage/Tariff_rate'//关税税率
 import Additional_tariff from '../views/Storage/Additional_tariff'//附加税率
 import SKU from '../views/Storage/SKU'//SUK信息表
+import VAT from '../views/Storage/VAT'//VAT信息表
+
 import Star_level from '../views/Storage/Star_level'//星级
 
 import UserModifiesPwd from '../views/ModifiesPassword/UserModifiesPwd.vue'  //修改密码
@@ -532,6 +534,10 @@ export default new Router({
         {
           path:'/index/SKU/:id/:name',//SUK信息表
           component:SKU
+        },
+        {
+          path:'/index/VAT/:id/:name',//VAT附加税
+          component:VAT
         },
         {
           path:'/index/Star_level/:id/:name',//星级

@@ -1,7 +1,7 @@
 <template>
   <div id="data">
     <!--多选输入框选择输入-->
-    <div id="printCheck" class="clearfix" v-if="tableTitle.length">
+    <div id="printCheck" class="clearfix" v-if="tableTitle.length" v-show="showQuery">
       <el-row :gutter="20">
         <el-col :span="4">
           <Query2 :tableTitle="tableTitle" @getValue="getValue"></Query2>
@@ -28,7 +28,7 @@
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
       />
-      <div v-if="tableTitle.length">
+      <div v-if="tableTitle.length" class="control">
         <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
         <!--分页-->
         <Pagination :data="data" v-on:pageData="pagination"/>
@@ -66,7 +66,8 @@ export default {
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
-      }
+      },
+      showQuery: true
     };
   },
   components: {
@@ -132,4 +133,7 @@ export default {
 
 
 <style lang="scss">
+.control {
+  margin-top: 20px;
+}
 </style>

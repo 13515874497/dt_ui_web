@@ -1,5 +1,3 @@
-
-
 <script>
 import { repGetCompanyInfo } from "../../../api";
 import MxTable  from '../../../components/Mixins/MxTable'

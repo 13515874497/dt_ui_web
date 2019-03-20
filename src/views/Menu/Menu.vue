@@ -56,7 +56,7 @@
         <el-tab-pane label="菜单信息" name="first">
           <el-form ref="form" :model="editingMenu.data" label-width="80px">
             <el-form-item label="菜单名称">
-              <el-input v-model="editingMenu.data.name" placeholder="公共资料"></el-input>
+              <el-input v-model="editingMenu.data.mName" placeholder="公共资料"></el-input>
             </el-form-item>
             <el-form-item label="URL">
               <el-input v-model="editingMenu.data.url" placeholder="请输入监管方式简称"></el-input>
@@ -444,9 +444,22 @@ export default {
     async upMenu() {
       this.editingMenu.isShow = false;
       console.log(this.editingMenu.data);
-      let { menuId, name, icon, url } = this.editingMenu.data;
-      let res = await upMenu({ menuId, name, icon, url });
+      let { menuId, mName, icon, url } = this.editingMenu.data;
+      console.log({ menuId, mName, icon, url });
+      
+      let res = await upMenu({ menuId, mName, icon, url });
       console.log(res);
+      if(res.code == 200){
+        this.upStorageMenu();
+      }
+    },
+    async upStorageMenu(){
+      let res = await repMenu();
+      if (res.code === 200) {
+        storage.saveData(this.userName + "menu", res.data);
+        this.menuList = res.data;
+        this.mresetMenuList = res.data;
+      }
     },
     //菜单列表 => 编辑 => 菜单信息 | 字段信息
     async menuTabClick(tab) {
