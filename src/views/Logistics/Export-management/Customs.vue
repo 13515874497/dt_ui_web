@@ -5,15 +5,15 @@
             <h2 class="ex-title">中华人民共和国海关出口货物报关单</h2>
             </div>
             <div class="main">
-                <div class="table-title">
+                <div class="table-title" >
                     <span class="title1">预录入编号：<input type="text" class="ex-input" ></span>
-                    <span class="title2">海关编号：<input  type="text" class="ex-input2" v-model="haiguan"></span>
-                    <span class="title3">页码/页数：<input  type="text" class="ex-input3" v-model="yema"></span>
+                    <span class="title2">海关编号：<input  type="text" class="ex-input2" ></span>
+                    <span class="title3">页码/页数：<input  type="text" class="ex-input3"></span>
                 </div>
-                <div class="content1">
+                <div class="content1" >
                     <span class="cont-span1">
                         <p class="Consignor">境内发货人</p>
-                        <input type="text" v-model="diantu">
+                        <input type="text" >
                     </span>
                        <span class="cont-span2">
                         <p>出境关别</p>
@@ -35,11 +35,11 @@
                 <div class="content2">
                     <span class="cont2-span1">
                         <p>境内收货人</p>
-                        <input type="text" v-model="shouhuo">
+                        <input type="text" >
                     </span>
                        <span class="cont2-span2">
                         <p>运输方式</p>
-                        <input type="text" v-model="yunshu">
+                        <input type="text" >
                     </span>
                        <span class="cont2-span3">
                         <p>运输工具名称及航次号</p>
@@ -133,7 +133,7 @@
                 <div class="content6">
                     <span class="cont6-span1">
                         <p>标记唛码及备注</p>
-                        <input type="text" :value="wenben"></input>
+                        <input type="text" ></input>
                     </span>
                 </div>
                 
@@ -168,14 +168,14 @@
                   </tr>               
                    <tr>
                     <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>
-                    <td>2</td>
-                    <td>1</td>    
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>    
                   </tr>
                 </table>
 
@@ -208,13 +208,6 @@
 export default {
   data() {
     return {
-     
-      haiguan:'234',
-      yema:'456',
-      diantu:"温州电兔电子商务有限公司",
-      wenben:'这是个文本输入框',
-      shouhuo:'GLOBEGOU USA CO.,LTD ',
-      yunshu:'集装箱'
     };
   },
   methods: {

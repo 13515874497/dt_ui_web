@@ -71,7 +71,14 @@ export default {
   } 
 }
 </script>
-<style>
+<style scoped>
+#declarationBox{
+  height: 100%;
+  width: 210mm;
+  margin: 0 auto;
+  padding: 5mm 7mm;
+}
+ 
 .deTitle{
     width:100%;
     font-size:16px;

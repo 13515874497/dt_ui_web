@@ -71,7 +71,7 @@ export default {
   } 
 }
 </script>
-<style>
+<style scoped>
 .deTitle{
     width:100%;
     font-size:16px;

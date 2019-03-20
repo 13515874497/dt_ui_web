@@ -14,7 +14,7 @@
         :default-expand-all="false"
         :expand-on-click-node="false"
         :props="defaultProps"
-      >
+        >
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label}}</span>
           <span>

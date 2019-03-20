@@ -165,7 +165,8 @@ export default {
   },
   methods: {
     // 打印
-    printContent(e) {
+    printContent() {
+      this.bindData()
        document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("salesBox");
       // console.log(subOutputRankPrint.innerHTML);
@@ -176,7 +177,19 @@ export default {
       // window.location.reload();
       // document.body.innerHTML = oldContent;
       // return false;
+    },
+    bindData(){
+       let subOutputRankPrint = document.getElementById("salesBox");
+       var oInputs = subOutputRankPrint.getElementsByTagName('input');
+       console.log(oInputs);     
+       for (var i=0;i<oInputs.length;i++){
+          oInputs[i].setAttribute("value",oInputs[i].value)
+       } ;  
     }
+
+  },
+  mounted(){
+    this.bindData()
   }
 };
 </script>

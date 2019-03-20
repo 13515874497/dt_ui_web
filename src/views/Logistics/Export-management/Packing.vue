@@ -245,23 +245,23 @@ export default {
   margin: 5mm 8mm;
 }
 .el-table--border {
-  border: 1px solid black;
+  border: 1px solid #333;
 }
 .el-table--border th {
   text-align: center;
-  border-right: 1px solid black;
+  border-right: 1px solid  #333;
 }
 
 .el-table td,
 .el-table th.is-leaf {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid #333;
 }
 .el-table--border td {
-  border-right: 1px solid black;
+  border-right: 1px solid #333;
   text-align: center;
 }
 .el-table__footer-wrapper td {
-  border-top: 1px solid black;
+  border-top: 1px solid #333;
 }
 .el-table__footer-wrapper tbody td,
 .el-table__header-wrapper tbody td {

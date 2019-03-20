@@ -143,10 +143,10 @@ export default {
 
        for (var i=0;i<oInputs.length;i++){
           oInputs[i].setAttribute("value",oInputs[i].value)      
-    }
-     for (var i=0;i<otextarea.length;i++){
+         }
+      for (var i=0;i<otextarea.length;i++){
          otextarea[i].innerHTML = otextarea[i].value
-       } ;  
+        } ;  
   }
   },
   mounted(){
@@ -156,8 +156,10 @@ export default {
 </script>
 <style>
 #invoiceBox {
-  width: 100%;
   height: 100%;
+  width: 210mm;
+  margin: 0 auto;
+  padding: 5mm 7mm;
 }
 .packTitle {
   text-align: center;
@@ -447,6 +449,13 @@ text-align: center;
   font-size:14px;
   font-weight: bold;
 }
+/* button{
+  margin-top:20px;
+  width:80px;
+  height: 40px;
+  border-radius: 12px;
+  background-color: yellowgreen;
+} */
 </style>
 <style media="print">
 @page {
