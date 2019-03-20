@@ -9,26 +9,31 @@
             <div class="salesLeft">
                 <div class="salesBuyer">买方</div>
                 <div class="buyersNames">
-                   <span> BUYERS：</span>
-                   <span>GLOBEGOU USA CO.,LTD</span>
-                   <span>245 EAST MAIN STREET, SUITE 115, ALHAMBRA  CA 91801 </span>
+                 
+                     <span> BUYERS：</span>
+                     <input type="text"></input>
+               
+                   <textarea class="buyersNamesBottom">245 EAST MAIN STREET, SUITE 115, ALHAMBRA  CA 91801 </textarea>
                 </div>
             </div>
             <div class="salesRight">
                <div>合同号码</div> 
                <div class="salesContract">
                    <span>CONTACT NO.:</span>
-                   <span style="border-bottom:1px solid black ">GL18AM181US</span>
+                   <!-- <span style="border-bottom:1px solid black ">GL18AM181US</span> -->
+                   <input type="text"></input>
                </div>
                <div >日期</div>
                <div class="salesContract">
                    <span>DATE：</span>
-                   <span style="border-bottom:1px solid black ">Sep.28,2019</span>
+                   <!-- <span style="border-bottom:1px solid black ">Sep.28,2019</span> -->
+                   <input type="text"></input>
                </div>
                <div>签约地点</div>
                <div class="salesContract">
                    <span>SIGNED AT：</span>
-                   <span style="border-bottom:1px solid black">WENZHOU</span>
+                   <!-- <span style="border-bottom:1px solid black">WENZHOU</span> -->
+                   <input type="text"></input>
                </div>
             </div>
         </div>
@@ -156,6 +161,7 @@
             <span>  GLOBEGOU WZ CO.,LTD  </span>
         </div>
          <button @click="printContent" id="printBtn">dayin</button>
+        
     </div>
 </template>
 <script>
@@ -165,7 +171,8 @@ export default {
   },
   methods: {
     // 打印
-    printContent(e) {
+    printContent() {
+      this.bindData()
        document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("salesBox");
       // console.log(subOutputRankPrint.innerHTML);
@@ -176,7 +183,25 @@ export default {
       // window.location.reload();
       // document.body.innerHTML = oldContent;
       // return false;
-    }
+    },
+    bindData(){
+       var subOutputRankPrint = document.getElementById("salesBox");
+       var oInputs = subOutputRankPrint.getElementsByTagName('input');
+       var otextarea = subOutputRankPrint.getElementsByTagName('textarea'); 
+       console.log(oInputs); 
+       console.log(otextarea);    
+
+       for (var i=0;i<oInputs.length;i++){
+          oInputs[i].setAttribute("value",oInputs[i].value)      
+         }
+       for (var i=0;i<otextarea.length;i++){
+         otextarea[i].innerHTML = otextarea[i].value
+        } ;  
+  }
+
+  },
+  mounted(){
+    this.bindData()
   }
 };
 </script>
@@ -187,6 +212,13 @@ export default {
 }
 .salesContract span{
   width:40%;
+}
+.salesContract input{
+  width:55%;
+  border:none;
+  border-bottom:1px solid black ;
+  outline: none;
+
 }
 .salesTitle {
   width: 100%;
@@ -206,7 +238,7 @@ export default {
 }
 .salesInformation {
   width: 100%;
-  /* height:150px; */
+  height:150px;
   /* border: 1px solid black; */
   display: flex;
   margin-bottom: 5px;
@@ -214,6 +246,39 @@ export default {
 }
 .salesLeft {
   width: 50%;
+}
+.buyersNames{
+  position: relative;
+  width:100%;
+  display: flex;
+  align-items: center;
+}
+
+.buyersNames span{
+  display: inline-block;
+  width:12%;
+  position: absolute;
+  left:0;
+  top:0;
+  height:130px;
+}
+.buyersNames input{
+  width:75%;
+  position: absolute;
+  left:80px;
+  top:0;
+  border:none;
+  outline:none;
+}
+.buyersNamesBottom{
+  width:75%;
+  position: absolute;
+  left:80px;
+  top:40px;
+  resize: none;
+  height:80px;
+  border:none;
+  outline:none;
 }
 .salesRight {
   width: 50%;
@@ -246,12 +311,14 @@ export default {
   width: 50%;
 }
 .salesTotal {
-  width: 80%;
+  width: 100%;
   text-align: right;
+  padding-right:200px;
 }
 .salesTotalAmount {
-  width: 90%;
+  width: 100%;
   text-align: right;
+  padding-right:100px;
 }
 .salesPacking {
   width: 100%;
