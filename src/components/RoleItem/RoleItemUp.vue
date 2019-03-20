@@ -314,8 +314,10 @@ export default {
           if (item.childMenus && item.childMenus) {
             this.getMenuId(item.childMenus, arr);
           }
+      
         // }
       });
+      this.isViewMenu = arr.length? false: true;
     },
     //新增角色信息
     addRoleInfo(formName) {

@@ -145,6 +145,22 @@ Vue.prototype.getCookie = function (c_name) {
 Vue.prototype.removeCookie = (key)=>{
   this.setCookie(key,'',-1);
 }
+
+// let rep =repIndex();
+// rep.then((res)=>{
+//   console.log(res);
+  
+// })
+// router.beforeEach((to, from, next) => {
+//   console.log();
+  
+// })
+
+
+
+
+
+
 // router.beforeEach((to, from, next) => {
 //   let rep =repIndex()
   
@@ -181,9 +197,7 @@ Vue.prototype.removeCookie = (key)=>{
 //       }
 //       break;
 //     }
-//     if(from.path === '/userModifiesPwd') {
-     
-//     }
+
 //     if (to.matched.some(m => m.meta.showLogin)) {
 //       if (res.code === 200 && res.msg === 'ok') {
 //         // console.log("检测顺利进入")

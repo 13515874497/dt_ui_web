@@ -53,38 +53,21 @@ export default {
       body_height: { height: "" },
       userName: "",
       passWord: "",
-      isLanding: false, //控制 账号跟密码输入款要有value 才能登陆
+      // isLanding: false, 
       isLogin: true, // <!--登录-->
       rememberMe: false,
       onlineNumber: "" //在线人数
     };
   },
-  mounted() {
-    if (this.userName === "" || this.passWord === "") {
-      this.isLanding = true;
-      return;
+  computed: {
+    //控制 账号跟密码输入款要有value 才能登陆
+    isLanding(){
+      return !(this.userName && this.passWord) ; 
     }
-    this.isLanding = false;
   },
   created() {
     this.hh();
     this.getOnlineNumber();
-  },
-  watch: {
-    userName: function() {
-      if (this.userName === "" || this.passWord === "") {
-        this.isLanding = true;
-        return;
-      }
-      this.isLanding = false;
-    },
-    passWord: function() {
-      if (this.userName === "" || this.passWord === "") {
-        this.isLanding = true;
-        return;
-      }
-      this.isLanding = false;
-    }
   },
   methods: {
     //获取屏幕尺寸
@@ -110,10 +93,10 @@ export default {
           console.log(uData.token);
 
           this.setCookie("name", uData.user.name, 7);
-          this.setCookie("isFirstLogin", uData.user.firstLogin);
+
 
           //如果是首次登陆 跳转到修改密码的页面
-          if (!uData.user.firstLogin) {
+          if (uData.user.firstLogin) {
             this.$router.replace("/userModifiesPwd");
             loadingInstance.close();
             return;

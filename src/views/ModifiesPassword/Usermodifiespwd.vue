@@ -42,10 +42,9 @@
           const res = await register(uInfo);
           if (res.code === 200) {
             const logOut = await repLogout();
-            if (logOut.code === 200) {
-              this.setCookie('isFirstLogin',true);
-              this.$router.replace('/login')
-            }
+            // if (logOut.code === 200) {
+            //   this.$router.replace('/login')
+            // }
           }
         }
       },

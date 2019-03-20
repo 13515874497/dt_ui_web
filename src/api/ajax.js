@@ -133,14 +133,21 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
           Message({
             showClose: true,
             message: response.data.msg,
-            type: "error"
+            // type: "error"
           });
           break;
+          case -3:
+          router.replace('/userModifiesPwd');
+          Message({
+            showClose: true,
+            message: response.data.msg,
+            type: "error"
+          });
       }
 
       resolve(response.data)
 
-
+      //自定义成功或错误信息
       if (msg) {
         if (response.data.code == 200) {
           if (msg[0]) {
