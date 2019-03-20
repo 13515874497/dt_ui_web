@@ -450,7 +450,6 @@ export default {
       let res = await upMenu({ menuId, mName, icon, url });
       console.log(res);
       if(res.code == 200){
-        // storage.removeData(this.userName+'menu');
         this.upStorageMenu();
       }
     },

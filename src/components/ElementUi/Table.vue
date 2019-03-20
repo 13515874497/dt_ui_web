@@ -227,9 +227,6 @@ export default {
       }
     },
     renderHeader(h, { column, $index }) {
-      console.log(h);
-      console.log(column);
-      console.log($index);
       this.setHeaderMinWidth(column);
       return column.label;
     },
@@ -256,7 +253,6 @@ export default {
     },
     //点击表头固定字段并缓存到本地
     headerClick(column, event) {
-      console.log(event);
       
       let cache = this.fixedCache[this.menuId] || [];
       let key = column.label;
@@ -288,11 +284,6 @@ export default {
     this.initOptions();
   },
   mounted(){
-    console.log();
-    
-    // document.querySelector('thead')[0].oncontextmenu = function(){
-    //   return false ;
-    // }
   }
 };
 

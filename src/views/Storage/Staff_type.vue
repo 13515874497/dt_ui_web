@@ -1,13 +1,13 @@
 
 <script>
-// 学历
-import { getEducation } from "../../api";
+// 员工类型  职员类型
+import { getEmployee } from "../../api";
 import MxTable  from '../../components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {
      queryPage(data) {
-      return getEducation(data);
+      return getEmployee(data);
     },
   }
 }
