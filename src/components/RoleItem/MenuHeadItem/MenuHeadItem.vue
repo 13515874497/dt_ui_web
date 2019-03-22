@@ -90,15 +90,22 @@ export default {
       const thIds = movedKeys;
       const mId = this.menuHeadFrom.menuId;
       const menuHead = { mId, thIds };
+      console.log(value);
+      console.log(direction);
+      console.log(movedKeys);
+      
       if (direction === "left") {
         const resultDel = await repDelHeadMenu(menuHead);
+        
         if (resultDel.code === 200) {
+          this.$emit('moved');
           console.log("移除成功~");
         }
       } else {
         const resultAdd = await repAddHeadMenu(menuHead);
         if (resultAdd.code === 200) {
           console.log("添加成功~");
+          this.$emit('moved');
         }
       }
     }

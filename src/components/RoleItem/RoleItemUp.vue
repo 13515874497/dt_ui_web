@@ -67,7 +67,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
-    <MenuHeadItem/>
+    <MenuHeadItem @moved="refreshTabel"/>
   </div>
 </template>
 
@@ -137,7 +137,8 @@ export default {
       rules: {
         rNameAdd: [{ validator: rNameAdd, trigger: "blur" }],
         rSign: [{ validator: rSign, trigger: "blur" }]
-      }
+      },
+      menuIds:[] //当前表格中要查看的菜单id
     };
   },
   async mounted() {
@@ -224,25 +225,20 @@ export default {
     async lookMenuHead() {
       this.isCViewMenu = false;
       this.menuHedaFlg = true;
-      // //获得当前选中的menuIds
-      // let keys = this.$refs.tree.getCheckedKeys();
-      // //获得当前半选中的menuIds
-      // let menuIds = this.$refs.tree.getHalfCheckedKeys();
+
       //获得当前选中的节点对象
       let sel_nodes = this.$refs.tree.getCheckedNodes();
       // 筛选没有url的并返回menuId的数组
-      let menuIds = sel_nodes.filter((item)=>{
+      this.menuIds = sel_nodes.filter((item)=>{
         return item.url
       }).map(item => item.menuId);
-      // keys.forEach(i => {
-      //   menuIds.push(i);
-      // });
-     
-      
-      const menuId = { menuIds };
-      const resultHead = await repGetHead(menuId);
+
+      this.refreshTabel();
+    },
+    //刷新表格信息
+    async refreshTabel(){
+      const resultHead = await repGetHead({menuIds:this.menuIds});
       if (resultHead.code === 200) {
-        console.log(1111111);
         console.log(resultHead);
         
         this.menuTableTitleData = resultHead.data;

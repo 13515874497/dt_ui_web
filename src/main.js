@@ -244,7 +244,6 @@ new Vue({
   router,
   components: {
     Form: form,
-    Message
   }
 })
 
