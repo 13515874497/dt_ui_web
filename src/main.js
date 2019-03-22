@@ -243,7 +243,8 @@ new Vue({
   template: '<App/>',
   router,
   components: {
-    Form: form
+    Form: form,
+    Message
   }
 })
 

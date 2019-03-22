@@ -53,7 +53,7 @@ export default {
       body_height: { height: "" },
       userName: "",
       passWord: "",
-      // isLanding: false, 
+      // isLanding: false,
       isLogin: true, // <!--登录-->
       rememberMe: false,
       onlineNumber: "" //在线人数
@@ -61,8 +61,8 @@ export default {
   },
   computed: {
     //控制 账号跟密码输入款要有value 才能登陆
-    isLanding(){
-      return !(this.userName && this.passWord) ; 
+    isLanding() {
+      return !(this.userName && this.passWord);
     }
   },
   created() {
@@ -85,35 +85,25 @@ export default {
       //成功执行后续
       if (userName && pwd) {
         const result = await repLoginUser(users);
+        loadingInstance.close();
         const uData = result.data;
         console.log(result);
         if (result.code === 200) {
           const uData = result.data;
-          
-          console.log(uData.token);
-
           this.setCookie("name", uData.user.name, 7);
-
-
           //如果是首次登陆 跳转到修改密码的页面
           if (uData.user.firstLogin) {
             this.$router.replace("/userModifiesPwd");
-            loadingInstance.close();
             return;
           }
           // 去个主界面
           this.$router.replace("/index");
-          loadingInstance.close();
         } else {
           message.messageNotDError(result.msg, "登陆失败");
-          loadingInstance.close();
         }
-        loadingInstance.close();
       } else {
         message.messageNotDError("账号或密码不能为空~", "登陆失败");
-        loadingInstance.close();
       }
-      loadingInstance.close();
     },
     async getOnlineNumber() {
       let res = await getOnlineNumber();

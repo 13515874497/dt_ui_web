@@ -19,6 +19,5 @@ export default {
       loadingInstance.close()
       return resultHead.data
     }
-
   }
 }
