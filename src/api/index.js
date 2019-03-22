@@ -205,6 +205,39 @@ export const repDelHistoryUserInfo = ({
 
 
 
+
+
+/**
+ * 
+ * 基础资料 => 采购管理 => 采购价格
+ */
+//查询采购价格分页 http://127.0.0.1:9001/api/v1/price/findByListPrice post
+export const findByListPrice = (data) => ajax(BASE_URL + '/price/findByListPrice', data,'POST');
+
+
+
+
+
+
+
+
+/**
+ * 
+ * 基础资料 => 出口管理
+ */
+//查询HS Code tree http://127.0.0.1:9001/api/v1/code/findHsCodeInfo post
+export const findHsCodeInfo = (data) => ajax(BASE_URL + '/code/findHsCodeInfo', data, 'POST');
+//查询要素内容分页  http://127.0.0.1:9001/api/v1/ele/findElementInfo psot
+export const findElementInfo = (data) => ajax(BASE_URL + '/ele/findElementInfo', data, 'POST');
+//查询报关类型分页 http://127.0.0.1:9001/api/v1/declare/findByListDeclareType?pageSize=2&currentPage=3 get
+export const findByListDeclareType = (data) => ajax(BASE_URL + '/declare/findByListDeclareType', data);
+//查询清关类型分页 http://127.0.0.1:9001/api/v1/gro/findByListGrosscustoms?pageSize=2&currentPage=3 get
+export const findByListGrosscustoms = (data) => ajax(BASE_URL + '/gro/findByListGrosscustoms', data);
+
+
+
+
+
 /**
  * 
  * 基础资料 => 运营管理 => 亚马逊

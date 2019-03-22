@@ -13,6 +13,7 @@ import Currency from '../views/Basic_Data/Public_Data/Currency'
 import Upload from '../views/Upload/FinanceUploadFile'
 import Clearance from '../views/Basic_Data/Basic_Logistics/Customs-clearance'
 import Declaration from '../views/Basic_Data/Basic_Logistics/Customs-declaration'
+import EleContent from '../views/Basic_Data/Basic_Logistics/ele_content'
 import Err from '../views/Err/Err'
 import Freight from '../views/Freight/Freight'
 import CprUpload from '../views/Upload/CprUploadFile'
@@ -168,12 +169,16 @@ export default new Router({
           component: Upload
         },
         {
-          path: '/index/customs_clearance/:id/:name',
+          path: '/index/customs_clearance/:id/:name', //清关类型
           component: Clearance
         },
         {
-          path:'/index/customs_declaration/:id/:name',
+          path:'/index/customs_declaration/:id/:name',//报关类型
           component:Declaration
+        },
+        {
+          path:'/index/ele_content/:id/:name',//报关类型
+          component:EleContent
         },
         {
          path:'/index/err/:id/:name',

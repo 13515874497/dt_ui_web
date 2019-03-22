@@ -1,6 +1,6 @@
 <script>
-//基础资料=>出口管理=>报关类型
-import { findByListDeclareType } from "../../../api";
+//基础资料=>出口管理=>要素内容
+import { findElementInfo } from "../../../api";
 import MxTable  from '../../../components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
@@ -11,7 +11,7 @@ export default {
   },
   methods: {
      queryPage(data) {
-      return findByListDeclareType(data);
+      return findElementInfo(data);
     },
   }
 }
