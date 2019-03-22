@@ -1,5 +1,6 @@
 
 <script>
+//公共资料=>产品类目
 import {findByListProducts} from '../../../api/index'
 import MxTree from "../../../components/Mixins/MxTree";
 export default {
@@ -9,7 +10,7 @@ export default {
     return {
       data_tree: [],
       defaultProps: {
-              children: 'childPros',
+          children: 'childNode',
           label: 'productsName'
       },
       nodeKey: "productsId",
@@ -25,11 +26,3 @@ export default {
 
 <style>
 </style>
-
-
-
-
-
-
-
-

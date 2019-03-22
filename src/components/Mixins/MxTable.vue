@@ -115,6 +115,8 @@ export default {
     // },
     //封装分页请求
     async pagination(data) {
+      console.log(data);
+      
       const res = await this.queryPage(data);
       console.log(res);
       if (res.code === 200) {

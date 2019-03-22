@@ -65,6 +65,10 @@ import Bas_Transport from '../views/Basic_Data/Basic_Logistics/Transport_nature'
 import Bas_Types from '../views/Basic_Data/Basic_Logistics/Types'//物流运输类型
 import Bas_Err from '../views/Basic_Data/Basic_Logistics/Err'//物流异常类型
 import Bas_Freight from '../views/Basic_Data/Basic_Logistics/Freight_company'//物流货运公司
+import Price_Type from '../views/Basic_Data/Basic_Logistics/Price_Type'//物流计价方式
+import Pricing_Range from '../views/Basic_Data/Basic_Logistics/Pricing_Range'//物流计价范围
+import Freight_Level from '../views/Basic_Data/Basic_Logistics/Freight_Level'//物流运价等级
+
 import Exp_Declare from '../views/Basic_Data/Basic_Logistics/Export_management/Declare'//出口管理申报要素
 import Exp_HS from '../views/Basic_Data/Basic_Logistics/Export_management/HS_Code'//出口管理HS
 import Exp_Off from '../views/Basic_Data/Basic_Logistics/Export_management/Off_Shore_Company'//出口管理离岸公司
@@ -370,6 +374,18 @@ export default new Router({
         {
           path:'/index/Bas_Types/:id/:name',//物流运输类型
           component:Bas_Types
+        },
+        {
+          path:'/index/Price_Type/:id/:name',//物流计价方式
+          component:Price_Type
+        },
+        {
+          path:'/index/Pricing_Range/:id/:name',//物流计价范围
+          component:Pricing_Range
+        },
+        {
+          path:'/index/Freight_Level/:id/:name',//运价等级
+          component:Freight_Level
         },
         {
           path:'/index/Bas_Err/:id/:name',//物流异常类型

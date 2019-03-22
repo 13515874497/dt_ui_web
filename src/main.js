@@ -224,6 +224,7 @@ Vue.prototype.removeCookie = (key)=>{
 // })
 //时间过滤器
 Vue.filter('date-format',(value,formatStr='YYYY-MM-DD HH:mm:ss')=>{
+  if(!value) return '';
   return moment(value).format(formatStr)
 })
 //获取屏幕尺寸

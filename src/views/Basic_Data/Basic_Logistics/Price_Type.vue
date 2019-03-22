@@ -1,21 +1,22 @@
 <script>
-//异常类型
-import { findByListAbnormal } from "../../../api/index";
+//计价方式
+import { findByListValuationMethod } from "../../../api/index";
 import MxTree from "../../../components/Mixins/MxTree";
 export default {
   mixins: [MxTree],
   data() {
     return {
+      data_tree: [],
       defaultProps: {
         children: "childNode",
-        label: "transportAbnormalTypeName"
+        label: "transportValuationMethodName"
       },
-      nodeKey: "transportAbnormalTypeId"
+      nodeKey: "transportValuationMethodId"
     };
   },
   methods: {
     queryAjax() {
-      return findByListAbnormal();
+      return findByListValuationMethod();
     }
   }
 };

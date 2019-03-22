@@ -19,11 +19,11 @@
       <el-table-column
         v-if="title.inputType==3"
         :label="title.headName"
-        width="100"
         :fixed="isFixed(title)"
         :formatter="statusOptions"
         :prop="title.topType"
         :render-header="renderHeader"
+        :show-overflow-tooltip="true"
       ></el-table-column>
 
 
@@ -31,47 +31,12 @@
 
 
 
-<!-- sortable
-        :fixed="isFixed(title)"
-        :label="title.headName"
-        :prop="title.topType"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader" -->
-
-
-
-
       <el-table-column
-        v-else-if="title.inputType==4"
-        :fixed="isFixed(title)"
+        v-else-if="title.topType==='userExpirationDate'"
         :label="title.headName"
-        :prop="title.topType"
+        :fixed="isFixed(title)"
         :show-overflow-tooltip="true"
         :render-header="renderHeader"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.createDate | date-format}}</span>
-        </template>
-      </el-table-column>
-      <!-- <el-table-column
-        v-else-if="title.topType==='createDate'"
-        :label="title.headName"
-        width="180"
-        :fixed="isFixed(title)"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.createDate | date-format}}</span>
-        </template>
-      </el-table-column> -->
-
-      <el-table-column
-        width="150"
-        v-else-if="title.topType==='userExpirationDate'"
-        sortable
-        :label="title.headName"
-        :fixed="isFixed(title)"
       >
         <template slot-scope="scope">
           <span
@@ -81,11 +46,11 @@
         </template>
       </el-table-column>
       <el-table-column
-        width="150"
         v-else-if="title.topType==='pwdValidityPeriod'"
-        sortable
         :label="title.headName"
         :fixed="isFixed(title)"
+        :show-overflow-tooltip="true"
+         :render-header="renderHeader"
       >
         <template slot-scope="scope">
           <span
@@ -95,65 +60,36 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column
-        v-else-if="title.topType==='landingTime'"
-        :label="title.headName"
-        width="180"
-        :fixed="isFixed(title)"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.landingTime | date-format}}</span>
-        </template>
-      </el-table-column> -->
 
-      <el-table-column
+
+      <!-- <el-table-column
         v-else-if="title.topType==='eDate'"
         :label="title.headName"
-        width="180"
         :fixed="isFixed(title)"
+        :show-overflow-tooltip="true"
+         :render-header="renderHeader"
       >
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span>{{ scope.row.userExpirationDate | date-format}}</span>
         </template>
+      </el-table-column> -->
+
+
+      <el-table-column
+        v-else-if="title.inputType==4"
+        :fixed="isFixed(title)"
+        :label="title.headName"
+        :prop="title.topType"
+        :show-overflow-tooltip="true"
+        :render-header="renderHeader"
+        sortable
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
+          <span>{{ scope.row[title.topType] | date-format}}</span>
+        </template>
       </el-table-column>
-
-      <!-- <el-table-column
-        v-else-if="title.topType==='modifyDate'"
-        :label="title.headName"
-        width="180"
-        :fixed="isFixed(title)"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.modifyDate | date-format}}</span>
-        </template>
-      </el-table-column> -->
-
-      <!-- <el-table-column
-        v-else-if="title.topType==='createDate'"
-        :label="title.headName"
-        width="180"
-        :fixed="isFixed(title)"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.createDate | date-format}}</span>
-        </template>
-      </el-table-column> -->
-
-      <!-- <el-table-column
-        v-else-if="title.topType==='auditDate'"
-        :label="title.headName"
-        width="180"
-        :fixed="isFixed(title)"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.createDate | date-format}}</span>
-        </template>
-      </el-table-column> -->
 
       <el-table-column
         v-else

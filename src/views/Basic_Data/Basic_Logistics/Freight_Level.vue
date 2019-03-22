@@ -1,21 +1,22 @@
 <script>
-//异常类型
-import { findByListAbnormal } from "../../../api/index";
+//运价等级
+import { findByListLevel } from "../../../api/index";
 import MxTree from "../../../components/Mixins/MxTree";
 export default {
   mixins: [MxTree],
   data() {
     return {
+      data_tree: [],
       defaultProps: {
         children: "childNode",
-        label: "transportAbnormalTypeName"
+        label: "transportFreightLevelName"
       },
-      nodeKey: "transportAbnormalTypeId"
+      nodeKey: "transportFreightLevelId"
     };
   },
   methods: {
     queryAjax() {
-      return findByListAbnormal();
+      return findByListLevel();
     }
   }
 };

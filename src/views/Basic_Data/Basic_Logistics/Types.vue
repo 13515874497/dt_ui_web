@@ -1,21 +1,21 @@
 <script>
-import {findByListType} from '../../../api/index'
+//运输类型
+import { findByListType } from "../../../api/index";
 import MxTree from "../../../components/Mixins/MxTree";
 export default {
-  mixins:[MxTree],
+  mixins: [MxTree],
   data() {
-    
     return {
       data_tree: [],
       defaultProps: {
-              children: 'childTransportType',
-          label: 'transportTypeName'
+        children: "childNode",
+        label: "transportTypeName"
       },
-      nodeKey: "transportTypeId",
+      nodeKey: "transportTypeId"
     };
   },
   methods: {
-    queryAjax(){
+    queryAjax() {
       return findByListType();
     }
   }

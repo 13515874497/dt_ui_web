@@ -212,17 +212,18 @@ export const repDelHistoryUserInfo = ({
 
 
 //查询亚马逊描述分页 
-export const findByListDescription = (data) => ajax(BASE_URL + '/description/findByListDescription', data,'POST');
+export const findByListDescription = (data) => ajax(BASE_URL + '/description/findByListDescription', data, 'POST');
 //查询付款类型分页  
 export const findPayByListProperty = (data) => ajax(BASE_URL + '/pay/findByListProperty', data);
 //查询订单处理类分页  
-export const findByListHandling = (data) => ajax(BASE_URL + '/handling/findByListHandling', data,'POST');
+export const findByListHandling = (data) => ajax(BASE_URL + '/handling/findByListHandling', data, 'POST');
 
 
 //查询亚马逊type(订单类型)分页
-export const findByListAmazon = (data) => ajax(BASE_URL + '/type/findByListAmazon', data,'POST');
+export const findByListAmazon = (data) => ajax(BASE_URL + '/type/findByListAmazon', data, 'POST');
 //查询亚马逊仓库分页  
-export const findByListWarehouse = (data) => ajax(BASE_URL + '/amazon/war/findByListWarehouse', data,'POST');
+export const findByListWarehouse = (data) => ajax(BASE_URL + '/amazon/war/findByListWarehouse', data, 'POST');
+
 
 
 
@@ -232,12 +233,17 @@ export const findByListWarehouse = (data) => ajax(BASE_URL + '/amazon/war/findBy
  * 基础资料 => 运营管理 => 辅助资料
  */
 
-//发货方式   http://127.0.0.1:9001/api/v1/deli/findByListDelivery?pageSize=3&currentPage=3 get
+//查询发货方式分页   
 export const findByListDelivery = (data) => ajax(BASE_URL + '/deli/findByListDelivery', data);
 
-//星级    http://127.0.0.1:9001/api/v1/star/findByListStarLevel?pageSize=10&currentPage=3 get
+//查询星级分页   
 export const findByListStarLevel = (data) => ajax(BASE_URL + '/star/findByListStarLevel', data);
 
+//查询刷单类型分页
+export const findByListBrush = (data) => ajax(BASE_URL + '/brush/findByListBrush', data);
+
+//查询平台类型分页
+export const findByListPlatform = (data) => ajax(BASE_URL + '/plat/findByListPlatform', data);
 
 
 
@@ -255,7 +261,12 @@ export const findByListType = (data) => ajax(BASE_URL + '/type/findByListType', 
 export const findByListFreight = (data) => ajax(BASE_URL + '/freight/findByListFreight', data, 'POST');
 //查询异常类型tree 
 export const findByListAbnormal = (data) => ajax(BASE_URL + '/abnormal/findByListAbnormal', data);
-
+//查询运价等级tree
+export const findByListLevel = (data) => ajax(BASE_URL + '/level/findByListLevel', data);
+//查询计价方式tree 
+export const findByListValuationMethod = (data) => ajax(BASE_URL + '/valuation/findByListValuationMethod', data);
+//查询计价范围分页
+export const findByListRange = (data) => ajax(BASE_URL + '/range/findByListRange', data);
 
 /**
  * 
@@ -275,6 +286,12 @@ export const getHrLeave = (data) => ajax(BASE_URL + '/staff/getHrLeave', data)
  * 
  * 基础资料 => 公共资料
  */
+//查询省州关联表分页 省州关联表 http://127.0.0.1:9001/api/v1/rel/findByListRelation post
+export const findByListRelation = (data) => ajax(BASE_URL + '/rel/findByListRelation', data, 'POST');
+
+//查询计量单位tree  http://127.0.0.1:9001/api/v1/unit/findByListUnit 计量单位  get  树形
+export const findByListUnit = (data) => ajax(BASE_URL + '/unit/findByListUnit', data);
+
 //查询SKU信息分页
 export const findByListSku = (data) => ajax(BASE_URL + '/sku/findByListSku', data, 'POST');
 
@@ -360,6 +377,9 @@ export const repGetRate = ({
   currentPage,
   pageSize
 }, 'POST')
+
+
+
 //获取所有角色信息
 export const repFindRoles = () => ajax(BASE_URL + `/role/findByListRoles`)
 
@@ -467,3 +487,7 @@ export const repGetLogisticsInfo = ({
   currentPage,
   pageSize
 }, 'POST')
+
+
+
+

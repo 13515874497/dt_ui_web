@@ -9,7 +9,7 @@ export default {
     return {
       data_tree: [],
       defaultProps: {
-        children: "childWarehouse",
+        children: "childNode",
         label: "warehouseName"
       },
       nodeKey: "warehouseId",

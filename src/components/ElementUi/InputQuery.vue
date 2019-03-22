@@ -118,14 +118,28 @@ export default {
   data() {
     return {
       data: [],
-      data_model: {},
+      data_model: {
+        systemLogStatus: {}
+      },
       curr_query_field: "", //当前查询搜索建议的字段
       rules: {
         str: [{ required: false, message: "请输入字符", trigger: "change" }],
         number: [{ required: false, validator: isNumber, trigger: "change" }],
         date: [{ required: false, message: "请输入日期", trigger: "change" }],
         status: [{ required: false, message: "请选择状态", trigger: "change" }]
-      }
+      },
+      //用于脚丫请求参数是否属于systemLogStatus对象（属于systemLogStatus的字段需要放在systemLogStatus ）
+      sysLogInclude: [
+        "statusId",
+        "remark",
+        "status",
+        "createDate",
+        "createUser",
+        "modifyDate",
+        "modifyUser",
+        "auditDate",
+        "auditUser"
+      ]
     };
   },
   watch: {
@@ -185,13 +199,14 @@ export default {
       });
       this.data = data;
     },
+
     //初始化数据
     initValue(tableTitle) {
       if (tableTitle) {
         let key = tableTitle.topType;
         this.$set(this.data_model, key, "");
         if (tableTitle.inputType == 4) {
-          switch (tableTitle.topType) {
+          switch (key) {
             //用户有效期
             case "userExpirationDate":
               this.data_model.uAlways = false;
@@ -201,29 +216,35 @@ export default {
               this.data_model.pwdAlways = false;
               break;
           }
+           this.$set(this.data_model, key + "s", []);
+          if (this.sysLogInclude.includes(key) && !this.sysLogInclude.includes(key+'s')) {
+            this.sysLogInclude.push(key + "s")
+          }
           tableTitle._isShow = true;
-          this.$set(this.data_model, key+'s',[]);
         }
       }
     },
     //查询 搜索建议下拉列表
     async getQuerySuggestions(queryString, cb) {
-
       let query = JSON.parse(JSON.stringify(this._querySuggestionsConfig));
-
 
       let field = this.curr_query_field;
       query[field] = queryString;
 
       let res = await this.querySuggestionsMethod(query);
-
+      console.log(res);
+      
       let data = res.data.dataList.map(item => {
-        return item[field];
+        return item[field] || (item.systemLogStatus && item.systemLogStatus[field]);
       });
       data = unique(data);
+      console.log(data);
+      
       data = data.map(item => {
         return { value: item };
       });
+      console.log(data);
+      
       cb(data);
     },
     //验证的checkbox是否显示
@@ -234,19 +255,32 @@ export default {
     isValid(val, data) {
       data._isShow = !val;
       if (val) {
-        this.data_model[data.topType] = "";
+        this.data_model[data.topType + 's'] = [];
       }
       this.changeQuery();
     },
     //向上回传数据
     changeQuery() {
-      this.$emit("changeQuery", [this.data_model]);
-      console.log(this.data_model);
+      
+      let data_model = {...this.data_model};
+
+      console.log(data_model);
+      for (let key in data_model) {
+        if (this.sysLogInclude.includes(key)) {
+          console.log(key);
+          
+          data_model.systemLogStatus[key] = data_model[key];
+          delete data_model[key];
+        }
+      }
+      this.$emit("changeQuery", [data_model]);
+      console.log(data_model);
     }
   },
   created() {
     this.updateTableTitle();
   }
+  
 };
 </script>
 
