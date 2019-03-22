@@ -138,7 +138,8 @@ export default {
         "modifyDate",
         "modifyUser",
         "auditDate",
-        "auditUser"
+        "auditUser",
+        "effectiveDate"
       ]
     };
   },
