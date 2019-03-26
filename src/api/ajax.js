@@ -4,6 +4,7 @@ ajax请求函数模块
 import axios from 'axios'
 import router from '../router'
 import Vue from 'vue'
+import loading from '../utils/loading'
 import {
   Message
 } from 'element-ui'
@@ -91,44 +92,10 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     // })
     promise.then(function (response) {
       // 成功了调用resolve()
-      data = {
-        "code": 200,
-        "msg": "success",
-        "data": {
-          "user": {
-            "uid": 367,
-            "userName": "vvvv",
-            "pwd": null,
-            "status": 1,
-            "accountStatus": 0,
-            "createIdUser": 1,
-            "upIdUser": null,
-            "createDate": 1550215905999,
-            "upDate": null,
-            "userExpirationDate": 0,
-            "pwdValidityPeriod": 0,
-            "userStatus": null,
-            "version": null,
-            "name": null,
-            "roles": null,
-            "rName": null,
-            "rId": null,
-            "landingTime": 1552897889645,
-            "mobilePhone": null,
-            "menuName": null,
-            "delUser": 0,
-            "delDate": null,
-            "restoreDate": null,
-            "uIds": null,
-            "type": null,
-            "computerName": null,
-            "firstLogin": true
-          },
-          "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ2aWRlb1Rva2VuIiwiaWQiOjM2NywibmFtZSI6InZ2dnYiLCJzdGF0dXMiOjEsImlhdCI6MTU1Mjg5Nzg4OSwiZXhwIjoxNTUzNTAyNjg5fQ.Sn1b9HlCtIUoSlZWGWyM7Vm_1nWBH7m16rBbumdNCYQ"
-        }
-      }
       switch (response.data.code) {
         case -2:
+         
+        loading.loading_dom().close();
           router.push('/login');
           Message({
             showClose: true,
@@ -156,7 +123,6 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
 
 
       }
-
       resolve(response.data)
 
       //自定义成功或错误信息

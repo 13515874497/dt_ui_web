@@ -163,6 +163,19 @@ export default {
       return column.label;
     },
     setHeaderMinWidth(column) {
+      let span = document.createElement('span');
+      span.innerText = column.label;
+      let tempSpan = document.getElementById('tempReturnWidth')
+      console.log(tempSpan);
+      
+      // tempSpan.innerHTML = span;  
+      console.log(tempSpan.offsetWidth);
+      
+
+
+
+
+
       //内边距左右各10  每个字符宽度按 15的宽度计算
       let minWidth = column.label.length * 15 + 20;
       //如果有排序的图标则加24  排序的箭头宽度 26
@@ -177,14 +190,16 @@ export default {
     handleHeaderDragend(newWidth, oldWidth, column, event) {
       this.setHeaderMinWidth(column);
     },
-    //根据本地缓存cacheFixed判断里否固定表头
+    //根据本地缓存cacheFixed判断是否固定表头
     isFixed(title) {
       return (
         !!title.isFixed || this.fixedCache[this.menuId].includes(title.headName)
       );
     },
-    //点击表头固定字段并缓存到本地
+    //右键点击表头固定字段并缓存到本地
     headerClick(column, event) {
+      let target = event.target || event.srcElement;
+      event.preventDefault();
       let cache = this.fixedCache[this.menuId] || [];
       let key = column.label;
       if (cache.indexOf(key) > -1) {
@@ -208,29 +223,40 @@ export default {
         ? fixedCache[this.menuId]
         : [];
       this.fixedCache = fixedCache;
+    },
+    //删除浏览器默认的右键弹出菜单
+    removeRightKeyMenu() {
+      let thead = document.querySelector(".noRightKey");
+      console.log(thead);
+      thead.addEventListener("contextmenu", e => {
+        window.event.returnValue = false;
+        return false;
+      });
+    },
+    createTempDom(){
+      if(!document.getElementById('tempReturnWidth')){
+        let tempSpan = document.createElement('span');
+        tempSpan.setAttribute('id','tempReturnWidth');
+        tempSpan.innerHTML = 1;
+        document.body.appendChild(tempSpan);
+        console.log(tempSpan);
+      }
+      
     }
   },
   created() {
     this.readFixedCache();
     this.initOptions();
+    this.createTempDom();
   },
-  mounted() {
-    
-    let thead = document.querySelector(".noRightKey");
-    console.log(thead);
-    thead.addEventListener("contextmenu", (e) => {
-      let target = e.target || e.srcElement;
 
-      console.log(target);
-      
-      window.event.returnValue = false;
-      return false;
-    });
+  mounted() {
+    this.removeRightKeyMenu();
   }
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped>
 .el-tooltip__popper {
   max-width: 500px;
   line-height: 180%;
@@ -243,5 +269,12 @@ export default {
 .el-table td,
 .el-table th {
   padding: 6px 0;
+}
+#returnWidth {
+  padding: 0 !important;
+  display: inline-block;
+  position: fixed;
+  left: 100px;
+  top: 100px;
 }
 </style>

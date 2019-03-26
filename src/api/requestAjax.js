@@ -5,9 +5,11 @@ import loading from '../utils/loading'
 
 export default {
   async requestGetHead(id) {
-    let loadingInstance = loading.loading_dom('加载中', document.getElementById('Account'))
+    let loadingInstance = loading.loading_dom('加载中', document.getElementById('Account'));
+    
     const resultHead = await repHead(id)
-    loadingInstance.close()
+    
+    loadingInstance.close();
     if (resultHead.code === 200) {
       if (resultHead.data.length === 0) {
         //如果是0 就全部不显示

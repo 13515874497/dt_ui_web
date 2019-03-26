@@ -207,6 +207,18 @@ export const repDelHistoryUserInfo = ({
 
 
 
+
+/**
+ * 
+ * 人事管理 => 基础档案
+ */
+//职员分页
+export const findByListEmployee = (data) => ajax(BASE_URL + '/staff/findByListEmployee', data, 'POST');
+//员工 tree http://127.0.0.1:9001/api/v1/staff/findByListDepartment  get  tree 部门
+export const findByListDepartment = (data) => ajax(BASE_URL + '/staff/findByListDepartment', data);
+
+
+
 /**
  * 
  * 基础资料 => 采购管理 => 采购价格
