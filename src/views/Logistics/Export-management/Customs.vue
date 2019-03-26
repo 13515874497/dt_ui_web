@@ -19,54 +19,13 @@
                       <input type="text" class="ex-input" >
                     </div>
                 </div>
-                <div class="content1" >
-                    <span class="cont-span1" v-for="(i,index) in datas" :key="index" :style="{width:i.width}">
-                        <p class="Consignor">{{i.aa}}</p>
+                <div class="content1" v-for="iList in list.datas">
+                    <span class="cont-span1" v-for="(i,index) in iList" :key="index" :style="{width:i.width}">
+                        <p class="Consignor">{{i.name}}</p>
                         <input type="text" >
                     </span>
+                </div> 
              
-                </div> 
-                <div class="content2">
-                    <span class="cont2-span1" v-for="(r,index) in recipient" :key="index" :style="{width:r.width}">
-                        <p>{{r.bb}}</p>
-                        <input type="text">
-                    </span>
-                   
-                </div> 
-                 <div class="content2">
-                    <span class="cont2-span1" v-for="(s,index) in sales " :key="index" :style="{width:s.width}">
-                        <p>{{s.cc}}</p>
-                        <input type="text">
-                    </span>
-                    
-                </div> 
-                 <div class="content3">
-                    <span class="cont3-span1" v-for="(contract,index) in contracts" :key="index" :style="{width:contract.width}">
-                        <p>{{contract.dd}}</p>
-                        <input type="text">
-                    </span>
-                
-                </div>
-                <div class="content4">
-                    <span class="cont4-span1" v-for="(pack,index) in packs" :key="index" :style="{width:pack.width}">
-                        <p>{{pack.ee}}</p>
-                        <input type="text">
-                    </span>
-             
-                </div>
-                <div class="content5">
-                    <span class="cont5-span1" :style="{width:documents.width}">
-                        <p>{{documents.ff}}</p>
-                        <input type="text">
-                    </span>
-                </div>  
-                <div class="content6">
-                    <span class="cont6-span1" :style="{width:signs.width}">
-                        <p>{{signs.ee}}</p>
-                        <input type="text" ></input>
-                    </span>
-                </div>
-                
                 <table class="content-table">
                   <tr>
                     <th v-for="(item,index) in headerList.split(',')" :key="index">{{item}}</th>
@@ -92,7 +51,7 @@
                 </table>
 
                 <div class="footerOne" >
-                  <span v-for="(item,index) in confirm" :key="index" :style="{width:item.width}">{{item.hh}}</span>
+                  <span v-for="(item,index) in information.confirm" :key="index" :style="{width:item.width}">{{item.name}}</span>
                 
                 </div>
                 
@@ -118,22 +77,92 @@
 export default {
   data() {
     return {
-      datas: [{aa: "境内发货人",width: "35%"},{aa: "出关境别",width: "20%"},{ aa: "出口日期", width: "15%" },{aa: "申报日期",width: "15%" }, { aa: "备案号",width: "15%" }],
-      recipient:[ { bb:'境外收货人', width: "35%"},{ bb:'运输方式', width: "20%"},{bb:'运输工具名称及航次号', width: "15%"}, {bb:'提运单号', width: "30%"}],
-      sales:[{cc:'生产销售单位',width: "35%"},{cc:'监管方式',width: "20%"},{cc:'征免性质', width: "15%"},{cc:'许可证号',width: "30%"}],
-      contracts:[{dd:'合同协议号',width: "35%"},{dd:'贸易国（地区）',width: "20%"},{dd:'运抵国（地区）',width: "15%"},{dd:'指运港',width: "15%"},{dd:'出境口岸',width: "15%"}],
-      packs:[{ee:'包装种类',width: "35%"},{ee:'件数',width: "8%"},{ee:'毛重（千克）',width: "12%"},{ee:'净重（千克）',width: "15%"},{ee:'成交方式',width: "7.5%"},{ee:'运费',width: "7.5%"},{ee:'保费',width: "7.5%"},{ee:'杂费',width: "7.5%"}],
-      documents:{ff:'随附单证及编号',width:'100%'},
-      signs:{ee:'标记唛码及备注',width:'100%'},
-      confirm:[{hh:'特殊关系确认',width:'25%'},{hh:'价格影响确认',width:'25%'},{hh:' 支付特许权使用费确认：',width:'25%'},{hh:'自报自缴：',width:'25%'},],
-      information:{person: '报关人员',personNO:' 报关人员证号 ',tel:' 电话  ',content:'兹申明对以上内容承担如实申报、依法纳税之法律责任',unit:' 申报单位 ',signature:'申报单位（签章）',postil:'海关批注及签章'},
-       
-        headerList: "项号,商品编号,商品名称及规格型号,数量及单位,单价/总价/币制,原产国（地区）,最终目的国（地区）,境内货源地,征免",
-        tableDatas:[
-          {ItemNo:'', No:'123',goods:'12',size:'111',amount:'112',unit:'1',price:'234',start:'1',end:'0',source:'1',free:'1'},
-          {ItemNo:'', No:'',goods:'',size:'',amount:'',unit:'',price:'',start:'',end:'',source:'',free:''}
-          ]
-    }
+      //上
+      list: {
+        datas: [
+          [
+            { name: "境内发货人", width: "35%" },
+            { name: "出关境别", width: "20%" },
+            { name: "出口日期", width: "15%" },
+            { name: "申报日期", width: "15%" },
+            { name: "备案号", width: "15%" }
+          ],
+          [
+            { name: "境外收货人", width: "35%" },
+            { name: "运输方式", width: "20%" },
+            { name: "运输工具名称及航次号", width: "15%" },
+            { name: "提运单号", width: "30%" }
+          ],
+          [
+            { name: "合同协议号", width: "35%" },
+            { name: "贸易国（地区）", width: "20%" },
+            { name: "运抵国（地区）", width: "15%" },
+            { name: "指运港", width: "15%" },
+            { name: "出境口岸", width: "15%" }
+          ],
+          [
+            { name: "包装种类", width: "35%" },
+            { name: "件数", width: "8%" },
+            { name: "毛重（千克）", width: "12%" },
+            { name: "净重（千克）", width: "15%" },
+            { name: "成交方式", width: "7.5%" },
+            { name: "运费", width: "7.5%" },
+            { name: "保费", width: "7.5%" },
+            { name: "杂费", width: "7.5%" }
+          ],
+          [{name: '随附单证及编号', width: '100%'}],
+          [{name: '标记唛码及备注', width: '100%'}],
+        ]
+      },
+      //中：
+      tableDatas: [
+        {
+          ItemNo: "",
+          No: "123",
+          goods: "12",
+          size: "111",
+          amount: "112",
+          unit: "1",
+          price: "234",
+          start: "1",
+          end: "0",
+          source: "1",
+          free: "1"
+        },
+        {
+          ItemNo: "",
+          No: "",
+          goods: "",
+          size: "",
+          amount: "",
+          unit: "",
+          price: "",
+          start: "",
+          end: "",
+          source: "",
+          free: ""
+        }
+      ],
+
+      //下：
+       information: {
+        comfirm:[
+        { name: "特殊关系确认", width: "25%" },
+        { name: "价格影响确认", width: "25%" },
+        { name: " 支付特许权使用费确认：", width: "25%" },
+        { name: "自报自缴：", width: "25%" }
+        ],
+        person: "报关人员",
+        personNO: " 报关人员证号 ",
+        tel: " 电话  ",
+        content: "兹申明对以上内容承担如实申报、依法纳税之法律责任",
+        unit: " 申报单位 ",
+        signature: "申报单位（签章）",
+        postil: "海关批注及签章"
+      },
+      headerList:
+      "项号,商品编号,商品名称及规格型号,数量及单位,单价/总价/币制,原产国（地区）,最终目的国（地区）,境内货源地,征免",
+    };
   },
   methods: {
     // 打印
@@ -146,9 +175,9 @@ export default {
       let oldContent = document.body.innerHTML;
       document.body.innerHTML = newContent;
       window.print();
-      // window.location.reload();
-      // document.body.innerHTML = oldContent;
-      // return false;
+      window.location.reload();
+      document.body.innerHTML = oldContent;
+      return false;
     },
     bindData() {
       let subOutputRankPrint = document.getElementById("exportBox");
@@ -210,6 +239,8 @@ input {
   width: 100%;
   border: 1px solid black;
   overflow: hidden;
+  border-bottom:none;
+  border-right:none;
 }
 .cont-span1 {
   width: 35%;

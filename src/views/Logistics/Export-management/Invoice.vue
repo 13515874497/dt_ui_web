@@ -52,30 +52,12 @@
               <span>{{i.leftName}}</span>
               <span>{{i.rightNO}}</span>
             </div>
-            <!-- <div class="boxContent1">
-              <span>NAME:</span>
-              <span>DOG HARNESS</span>
-            </div>
-            <div class="boxContent1">
-              <span> Material:</span>
-              <span>Polyester fiber</span>
-            </div>
-            <div class="boxContent1">
-               <span>Function:</span>
-              <span>HARNESS FOR SMALL ANIMAL</span>
-            </div>
-            <div class="boxContent1">
-               <span> Model:</span>
-              <span>DTCW006-L</span>
-            </div> -->
+      
             <div class="boxCompany" v-for="(n,index) in box3.news" >
              <span> {{n.names}}</span>
              <span> {{n.company}}</span>
             </div>
-            <!-- <div class="boxContentAddress">
-              <span>1</span>
-              <span>2 </span>
-            </div> -->
+         
           </div>
           <div class="tableBox3" v-for="(box,index) in box4.units">
             <div class="boxTitle3">{{box.boxTitle}}</div>
@@ -83,18 +65,7 @@
             <div class="boxEmpty">{{box.boxusd}}</div>
             <div class="boxName">{{box.boxName}}</div>
           </div>
-          <!-- <div class="tableBox4">
-            <div class="boxTitle4">UNIT PRICE</div>
-            <div class="boxusd">(USD)</div>
-            <div class="boxusd">DDP</div>
-            <div class="boxName">7.642</div>
-          </div>
-          <div class="tableBox5">
-            <div class="boxTitle5">AMOUNT</div>
-             <div class="boxusd">(USD)</div>
-             <div class="boxEmpty"></div>
-             <div class="boxName">37406</div>
-          </div> -->
+      
         </div>
         <div class="tableFooter">
           <div class="tableFooter1">{{box5.footer1}}</div>
