@@ -1,7 +1,7 @@
 <template>
   <div id="data">
     <!--多选输入框选择输入-->
-    <div id="printCheck" class="clearfix" v-if="tableTitle.length" v-show="showQuery">
+    <div id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="20">
         <el-col :span="4">
           <Query2 :tableTitle="tableTitle" @getValue="getValue"></Query2>
@@ -116,8 +116,9 @@ export default {
     //封装分页请求
     async pagination(data) {
       console.log(data);
-      
-      const res = await this.queryPage(data);
+      let _data = {...data};
+      delete _data.tableData;
+      const res = await this.queryPage(_data);
       console.log(res);
       if (res.code === 200) {
         //赋值 然后显示

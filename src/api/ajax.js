@@ -136,13 +136,25 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
             // type: "error"
           });
           break;
-          case -3:
+        case -3:
           router.replace('/userModifiesPwd');
           Message({
             showClose: true,
             message: response.data.msg,
             type: "error"
           });
+          break;
+        case -1:
+          // if (!msg) {
+          //   Message({
+          //     showClose: true,
+          //     message: response.data.msg,
+          //     type: "error"
+          //   });
+          //   break;
+          // }
+
+
       }
 
       resolve(response.data)

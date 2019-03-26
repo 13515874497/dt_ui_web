@@ -146,6 +146,8 @@ Vue.prototype.removeCookie = (key)=>{
   this.setCookie(key,'',-1);
 }
 
+router.afterEach( (to,from) => {
+});
 // let rep =repIndex();
 // rep.then((res)=>{
 //   console.log(res);

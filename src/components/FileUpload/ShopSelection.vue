@@ -34,7 +34,7 @@
   import {
     repGetShopIdSiteInfo,
     repGetUserUploadInfo,
-    repGetRegionInfo, repGetShopName
+    findByListRegion, repGetShopName
   } from '../../api'
   import FileUp from '../../components/FileUpload/FileUp'
 

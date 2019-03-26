@@ -1,13 +1,12 @@
-
 <script>
-//币别
-import { findByListCurrency } from "../../../api";
+//监管方式
+import { findMonitoringInfo } from "../../../api";
 import MxTable  from '../../../components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {
      queryPage(data) {
-      return findByListCurrency(data);
+      return findMonitoringInfo(data);
     },
   }
 }

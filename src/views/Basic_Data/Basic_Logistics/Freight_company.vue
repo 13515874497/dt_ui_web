@@ -1,5 +1,3 @@
-
-
 <script>
 //货运公司
 import { findByListFreight } from "../../../api";

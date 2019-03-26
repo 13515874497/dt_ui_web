@@ -49,7 +49,7 @@
     repUpUserInfo,
     repDelRole,
     repAdRole,
-    repGetCompanyInfo
+    findByListCompany
   } from '../../../api/index'
   export default {
     data() {

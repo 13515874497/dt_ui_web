@@ -1,5 +1,6 @@
 <script>
-import { repGetCompanyInfo } from "../../../api";
+//公司
+import { findByListCompany } from "../../../api";
 import MxTable  from '../../../components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
@@ -10,7 +11,7 @@ export default {
   },
   methods: {
      queryPage(data) {
-      return repGetCompanyInfo(data);
+      return findByListCompany(data);
     },
   }
 }

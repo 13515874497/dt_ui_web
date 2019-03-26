@@ -55,6 +55,10 @@ import OP_Feedback from '../views/Operate/Amazon/Other/Feedback'//Feedback
 import OP_Review from '../views/Operate/Amazon/Other/Review'//Review
 import OP_Closing from '../views/Operate/Ending/Closing_accounts'//期末关帐
 import OP_Settle from '../views/Operate/Ending/Settle_accounts'//期末结账
+
+
+//基础资料=>物流管理
+
 import LOG_Status from '../views/Logistics/Logistics-tracking/Logistics_status'//物流状态
 import LOG_Query from '../views/Logistics/Logistics-tracking/Logistics_query'//物流查询
 import LOG_Record from '../views/Logistics/Logistics-tracking/Delivery_record'//物流发货记录
@@ -70,9 +74,19 @@ import Price_Type from '../views/Basic_Data/Basic_Logistics/Price_Type'//物流�
 import Pricing_Range from '../views/Basic_Data/Basic_Logistics/Pricing_Range'//物流计价范围
 import Freight_Level from '../views/Basic_Data/Basic_Logistics/Freight_Level'//物流运价等级
 
-import Exp_Declare from '../views/Basic_Data/Basic_Logistics/Export_management/Declare'//出口管理申报要素
-import Exp_HS from '../views/Basic_Data/Basic_Logistics/Export_management/HS_Code'//出口管理HS
+
+//基础资料=>出口管理
+import Packing_Type from '../views/Basic_Data/Basic_Logistics/Packing_Type' //包装种类
+import Exp_Declare from '../views/Basic_Data/Basic_Logistics/Export_management/Declare'//申报要素
+import Exp_HS from '../views/Basic_Data/Basic_Logistics/Export_management/HS_Code'//HScode
+import Monitoring_Condition from '../views/Basic_Data/Basic_Logistics/Monitoring_Condition' //监管方式
+import Mode_Of_Transport from '../views/Basic_Data/Basic_Logistics/Mode_Of_Transport' //运输方式
+import Exit_Customs from '../views/Basic_Data/Basic_Logistics/Exit_Customs' //出口关别
 import Exp_Off from '../views/Basic_Data/Basic_Logistics/Export_management/Off_Shore_Company'//出口管理离岸公司
+import way_of_closing from '../views/Basic_Data/Basic_Logistics/way_of_closing' //成交方式
+import quarantine_type from '../views/Basic_Data/Basic_Logistics/quarantine_type' //检验检疫类别
+
+
 import Purchase from '../views/Basic_Data/Basic_Purchase/Price'//采购价格
 import Nation from '../views/Basic_Data/Basic_Personnel/Nation'//民族
 import Ama_Describe from '../views/Basic_Data/Basic_Operate/Amazon/Describe'//亚马逊描述
@@ -401,12 +415,37 @@ export default new Router({
           component:Bas_Freight
         },
         {
+          path:'/index/packing_type/:id/:name',//物流货运公司
+          component:Packing_Type
+        },
+
+        {
           path:'/index/exp_declare/:id/:name',//出口管理申报要素
           component:Exp_Declare
         },
         {
           path:'/index/exp_hs/:id/:name',//出口管理HS
           component:Exp_HS
+        },
+        {
+          path:'/index/monitoring_condition/:id/:name',//监管方式
+          component:Monitoring_Condition
+        },
+        {
+          path:'/index/mode_of_transport/:id/:name',//运输方式
+          component:Mode_Of_Transport
+        },
+        {
+          path:'/index/exit_customs/:id/:name',//出口关别
+          component:Exit_Customs
+        },
+        {
+          path:'/index/way_of_closing/:id/:name',//出口关别
+          component:way_of_closing
+        },
+        {
+          path:'/index/quarantine_type/:id/:name',//出口关别
+          component:quarantine_type
         },
         {
           path:'/index/exp_off/:id/:name',//出口管理离岸公司
