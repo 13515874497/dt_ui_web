@@ -15,7 +15,7 @@
                       <input type="text" class="ex-input" >
                     </div>
                      <div class="table-left">
-                      <span class="title1">页码/页数</span>
+                      <span class="title1">页码/页数：</span>
                       <input type="text" class="ex-input" >
                     </div>
                 </div>
@@ -24,114 +24,35 @@
                         <p class="Consignor">{{i.aa}}</p>
                         <input type="text" >
                     </span>
-                    <!-- <span class="cont-span2">
-                        <p>出境关别</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont-span3">
-                        <p>出口日期</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont-span4">
-                        <p>申报日期</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont-span5">
-                        <p>备案号</p>
-                        <input type="text">
-                    </span> -->
+             
                 </div> 
                 <div class="content2">
                     <span class="cont2-span1" v-for="(r,index) in recipient" :key="index" :style="{width:r.width}">
                         <p>{{r.bb}}</p>
                         <input type="text">
                     </span>
-                    <!-- <span class="cont2-span2">
-                        <p>运输方式</p>
-                        <input type="text" >
-                    </span>
-                    <span class="cont2-span3">
-                        <p>运输工具名称及航次号</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont2-span4">
-                        <p>提运单号</p>
-                        <input type="text">
-                    </span> -->
+                   
                 </div> 
                  <div class="content2">
                     <span class="cont2-span1" v-for="(s,index) in sales " :key="index" :style="{width:s.width}">
                         <p>{{s.cc}}</p>
                         <input type="text">
                     </span>
-                       <!-- <span class="cont2-span2">
-                        <p>监管方式</p>
-                        <input type="text">
-                    </span>
-                       <span class="cont2-span3">
-                        <p>征免性质</p>
-                        <input type="text">
-                    </span>
-                       <span class="cont2-span4">
-                        <p>许可证号</p>
-                        <input type="text">
-                    </span> -->
+                    
                 </div> 
                  <div class="content3">
                     <span class="cont3-span1" v-for="(contract,index) in contracts" :key="index" :style="{width:contract.width}">
                         <p>{{contract.dd}}</p>
                         <input type="text">
                     </span>
-                       <!-- <span class="cont3-span2">
-                        <p>贸易国（地区）</p>
-                        <input type="text">
-                    </span>
-                       <span class="cont3-span3">
-                        <p>运抵国（地区）</p>
-                        <input type="text">
-                    </span>
-                       <span class="cont3-span4">
-                        <p>指运港</p>
-                        <input type="text">
-                    </span>
-                       <span class="cont3-span5">
-                        <p>出境口岸</p>
-                        <input type="text">
-                    </span> -->
+                
                 </div>
                 <div class="content4">
                     <span class="cont4-span1" v-for="(pack,index) in packs" :key="index" :style="{width:pack.width}">
                         <p>{{pack.ee}}</p>
                         <input type="text">
                     </span>
-                    <!-- <span class="cont4-span2">
-                        <p>件数</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont4-span3">
-                        <p>毛重（千克）</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont4-span4">
-                        <p>净重（千克）</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont4-span5">
-                        <p>成交方式</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont4-span6">
-                        <p>运费</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont4-span7">
-                        <p>保费</p>
-                        <input type="text">
-                    </span>
-                    <span class="cont4-span8">
-                        <p>杂费</p>
-                        <input type="text">
-                    </span> -->
+             
                 </div>
                 <div class="content5">
                     <span class="cont5-span1" :style="{width:documents.width}">
@@ -148,16 +69,7 @@
                 
                 <table class="content-table">
                   <tr>
-                    <!-- <th v-for="(top,index) in tops" :key="index">{{top.title}}</th> -->
                     <th v-for="(item,index) in headerList.split(',')" :key="index">{{item}}</th>
-                    <!-- <th>商品编号</th>
-                    <th>商品名称及规格型号 </th>
-                    <th>数量及单位</th>
-                    <th>单价/总价/币制 </th>
-                    <th>原产国（地区）</th>
-                    <th>最终目的国（地区）</th>
-                    <th>境内货源地 </th>
-                    <th>征免</th> -->
                   </tr>
                   <tr v-for="(i,index) in tableDatas" :key="index">
                     <td>{{i.ItemNo}}</td>
@@ -176,24 +88,12 @@
                     <td>{{i.source}}</td>
                     <td>{{i.free}}</td>    
                   </tr>               
-                   <!-- <tr>
-                    <td>1</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>    
-                  </tr> -->
+                  
                 </table>
 
                 <div class="footerOne" >
                   <span v-for="(item,index) in confirm" :key="index" :style="{width:item.width}">{{item.hh}}</span>
-                  <!-- <span>价格影响确认:</span>
-                  <span>支付特许权使用费确认：</span>
-                  <span>自报自缴：</span> -->
+                
                 </div>
                 
                 <div class="footerTwo">
@@ -227,36 +127,7 @@ export default {
       signs:{ee:'标记唛码及备注',width:'100%'},
       confirm:[{hh:'特殊关系确认',width:'25%'},{hh:'价格影响确认',width:'25%'},{hh:' 支付特许权使用费确认：',width:'25%'},{hh:'自报自缴：',width:'25%'},],
       information:{person: '报关人员',personNO:' 报关人员证号 ',tel:' 电话  ',content:'兹申明对以上内容承担如实申报、依法纳税之法律责任',unit:' 申报单位 ',signature:'申报单位（签章）',postil:'海关批注及签章'},
-        // tops: [
-        //         {
-        //             title:'项号',
-        //         },
-        //          {
-        //             title:'商品编号',
-        //         },
-        //          {
-        //             title:'商品名称及规格型号',
-        //         },
-        //          {
-        //             title:'数量及单位',
-        //         },
-        //          {
-        //             title:'单价/总价/币制',
-        //         },
-        //          {
-        //             title:'原产国（地区）',
-        //         },
-        //          {
-        //             title:'最终目的国（地区）',
-        //         },
-        //           {
-        //             title:'境内货源地',
-        //         },
-
-        //          {
-        //             title:'征免',
-        //         },
-        // ],
+       
         headerList: "项号,商品编号,商品名称及规格型号,数量及单位,单价/总价/币制,原产国（地区）,最终目的国（地区）,境内货源地,征免",
         tableDatas:[
           {ItemNo:'', No:'123',goods:'12',size:'111',amount:'112',unit:'1',price:'234',start:'1',end:'0',source:'1',free:'1'},
