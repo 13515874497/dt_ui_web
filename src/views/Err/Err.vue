@@ -37,11 +37,11 @@
 
 </template>
 <script>
-  import {repHead, repGetCompanyInfo} from '../../api'
-  import CompanyAdd from '../../components/Basic_Data_modify/CompanyItem/CompanyAdd'
-  import CompanyUp from '../../components/Basic_Data_modify/CompanyItem/CompanyUp'
-  import utils from '../../utils/PageUtils'
-  import ErrAdd from '../../components/Err/ErrAdd'
+  import {repHead, repGetCompanyInfo} from '@/api'
+  import CompanyAdd from '@/components/Basic_Data_modify/CompanyItem/CompanyAdd'
+  import CompanyUp from '@/components/Basic_Data_modify/CompanyItem/CompanyUp'
+  import utils from '@/utils/PageUtils'
+  import ErrAdd from '@/components/Err/ErrAdd'
   import PubSub_Err from 'pubsub-js'
   //公司
   export default {

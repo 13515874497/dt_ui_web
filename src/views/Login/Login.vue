@@ -41,11 +41,11 @@
 
 <script>
 import axios from "axios";
-import { repLoginUser } from "../../api";
-import message from "../../utils/Message";
-import login_intercept from "../../utils/login_intercept";
-import loading from "../../utils/loading";
-import { getOnlineNumber } from "../../api";
+import { repLoginUser } from "@/api";
+import message from "@/utils/Message";
+import login_intercept from "@/utils/login_intercept";
+import loading from "@/utils/loading";
+import { getOnlineNumber } from "@/api";
 import { Message } from "element-ui";
 export default {
   data() {

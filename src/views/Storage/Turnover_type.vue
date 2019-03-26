@@ -1,7 +1,7 @@
 <script>
 // 离职类型
-import { getHrLeave } from "../../api";
-import MxTable from "../../components/Mixins/MxTable";
+import { getHrLeave } from "@/api";
+import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
   data() {

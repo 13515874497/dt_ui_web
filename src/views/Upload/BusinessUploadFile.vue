@@ -6,7 +6,7 @@
   </div>
 </template>
 <script>
-  import BusinessTime from '../../components/FileUpload/BusinessTime'
+  import BusinessTime from '@/components/FileUpload/BusinessTime'
 
   export default {
     data () {

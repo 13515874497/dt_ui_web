@@ -1,7 +1,7 @@
 <script>
 //基础资料=>出口管理=>要素内容
-import { findElementInfo } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findElementInfo } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

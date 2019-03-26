@@ -1,8 +1,8 @@
 
 
 <script>
-import { getTemplate } from "../../api";
-import MxTable  from '../../components/Mixins/MxTable'
+import { getTemplate } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {

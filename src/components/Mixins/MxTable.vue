@@ -38,18 +38,18 @@
   </div>
 </template>
 <script>
-import Query2 from "../../components/ElementUi/Query2";
-import InputQuery from "../../components/ElementUi/InputQuery";
-import SearchReset from "../../components/ElementUi/SearchReset";
+import Query2 from "@/components/ElementUi/Query2";
+import InputQuery from "@/components/ElementUi/InputQuery";
+import SearchReset from "@/components/ElementUi/SearchReset";
 
-// import { findByListProduct } from "../../api";
+// import { findByListProduct } from "@/api";
 
-import Message from "../../utils/Message";
-import pUtils from "../../utils/PageUtils";
-import Pagination from "../../components/ElementUi/Pagination";
-import Table from "../../components/ElementUi/Table";
-import AddDelUpButton from "../../components/ElementUi/AddDelUpButton";
-import requestAjax from "../../api/requestAjax";
+import Message from "@/utils/Message";
+import pUtils from "@/utils/PageUtils";
+import Pagination from "@/components/ElementUi/Pagination";
+import Table from "@/components/ElementUi/Table";
+import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
+import requestAjax from "@/api/requestAjax";
 
 export default {
   data() {

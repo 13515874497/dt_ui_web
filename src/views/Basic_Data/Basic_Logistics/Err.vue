@@ -1,18 +1,9 @@
 <script>
 //异常类型
-import { findByListAbnormal } from "../../../api/index";
-import MxTree from "../../../components/Mixins/MxTree";
+import { findByListAbnormal } from "@/api/index";
+import MxTree from "@/components/Mixins/MxTree";
 export default {
   mixins: [MxTree],
-  data() {
-    return {
-      defaultProps: {
-        children: "childNode",
-        label: "transportAbnormalTypeName"
-      },
-      nodeKey: "transportAbnormalTypeId"
-    };
-  },
   methods: {
     queryAjax() {
       return findByListAbnormal();

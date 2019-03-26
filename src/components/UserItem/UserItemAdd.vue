@@ -64,9 +64,9 @@
 
 
 <script>
-  import {repFindRoles, repGetStaff, repGetUserName, repSaveUserInfo} from '../../api'
+  import {repFindRoles, repGetStaff, repGetUserName, repSaveUserInfo} from '@/api'
   import PubSub from 'pubsub-js'
-  import message from '../../utils/Message'
+  import message from '@/utils/Message'
 
   export default {
     data () {

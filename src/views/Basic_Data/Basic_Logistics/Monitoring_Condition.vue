@@ -1,7 +1,7 @@
 <script>
 //监管方式
-import { findMonitoringInfo } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findMonitoringInfo } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {

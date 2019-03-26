@@ -105,8 +105,8 @@
 </template>
 
 <script>
-import { isNumber } from "../../utils/verify.js";
-import { unique } from "../../utils/Arrays";
+import { isNumber } from "@/utils/verify.js";
+import { unique } from "@/utils/Arrays";
 
 export default {
   props: {
@@ -128,7 +128,7 @@ export default {
         date: [{ required: false, message: "请输入日期", trigger: "change" }],
         status: [{ required: false, message: "请选择状态", trigger: "change" }]
       },
-      //用于脚丫请求参数是否属于systemLogStatus对象（属于systemLogStatus的字段需要放在systemLogStatus ）
+      //用于判断请求参数是否属于systemLogStatus对象（属于systemLogStatus的字段需要放在systemLogStatus ）
       sysLogInclude: [
         "statusId",
         "remark",
@@ -141,6 +141,7 @@ export default {
         "auditUser",
         "effectiveDate"
       ]
+      
     };
   },
   watch: {
@@ -276,10 +277,16 @@ export default {
       }
       this.$emit("changeQuery", [data_model]);
       console.log(data_model);
+    },
+    setSysLogInclude(id){
+      if(id == 63){
+        this.sysLogInclude = [];
+      }
     }
   },
   created() {
     this.updateTableTitle();
+    this.setSysLogInclude(this.$route.params.id)
   }
   
 };

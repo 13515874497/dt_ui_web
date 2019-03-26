@@ -1,7 +1,7 @@
 <script>
 //检验检疫类别
-import { findByListQuarantine } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListQuarantine } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

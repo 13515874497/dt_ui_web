@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import rules from "../../utils/rules.js";
+import rules from "@/utils/rules.js";
 
 export default {
   props: {

@@ -45,8 +45,8 @@
 
 <script>
   import PubSubAdd from 'pubsub-js'
-  import {repFindRoles, repGetStaff, repSaveUserInfo} from '../../../api/index'
-  import message from '../../../utils/Message'
+  import {repFindRoles, repGetStaff, repSaveUserInfo} from '@/api/index'
+  import message from '@/utils/Message'
   export default {
     data() {
       return {

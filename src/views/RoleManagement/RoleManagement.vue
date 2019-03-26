@@ -45,15 +45,15 @@
   </div>
 </template>
 <script>
-import { repGetRoles } from "../../api";
-import pUtils from "../../utils/PageUtils";
+import { repGetRoles } from "@/api";
+import pUtils from "@/utils/PageUtils";
 import PubSub from "pubsub-js";
-import RoleItemUp from "../../components/RoleItem/RoleItemUp";
-import Pagination from "../../components/ElementUi/Pagination";
-import requestAjax from "../../api/requestAjax";
-import Table from "../../components/ElementUi/Table";
-import AddDelUpButton from "../../components/ElementUi/AddDelUpButton";
-import Query from "../../components/ElementUi/Query";
+import RoleItemUp from "@/components/RoleItem/RoleItemUp";
+import Pagination from "@/components/ElementUi/Pagination";
+import requestAjax from "@/api/requestAjax";
+import Table from "@/components/ElementUi/Table";
+import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
+import Query from "@/components/ElementUi/Query";
 //角色管理
 export default {
   data() {

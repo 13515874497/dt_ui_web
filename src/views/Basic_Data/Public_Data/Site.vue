@@ -1,8 +1,8 @@
 
 <script>
 //站点
-import { findByListSite } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListSite } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {

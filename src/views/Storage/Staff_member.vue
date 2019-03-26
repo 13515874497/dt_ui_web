@@ -1,6 +1,6 @@
 <script>
-import { findByListEmployee } from "../../api";
-import MxTable  from '../../components/Mixins/MxTable'
+import { findByListEmployee } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {

@@ -73,7 +73,7 @@
 
 <script>
 import PubSub from "pubsub-js";
-import message from "../../utils/Message";
+import message from "@/utils/Message";
 import {
   repGetUsers,
   roleMenu,
@@ -81,8 +81,8 @@ import {
   repGetHead,
   repGetMenus,
   repAdRole
-} from "../../api";
-import MenuHeadItem from "../../components/RoleItem/MenuHeadItem/MenuHeadItem";
+} from "@/api";
+import MenuHeadItem from "@/components/RoleItem/MenuHeadItem/MenuHeadItem";
 
 export default {
   data() {

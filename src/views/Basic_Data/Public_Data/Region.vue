@@ -1,8 +1,8 @@
 
 <script>
 //区域
-import { findByListRegion } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListRegion } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {

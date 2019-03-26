@@ -1,7 +1,7 @@
 <script>
 // 订单处理类
-import { findByListHandling } from "../../../../api";
-import MxTable from "../../../../components/Mixins/MxTable";
+import { findByListHandling } from "@/api";
+import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
   methods: {

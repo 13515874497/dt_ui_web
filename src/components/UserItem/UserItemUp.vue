@@ -145,14 +145,14 @@
 
 <script>
 import PubSub from "pubsub-js";
-import message from "../../utils/Message";
+import message from "@/utils/Message";
 import {
   repHead,
   repFindRoles,
   repUpUserInfo,
   repAdRole,
   repDelRole
-} from "../../api";
+} from "@/api";
 
 export default {
   data() {

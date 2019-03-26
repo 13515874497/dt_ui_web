@@ -5,18 +5,18 @@
 
 
 <script>
-  import Tree from '../../components/ElementUi/Tree.vue'
-  import AddDelUpButton from '../../components/ElementUi/AddDelUpButton'
+  import Tree from '@/components/ElementUi/Tree.vue'
+  import AddDelUpButton from '@/components/ElementUi/AddDelUpButton'
 
   export default {
     data () {
       return {
         data_tree:[],
         defaultProps: {
-          children: 'childPros',
-          label: 'productsName'
+          children: 'childNode',
+          label: 'treeName'
         },
-        nodeKey: 'productsId'
+        nodeKey: 'treeId'
       }
     },
     components:{

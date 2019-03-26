@@ -160,7 +160,7 @@
 </template>
 
 <script>
-import storage from "../../utils/storageUtils";
+import storage from "@/utils/storageUtils";
 import {
   repUpMenuInfo,
   repMenu,
@@ -169,12 +169,12 @@ import {
   icons,
   upHeadSort,
   upMenu
-} from "../../api";
-import message from "../../utils/Message";
-import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
-import AddDelUpBtn from "../../components/ElementUi/AddDelUpBtn"; //增删改组件
-import requestAjax from "../../api/requestAjax";
-import Table from "../../components/ElementUi/Table";
+} from "@/api";
+import message from "@/utils/Message";
+import Pagination from "@/components/ElementUi/Pagination"; // 分页组件
+import AddDelUpBtn from "@/components/ElementUi/AddDelUpBtn"; //增删改组件
+import requestAjax from "@/api/requestAjax";
+import Table from "@/components/ElementUi/Table";
 import { Message } from "element-ui";
 let id = 1000; //假菜单ID
 export default {

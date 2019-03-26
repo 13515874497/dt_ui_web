@@ -62,7 +62,7 @@
   import lt from '../Amazon/a.css'
   import PubSub_Ship from 'pubsub-js'
   import tables from '../Amazon/AddShipment_table'
-  import {repMenu} from '../../../api'
+  import {repMenu} from '@/api'
 
   export default {
     data () {

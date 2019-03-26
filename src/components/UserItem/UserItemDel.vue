@@ -50,10 +50,10 @@
 </template>
 <!--JS-->
 <script>
-  import {repDelHistoryUserInfo,repReUserInfo} from '../../api'
+  import {repDelHistoryUserInfo,repReUserInfo} from '@/api'
   import PubSub from 'pubsub-js'
-  import utils from '../../utils/PageUtils'
-  import message from '../../utils/Message'
+  import utils from '@/utils/PageUtils'
+  import message from '@/utils/Message'
 
   export default {
     data () {

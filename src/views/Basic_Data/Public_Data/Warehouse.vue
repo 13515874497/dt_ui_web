@@ -1,20 +1,9 @@
 
 <script>
-import { findByListWar } from "../../../api";
-import MxTree from "../../../components/Mixins/MxTree";
+import { findByListWar } from "@/api";
+import MxTree from "@/components/Mixins/MxTree";
 export default {
   mixins:[MxTree],
-  data() {
-    
-    return {
-      data_tree: [],
-      defaultProps: {
-        children: "childNode",
-        label: "warehouseName"
-      },
-      nodeKey: "warehouseId",
-    };
-  },
   methods: {
     queryAjax(){
       return findByListWar();

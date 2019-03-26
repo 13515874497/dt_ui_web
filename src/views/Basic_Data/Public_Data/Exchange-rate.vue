@@ -1,8 +1,8 @@
 
 <script>
 //汇率
-import { findByListRate } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListRate } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {

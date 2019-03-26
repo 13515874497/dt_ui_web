@@ -253,7 +253,8 @@ export const findMonitoringInfo = (data) => ajax(BASE_URL + '/condition/findMoni
 export const findByListModeOfTransport = (data) => ajax(BASE_URL + '/mode/findByListModeOfTransport', data);
 //出口关别分页
 export const findExitCustomsInfo = (data) => ajax(BASE_URL + '/customs/findExitCustomsInfo', data, 'POST');
-
+//离岸公司分页 http://127.0.0.1:9001/api/v1/Offshore/findByListCompanyOffshore?pageSize=10&currentPage=100 离岸公司 get
+export const findByListCompanyOffshore = (data) => ajax(BASE_URL + '/Offshore/findByListCompanyOffshore', data);
 
 
 /**
@@ -334,7 +335,8 @@ export const getEmployee = (data) => ajax(BASE_URL + '/staff/getEmployee', data)
 export const getEmployment = (data) => ajax(BASE_URL + '/staff/getEmployment', data)
 //离职类型分页 
 export const getHrLeave = (data) => ajax(BASE_URL + '/staff/getHrLeave', data)
-
+//民族分页 http://127.0.0.1:9001/api/v1/nation/findByListNationInfo?
+export const findByListNationInfo = (data) => ajax(BASE_URL + '/nation/findByListNationInfo', data)
 
 /**
  * 

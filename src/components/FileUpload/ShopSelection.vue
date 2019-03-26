@@ -35,8 +35,8 @@
     repGetShopIdSiteInfo,
     repGetUserUploadInfo,
     findByListRegion, repGetShopName
-  } from '../../api'
-  import FileUp from '../../components/FileUpload/FileUp'
+  } from '@/api'
+  import FileUp from '@/components/FileUpload/FileUp'
 
   export default {
     props: {
