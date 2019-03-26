@@ -9,8 +9,8 @@
             <div class="invoiceLeft">
                 <div class="company">
                     <span class="companyTo">To:</span>
-                    <input  v-model="gongsi" class="companInput">
-                    <textarea class="inputText"v-model="dizhi"> 
+                    <input  class="companInput">
+                    <textarea class="inputText"> 
                     </textarea>
                 </div>
                
@@ -18,41 +18,41 @@
             <div class="invoiceRight">
                <div class="invoiceNum">
                     <span class="invoiceNumspan">INV.NO.:</span>
-                    <input  class="invoiceNuminput"v-model="hao">
+                    <input  class="invoiceNuminput">
                 </div>
                  <div class="invoiceTitle">
                     <span class="invoiceNum">DATE:</span>
-                    <input class="invoiceTitleinput" v-model="shijian" type="text">
+                    <input class="invoiceTitleinput"  type="text">
                 </div>
             </div>
         </div>
         <div class="einBox">
           <span class="einBoxspan">EIN No.:</span>
-          <input type="text" class="einInput" v-model="bbb">
+          <input type="text" class="einInput">
         </div>
         <div class="delAddress">
           <div class="delTitle">DELIVERY ADDRESS:</div>
           <div class="delText">
-            <textarea v-model="texta">
+            <textarea >
             </textarea>
           </div>
         </div>
         <div class="tableBox">
           <div class="tableBox1">
-            <div class="boxTitle1">MARKS:</div>
-            <textarea class="boxText" v-model="boxText">
+            <div class="boxTitle1">{{box1.sign}}</div>
+            <textarea class="boxText" >
             </textarea>
           </div>
           <div class="tableBox2">
-            <div class="boxTitle2">QUANTITIES AND DESCRIPTIONS </div>
+            <div class="boxTitle2">{{box2.quality}} </div>
             <div class="boxEmpty"></div>
             <div class="boxEmpty"></div>
             <div class="boxName">DOG HARNESS</div>
-            <div class="boxContent1">
-              <span>HS CODE</span>
-              <span>4201000090</span>
+            <div class="boxContent1" v-for="(i,index) in box2.content" :key="index">
+              <span>{{i.leftName}}</span>
+              <span>{{i.rightNO}}</span>
             </div>
-            <div class="boxContent1">
+            <!-- <div class="boxContent1">
               <span>NAME:</span>
               <span>DOG HARNESS</span>
             </div>
@@ -67,21 +67,23 @@
             <div class="boxContent1">
                <span> Model:</span>
               <span>DTCW006-L</span>
+            </div> -->
+            <div class="boxCompany" v-for="(n,index) in box3.news">
+             <span> {{n.names}}</span>
+             <span> {{n.company}}</span>
             </div>
-            <div class="boxCompany">
-              MANUFACTURER: GLOBEGOU WZ CO.,LTD
-            </div>
-            <div class="boxContentAddress">
-              RM 209, BUILDING A, LANJIANG SOFTWARE PARK, LANJIANG ROAD, WENZHOU, ZHEJIANG, CHINA 
-            </div>
+            <!-- <div class="boxContentAddress">
+              <span>1</span>
+              <span>2 </span>
+            </div> -->
           </div>
-          <div class="tableBox3">
-            <div class="boxTitle3"></div>
-            <div class="boxTitlePrice">(PCS)</div>
-            <div class="boxEmpty"></div>
-            <div class="boxName">4895</div>
+          <div class="tableBox3" v-for="(box,index) in box4.units">
+            <div class="boxTitle3">{{box.boxTitle}}</div>
+            <div class="boxTitlePrice">{{box.boxTitlePrice}}</div>
+            <div class="boxEmpty">{{box.boxusd}}</div>
+            <div class="boxName">{{box.boxName}}</div>
           </div>
-          <div class="tableBox4">
+          <!-- <div class="tableBox4">
             <div class="boxTitle4">UNIT PRICE</div>
             <div class="boxusd">(USD)</div>
             <div class="boxusd">DDP</div>
@@ -92,17 +94,21 @@
              <div class="boxusd">(USD)</div>
              <div class="boxEmpty"></div>
              <div class="boxName">37406</div>
-          </div>
+          </div> -->
         </div>
         <div class="tableFooter">
-          <div class="tableFooter1"></div>
-          <div class="tableFooter2">TTL</div>
-          <div class="tableFooter3">4895</div>
-          <div class="tableFooter4"></div>
-          <div class="tableFooter5">37406</div>
+          <div class="tableFooter1">{{box5.footer1}}</div>
+          <div class="tableFooter2">{{box5.footer2}}</div>
+          <div class="tableFooter3">{{box5.footer3}}</div>
+          <div class="tableFooter4">{{box5.footer4}}</div>
+          <div class="tableFooter5">{{box5.footer5}}</div>
         </div>
         <div class="invfooter">
-          TOTAL VALUE SAY US FREIGHT<span>6489 </span>AND PREMIUM <span>41</span>ONLY
+          <span>TOTAL VALUE SAY US FREIGHT</span>
+          <span>6489 </span>
+          <span>AND PREMIUM </span>
+          <span>41</span>
+          <span>ONLY</span>
         </div>
          <button @click="printContent" id="printBtn">dayin</button>
   </div>
@@ -111,24 +117,68 @@
 export default {
   data() {
     return {
-      gongsi:'GLOBEGOU WZ CO.,LTD  ',
-      dizhi:' 245 EAST MAIN STREET, SUITE 115, ALHAMBRA  CA 91801 ',
-      texta:"这是地址",
-      hao:'fdsag a ',
-      boxText:'zheshiyixiemark',
-      bbb:'111',
-      shijian:'2019-01-01'
+      box1:{
+        sign:'MARKS:', 
+      },
+      box2:{
+       quality:'QUANTITIES AND DESCRIPTIONS' ,
+       name:'111',
+       content:[
+         {leftName:'HS CODE',rightNO:'4201000090'},
+         {leftName:'NAME',rightNO:'1'},
+         {leftName:'2',rightNO:'3'},
+         {leftName:'4 CODE',rightNO:'5'},
+         {leftName:'6 CODE',rightNO:'7'},
+         {leftName:'8',rightNO:'9'},
+       ]
+      },
+      box3:{
+        news:[
+          {names:'1',company:'2'},
+          {names:'3',company:'4'}
+        ]
+      },
+      box4:{
+        units:[{
+          boxTitle:'',
+          boxTitlePrice:'(pcs)',
+          boxusd:'',
+          boxName:'1234'
+        },
+        {
+          boxTitle:'UNITPRICE',
+          boxTitlePrice:'(USD)',
+          boxusd:'DDP',
+          boxName:'7.642'
+        },
+        {
+          boxTitle:'AMOUNT',
+          boxTitlePrice:'(USD)',
+          boxusd:'',
+          boxName:'37406'
+        }]
+      },
+      box5:{
+        footer1:'',
+        footer2:'TTL',
+        footer3:'4895',
+        footer4:'',
+        footer5:'37406'
+      }
+        
     };
   },
   methods: {
     // 打印
     printContent() {
+      this.bindData()
        document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("invoiceBox");
       // console.log(subOutputRankPrint.innerHTML);
       let newContent = subOutputRankPrint.innerHTML;
       let oldContent = document.body.innerHTML;
       document.body.innerHTML = newContent;
+      
       window.print();
       // window.location.reload();
       // document.body.innerHTML = oldContent;
@@ -297,7 +347,7 @@ export default {
   display: flex;
 }
 .tableBox .tableBox1 {
-  width: 15%;
+  width: 10%;
   border: 1px solid black;
     border-right: none;
 }
@@ -307,12 +357,13 @@ export default {
   border-right: none;
 }
 .tableBox .tableBox3 {
-  width: 10%;
+  width: 15%;
   border: 1px solid black;
   border-left:none;
-    border-right: none;
+  text-align: center;
+    /* border-right: none; */
 }
-.tableBox .tableBox4 {
+/* .tableBox .tableBox4 {
   width: 15%;
   border: 1px solid black;
     border-right: none;
@@ -321,7 +372,7 @@ export default {
 .tableBox .tableBox5 {
   width: 15%;
   border: 1px solid black;
-}
+} */
 .boxTitle1 {
   border-bottom: 1px solid black;
     text-align: center;
@@ -411,7 +462,7 @@ text-align: center;
   text-align: center;
 }
 .tableFooter .tableFooter1 {
-  width: 15%;
+  width: 10%;
   border: 1px solid black;
   border-right: none;
   border-top:none;
@@ -423,7 +474,7 @@ text-align: center;
   border-top:none;
 }
 .tableFooter .tableFooter3 {
-  width: 10%;
+  width: 15%;
   border: 1px solid black;
   border-left:none;
     border-right: none;
@@ -443,7 +494,7 @@ text-align: center;
 }
 .invfooter{
   width:100%;
-  border:1px solid black;
+  /* border:1px solid black; */
   border-top:none;
   text-align: center;
   font-size:14px;

@@ -8,22 +8,19 @@
         <h1 class="titleTop">PACKING LIST</h1>
         <div class="titleContent">
             <div class="titleContentLeft">
-                <div class="left1">SHIPPING MARKS:</div>
+                <div class="left1">{{mark}}</div>
                 <div class="left2">
-                    Amazon.com.kydc, LLC  
-                        33333 LBJ FWY
-                        Dallas, TX 75241-7203
-                        US (FTW1)
+                    {{address}}
                 </div>
             </div>
              <div class="titleContentRight">
                 <div class="titleNum">
-                    <span>INV.NO.:</span>
+                    <span>{{invNo}}</span>
                     <input type="text">
                 </div>
                  <div class="titleDate">
-                    <span class="invoiceNum">DATE:</span>
-                    <input type="text" v-model="shijian">
+                    <span class="invoiceNum">{{date}}</span>
+                    <input type="text" >
                 </div>
             </div>
         </div>
@@ -34,12 +31,14 @@
                 :summary-method="getSummaries"
                 show-summary
                 style="width: 100%; margin-top: 20px;">
+                 <template v-for="(col ,index) in cols">
                 <el-table-column
-                  prop="NOS."
-                  label="NOS."
+                  :prop="col.prop" 
+                  :label="col.label"
                   >
                 </el-table-column>
-                <el-table-column
+                 </template>
+                <!-- <el-table-column
                   prop="SPECIFICATION"
                   label="SPECIFICATION"  
                   >
@@ -68,7 +67,7 @@
                   prop="MEAS"
                   label="MEAS."     
                   >
-                </el-table-column>
+                </el-table-column> -->
               </el-table>
 
             <button @click="printContent" id="printBtn">dayin</button>
@@ -80,6 +79,19 @@ export default {
   data() {
     return {
       shijian: "2019-01-01",
+       mark:'SHIPPING MARKS',
+      address:'1',
+      invNo:'INV.NO.:',
+      date:'DATE:',
+        cols: [
+                { label: "NOS", prop: "NOS"},
+                { label: "SPECIFICATION", prop: "SPECIFICATION"},
+                { label: "CARTON", prop: "CARTON"},
+                { label: "QUANTITY", prop: "QUANTITY" },
+                { label: "GR.WT", prop: "GR_WT"},
+                { label: "NET.WT", prop: "NET_WT"},
+                { label: "MEAS", prop: "MEAS"},
+            ],
       tableData6: [
         {
           NOS: "",
@@ -122,9 +134,9 @@ export default {
       let oldContent = document.body.innerHTML;
       document.body.innerHTML = newContent;
       window.print();
-      window.location.reload();
-      document.body.innerHTML = oldContent;
-      return false;
+      // window.location.reload();
+      // document.body.innerHTML = oldContent;
+      // return false;
     },
     bindData() {
       let subOutputRankPrint = document.getElementById("packBox");
@@ -138,6 +150,10 @@ export default {
       const { columns, data } = param;
       const sums = [];
       columns.forEach((column, index) => {
+         if (index === 0) {
+          sums[index] = "";
+          return;
+        }
         if (index === 1) {
           sums[index] = " TOTAL:";
           return;
@@ -149,15 +165,13 @@ export default {
             if (!isNaN(value)) {
               return prev + curr;
             } else {
-              return prev;
-            }
+              return prev; }
           }, 0);
           sums[index] += " ";
         } else {
           sums[index] = "";
         }
       });
-
       return sums;
     }
   },
