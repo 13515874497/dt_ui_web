@@ -68,7 +68,7 @@
                <span> Model:</span>
               <span>DTCW006-L</span>
             </div> -->
-            <div class="boxCompany" v-for="(n,index) in box3.news">
+            <div class="boxCompany" v-for="(n,index) in box3.news" >
              <span> {{n.names}}</span>
              <span> {{n.company}}</span>
             </div>

@@ -89,16 +89,16 @@
             <span style="border-bottom:1px solid black">usd37406</span>
         </div>
         <div>
-            4)数量及总值允许有         %的增减。
+            4)数量及总值允许有 <span>%</span>的增减。
         </div>
         <div>
-             THE ABOVE GOODS MAY BE ALLOWED WITH         %MORE OR LESS BOTH IN AMOUNT AND QUANTITY ALLOWED
+             THE ABOVE GOODS MAY BE ALLOWED WITH <span>%</span>MORE OR LESS BOTH IN AMOUNT AND QUANTITY ALLOWED
         </div>
-        <div class="salesPacking">
-            <span>5)包装:出口标准纸箱</span>
-            <span>6)装船唛头</span>
+        <div class="salesPacking" v-for="(s,index) in contDatas">
+            <span>{{s.type}}</span>
+            <span>{{s.translate}}</span>
         </div>
-        <div class="salesPacking"> 
+        <!-- <div class="salesPacking"> 
             <span> PACKING:EXPORT CARTON</span>
             <span> SHIPPING MARKS</span>
         </div>
@@ -117,7 +117,7 @@
         <div class="salesPacking"> 
             <span>    DESTINATION :  </span>
             <span> FROM WENZHOU TO   </span>
-        </div>
+        </div> -->
         <div>
             9) 付款 
         </div>
@@ -194,7 +194,14 @@ export default {
                     bb:'12'
                 },
         
-            ]
+      ],
+    contDatas:[
+      {type:'5)包装:出口标准纸箱',translate:'6)装船唛头'},
+      {type:' PACKING:EXPORT CARTON',translate:'SHIPPING MARKS'},
+      {type:' 7)装运期',translate:' AT THE BUYERS OPTION'},
+      {type:' 8)装运口岸和目的地:',translate:'至'},
+      {type:'  DESTINATION :  ',translate:'FROM WENZHOU TO '},
+    ]
     };
   },
   methods: {
