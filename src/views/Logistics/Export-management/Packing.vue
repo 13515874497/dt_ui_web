@@ -79,7 +79,7 @@ export default {
   data() {
     return {
       shijian: "2019-01-01",
-       mark:'SHIPPING MARKS',
+      mark:'SHIPPING MARKS',
       address:'1',
       invNo:'INV.NO.:',
       date:'DATE:',
