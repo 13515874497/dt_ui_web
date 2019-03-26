@@ -1,11 +1,11 @@
 <template>
     <div id="declarationBox">
         <h2 class="deTitle">申 报 要 素</h2>
-        <div class="deContainer">
-            <span>HS CODE:</span>
-            <span>4201000090</span>
+        <div class="deContainer" v-for="(item,index) in deContainer" :key="index">
+            <span>{{item.name}}</span>
+            <span>{{item.value}}</span>
         </div>
-        <div class="deContainer">
+        <!-- <div class="deContainer">
             <span>1.品名：</span>
             <span>狗背带</span>
         </div>
@@ -44,7 +44,7 @@
         <div class="deContainer">
             <span>8.品牌类型：</span>
             <span>境内自主品牌</span>
-        </div>
+        </div> -->
 
         <button @click="printContent" id="printBtn">dayin</button>
     </div>
@@ -52,7 +52,9 @@
 <script>
 export default {
    data() {
-    return {};
+    return {
+       deContainer:[{name:'HSCODE',value:'4201000090'},{name:'1.品名：',value:'狗背带'},] 
+    };
   },
   methods: {
     // 打印

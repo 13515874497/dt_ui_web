@@ -41,30 +41,34 @@
         <div>THIS CONTRACT IS MADE OUT BY THE SELLERS AND BUYERS AS PER THE FOLLOWING TERMS AND CONDITIONS MUTUILLY CONFIRMED:</div>
         <table class="salesTable">
             <tr>
-                <th class="salesTh">
-                    <span>货 物 名 称 及 规 格</span>
-                    <span>NAME OF COMMODITY AND SPECIFICATION</span>
+                <th class="salesTh" v-for="(item,index) in items" :key="index">
+                    <span>{{item.chinese}}</span>
+                    <span>{{item.english}}</span>
+                </th>
+                <!-- <th class="salesTh">
+                  <span>数   量</span>
+                  <span>QUANTITY</span>  
                 </th>
                 <th class="salesTh">
-                <span>数   量</span>
-                <span>QUANTITY</span>  
+                  <span>单   价</span>
+                  <span>UNIT PRICE</span> 
                 </th>
                 <th class="salesTh">
-                <span>单   价</span>
-                <span>UNIT PRICE</span> 
-                </th>
-                <th class="salesTh">
-                <span>金   额</span>
-                <span>AMOUNT</span>  
-                </th>
+                  <span>金   额</span>
+                  <span>AMOUNT</span>  
+                </th> -->
             </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td>DDP</td>
-                <td></td>
+            <tr v-for="(i,index) in tableData" :key="index">
+                <td>{{i.name}}</td>
+                <td>{{i.amount}}</td>
+                <td> {{i.status}}</td>
+                <td>
+                  <span>{{i.aa}}</span>
+                  <span>{{i.bb}}</span>
+                </td>
+                
             </tr>
-            <tr>
+            <!-- <tr>
                 <td>DOG HARNESS</td>
                 <td>4895</td>
                 <td class="Salesusd">
@@ -75,7 +79,7 @@
                     <span>usd</span>
                     <span>37406</span>
                 </td>
-            </tr>
+            </tr> -->
         </table>
         <div class="salesTotal">
             总    值
@@ -85,16 +89,16 @@
             <span style="border-bottom:1px solid black">usd37406</span>
         </div>
         <div>
-            4)数量及总值允许有         %的增减。
+            4)数量及总值允许有 <span>%</span>的增减。
         </div>
         <div>
-             THE ABOVE GOODS MAY BE ALLOWED WITH         %MORE OR LESS BOTH IN AMOUNT AND QUANTITY ALLOWED
+             THE ABOVE GOODS MAY BE ALLOWED WITH <span>%</span>MORE OR LESS BOTH IN AMOUNT AND QUANTITY ALLOWED
         </div>
-        <div class="salesPacking">
-            <span>5)包装:出口标准纸箱</span>
-            <span>6)装船唛头</span>
+        <div class="salesPacking" v-for="(s,index) in contDatas">
+            <span>{{s.type}}</span>
+            <span>{{s.translate}}</span>
         </div>
-        <div class="salesPacking"> 
+        <!-- <div class="salesPacking"> 
             <span> PACKING:EXPORT CARTON</span>
             <span> SHIPPING MARKS</span>
         </div>
@@ -113,7 +117,7 @@
         <div class="salesPacking"> 
             <span>    DESTINATION :  </span>
             <span> FROM WENZHOU TO   </span>
-        </div>
+        </div> -->
         <div>
             9) 付款 
         </div>
@@ -167,7 +171,38 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      items:[{chinese:'货 物 名 称 及 规 格',english:'NAME OF COMMODITY AND SPECIFICATION'},
+      {chinese:'数   量',english:'QUANTITY'},
+      {chinese:'单   价',english:'UNIT PRICE'},
+      {chinese:'金   额',english:'AMOUNT'}],
+       tableData: [
+                {
+                   
+                    name: " ",
+                    amount: "",
+                    status: "DDP",
+                    aa: "",
+                    bb:''
+                },
+                   {
+                   
+                    name: " 111",
+                    amount: "123",
+                    status: "ussss",
+                    aa: "usd",
+                    bb:'12'
+                },
+        
+      ],
+    contDatas:[
+      {type:'5)包装:出口标准纸箱',translate:'6)装船唛头'},
+      {type:' PACKING:EXPORT CARTON',translate:'SHIPPING MARKS'},
+      {type:' 7)装运期',translate:' AT THE BUYERS OPTION'},
+      {type:' 8)装运口岸和目的地:',translate:'至'},
+      {type:'  DESTINATION :  ',translate:'FROM WENZHOU TO '},
+    ]
+    };
   },
   methods: {
     // 打印
