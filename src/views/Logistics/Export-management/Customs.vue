@@ -114,7 +114,10 @@ export default {
           [{name: '标记唛码及备注', width: '100%'}],
         ]
       },
+      
       //中：
+       headerList:
+      "项号,商品编号,商品名称及规格型号,数量及单位,单价/总价/币制,原产国（地区）,最终目的国（地区）,境内货源地,征免",
       tableDatas: [
         {
           ItemNo: "",
@@ -143,7 +146,7 @@ export default {
           free: ""
         }
       ],
-
+      
       //下：
        information: {
         comfirm:[
@@ -160,8 +163,7 @@ export default {
         signature: "申报单位（签章）",
         postil: "海关批注及签章"
       },
-      headerList:
-      "项号,商品编号,商品名称及规格型号,数量及单位,单价/总价/币制,原产国（地区）,最终目的国（地区）,境内货源地,征免",
+     
     };
   },
   methods: {

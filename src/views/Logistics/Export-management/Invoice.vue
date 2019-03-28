@@ -47,7 +47,7 @@
             <div class="boxTitle2">{{box2.quality}} </div>
             <div class="boxEmpty"></div>
             <div class="boxEmpty"></div>
-            <div class="boxName">DOG HARNESS</div>
+            <div class="boxName">{{box2.name}}</div>
             <div class="boxContent1" v-for="(i,index) in box2.content" :key="index">
               <span>{{i.leftName}}</span>
               <span>{{i.rightNO}}</span>
@@ -175,7 +175,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 #invoiceBox {
   height: 100%;
   width: 210mm;
