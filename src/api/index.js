@@ -204,6 +204,12 @@ export const repDelHistoryUserInfo = ({
 }, 'POST')
 
 
+/**
+ * 
+ * 运营管理 => 亚马逊 => 广告
+ */
+//CPR分页 http://127.0.0.1:9001/api/v1/ad/getCprInfo post
+export const getCprInfo = (data) => ajax(BASE_URL + '/ad/getCprInfo', data,'POST');
 
 
 
@@ -414,6 +420,38 @@ export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + `/site/getByShopIdL
 export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
 //汇率分页 repGetRate
 export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', data, 'POST')
+
+
+
+/**
+ * 
+ * 菜单管理 => 菜单管理
+ */
+//获取可引用的表头字段 
+export const reference = (data) => ajax(BASE_URL + '/reference', data)
+//新增表头字段 api/v1/saveHead
+export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

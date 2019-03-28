@@ -8,6 +8,7 @@ import VueResource from 'vue-resource'
 import login_intercept from './utils/login_intercept'
 import loading from './utils/loading'
 import './assets/icon/iconfont.css'//
+import './assets/icon/iconfont_zbr.css'
 import router from './router'
 import {
   Badge,

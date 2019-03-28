@@ -1,6 +1,6 @@
 <template>
   <div class="check1">
-    <el-select v-model="tVal" clearable multiple placeholder="用户信息选择" @change="getValue" value="">
+    <el-select v-model="tVal" clearable multiple filterable placeholder="用户信息选择" @change="getValue" value="">
       <el-option
         v-for="(item,index) in tableTitle"
         :key="index"

@@ -140,8 +140,8 @@ export default {
         "auditDate",
         "auditUser",
         "effectiveDate"
-      ]
-      
+      ],
+      sysLogNotInclude:[63]
     };
   },
   watch: {
@@ -279,14 +279,19 @@ export default {
       console.log(data_model);
     },
     setSysLogInclude(id){
-      if(id == 63){
-        this.sysLogInclude = [];
+      console.log(this.sysLogNotInclude);
+      console.log(id);
+      
+      console.log(this.sysLogNotInclude.includes(id));
+      
+      if(this.sysLogNotInclude.includes(id)){
+        this.sysLogInclude.length = 0;
       }
     }
   },
   created() {
     this.updateTableTitle();
-    this.setSysLogInclude(this.$route.params.id)
+    this.setSysLogInclude(+this.$route.params.id)
   }
   
 };

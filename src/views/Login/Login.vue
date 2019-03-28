@@ -76,7 +76,7 @@ export default {
       this.body_height.height = View.height + "px";
     },
     async Login() {
-      let loadingInstance = loading.loading_dom("登陆中", "body");
+      let loadingInstance = loading.loading_dom({text:'登陆中',target:'body'});
       const userName = this.userName;
       const pwd = this.passWord;
       const rememberMe = this.rememberMe;

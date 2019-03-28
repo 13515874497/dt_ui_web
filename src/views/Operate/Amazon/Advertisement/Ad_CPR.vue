@@ -1,17 +1,17 @@
 <script>
 //CPR
-import { findByListCompany } from "@/api";
+import { getCprInfo } from "@/api";
 import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
-  data(){
-    return {
-       showQuery: false
-    }
-  },
+  // data(){
+  //   return {
+  //      showQuery: false
+  //   }
+  // },
   methods: {
      queryPage(data) {
-      return findByListCompany(data);
+      return getCprInfo(data);
     },
   }
 }

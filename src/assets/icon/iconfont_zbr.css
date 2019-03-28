@@ -1,0 +1,36 @@
+[class^="el-iconfont-"], [class*="el-iconfont-"]
+{
+  /* font-family:"iconfont_zbr" !important;
+  font-size:16px;
+  font-style:normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; */
+
+
+  font-family: "iconfont_zbr" !important;
+  speak: none;
+  font-style: normal;
+  font-weight: 400;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: baseline;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+}
+@keyframes rotating {
+  from{transform:rotate(0)}
+  to{transform:rotate(360deg)}
+}
+
+.el-iconfont-loading{
+
+  animation:  rotating 2s linear infinite;
+}
+
+.el-iconfont-miao::before {
+  width: 2em;
+  height: 2em;
+  fill: currentColor;
+  overflow: hidden;
+}
