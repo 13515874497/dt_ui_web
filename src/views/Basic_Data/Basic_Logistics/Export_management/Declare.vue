@@ -5,46 +5,6 @@
             <span>{{item.name}}</span>
             <span>{{item.value}}</span>
         </div>
-        <!-- <div class="deContainer">
-            <span>1.品名：</span>
-            <span>狗背带</span>
-        </div>
-        <div class="deContainer">
-            <span>2.材质：</span>
-            <span>涤纶</span>
-        </div>
-        <div class="deContainer">
-            <span>2.材质：</span>
-            <span>涤纶</span>
-        </div>
-        <div class="deContainer">
-            <span>3.是否为濒危野生动物材料制：</span>
-            <span>否</span>
-        </div>
-        <div class="deContainer">
-            <span>4.型号：</span>
-            <span>DTCW006-L等</span>
-        </div>
-        <div class="deContainer">
-            <span>5.用途：</span>
-            <span>宠物用品</span>
-        </div>
-        <div class="deContainer">
-            <span>6.品牌:</span>
-            <span>Rabbitgoo</span>
-        </div>
-        <div class="deContainer">
-            <span>6.品牌:</span>
-            <span>Rabbitgoo</span>
-        </div>
-        <div class="deContainer">
-            <span>7.出口享惠情况：</span>
-            <span>出口货物在最终目的国（地区）不享受优惠关税</span>
-        </div>
-        <div class="deContainer">
-            <span>8.品牌类型：</span>
-            <span>境内自主品牌</span>
-        </div> -->
 
         <button @click="printContent" id="printBtn">dayin</button>
     </div>

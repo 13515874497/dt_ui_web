@@ -38,36 +38,7 @@
                   >
                 </el-table-column>
                  </template>
-                <!-- <el-table-column
-                  prop="SPECIFICATION"
-                  label="SPECIFICATION"  
-                  >
-                </el-table-column>
-                <el-table-column
-                  prop="CARTON"
-                  label="CARTON"       
-                  >
-                </el-table-column>
-                <el-table-column
-                  prop="QUANTITY"
-                  label="QUANTITY"             
-                  >
-                </el-table-column>
-                <el-table-column
-                  prop="GR_WT"
-                  label="GR.WT."
-                  >
-                </el-table-column>
-                <el-table-column
-                  prop="NET_WT"
-                  label="NET.WT"
-                  >
-                </el-table-column>
-                <el-table-column
-                  prop="MEAS"
-                  label="MEAS."     
-                  >
-                </el-table-column> -->
+              
               </el-table>
 
             <button @click="printContent" id="printBtn">dayin</button>

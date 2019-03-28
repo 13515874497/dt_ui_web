@@ -8,11 +8,9 @@
         <div class="salesInformation">
             <div class="salesLeft">
                 <div class="salesBuyer">买方</div>
-                <div class="buyersNames">
-                 
+                <div class="buyersNames">                 
                      <span> BUYERS：</span>
-                     <input type="text"></input>
-               
+                     <input type="text"></input>               
                    <textarea class="buyersNamesBottom">245 EAST MAIN STREET, SUITE 115, ALHAMBRA  CA 91801 </textarea>
                 </div>
             </div>
@@ -20,19 +18,16 @@
                <div>合同号码</div> 
                <div class="salesContract">
                    <span>CONTACT NO.:</span>
-                   <!-- <span style="border-bottom:1px solid black ">GL18AM181US</span> -->
                    <input type="text"></input>
                </div>
                <div >日期</div>
                <div class="salesContract">
                    <span>DATE：</span>
-                   <!-- <span style="border-bottom:1px solid black ">Sep.28,2019</span> -->
                    <input type="text"></input>
                </div>
                <div>签约地点</div>
                <div class="salesContract">
                    <span>SIGNED AT：</span>
-                   <!-- <span style="border-bottom:1px solid black">WENZHOU</span> -->
                    <input type="text"></input>
                </div>
             </div>
@@ -45,18 +40,6 @@
                     <span>{{item.chinese}}</span>
                     <span>{{item.english}}</span>
                 </th>
-                <!-- <th class="salesTh">
-                  <span>数   量</span>
-                  <span>QUANTITY</span>  
-                </th>
-                <th class="salesTh">
-                  <span>单   价</span>
-                  <span>UNIT PRICE</span> 
-                </th>
-                <th class="salesTh">
-                  <span>金   额</span>
-                  <span>AMOUNT</span>  
-                </th> -->
             </tr>
             <tr v-for="(i,index) in tableData" :key="index">
                 <td>{{i.name}}</td>
@@ -68,18 +51,6 @@
                 </td>
                 
             </tr>
-            <!-- <tr>
-                <td>DOG HARNESS</td>
-                <td>4895</td>
-                <td class="Salesusd">
-                    <span >usd</span>
-                    <span>7.642</span>
-                </td>
-                <td class="Salesusd">
-                    <span>usd</span>
-                    <span>37406</span>
-                </td>
-            </tr> -->
         </table>
         <div class="salesTotal">
             总    值
@@ -98,26 +69,6 @@
             <span>{{s.type}}</span>
             <span>{{s.translate}}</span>
         </div>
-        <!-- <div class="salesPacking"> 
-            <span> PACKING:EXPORT CARTON</span>
-            <span> SHIPPING MARKS</span>
-        </div>
-        <div class="salesPacking"> 
-            <span> 7)装运期</span>
-            <span>   由买方决定</span>
-        </div>
-        <div class="salesPacking"> 
-            <span> TIME OF SHIPMENT: ON OR BEFORE: </span>
-            <span>AT THE BUYERS OPTION</span>
-        </div>
-        <div class="salesPacking"> 
-            <span> 8)装运口岸和目的地:</span>
-            <span> 至 </span>
-        </div>
-        <div class="salesPacking"> 
-            <span>    DESTINATION :  </span>
-            <span> FROM WENZHOU TO   </span>
-        </div> -->
         <div>
             9) 付款 
         </div>
@@ -156,13 +107,9 @@
         <div>
               OTHER
         </div>
-        <div class="salesSure"> 
-            <span>  买方确认 </span>
-            <span> 温州电兔电子商务有限公司 </span>
-        </div>
-        <div class="salesSure"> 
-            <span>  Confirmed by the Buyer </span>
-            <span>  GLOBEGOU WZ CO.,LTD  </span>
+        <div class="salesSure" v-for="(sale,index) in salesSure"> 
+            <span>  {{sale.confirm}} </span>
+            <span> {{sale.companyName}}</span>
         </div>
          <button @click="printContent" id="printBtn">dayin</button>
         
@@ -201,7 +148,8 @@ export default {
       {type:' 7)装运期',translate:' AT THE BUYERS OPTION'},
       {type:' 8)装运口岸和目的地:',translate:'至'},
       {type:'  DESTINATION :  ',translate:'FROM WENZHOU TO '},
-    ]
+    ],
+    salesSure:[{confirm:'买方确认',companyName:'温州电兔电子商务有限公司'},{confirm:'Confirmed by the Buyer',companyName:'GLOBEGOU WZ CO.,LTD '}]
     };
   },
   methods: {

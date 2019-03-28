@@ -68,7 +68,12 @@ export default {
   created() {
     this.hh();
     this.getOnlineNumber();
+    this.timer = setInterval(this.getOnlineNumber, 10000); //轮询
   },
+  //在页面销毁时清除定时器
+   beforeDestroy() {
+       clearInterval(this.timer);
+    },
   methods: {
     //获取屏幕尺寸
     async hh() {
@@ -107,16 +112,18 @@ export default {
     },
     async getOnlineNumber() {
       let res = await getOnlineNumber();
-      if (res.code == 200) {
-        this.onlineNumber = res.data;
-      } else {
+      console.log(res)       
+      if (res.code == 200) {      
+        this.onlineNumber = res.data; 
+      } 
+      else {
         Message({
           showClose: true,
           message: res.msg,
           type: "error"
         });
       }
-    }
+    },
   }
 };
 </script>
