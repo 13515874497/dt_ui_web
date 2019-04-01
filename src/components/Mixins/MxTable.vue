@@ -56,7 +56,7 @@ export default {
     return {
       queryIds: [],
 
-      tableTitle: [], //表头信息
+      tableTitle: [ ], //表头信息
 
       multipleSelection: [], //更新按钮数组收集
 

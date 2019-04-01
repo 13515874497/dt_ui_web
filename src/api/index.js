@@ -522,3 +522,8 @@ export const repGetLogisticsInfo = ({
   currentPage,
   pageSize
 }, 'POST')
+
+
+//查询str
+
+export const getStr = (data) => ajax(BASE_URL + `/ad/getStrInfo`,data, 'POST')
