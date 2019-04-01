@@ -145,7 +145,7 @@ export default {
               socket.close();
             });
         };
-        this.socket.onerror = () => {
+        socket.onerror = () => {
           socket.close();
           setTimeout(() => {
             self.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
