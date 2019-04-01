@@ -428,10 +428,11 @@ export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', 
  * 菜单管理 => 菜单管理
  */
 //获取可引用的表头字段 
-export const reference = (data) => ajax(BASE_URL + '/reference', data)
+export const reference = (data) => ajax(BASE_URL + '/reference', data,'GET',[false,true])
 //新增表头字段 api/v1/saveHead
-export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST')
-
+export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST',[true,true])
+//新增引用数据 
+export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'POST',[true,true])
 
 
 

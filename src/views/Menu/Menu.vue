@@ -129,7 +129,7 @@
 
     <!-- 字段列表 =>  修改 -->
     <el-dialog title="编辑字段" :visible.sync="editDialogFormVisible">
-      <Form :formItems="formItems" :formData="data_field" key="修改"></Form>
+      <Form :formItems="formItems" :formData="data_field"></Form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
@@ -138,20 +138,31 @@
     </el-dialog>
 
     <!-- 点击新增 -->
-    <el-dialog title="新增菜单表头" :visible.sync="addDialogFormVisible">
-      <Form :formItems="formItems" @passData="passData_add" key="新增"></Form>
+    <el-dialog title="新增字段" :visible.sync="addDialogFormVisible">
+      <Form :formItems="formItems" @passData="passData_add"></Form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUserSubmit">确 定</el-button>
+        <el-button type="primary" @click="passedData_add">确 定</el-button>
       </div>
     </el-dialog>
 
-    <!-- 引入其他菜单表头 -->
-    <el-dialog title="引入其他菜单表头" :visible.sync="IntroDialogFormVisible">
-      <Table :tableTitle="tableTitle" :tableData="introList"></Table>
+    <!-- 引入其他字段 -->
+    <el-dialog title="引入其他字段" :visible.sync="IntroDialogFormVisible">
+      <el-autocomplete
+        placeholder="输入要查询的字段"
+        v-model="introList_filter.input"
+        :fetch-suggestions="queryIntroList"
+        class="introList-search"
+      >
+        <i class="el-icon-edit el-input__icon" slot="suffix"></i>
+      </el-autocomplete>
+
+      <el-tree :data="introList_filter.data" :props="defaultProps_introList" show-checkbox ref="tree_introList"></el-tree>
+      <!-- <Table :tableTitle="tableTitle" :tableData="introList"></Table> -->
+
       <div slot="footer" class="dialog-footer">
         <el-button @click="IntroDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="IntroUserSubmit()">确 定</el-button>
+        <el-button type="primary" @click="introList_add()">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -163,12 +174,12 @@ import {
   repUpMenuInfo,
   repMenu,
   repHead,
-  repGetHeadList,
   icons,
   upHeadSort,
   upMenu,
   saveHead,
-  reference
+  reference,
+  saveReference
 } from "@/api";
 import message from "@/utils/Message";
 import Pagination from "@/components/ElementUi/Pagination"; // 分页组件
@@ -237,9 +248,7 @@ export default {
           topType: "inputType"
         }
       ], //表头信息
-      isTableTitle: false, //如果table表头的长度是 0
       multipleSelection: [],
-      menuTableTitle: {}, //菜单查询到的表头信息
       showSortBtn: false, //是否显示字段排序的按钮
       activeName: "first",
       menu: {
@@ -271,13 +280,13 @@ export default {
           inputType: 0,
           required: true
         },
-        {
-          headName: "菜单ID",
-          topType: "menuId",
-          inputType: 0,
-          required: true,
-          disabled: true
-        },
+        // {
+        //   headName: "菜单ID",
+        //   topType: "menuId",
+        //   inputType: 1000,
+        //   required: true,
+        //   disabled: true
+        // },
 
         {
           headName: "是否固定表头",
@@ -315,7 +324,7 @@ export default {
             },
             {
               id: 3,
-              name: "多选框"
+              name: "下拉框"
             },
             {
               id: 4,
@@ -325,7 +334,7 @@ export default {
         },
         {
           headName: "是否可被引用",
-          topType: "reference",
+          topType: "isReference",
           inputType: 5,
           required: true,
           statusOptions: [
@@ -352,8 +361,17 @@ export default {
         children: "childMenus",
         label: "mName"
       },
+      defaultProps_introList: {
+        children: null,
+        label: "headName"
+      },
       //引入菜单表头的数据
-      introList: []
+      introList: [],
+      introList_filter: {
+        input: "", //输入框中的数据
+        autocomplete: [], //用于筛选的数据
+        data:[] //根据用户输入筛选符合的字段
+      }
     };
   },
   components: {
@@ -361,6 +379,13 @@ export default {
     AddDelUpBtn,
     Table
     // Form
+  },
+  watch: {
+    "introList_filter.input": function(val) {
+      this.introList_filter.data = this.introList.filter((item)=>{
+        return item.headName.indexOf(val) > -1;
+      })
+    }
   },
   async mounted() {
     this.userName = this.getCookie("name");
@@ -549,38 +574,59 @@ export default {
         this.IntroDialogFormVisible = true;
         return;
       }
-      let res = await repGetHeadList();
+      let res = await reference();
       console.log(res);
       if (res.code == 200) {
         this.introList = res.data;
         this.IntroDialogFormVisible = true;
-      } else {
-        Message({
-          showClose: true,
-          message: "获取引用信息失败",
-          type: "error"
+        this.introList_filter.autocomplete = this.introList.map(item => {
+          return { value: item.headName };
+        });
+        this.introList_filter.data = this.introList;
+      }
+    },
+    //根据输入 提示引用字段
+    queryIntroList(queryString, cb) {
+      function createFilter() {
+        return fieldList.filter(item => {
+          return (
+            item.value.toLowerCase().indexOf(queryString.toLowerCase()) > -1
+          );
         });
       }
+      let fieldList = this.introList_filter.autocomplete;
+      console.log(fieldList);
+
+      let result = queryString ? createFilter() : fieldList;
+      cb(result);
+    },
+    //引用完成后发起请求
+    introList_add() {
+      let checked = this.$refs.tree_introList.getCheckedNodes();
+      console.log(checked);
+      if (!checked.length) {
+        Message({
+          showClose: true,
+          message: "未选择",
+          type: "error"
+        });
+        return;
+      }
+      let mId = this.editingMenu.data.menuId;
+      let data = checked.map(item => {
+        return {
+          id: item.id,
+          menuId: item.menuId + "," + mId
+        };
+      });
+
+      saveReference({ headList: data });
+      console.log(data);
     },
     async sort() {
       console.log("保存排序接口");
       let res = await upHeadSort(this.sortedAjaxObj);
       console.log(res);
-
-      // if(res.code == 200){
-      //    Message({
-      //     showClose: true,
-      //     message: "修改排序成功",
-      //     type: "success"
-      //   });
-      //   this.showSortBtn = false;
-      // }else {
-      //    Message({
-      //     showClose: true,
-      //     message: res.message,
-      //     type: "error"
-      //   });
-      // }
     },
     //拖拽跟踪 防止拖到内部
     allowDrop(draggingNode, dropNode, type) {
@@ -619,30 +665,34 @@ export default {
     checkboxValue(val) {
       this.multipleSelection = val;
     },
-
-    addUserSubmit() {
-      this.addField();
-      console.log(this.menuHead);
-      if (this.menuHead == "") {
-        alert("请输入菜单表头");
-        return;
-      }
-      this.addDialogFormVisible = false;
-      this.tableTitle.push({ headName: this.menuHead });
-    },
+    //对某个菜单进行新增字段 实时接收用户编辑中的字段
     passData_add($event) {
-      let data = $event[0];
+      let data = $event[0],
+        isPass = $event[1];
       console.log($event);
       //新增的字段数据
-      this.add_field = data;
-    },
-    async addField() {
-      let TableHead = {
-        menuId: this.editingMenu.data.menuId,
-        ...this.add_field
+      this.add_field = {
+        data,
+        isPass
       };
-      let res = await saveHead(TableHead);
-      console.log(res);
+    },
+    //对某个菜单进行新增字段 如果验证通过则向后台发起请求
+    async passedData_add() {
+      if (this.add_field && this.add_field.isPass) {
+        let TableHead = {
+          menuId: this.editingMenu.data.menuId,
+          ...this.add_field.data
+        };
+        let res = await saveHead(TableHead);
+        console.log(res);
+        this.addDialogFormVisible = false;
+      } else {
+        Message({
+          showClose: true,
+          message: "验证未通过",
+          type: "error"
+        });
+      }
     }
   }
 };
@@ -686,6 +736,9 @@ export default {
 }
 .icon-card .el-card {
   margin-right: 10px;
+}
+.introList-search {
+  margin-bottom: 16px;
 }
 </style>
 
