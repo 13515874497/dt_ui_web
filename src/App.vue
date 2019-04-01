@@ -43,7 +43,8 @@ body .el-table--enable-row-hover .el-table__body tr:hover > td {
   margin-bottom: 25px;
 }
 .el-notification {
-      word-break: break-all;
-    word-wrap: break-word;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre-wrap;
 }
 </style>

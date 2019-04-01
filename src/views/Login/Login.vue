@@ -6,6 +6,7 @@
           <div class="login">
             <img src="./img/logo.png">
           </div>
+
           <p class="login_name">用户名</p>
           <el-input
             v-model="userName"
@@ -47,6 +48,7 @@ import login_intercept from "@/utils/login_intercept";
 import loading from "@/utils/loading";
 import { getOnlineNumber } from "@/api";
 import { Message } from "element-ui";
+import Vue from 'vue';
 export default {
   data() {
     return {
@@ -71,9 +73,9 @@ export default {
     this.timer = setInterval(this.getOnlineNumber, 10000); //轮询
   },
   //在页面销毁时清除定时器
-   beforeDestroy() {
-       clearInterval(this.timer);
-    },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
   methods: {
     //获取屏幕尺寸
     async hh() {
@@ -99,13 +101,13 @@ export default {
         if (result.code === 200) {
           const uData = result.data;
           this.setCookie("name", uData.user.name, 7);
+          this.setCookie("uId", uData.user.uid, 7);
           //如果是首次登陆 跳转到修改密码的页面
           if (uData.user.firstLogin) {
             this.$router.replace("/userModifiesPwd");
             return;
           }
           // 去个主界面
-          this.connectWebsocket(uData.user.uid);
           this.$router.replace("/index");
         } else {
           message.messageNotDError(result.msg, "登陆失败");
@@ -116,11 +118,10 @@ export default {
     },
     async getOnlineNumber() {
       let res = await getOnlineNumber();
-      console.log(res)       
-      if (res.code == 200) {      
-        this.onlineNumber = res.data; 
-      } 
-      else {
+      console.log(res);
+      if (res.code == 200) {
+        this.onlineNumber = res.data;
+      } else {
         Message({
           showClose: true,
           message: res.msg,
@@ -128,37 +129,9 @@ export default {
         });
       }
     },
-    connectWebsocket(uid) {
-      let self = this;
-      function bindEvents(socket) {
-        socket.onopen = () => {
-          console.log("Socket 已打开");
-        };
-        socket.onmessage = msg => {
-          var resMsg = msg.data;
-          message
-            .messageBox_confirm(resMsg)
-            .then(() => {
-              socket.close();
-            })
-            .catch(() => {
-              socket.close();
-            });
-        };
-        socket.onerror = () => {
-          socket.close();
-          setTimeout(() => {
-            self.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
-            bindEvents(self.socket);
-          }, 3000);
-        };
-      }
-      this.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
-      bindEvents(this.socket);
-      //获得消息事件
-    }
   }
 };
+
 </script>
 
 <style scope lang="scss">

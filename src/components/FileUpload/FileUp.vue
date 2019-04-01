@@ -86,7 +86,7 @@
 import checkUtils from "@/utils/CheckUtils";
 import message from "@/utils/Message";
 import axios from "axios";
-
+import PubSub from "pubsub-js";
 // const BASE_URL = '/api'
 const BASE_URL = "/api/api/v1";
 import { repDelUploadInfo, repAddUploadInfoMysql } from "@/api";
@@ -125,6 +125,11 @@ export default {
   mounted() {
     //避免上传记录操作留在页面
     this.upArr = [];
+    PubSub.subscribe('progressBar',(a,b)=>{
+      console.log(a);
+      console.log(b);
+      
+    })
   },
   methods: {
     //批量上传
@@ -229,9 +234,25 @@ export default {
                   this.upArr = [];
                   break;
                 case -1:
-                  message.messageNotSuccess(
-                    resultReturn.msg,
+                  let msgArr = resultReturn.msg.split('*');
+                  console.log(msgArr[1]);
+                  msgArr[1] = JSON.parse(msgArr[1]);
+                  let msg = '';
+                  msg += msgArr[0]+'\n';
+                  for(let key in msgArr[1]){
+                    let value = msgArr[1][key];
+                    msg += key + ':\n';
+                    for(let i=0;i<value.length;i++){
+                      msg += value[i]+ '\n'
+                    }
+                  }
+                  console.log(msg);
+                  
+                  message.messageNotError(
+                    // resultReturn.msg
                     // messagesResult.data.name
+                    // msgArr[0]+ JSON.stringify(JSON.parse(msgArr[1]),null,2) 
+                    msg
                   );
 
                   break;

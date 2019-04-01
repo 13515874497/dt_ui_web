@@ -7,7 +7,7 @@ import focus from './utils/focus'
 import VueResource from 'vue-resource'
 import login_intercept from './utils/login_intercept'
 import loading from './utils/loading'
-import './assets/icon/iconfont.css'//
+import './assets/icon/iconfont.css' //
 import './assets/icon/iconfont_zbr.css'
 import router from './router'
 import {
@@ -55,18 +55,22 @@ import {
   Upload,
   Progress,
   Steps,
-  Step, Message,Autocomplete,
+  Step,
+  Message,
+  Autocomplete,
   Tabs,
   TabPane,
   Tooltip
 } from 'element-ui'
-import {repIndex} from './api'
+import {
+  repIndex
+} from './api'
 import moment from 'moment'
 import form from './components/ElementUi/Form.vue'
 
 
 
-Vue.component(Badge.name,Badge)
+Vue.component(Badge.name, Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
 Vue.component(Container.name, Container)
@@ -115,7 +119,7 @@ Vue.component(Autocomplete.name, Autocomplete)
 Vue.component(Tabs.name, Tabs)
 Vue.component(TabPane.name, TabPane)
 Vue.component(Tooltip.name, Tooltip)
-Vue.component('Form',form);
+Vue.component('Form', form);
 Vue.use(focus)
 Vue.use(VueResource)
 
@@ -143,20 +147,19 @@ Vue.prototype.getCookie = function (c_name) {
   }
   return ''
 }
-Vue.prototype.removeCookie = (key)=>{
-  this.setCookie(key,'',-1);
+Vue.prototype.removeCookie = (key) => {
+  this.setCookie(key, '', -1);
 }
 
-router.afterEach( (to,from) => {
-});
+router.afterEach((to, from) => {});
 // let rep =repIndex();
 // rep.then((res)=>{
 //   console.log(res);
-  
+
 // })
 // router.beforeEach((to, from, next) => {
 //   console.log();
-  
+
 // })
 
 
@@ -166,14 +169,14 @@ router.afterEach( (to,from) => {
 
 // router.beforeEach((to, from, next) => {
 //   let rep =repIndex()
-  
-  
+
+
 //   console.log(to);
 //   console.log(from);
 
 
 
-  
+
 //   rep.then((res)=>{
 //     console.log(to.fullPath==='/login')
 //     console.log(res)
@@ -187,9 +190,9 @@ router.afterEach( (to,from) => {
 //       case '/userModifiesPwd':
 //       let isFirstLogin = Vue.prototype.getCookie('isFirstLogin');
 //       console.log(isFirstLogin);
-      
+
 //       console.log(99999999);
-      
+
 //       if(isFirstLogin === 'false'){
 //         next({path: '/userModifiesPwd'});
 //         return Message({
@@ -226,12 +229,12 @@ router.afterEach( (to,from) => {
 //   })
 // })
 //时间过滤器
-Vue.filter('date-format',(value,formatStr='YYYY-MM-DD HH:mm:ss')=>{
-  if(!value) return '';
+Vue.filter('date-format', (value, formatStr = 'YYYY-MM-DD HH:mm:ss') => {
+  if (!value) return '';
   return moment(value).format(formatStr)
 })
 //获取屏幕尺寸
-Vue.prototype.getViewportSize = function(){
+Vue.prototype.getViewportSize = function () {
   return {
     width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
     height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
@@ -249,4 +252,3 @@ new Vue({
     Form: form,
   }
 })
-
