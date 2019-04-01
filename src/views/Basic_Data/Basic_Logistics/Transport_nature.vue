@@ -1,8 +1,8 @@
 
 
 <script>
-import { findByListProperty } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListProperty } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

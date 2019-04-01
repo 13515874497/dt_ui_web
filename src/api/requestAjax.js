@@ -5,7 +5,7 @@ import loading from '../utils/loading'
 
 export default {
   async requestGetHead(id) {
-    let loadingInstance = loading.loading_dom('加载中', document.getElementById('Account'));
+    let loadingInstance = loading.loading_dom({text:'加载中',background:'rgba(255, 255, 255, 1)',target:'.el-main'});
     
     const resultHead = await repHead(id)
     

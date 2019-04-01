@@ -92,10 +92,11 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     // })
     promise.then(function (response) {
       // 成功了调用resolve()
+
       switch (response.data.code) {
         case -2:
-         
-        loading.loading_dom().close();
+
+          // loading.loading_dom().close();
           router.push('/login');
           Message({
             showClose: true,
@@ -111,15 +112,15 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
             type: "error"
           });
           break;
-        case -1:
-          // if (!msg) {
-          //   Message({
-          //     showClose: true,
-          //     message: response.data.msg,
-          //     type: "error"
-          //   });
-          //   break;
-          // }
+        // case -1:
+        //   if (!msg) {
+        //     Message({
+        //       showClose: true,
+        //       message: response.data.msg,
+        //       type: "error"
+        //     });
+        //   }
+        //   break;
 
 
       }

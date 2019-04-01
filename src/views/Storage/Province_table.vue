@@ -1,7 +1,7 @@
 <script>
 //省州关联表
-import { findByListRelation } from "../../api";
-import MxTable  from '../../components/Mixins/MxTable'
+import { findByListRelation } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   methods: {

@@ -2,8 +2,8 @@
 
 <script>
 //包装种类
-import { findByListPackingType } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListPackingType } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

@@ -1,7 +1,7 @@
 <script>
 //公司
-import { findByListCompany } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListCompany } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

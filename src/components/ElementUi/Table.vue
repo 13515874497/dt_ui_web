@@ -163,28 +163,17 @@ export default {
       return column.label;
     },
     setHeaderMinWidth(column) {
-      let span = document.createElement('span');
-      span.innerText = column.label;
-      let tempSpan = document.getElementById('tempReturnWidth')
-      console.log(tempSpan);
+      //挂在到页面上从而获取宽度
+      let TextWidth = this.getTempDomWidth(column.label);
+      // console.log(TextWidth);
       
-      // tempSpan.innerHTML = span;  
-      console.log(tempSpan.offsetWidth);
-      
-
-
-
-
-
-      //内边距左右各10  每个字符宽度按 15的宽度计算
-      let minWidth = column.label.length * 15 + 20;
+      let minWidth = TextWidth + 20;
       //如果有排序的图标则加24  排序的箭头宽度 26
       if (column.sortable) {
-        minWidth += 24;
+        minWidth += 26;
       }
       column.minWidth = minWidth;
       column.width = column.width < minWidth ? minWidth : column.width;
-      // column.width < minWidth ? minWidth : column.width;
     },
     //当拖动表头改变了列的宽度的时候会触发该事件
     handleHeaderDragend(newWidth, oldWidth, column, event) {
@@ -233,21 +222,31 @@ export default {
         return false;
       });
     },
-    createTempDom(){
-      if(!document.getElementById('tempReturnWidth')){
-        let tempSpan = document.createElement('span');
-        tempSpan.setAttribute('id','tempReturnWidth');
-        tempSpan.innerHTML = 1;
-        document.body.appendChild(tempSpan);
-        console.log(tempSpan);
+      //创建外层的临时dom  用来存放临时的span
+    createTempWarpdom() {
+      let tempDom = document.getElementById("tempDiv-getfieldWidth");
+      if (tempDom) {
+        document.body.removeChild(tempDom);
       }
-      
+      this.tempDiv = document.createElement("div");
+      this.tempDiv.setAttribute("id", "tempDiv-getfieldWidth");
+      this.tempDiv.style.cssText =
+        "position:fixed;height:0;overfolw:hidden;font-weight:700";
+      document.body.appendChild(this.tempDiv);
+    },
+     //创建临时的span 用来存放thead中字段的文本text 挂载到外层临时dom上 从而获取到字段的宽度
+    getTempDomWidth(text) {
+      let tempSpan = document.createElement("span");
+      tempSpan.innerHTML = text;
+      tempSpan.style.cssText = "display:inline-block";
+      this.tempDiv.appendChild(tempSpan);
+      return tempSpan.offsetWidth;
     }
   },
   created() {
     this.readFixedCache();
     this.initOptions();
-    this.createTempDom();
+    this.createTempWarpdom();
   },
 
   mounted() {
@@ -269,12 +268,5 @@ export default {
 .el-table td,
 .el-table th {
   padding: 6px 0;
-}
-#returnWidth {
-  padding: 0 !important;
-  display: inline-block;
-  position: fixed;
-  left: 100px;
-  top: 100px;
 }
 </style>

@@ -13,10 +13,10 @@
 </template>
 
 <script>
-  import {repHead, repGetSiteInfo} from '../../../api/index'
+  import {repHead, repGetSiteInfo} from '@/api/index'
   import PubSub_ShopUp from 'pubsub-js'
-  import message from '../../../utils/Message'
-  import utils from '../../../utils/PageUtils'
+  import message from '@/utils/Message'
+  import utils from '@/utils/PageUtils'
   export default {
     data(){
       return{

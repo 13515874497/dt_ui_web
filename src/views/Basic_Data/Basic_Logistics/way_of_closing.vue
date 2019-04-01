@@ -1,7 +1,7 @@
 <script>
 //成交方式
-import { findByListWayOfClosing } from "../../../api";
-import MxTable from "../../../components/Mixins/MxTable";
+import { findByListWayOfClosing } from "@/api";
+import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
   data() {

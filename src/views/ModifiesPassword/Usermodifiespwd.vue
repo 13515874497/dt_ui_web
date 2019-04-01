@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import {register, repLogout} from "../../api/index.js";
+  import {register, repLogout} from "@/api/index.js";
 
   export default {
     data() {

@@ -37,10 +37,10 @@
 </template>
 
 <script>
-  import {repHead, repGetRegionInfo} from '../../../api/index'
+  import {repHead, repGetRegionInfo} from '@/api/index'
   import PubSub_AreaUp from 'pubsub-js'
-  import message from '../../../utils/Message'
-  import utils from '../../../utils/PageUtils'
+  import message from '@/utils/Message'
+  import utils from '@/utils/PageUtils'
   export default {
     data(){
       return{

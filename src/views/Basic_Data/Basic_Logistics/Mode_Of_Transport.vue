@@ -2,8 +2,8 @@
 
 <script>
 //运输方式
-import { findByListModeOfTransport } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListModeOfTransport } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

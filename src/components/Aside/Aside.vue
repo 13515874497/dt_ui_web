@@ -1,7 +1,7 @@
 <script>
-import pig from "../../components/HeaderTop/img/pig.jpg";
-import storage from "../../utils/storageUtils";
-import { repMenu, repCheckMenuToken } from "../../api";
+import pig from "@/components/HeaderTop/img/pig.jpg";
+import storage from "@/utils/storageUtils";
+import { repMenu, repCheckMenuToken } from "@/api";
 export default {
   render() {
     return (

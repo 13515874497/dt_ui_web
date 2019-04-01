@@ -165,22 +165,22 @@
   </div>
 </template>
 <script>
-import Query2 from "../../components/ElementUi/Query2";
-import InputQuery from "../../components/ElementUi/InputQuery";
-import SearchReset from "../../components/ElementUi/SearchReset";
+import Query2 from "@/components/ElementUi/Query2";
+import InputQuery from "@/components/ElementUi/InputQuery";
+import SearchReset from "@/components/ElementUi/SearchReset";
 
-import { repUsers, repDelUserInfo } from "../../api";
-import UserItemAdd from "../../components/UserItem/UserItemAdd";
-import UserItemUp from "../../components/UserItem/UserItemUp";
-import UserItemDel from "../../components/UserItem/UserItemDel";
-import message from "../../utils/Message";
-import pUtils from "../../utils/PageUtils";
-import Pagination from "../../components/ElementUi/Pagination";
-import Table from "../../components/ElementUi/Table";
-import AddDelUpButton from "../../components/ElementUi/AddDelUpButton";
-import Query from "../../components/ElementUi/Query";
+import { repUsers, repDelUserInfo } from "@/api";
+import UserItemAdd from "@/components/UserItem/UserItemAdd";
+import UserItemUp from "@/components/UserItem/UserItemUp";
+import UserItemDel from "@/components/UserItem/UserItemDel";
+import message from "@/utils/Message";
+import pUtils from "@/utils/PageUtils";
+import Pagination from "@/components/ElementUi/Pagination";
+import Table from "@/components/ElementUi/Table";
+import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
+import Query from "@/components/ElementUi/Query";
 import PubSub from "pubsub-js";
-import requestAjax from "../../api/requestAjax";
+import requestAjax from "@/api/requestAjax";
 
 export default {
   data() {

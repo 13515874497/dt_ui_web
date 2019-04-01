@@ -204,6 +204,12 @@ export const repDelHistoryUserInfo = ({
 }, 'POST')
 
 
+/**
+ * 
+ * 运营管理 => 亚马逊 => 广告
+ */
+//CPR分页 http://127.0.0.1:9001/api/v1/ad/getCprInfo post
+export const getCprInfo = (data) => ajax(BASE_URL + '/ad/getCprInfo', data,'POST');
 
 
 
@@ -253,7 +259,8 @@ export const findMonitoringInfo = (data) => ajax(BASE_URL + '/condition/findMoni
 export const findByListModeOfTransport = (data) => ajax(BASE_URL + '/mode/findByListModeOfTransport', data);
 //出口关别分页
 export const findExitCustomsInfo = (data) => ajax(BASE_URL + '/customs/findExitCustomsInfo', data, 'POST');
-
+//离岸公司分页 http://127.0.0.1:9001/api/v1/Offshore/findByListCompanyOffshore?pageSize=10&currentPage=100 离岸公司 get
+export const findByListCompanyOffshore = (data) => ajax(BASE_URL + '/Offshore/findByListCompanyOffshore', data);
 
 
 /**
@@ -334,7 +341,8 @@ export const getEmployee = (data) => ajax(BASE_URL + '/staff/getEmployee', data)
 export const getEmployment = (data) => ajax(BASE_URL + '/staff/getEmployment', data)
 //离职类型分页 
 export const getHrLeave = (data) => ajax(BASE_URL + '/staff/getHrLeave', data)
-
+//民族分页 http://127.0.0.1:9001/api/v1/nation/findByListNationInfo?
+export const findByListNationInfo = (data) => ajax(BASE_URL + '/nation/findByListNationInfo', data)
 
 /**
  * 
@@ -412,6 +420,38 @@ export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + `/site/getByShopIdL
 export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
 //汇率分页 repGetRate
 export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', data, 'POST')
+
+
+
+/**
+ * 
+ * 菜单管理 => 菜单管理
+ */
+//获取可引用的表头字段 
+export const reference = (data) => ajax(BASE_URL + '/reference', data)
+//新增表头字段 api/v1/saveHead
+export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

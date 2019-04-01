@@ -22,7 +22,7 @@
 </template>
 
 <script>
-  import {repLogout} from '../../api'
+  import {repLogout} from '@/api'
 
   export default {
     methods:{

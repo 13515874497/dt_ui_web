@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import AddDelUpBtn from "../../components/ElementUi/AddDelUpBtn"; //增删改组件
+import AddDelUpBtn from "@/components/ElementUi/AddDelUpBtn"; //增删改组件
 export default {
   props: {
     data: {

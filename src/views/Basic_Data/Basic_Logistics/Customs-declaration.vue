@@ -1,7 +1,7 @@
 <script>
 //基础资料=>出口管理=>报关类型
-import { findByListDeclareType } from "../../../api";
-import MxTable  from '../../../components/Mixins/MxTable'
+import { findByListDeclareType } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

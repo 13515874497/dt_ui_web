@@ -81,13 +81,13 @@
 </template>
 
 <script>
-import checkUtils from "../../utils/CheckUtils";
-import message from "../../utils/Message";
+import checkUtils from "@/utils/CheckUtils";
+import message from "@/utils/Message";
 import axios from "axios";
 
 // const BASE_URL = '/api'
 const BASE_URL = "/api/api/v1";
-import { repDelUploadInfo, repAddUploadInfoMysql } from "../../api";
+import { repDelUploadInfo, repAddUploadInfoMysql } from "@/api";
 
 export default {
   //引用

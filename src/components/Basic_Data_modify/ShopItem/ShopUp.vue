@@ -15,8 +15,8 @@
 
 <script>
   import PubSubUp from 'pubsub-js'
-  import message from '../../../utils/Message'
-  import {repHead, repGetShopInfo} from '../../../api/index'
+  import message from '@/utils/Message'
+  import {repHead, repGetShopInfo} from '@/api/index'
   export default {
     data(){
       return{

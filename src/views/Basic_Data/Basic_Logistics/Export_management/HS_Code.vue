@@ -4,8 +4,8 @@
 
 <script>
 //基础资料=>出口管理=>HS Code
-import { findHsCodeInfo } from "../../../../api";
-import MxTable  from '../../../../components/Mixins/MxTable'
+import { findHsCodeInfo } from "@/api";
+import MxTable  from '@/components/Mixins/MxTable'
 export default {
   mixins: [MxTable],
   data(){

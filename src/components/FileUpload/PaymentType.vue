@@ -14,7 +14,7 @@
 </template>
 
 <script>
-  import ShopSelection from '../../components/FileUpload/ShopSelection'
+  import ShopSelection from '@/components/FileUpload/ShopSelection'
 
   export default {
     data () {

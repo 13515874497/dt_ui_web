@@ -14,7 +14,7 @@
         :default-expand-all="false"
         :expand-on-click-node="false"
         :props="defaultProps"
-        >
+      >
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label}}</span>
           <span>
@@ -63,17 +63,15 @@
             </el-form-item>
             <el-form-item label="图标" class="icon-card">
               <div class="iconList scrollbar">
-                <!-- <template v-for="n in 40"> -->
-                  <el-card
-                    v-for="icon in iconOptions"
-                    :key="icon.iId"
-                    :body-style="{ padding: '0px',textAlign:'center'}"
-                    shadow="hover"
-                    :class="{'is-hover-shadow':false}"
-                  >
-                    <i :class="icon.icon" style="font-size:20px"></i>
-                  </el-card>
-                <!-- </template> -->
+                <el-card
+                  v-for="icon in iconOptions"
+                  :key="icon.iId"
+                  :body-style="{ padding: '0px',textAlign:'center'}"
+                  shadow="hover"
+                  :class="{'is-hover-shadow':false}"
+                >
+                  <i :class="icon.icon" style="font-size:20px"></i>
+                </el-card>
               </div>
             </el-form-item>
             <el-form-item>
@@ -131,7 +129,7 @@
 
     <!-- 字段列表 =>  修改 -->
     <el-dialog title="编辑字段" :visible.sync="editDialogFormVisible">
-      <Form :formItems="formItems" :formData="data_field"></Form>
+      <Form :formItems="formItems" :formData="data_field" key="修改"></Form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
@@ -139,9 +137,9 @@
       </div>
     </el-dialog>
 
-    <!-- 点击新增菜单 -->
+    <!-- 点击新增 -->
     <el-dialog title="新增菜单表头" :visible.sync="addDialogFormVisible">
-      <Form :formItems="formItems"></Form>
+      <Form :formItems="formItems" @passData="passData_add" key="新增"></Form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUserSubmit">确 定</el-button>
@@ -160,7 +158,7 @@
 </template>
 
 <script>
-import storage from "../../utils/storageUtils";
+import storage from "@/utils/storageUtils";
 import {
   repUpMenuInfo,
   repMenu,
@@ -168,13 +166,15 @@ import {
   repGetHeadList,
   icons,
   upHeadSort,
-  upMenu
-} from "../../api";
-import message from "../../utils/Message";
-import Pagination from "../../components/ElementUi/Pagination"; // 分页组件
-import AddDelUpBtn from "../../components/ElementUi/AddDelUpBtn"; //增删改组件
-import requestAjax from "../../api/requestAjax";
-import Table from "../../components/ElementUi/Table";
+  upMenu,
+  saveHead,
+  reference
+} from "@/api";
+import message from "@/utils/Message";
+import Pagination from "@/components/ElementUi/Pagination"; // 分页组件
+import AddDelUpBtn from "@/components/ElementUi/AddDelUpBtn"; //增删改组件
+import requestAjax from "@/api/requestAjax";
+import Table from "@/components/ElementUi/Table";
 import { Message } from "element-ui";
 let id = 1000; //假菜单ID
 export default {
@@ -186,7 +186,6 @@ export default {
       },
       data: null, //菜单列表选中的数据对象
       data_field: {}, //字段列表选中的数据对象
-      cols: null,
       iconOptions: [],
       userName: "", //读取缓存名字
       addNewMenu: [], //新添加传递到后台的数组
@@ -256,55 +255,96 @@ export default {
       addDialogFormVisible: false,
       //引入别的菜单表头显示隐藏
       IntroDialogFormVisible: false,
-      //字段表头
+      //新增字段的所有类型 字段表头
       formItems: [
         {
-          label: "name",
-          key: "name",
-          type: "input-str",
-          required: false
-        },
-        {
-          label: "topType",
-          key: "topType",
-          type: "input-str",
+          headName: "字段名称",
+          topType: "headName",
+          // type: "input-str",
+          inputType: 0,
+          // statusOptions:
           required: true
         },
-        // {
-        //   label: "menuId",
-        //   key: "menuId",
-        //   type: "input-number",
-        //   required: true,
-        //   disabled: true
-        // },
         {
-          label: "topOrder",
-          key: "topOrder",
-          type: "input-str",
-          required: false
+          headName: "字段英文名称",
+          topType: "topType",
+          inputType: 0,
+          required: true
         },
         {
-          label: "isFixed",
-          key: "isFixed",
-          type: "input-switch-number",
+          headName: "菜单ID",
+          topType: "menuId",
+          inputType: 0,
           required: true,
-          activeValue: 1,
-          inactiveValue: 0
+          disabled: true
+        },
+
+        {
+          headName: "是否固定表头",
+          topType: "isFixed",
+          inputType: 5,
+          required: true,
+          statusOptions: [
+            {
+              id: false,
+              name: "否"
+            },
+            {
+              id: true,
+              name: "是"
+            }
+          ]
         },
         {
-          label: "inputType",
-          key: "inputType",
-          type: "input-number",
+          headName: "inputType",
+          topType: "inputType",
+          inputType: 1,
           required: true,
-          placeholder: "0:String, 1:int, 2:Data, 3,statusOption, 4:timeLine"
+          statusOptions: [
+            {
+              id: 0,
+              name: "字符型"
+            },
+            {
+              id: 1,
+              name: "数值型"
+            },
+            {
+              id: 2,
+              name: "日期型"
+            },
+            {
+              id: 3,
+              name: "多选框"
+            },
+            {
+              id: 4,
+              name: "起止日期"
+            }
+          ]
         },
         {
-          label: "isRef",
-          key: "isRef",
-          type: "input-switch-number",
+          headName: "是否可被引用",
+          topType: "reference",
+          inputType: 5,
           required: true,
-          activeValue: 1,
-          inactiveValue: 0
+          statusOptions: [
+            {
+              id: false,
+              name: "否"
+            },
+            {
+              id: true,
+              name: "是"
+            }
+          ]
+        },
+        {
+          headName: "topOrder",
+          topType: "topOrder",
+          inputType: 0,
+          required: false,
+          defaultValue: "1"
         }
       ],
       defaultProps: {
@@ -323,9 +363,6 @@ export default {
     // Form
   },
   async mounted() {
-    //  this.tableTitle = await requestAjax.requestGetHead(this.$route.params.id);
-    //   console.log(this.tableTitle);
-
     this.userName = this.getCookie("name");
     //读取本地缓存
     const menu = storage.readData(this.userName + "menu");
@@ -432,28 +469,18 @@ export default {
       this.editingMenu.data = { ...data };
       this.editingMenu.isShow = true;
       this.activeName = "first";
-      console.log(data);
-      // let menuId = data.menuId;
-      // let res = await repHead(menuId);
-      // if (res.code == 200) {
-      //   this.menu.tableData = res.data;
-      // }
-      // console.log(res);
     },
     //菜单列表 => 编辑 =>确定
     async upMenu() {
       this.editingMenu.isShow = false;
-      console.log(this.editingMenu.data);
       let { menuId, mName, icon, url } = this.editingMenu.data;
-      console.log({ menuId, mName, icon, url });
-      
       let res = await upMenu({ menuId, mName, icon, url });
       console.log(res);
-      if(res.code == 200){
+      if (res.code == 200) {
         this.upStorageMenu();
       }
     },
-    async upStorageMenu(){
+    async upStorageMenu() {
       let res = await repMenu();
       if (res.code === 200) {
         storage.saveData(this.userName + "menu", res.data);
@@ -479,11 +506,7 @@ export default {
       }
     },
 
-    formatter(row, column) {
-      return row.address;
-    },
-
-    //字段tree被选中
+    //菜单信息  字段tree被选中
     treeCheck(dataAll, data) {
       console.log(dataAll);
       console.log(data);
@@ -564,7 +587,7 @@ export default {
       if (type == "inner") return false;
       return true;
     },
-
+    //处理拖拽
     handleDrop(draggingNode, dropNode, dropType, ev) {
       console.log(111222);
 
@@ -598,6 +621,7 @@ export default {
     },
 
     addUserSubmit() {
+      this.addField();
       console.log(this.menuHead);
       if (this.menuHead == "") {
         alert("请输入菜单表头");
@@ -605,6 +629,20 @@ export default {
       }
       this.addDialogFormVisible = false;
       this.tableTitle.push({ headName: this.menuHead });
+    },
+    passData_add($event) {
+      let data = $event[0];
+      console.log($event);
+      //新增的字段数据
+      this.add_field = data;
+    },
+    async addField() {
+      let TableHead = {
+        menuId: this.editingMenu.data.menuId,
+        ...this.add_field
+      };
+      let res = await saveHead(TableHead);
+      console.log(res);
     }
   }
 };
@@ -627,10 +665,12 @@ export default {
   cursor: move;
 }
 .iconList {
-  border: 1px solid #ccc;
+  border: 1px solid #dcdfe6;
   padding: 10px;
   max-height: 200px;
   overflow-y: auto;
+  min-height: 40px;
+  border-radius: 5px;
 }
 
 .icon-card .el-card {

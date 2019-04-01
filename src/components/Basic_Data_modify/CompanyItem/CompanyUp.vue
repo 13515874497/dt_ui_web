@@ -41,8 +41,8 @@
 
 <script>
   import PubSubUp from 'pubsub-js'
-  import utils from '../../../utils/PageUtils'
-  import message from '../../../utils/Message'
+  import utils from '@/utils/PageUtils'
+  import message from '@/utils/Message'
   import {
     repHead,
     repFindRoles,
@@ -50,7 +50,7 @@
     repDelRole,
     repAdRole,
     findByListCompany
-  } from '../../../api/index'
+  } from '@/api/index'
   export default {
     data() {
       return {

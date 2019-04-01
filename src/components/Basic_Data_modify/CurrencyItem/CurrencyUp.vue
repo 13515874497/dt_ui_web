@@ -13,9 +13,9 @@
 
 <script>
   import PubSubcurr_Up from 'pubsub-js'
-  import utils from '../../../utils/PageUtils'
-  import message from '../../../utils/Message'
-  import {repHead, repGetCurrencyInfo} from '../../../api/index'
+  import utils from '@/utils/PageUtils'
+  import message from '@/utils/Message'
+  import {repHead, repGetCurrencyInfo} from '@/api/index'
   export default {
     data(){
       return{

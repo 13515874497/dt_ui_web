@@ -41,11 +41,11 @@
 
 <script>
 import axios from "axios";
-import { repLoginUser } from "../../api";
-import message from "../../utils/Message";
-import login_intercept from "../../utils/login_intercept";
-import loading from "../../utils/loading";
-import { getOnlineNumber } from "../../api";
+import { repLoginUser } from "@/api";
+import message from "@/utils/Message";
+import login_intercept from "@/utils/login_intercept";
+import loading from "@/utils/loading";
+import { getOnlineNumber } from "@/api";
 import { Message } from "element-ui";
 export default {
   data() {
@@ -81,7 +81,7 @@ export default {
       this.body_height.height = View.height + "px";
     },
     async Login() {
-      let loadingInstance = loading.loading_dom("登陆中", "body");
+      let loadingInstance = loading.loading_dom({text:'登陆中',target:'body'});
       const userName = this.userName;
       const pwd = this.passWord;
       const rememberMe = this.rememberMe;

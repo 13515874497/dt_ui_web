@@ -32,7 +32,7 @@ import {
   repAddHeadMenu,
   repDelHeadMenu,
   repHead
-} from "../../../api";
+} from "@/api";
 
 export default {
   data() {
