@@ -1,6 +1,5 @@
-<template>
+
   <!--STR-->
-</template>
 <script>
  import { getStr } from "../../../../api";
  import MxTable  from '../../../../components/Mixins/MxTable.vue'
