@@ -29,6 +29,14 @@ export default {
       center: true
     })
   },
+  messageBox_confirm(msg){
+    return MessageBox.confirm(msg, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      // center: true
+    })
+  },
   messageNotSuccess (msg, title) {
     return Notification({
       title: title,

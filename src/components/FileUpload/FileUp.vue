@@ -16,6 +16,7 @@
         :file-list="fileUp.fileListInfo"
         v-if="fileUp.isFileUp"
       >
+        <i class="el-icon-upload"></i>
         <div class="el-upload__text">
           将{{fileUp.shopName}}店铺---{{fileUp.siteName ===''?
           fileUp.areaName:fileUp.siteName}}---文件拖到此处，或
@@ -73,7 +74,8 @@
         type="primary"
         size="mini"
         style="margin-left: 103px;float: right"
-      >确认上传
+      >
+        确认上传
         <i class="el-icon-upload el-icon--right"></i>
       </el-button>
     </div>
@@ -163,14 +165,35 @@ export default {
             this.uploadStatus.dealWith = "数据处理中";
             this.uploadStatus.count++;
             //定时请求
-            this.getTimeCount();
+            // this.getTimeCount();
             resultAdd.then(resultReturn => {
-              if (resultReturn.code === 200) {
-                //上传状态
-                for (let i = 0; i < resultReturn.data.length; i++) {
-                  let messagesResult = resultReturn.data[i];
-                  if (messagesResult.code === 200) {
-                    if (messagesResult.data.status === 2) {
+              switch (resultReturn.code) {
+                case 200:
+                  //上传状态
+                  for (let i = 0; i < resultReturn.data.length; i++) {
+                    let messagesResult = resultReturn.data[i];
+                    if (messagesResult.code === 200) {
+                      if (messagesResult.data.status === 2) {
+                        message.messageNotSuccess(
+                          messagesResult.msg,
+                          messagesResult.data.name
+                        );
+                        this.fileUp.newListFile.splice(
+                          this.fileUp.newListFile.indexOf(i),
+                          1
+                        );
+                        //触发记录
+                        this.fileUp.fileListInfo.push(messagesResult.data);
+                        this.fileUp.icon_list.push({
+                          isIcon: true,
+                          id: messagesResult.data.id,
+                          filePath:
+                            messagesResult.data.filePath +
+                            messagesResult.data.uuidName,
+                          name: messagesResult.data.name
+                        });
+                        continue;
+                      }
                       message.messageNotSuccess(
                         messagesResult.msg,
                         messagesResult.data.name
@@ -179,51 +202,39 @@ export default {
                         this.fileUp.newListFile.indexOf(i),
                         1
                       );
-                      //触发记录
                       this.fileUp.fileListInfo.push(messagesResult.data);
                       this.fileUp.icon_list.push({
-                        isIcon: true,
+                        isIcon: false,
                         id: messagesResult.data.id,
-                        filePath:
-                          messagesResult.data.filePath +
-                          messagesResult.data.uuidName,
                         name: messagesResult.data.name
                       });
-                      continue;
+                    } else {
+                      message.messageNotError(
+                        messagesResult.msg,
+                        messagesResult.data.name
+                      );
+                      this.fileUp.newListFile.splice(
+                        this.fileUp.newListFile.indexOf(i),
+                        1
+                      );
+                      this.fileUp.fileListInfo.push(messagesResult.data);
+                      this.fileUp.icon_list.push({
+                        isIcon: false,
+                        id: messagesResult.data.id,
+                        name: messagesResult.data.name
+                      });
                     }
-                    message.messageNotSuccess(
-                      messagesResult.msg,
-                      messagesResult.data.name
-                    );
-                    this.fileUp.newListFile.splice(
-                      this.fileUp.newListFile.indexOf(i),
-                      1
-                    );
-                    this.fileUp.fileListInfo.push(messagesResult.data);
-                    this.fileUp.icon_list.push({
-                      isIcon: false,
-                      id: messagesResult.data.id,
-                      name: messagesResult.data.name
-                    });
-                  } else {
-                    message.messageNotError(
-                      messagesResult.msg,
-                      messagesResult.data.name
-                    );
-                    this.fileUp.newListFile.splice(
-                      this.fileUp.newListFile.indexOf(i),
-                      1
-                    );
-                    this.fileUp.fileListInfo.push(messagesResult.data);
-                    this.fileUp.icon_list.push({
-                      isIcon: false,
-                      id: messagesResult.data.id,
-                      name: messagesResult.data.name
-                    });
                   }
-                }
-                //全部处理完成 清空页面进度数据
-                this.upArr = [];
+                  //全部处理完成 清空页面进度数据
+                  this.upArr = [];
+                  break;
+                case -1:
+                  message.messageNotSuccess(
+                    resultReturn.msg,
+                    // messagesResult.data.name
+                  );
+
+                  break;
               }
             });
           }

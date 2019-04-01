@@ -76,7 +76,10 @@ export default {
       this.body_height.height = View.height + "px";
     },
     async Login() {
-      let loadingInstance = loading.loading_dom({text:'登陆中',target:'body'});
+      let loadingInstance = loading.loading_dom({
+        text: "登陆中",
+        target: "body"
+      });
       const userName = this.userName;
       const pwd = this.passWord;
       const rememberMe = this.rememberMe;
@@ -97,6 +100,7 @@ export default {
             return;
           }
           // 去个主界面
+          this.connectWebsocket(uData.user.uid);
           this.$router.replace("/index");
         } else {
           message.messageNotDError(result.msg, "登陆失败");
@@ -116,6 +120,35 @@ export default {
           type: "error"
         });
       }
+    },
+    connectWebsocket(uid) {
+      let self = this;
+      function bindEvents(socket) {
+        socket.onopen = () => {
+          console.log("Socket 已打开");
+        };
+        socket.onmessage = msg => {
+          var resMsg = msg.data;
+          message
+            .messageBox_confirm(resMsg)
+            .then(() => {
+              socket.close();
+            })
+            .catch(() => {
+              socket.close();
+            });
+        };
+        this.socket.onerror = () => {
+          socket.close();
+          setTimeout(() => {
+            self.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
+            bindEvents(self.socket);
+          }, 3000);
+        };
+      }
+      this.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
+      bindEvents(this.socket);
+      //获得消息事件
     }
   }
 };

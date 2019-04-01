@@ -42,4 +42,8 @@ body .el-table--enable-row-hover .el-table__body tr:hover > td {
   position: relative;
   margin-bottom: 25px;
 }
+.el-notification {
+      word-break: break-all;
+    word-wrap: break-word;
+}
 </style>

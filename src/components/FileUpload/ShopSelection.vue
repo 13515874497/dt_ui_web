@@ -87,7 +87,7 @@
     methods: {
       async changeRadio (value) {
         this.uploadFrom.areaId = ''
-        this.fileUp.newListFile = []
+        this.fileUp.newListFile.length = 0
         this.fileUp.disabled = true
         this.fileUp.bt_show = false
         this.fileUp.shopName = value.shopName
@@ -113,6 +113,7 @@
       },
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
+        this.fileUp.newListFile.length = 0
         this.uploadFrom.businessTime = this.ptFrom.businessTime
         this.fileUp.fileListInfo = []
         this.fileUp.icon_list = []
