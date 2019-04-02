@@ -454,7 +454,7 @@ export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'P
 
 
 //登陆状态
-export const loginStatus = () => ajax(BASE_URL + `/api/v1/index/status`);
+export const loginStatus = () => ajax(BASE_URL + `/index/status`);
 
 
 
