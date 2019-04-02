@@ -34,7 +34,7 @@
     </div>
     <div class="ces" style="float: left">
       <div>
-        <template v-for="i in fileUp.newListFile">
+        <template v-for="(i,index) in fileUp.newListFile">
           <el-tag
             style="display: block"
             :key="i.name"
@@ -43,9 +43,8 @@
             @close="handleClose(i)"
           >{{i.name}}</el-tag>
           <el-progress
-            v-if="uploadStatus.count===3"
-            :percentage="i.progress.percentage"
-            :status="i.progress.status"
+            :percentage="progress[index].percentage"
+            :status="progress[index].status"
             class="elProgress"
           ></el-progress>
         </template>
@@ -129,10 +128,12 @@ export default {
       upArr: [], //上传返回的数据数组
       param: new FormData(), //fromData
       url: BASE_URL, //上传的 api  接口,
-      progress: {
-        percentage: 0,
-        status: ""
-      }
+      progress: [
+        // {
+        //   percentage: 0,
+        //   status: ""
+        // }
+      ]
     };
   },
 
@@ -425,12 +426,12 @@ export default {
           return false;
       }
       //如果长度为为0 代表是空的时候 进来
-      file.progress = {
+      this.progress.push({
         percentage: 0,
         status: ""
-      };
+      });
       this.fileUp.newListFile.push(file);
-      console.log(this.fileUp.newListFile);
+console.log(this.fileUp.newListFile);
 
       this.fileUp.disabled = false;
       this.fileUp.bt_show = true;
@@ -450,10 +451,17 @@ export default {
     this.upArr = [];
     console.log(123);
 
-    PubSub.subscribe("progressBar", (a, msg) => {
-      let obj = JSON.parse(msg);
-      console.log(obj);
-
+    PubSub.subscribe("progressBar", (a, res) => {
+      // let res = JSON.parse(msg);
+      console.log(res);
+      res.forEach((item, index) => {
+        console.log(item.percentage);
+        console.log(index);
+        
+        self.progress[index].percentage = item.percentage;
+        // self.progress.percentage = item.percentage
+        // console.log(self.progress[index]);
+      });
       // let percentage = obj.
       // self.progress.percentage
       console.log(a);

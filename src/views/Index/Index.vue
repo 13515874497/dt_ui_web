@@ -56,7 +56,7 @@ export default {
           if (res.code == 200) {
             switch (res.data.type) {
               case "PROGRESS_BAR":
-                PubSub.publish("progressBar",res.msg);
+                PubSub.publish("progressBar",JSON.parse(res.msg));
                 break;
             }
           }
