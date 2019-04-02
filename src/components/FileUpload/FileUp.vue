@@ -34,14 +34,22 @@
     </div>
     <div class="ces" style="float: left">
       <div>
-        <el-tag
-          style="display: block"
-          v-for="i in fileUp.newListFile"
-          :key="i.name"
-          color="#ffffff"
-          closable
-          @close="handleClose(i)"
-        >{{i.name}}</el-tag>
+        <template v-for="i in fileUp.newListFile">
+          <el-tag
+            style="display: block"
+            :key="i.name"
+            color="#ffffff"
+            closable
+            @close="handleClose(i)"
+          >{{i.name}}</el-tag>
+          <el-progress
+            v-if="uploadStatus.count===3"
+            :percentage="i.progress.percentage"
+            :status="i.progress.status"
+            class="elProgress"
+          ></el-progress>
+        </template>
+
         <el-steps
           :space="200"
           :active="uploadStatus.count"
@@ -66,6 +74,7 @@
           </p>
         </div>
       </div>
+
       <el-button
         v-if="fileUp.bt_show"
         round
@@ -119,18 +128,14 @@ export default {
       timer: "",
       upArr: [], //上传返回的数据数组
       param: new FormData(), //fromData
-      url: BASE_URL //上传的 api  接口,
+      url: BASE_URL, //上传的 api  接口,
+      progress: {
+        percentage: 0,
+        status: ""
+      }
     };
   },
-  mounted() {
-    //避免上传记录操作留在页面
-    this.upArr = [];
-    PubSub.subscribe('progressBar',(a,b)=>{
-      console.log(a);
-      console.log(b);
-      
-    })
-  },
+
   methods: {
     //批量上传
     async uploadFiles() {
@@ -234,24 +239,24 @@ export default {
                   this.upArr = [];
                   break;
                 case -1:
-                  let msgArr = resultReturn.msg.split('*');
+                  let msgArr = resultReturn.msg.split("*");
                   console.log(msgArr[1]);
                   msgArr[1] = JSON.parse(msgArr[1]);
-                  let msg = '';
-                  msg += msgArr[0]+'\n';
-                  for(let key in msgArr[1]){
+                  let msg = "";
+                  msg += msgArr[0] + "\n";
+                  for (let key in msgArr[1]) {
                     let value = msgArr[1][key];
-                    msg += key + ':\n';
-                    for(let i=0;i<value.length;i++){
-                      msg += value[i]+ '\n'
+                    msg += key + ":\n";
+                    for (let i = 0; i < value.length; i++) {
+                      msg += value[i] + "\n";
                     }
                   }
                   console.log(msg);
-                  
+
                   message.messageNotError(
                     // resultReturn.msg
                     // messagesResult.data.name
-                    // msgArr[0]+ JSON.stringify(JSON.parse(msgArr[1]),null,2) 
+                    // msgArr[0]+ JSON.stringify(JSON.parse(msgArr[1]),null,2)
                     msg
                   );
 
@@ -420,7 +425,13 @@ export default {
           return false;
       }
       //如果长度为为0 代表是空的时候 进来
+      file.progress = {
+        percentage: 0,
+        status: ""
+      };
       this.fileUp.newListFile.push(file);
+      console.log(this.fileUp.newListFile);
+
       this.fileUp.disabled = false;
       this.fileUp.bt_show = true;
       return false;
@@ -432,6 +443,21 @@ export default {
         this.fileUp.bt_show = false;
       }
     }
+  },
+  mounted() {
+    let self = this;
+    //避免上传记录操作留在页面
+    this.upArr = [];
+    console.log(123);
+
+    PubSub.subscribe("progressBar", (a, msg) => {
+      let obj = JSON.parse(msg);
+      console.log(obj);
+
+      // let percentage = obj.
+      // self.progress.percentage
+      console.log(a);
+    });
   }
 };
 </script>

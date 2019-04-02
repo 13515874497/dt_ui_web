@@ -24,14 +24,18 @@ import Header from "@/components/HeaderTop/Header";
 import Aside from "@/components/Aside/Aside";
 import { repIndex } from "@/api";
 import Vue from "vue";
+import PubSub from "pubsub-js";
+
 export default {
   data() {
     return {
-      isRole: true
+      isRole: true,
+      ws: null
     };
   },
   methods: {
     connectWebsocket(uid) {
+      if (this.ws) return;
       let self = this;
       function bindEvents(socket) {
         socket.onopen = () => {
@@ -47,7 +51,15 @@ export default {
           var resMsg = msg.data;
           // .messageBox_confirm(resMsg)
           console.log(resMsg);
+          let res = JSON.parse(resMsg);
 
+          if (res.code == 200) {
+            switch (res.data.type) {
+              case "PROGRESS_BAR":
+                PubSub.publish("progressBar",res.msg);
+                break;
+            }
+          }
           // .then(() => {
           //   // socket.close();
           // })
@@ -69,13 +81,13 @@ export default {
         };
       }
       // this.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
-      Vue.prototype.$ws = new WebSocket(`ws://192.168.208.109:3333/ws`);
+      this.ws = new WebSocket(`ws://192.168.208.109:3333/ws`);
 
-      bindEvents(Vue.prototype.$ws);
+      bindEvents(this.ws);
       //获得消息事件
     }
   },
-   mounted() {
+  mounted() {
     this.connectWebsocket(+this.getCookie("uId"));
   },
   created() {},

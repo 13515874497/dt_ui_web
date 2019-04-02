@@ -70,7 +70,7 @@ export default {
   created() {
     this.hh();
     this.getOnlineNumber();
-    this.timer = setInterval(this.getOnlineNumber, 10000); //轮询
+    // this.timer = setInterval(this.getOnlineNumber, 10000); //轮询
   },
   //在页面销毁时清除定时器
   beforeDestroy() {
