@@ -102,7 +102,8 @@ export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {
 
 //访问index页面测试是否登陆
 export const repIndex = () => ajax(BASE_URL + `/index`)
-
+//登陆状态
+export const loginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
 export const repLogout = () => ajax(`api/login/logout`)
 
@@ -453,8 +454,7 @@ export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'P
 
 
 
-//登陆状态
-export const loginStatus = () => ajax(BASE_URL + `/index/status`);
+
 
 
 

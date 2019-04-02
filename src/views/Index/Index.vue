@@ -22,7 +22,7 @@
 <script>
 import Header from "@/components/HeaderTop/Header";
 import Aside from "@/components/Aside/Aside";
-import { repIndex } from "@/api";
+import { repIndex, loginStatus } from "@/api";
 import Vue from "vue";
 import PubSub from "pubsub-js";
 
@@ -56,7 +56,7 @@ export default {
           if (res.code == 200) {
             switch (res.data.type) {
               case "PROGRESS_BAR":
-                PubSub.publish("progressBar",JSON.parse(res.msg));
+                PubSub.publish("progressBar", JSON.parse(res.msg));
                 break;
             }
           }
@@ -87,10 +87,18 @@ export default {
       //获得消息事件
     }
   },
-  mounted() {
-    this.connectWebsocket(+this.getCookie("uId"));
+  async mounted() {
+    console.log(loginStatus);
+    let res = await loginStatus();
+    console.log(res);
+    if (res.code == 200 && res.msg === "已登陆") {
+      this.connectWebsocket(+this.getCookie("uId"));
+    }
   },
-  created() {},
+  created() {
+    console.log(repIndex);
+    console.log(loginStatus);
+  },
   components: {
     Header,
     Aside
