@@ -128,11 +128,12 @@ export default {
       upArr: [], //上传返回的数据数组
       param: new FormData(), //fromData
       url: BASE_URL, //上传的 api  接口,
+      curr_progress: 0,
       progress: [
-        // {
-        //   percentage: 0,
-        //   status: ""
-        // }
+        {
+          percentage: 0,
+          status: ""
+        }
       ]
     };
   },
@@ -183,6 +184,8 @@ export default {
                   //上传状态
                   for (let i = 0; i < resultReturn.data.length; i++) {
                     let messagesResult = resultReturn.data[i];
+                    console.log(messagesResult);
+                    
                     if (messagesResult.code === 200) {
                       if (messagesResult.data.status === 2) {
                         message.messageNotSuccess(
@@ -241,26 +244,20 @@ export default {
                   break;
                 case -1:
                   let msgArr = resultReturn.msg.split("*");
-                  console.log(msgArr[1]);
-                  msgArr[1] = JSON.parse(msgArr[1]);
                   let msg = "";
                   msg += msgArr[0] + "\n";
-                  for (let key in msgArr[1]) {
-                    let value = msgArr[1][key];
-                    msg += key + ":\n";
-                    for (let i = 0; i < value.length; i++) {
-                      msg += value[i] + "\n";
+                  console.log(msgArr[1]);
+                  if (msgArr[1]) {
+                    msgArr[1] = JSON.parse(msgArr[1]);
+                    for (let key in msgArr[1]) {
+                      let value = msgArr[1][key];
+                      msg += key + ":\n";
+                      for (let i = 0; i < value.length; i++) {
+                        msg += value[i] + "\n";
+                      }
                     }
                   }
-                  console.log(msg);
-
-                  message.messageNotError(
-                    // resultReturn.msg
-                    // messagesResult.data.name
-                    // msgArr[0]+ JSON.stringify(JSON.parse(msgArr[1]),null,2)
-                    msg
-                  );
-
+                  message.messageNotError(msg);
                   break;
               }
             });
@@ -431,7 +428,7 @@ export default {
         status: ""
       });
       this.fileUp.newListFile.push(file);
-console.log(this.fileUp.newListFile);
+      console.log(this.fileUp.newListFile);
 
       this.fileUp.disabled = false;
       this.fileUp.bt_show = true;
@@ -449,16 +446,20 @@ console.log(this.fileUp.newListFile);
     let self = this;
     //避免上传记录操作留在页面
     this.upArr = [];
-    console.log(123);
 
+    //上传后返回上传的百分比
     PubSub.subscribe("progressBar", (a, res) => {
       // let res = JSON.parse(msg);
       console.log(res);
-      res.forEach((item, index) => {
+
+      res.forEach(item => {
         console.log(item.percentage);
-        console.log(index);
-        
-        self.progress[index].percentage = item.percentage;
+        let percentage = item.percentage;
+
+        self.progress[self.curr_progress].percentage = percentage;
+        if (item.percentage === 100) {
+          self.progress[self.curr_progress++].status = "success";
+        }
         // self.progress.percentage = item.percentage
         // console.log(self.progress[index]);
       });

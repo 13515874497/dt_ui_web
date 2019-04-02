@@ -25,7 +25,7 @@ import Aside from "@/components/Aside/Aside";
 import { repIndex, loginStatus } from "@/api";
 import Vue from "vue";
 import PubSub from "pubsub-js";
-
+import message from "@/utils/Message";
 export default {
   data() {
     return {
@@ -48,7 +48,7 @@ export default {
           );
         };
         socket.onmessage = msg => {
-          var resMsg = msg.data;
+          let resMsg = msg.data;
           // .messageBox_confirm(resMsg)
           console.log(resMsg);
           let res = JSON.parse(resMsg);
@@ -56,7 +56,13 @@ export default {
           if (res.code == 200) {
             switch (res.data.type) {
               case "PROGRESS_BAR":
-                PubSub.publish("progressBar", JSON.parse(res.msg));
+                if (res.msg.indexOf("[{") > -1) {
+                  PubSub.publish("progressBar", JSON.parse(res.msg));
+                } else {
+                  message.messageNotSuccess(res.msg);
+                }
+                console.log(typeof res.msg);
+
                 break;
             }
           }
@@ -88,17 +94,12 @@ export default {
     }
   },
   async mounted() {
-    console.log(loginStatus);
     let res = await loginStatus();
-    console.log(res);
-    if (res.code == 200 && res.msg === "已登陆") {
+    if (res.code === 200) {
       this.connectWebsocket(+this.getCookie("uId"));
     }
   },
-  created() {
-    console.log(repIndex);
-    console.log(loginStatus);
-  },
+  created() {},
   components: {
     Header,
     Aside
