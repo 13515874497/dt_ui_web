@@ -57,11 +57,11 @@
         :prop="item.topType"
         :rules="item.required? rules._number : rules.number"
       >
-        <el-input
+      <el-input
           v-model="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
-        ></el-input>
+      ></el-input>
       </el-form-item>
 
       <!-- 
@@ -145,7 +145,10 @@ export default {
     },
     isVerifyPass() {
       let flag = false;
-      let validData = JSON.parse(JSON.stringif(this.$refs["data_model"])) ;
+        // console.log(this.$refs["data_model"])
+      let validData =this.$refs["data_model"] 
+      // let validData = JSON.parse(JSON.stringify(this.$refs["data_model"])) ;
+    
       validData.validate(valid => {
         if (valid) {
           flag = true;

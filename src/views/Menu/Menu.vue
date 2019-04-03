@@ -168,7 +168,8 @@ import {
   upHeadSort,
   upMenu,
   saveHead,
-  reference
+  reference,
+  newField
 } from "@/api";
 import message from "@/utils/Message";
 import Pagination from "@/components/ElementUi/Pagination"; // 分页组件
@@ -353,7 +354,8 @@ export default {
         label: "mName"
       },
       //引入菜单表头的数据
-      introList: []
+      introList: [],
+     
     };
   },
   components: {
@@ -378,6 +380,7 @@ export default {
       this.iconOptions = result.data;
     }
   },
+ 
   methods: {
     //添加 菜单
     append(data) {
@@ -622,8 +625,8 @@ export default {
 
     addUserSubmit() {
       this.addField();
-      console.log(this.menuHead);
-      if (this.menuHead == "") {
+      // console.log(this.menuHead);
+      if (this.menuHead === "") {
         alert("请输入菜单表头");
         return;
       }
@@ -633,8 +636,10 @@ export default {
     passData_add($event) {
       let data = $event[0];
       console.log($event);
+      console.log(data)
       //新增的字段数据
       this.add_field = data;
+      console.log(this.add_field)
     },
     async addField() {
       let TableHead = {
@@ -642,7 +647,7 @@ export default {
         ...this.add_field
       };
       let res = await saveHead(TableHead);
-      console.log(res);
+        console.log(res);     
     }
   }
 };

@@ -22,6 +22,10 @@ export const register = ({
 
 //获取图标icon/getIconInfo 
 export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`, 'get')
+
+// http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注 新增字段信息判断名字是否存在
+
+export const newField = () => ajax(BASE_URL + `/IsHeadName?headName=备注`)
 //获取在线人数
 export const getOnlineNumber = () => ajax('api/login/uCount')
 // 获取用户登陆信息
@@ -212,6 +216,10 @@ export const repDelHistoryUserInfo = ({
 export const getCprInfo = (data) => ajax(BASE_URL + '/ad/getCprInfo', data,'POST');
 
 
+
+//运营管理 => 亚马逊 => str查询
+
+export const getStr = (data) => ajax(BASE_URL + `/ad/getStrInfo`,data, 'POST')
 
 
 /**
@@ -563,7 +571,3 @@ export const repGetLogisticsInfo = ({
   pageSize
 }, 'POST')
 
-
-//查询str
-
-export const getStr = (data) => ajax(BASE_URL + `/ad/getStrInfo`,data, 'POST')

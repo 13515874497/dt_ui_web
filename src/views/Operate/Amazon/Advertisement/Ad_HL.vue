@@ -1,5 +1,5 @@
-<template>
-  <!--STR-->
+ <template>
+  <!--OAR-->
   <div>
     <!--table表格显示-->
     <div id="roleTable">
@@ -34,8 +34,8 @@
     </div>
   </div>
 
-</template>
-<script>
+ </template>
+ <script>
   import PubSub_Ware from 'pubsub-js'
 
   export default {
@@ -174,16 +174,3 @@
     }
   }
 </script>
-
-
-<style>
-  /*表格*/
-  #roleTable {
-    margin-top: 50px;
-  }
-
-  .el-tooltip__popper {
-    max-width: 500px;
-    line-height: 180%;
-  }
-</style>

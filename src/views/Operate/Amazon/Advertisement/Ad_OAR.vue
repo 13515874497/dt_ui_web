@@ -1,4 +1,4 @@
-<template>
+ <template>
   <!--OAR-->
   <div>
     <!--table表格显示-->
@@ -34,8 +34,8 @@
     </div>
   </div>
 
-</template>
-<script>
+ </template>
+ <script>
   import PubSub_Ware from 'pubsub-js'
 
   export default {

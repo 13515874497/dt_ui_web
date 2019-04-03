@@ -17,12 +17,5 @@
 
 <style>
   /*表格*/
-  #roleTable {
-    margin-top: 50px;
-  }
 
-  .el-tooltip__popper {
-    max-width: 500px;
-    line-height: 180%;
-  }
 </style>
