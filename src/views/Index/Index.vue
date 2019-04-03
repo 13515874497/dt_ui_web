@@ -22,7 +22,7 @@
 <script>
 import Header from "@/components/HeaderTop/Header";
 import Aside from "@/components/Aside/Aside";
-import { repIndex, loginStatus } from "@/api";
+import { repIndex, getLoginStatus } from "@/api";
 import Vue from "vue";
 import PubSub from "pubsub-js";
 import message from "@/utils/Message";
@@ -50,19 +50,34 @@ export default {
         socket.onmessage = msg => {
           let resMsg = msg.data;
           // .messageBox_confirm(resMsg)
-          console.log(resMsg);
+          console.log(msg);
           let res = JSON.parse(resMsg);
+          console.log(res);
 
-          if (res.code == 200) {
-            switch (res.data.type) {
+          if (res.code === 200) {
+            switch (res.type) {
               case "PROGRESS_BAR":
+              case "REGISTER":
                 if (res.msg.indexOf("[{") > -1) {
                   PubSub.publish("progressBar", JSON.parse(res.msg));
                 } else {
-                  message.messageNotSuccess(res.msg);
+                  message.successMessage(res.msg);
                 }
-                console.log(typeof res.msg);
-
+                break;
+            }
+          } else if (res.code === -1) {
+            switch (res.type) {
+              case "KICK_out":
+                message
+                  .messageBox_info(res.msg)
+                  .then(() => {
+                    this.$router.replace("/login");
+                    socket.close();
+                  })
+                  .catch(() => {
+                    this.$router.replace("/login");
+                    socket.close();
+                  });
                 break;
             }
           }
@@ -94,7 +109,8 @@ export default {
     }
   },
   async mounted() {
-    let res = await loginStatus();
+    console.log(this.ws);
+    let res = await getLoginStatus();
     if (res.code === 200) {
       this.connectWebsocket(+this.getCookie("uId"));
     }

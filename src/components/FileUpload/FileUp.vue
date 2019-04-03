@@ -27,7 +27,7 @@
       <div style="margin-top: 10px" v-if="fileUp.isFileUp">
         <div class="icons" v-for="(ic,index) in fileUp.icon_list" :key="ic.id" style="height: 25px">
           <span v-if="ic.isIcon" @click="download(ic)">
-            <i class="el-icon-caret-bottom"></i>
+            <i class="el-icon-download"></i>
           </span>
         </div>
       </div>
@@ -184,8 +184,8 @@ export default {
                   //上传状态
                   for (let i = 0; i < resultReturn.data.length; i++) {
                     let messagesResult = resultReturn.data[i];
-                    console.log(messagesResult);
-                    
+                    // console.log(messagesResult);
+
                     if (messagesResult.code === 200) {
                       if (messagesResult.data.status === 2) {
                         message.messageNotSuccess(
@@ -223,14 +223,30 @@ export default {
                         name: messagesResult.data.name
                       });
                     } else {
-                      message.messageNotError(
-                        messagesResult.msg,
-                        messagesResult.data.name
-                      );
+                      let msgArr = resultReturn.msg.split("*");
+                      let msg = "";
+                      msg += msgArr[0] + "\n";
+                      console.log(msgArr[1]);
+                      if (msgArr[1]) {
+                        msgArr[1] = JSON.parse(msgArr[1]);
+                        for (let key in msgArr[1]) {
+                          let value = msgArr[1][key];
+                          msg += key + ":\n";
+                          for (let i = 0; i < value.length; i++) {
+                            msg += value[i] + "\n";
+                          }
+                        }
+                      }
+                      message.messageNotError(msg);
+                      // message.messageNotError(
+                      //   messagesResult.msg,
+                      //   messagesResult.data.name
+                      // );
                       this.fileUp.newListFile.splice(
                         this.fileUp.newListFile.indexOf(i),
                         1
                       );
+                      this.progress.splice
                       this.fileUp.fileListInfo.push(messagesResult.data);
                       this.fileUp.icon_list.push({
                         isIcon: false,
@@ -436,7 +452,9 @@ export default {
     },
     //tag删除
     handleClose(tag) {
-      this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(tag), 1);
+      let index = this.fileUp.newListFile.indexOf(tag);
+      this.fileUp.newListFile.splice(index, 1);
+      this.progress.splice(index,1);
       if (this.fileUp.newListFile.length === 0) {
         this.fileUp.bt_show = false;
       }
@@ -472,4 +490,7 @@ export default {
 </script>
 
 <style scope lang="scss">
+.el-icon-download {
+  cursor: pointer;
+}
 </style>

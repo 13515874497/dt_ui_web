@@ -63,8 +63,9 @@ import {
   Tooltip
 } from 'element-ui'
 import {
-  repIndex
-} from './api'
+  repIndex,
+  getLoginStatus
+} from "@/api";
 import moment from 'moment'
 import form from './components/ElementUi/Form.vue'
 
@@ -151,14 +152,40 @@ Vue.prototype.removeCookie = (key) => {
   this.setCookie(key, '', -1);
 }
 
-router.afterEach((to, from) => {});
+// router.afterEach((to, from) => {});
 // let rep =repIndex();
 // rep.then((res)=>{
 //   console.log(res);
 
 // })
+
+
+console.log(666)
 // router.beforeEach((to, from, next) => {
-//   console.log();
+//   console.log(getLoginStatus());
+//   let loginStatus = getLoginStatus();
+//   loginStatus.then((res) => {
+//     switch (to.path) {
+//       case '/login':
+//         switch (from.path) {
+//           case '/':
+//           case '/userModifiesPwd':
+//           case '/login':
+//             next();
+//             return;
+//         }
+//         if (res.code === 200) {
+//           next(
+//             // path: from.fullPath
+//             false
+//           )
+//         }
+//         break;
+//       default:
+//         next();
+//         break;
+//     }
+//   })
 
 // })
 
