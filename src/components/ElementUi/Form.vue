@@ -1,5 +1,5 @@
 <template>
-  <!-- 0:str  1:number   input-switch-number  input-switch()   select(下拉框)      reference(引用可引用的字段，使用较少)    -->
+  <!-- 0:字符型  1:数值型   2:日期型  3:下拉框  4：起止日期  -->
   <el-form ref="data_model" :model="data_model" label-width="108px" label-position="left" status-icon>
     <template v-for="item in data">
       <el-form-item
@@ -13,7 +13,7 @@
           v-model="data_model[item.topType]"
           active-color="#409eff"
           inactive-color="#13ce66"
-          :active-text="item.statusOptions[0].name"
+          :active-text="JSON.stringify(item.statusOptions[0].name)"
           :inactive-text="item.statusOptions[1].name"
           :active-value="item.statusOptions[0].id"
           :inactive-value="item.statusOptions[1].id"
@@ -120,7 +120,6 @@ export default {
     },
     data_model: {
       handler(val) {
-        // console.log(val);
         if (this.isVerifyPass()) this.passData();
         console.log(val);
       },
@@ -128,6 +127,9 @@ export default {
     }
   },
   methods: {
+    testlog(){
+
+    },
     initData_model() {
       let self = this;
       if (this.formData) {
@@ -144,28 +146,37 @@ export default {
       console.log(this.data_model);
     },
     isVerifyPass() {
+<<<<<<< HEAD
       let flag = false;
         // console.log(this.$refs["data_model"])
       let validData =this.$refs["data_model"] 
       // let validData = JSON.parse(JSON.stringify(this.$refs["data_model"])) ;
     
       validData.validate(valid => {
+=======
+      let self = this;
+      this.flag = false;
+      //   console.log();
+        
+      // let validData = JSON.parse(JSON.stringify(this.$refs["data_model"])) ;
+      this.$refs["data_model"].validate(valid => {  
+>>>>>>> 22c17b8aa26db4d95fece40e84a2adc44ed539a1
         if (valid) {
-          flag = true;
+          self.flag = true;
         }
       });
-      return flag;
+      this.$refs["data_model"].clearValidate();
+      return this.flag;
     },
     passData() {
-      this.$emit("passData", [this.data_model]);
+      this.$emit("passData", [this.data_model,this.flag]);
     }
   },
   created() {
     this.initData_model();
   },
   mounted() {
-    //   this.$refs['data_model'].resetFields();
-    //   console.log(this.data_model);
+
   }
 };
 </script>

@@ -6,6 +6,7 @@
           <div class="login">
             <img src="./img/logo.png">
           </div>
+
           <p class="login_name">用户名</p>
           <el-input
             v-model="userName"
@@ -47,6 +48,7 @@ import login_intercept from "@/utils/login_intercept";
 import loading from "@/utils/loading";
 import { getOnlineNumber } from "@/api";
 import { Message } from "element-ui";
+import Vue from 'vue';
 export default {
   data() {
     return {
@@ -68,12 +70,12 @@ export default {
   created() {
     this.hh();
     this.getOnlineNumber();
-    this.timer = setInterval(this.getOnlineNumber, 10000); //轮询
+    // this.timer = setInterval(this.getOnlineNumber, 10000); //轮询
   },
   //在页面销毁时清除定时器
-   beforeDestroy() {
-       clearInterval(this.timer);
-    },
+  beforeDestroy() {
+    clearInterval(this.timer);
+  },
   methods: {
     //获取屏幕尺寸
     async hh() {
@@ -81,7 +83,10 @@ export default {
       this.body_height.height = View.height + "px";
     },
     async Login() {
-      let loadingInstance = loading.loading_dom({text:'登陆中',target:'body'});
+      let loadingInstance = loading.loading_dom({
+        text: "登陆中",
+        target: "body"
+      });
       const userName = this.userName;
       const pwd = this.passWord;
       const rememberMe = this.rememberMe;
@@ -96,6 +101,7 @@ export default {
         if (result.code === 200) {
           const uData = result.data;
           this.setCookie("name", uData.user.name, 7);
+          this.setCookie("uId", uData.user.uid, 7);
           //如果是首次登陆 跳转到修改密码的页面
           if (uData.user.firstLogin) {
             this.$router.replace("/userModifiesPwd");
@@ -112,11 +118,10 @@ export default {
     },
     async getOnlineNumber() {
       let res = await getOnlineNumber();
-      console.log(res)       
-      if (res.code == 200) {      
-        this.onlineNumber = res.data; 
-      } 
-      else {
+      console.log(res);
+      if (res.code == 200) {
+        this.onlineNumber = res.data;
+      } else {
         Message({
           showClose: true,
           message: res.msg,
@@ -126,6 +131,7 @@ export default {
     },
   }
 };
+
 </script>
 
 <style scope lang="scss">

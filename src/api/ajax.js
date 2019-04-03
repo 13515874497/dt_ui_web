@@ -92,15 +92,19 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     // })
     promise.then(function (response) {
       // 成功了调用resolve()
-
-      switch (response.data.code) {
+      let res = response.data;
+      console.log(response);
+      
+      switch (res.code) {
         case -2:
-
+        console.log(response.request.responseURL);
+        
+          if(response.request.responseURL.endsWith('/index/status')) break; //如果是验证状态的接口 直接退出
           // loading.loading_dom().close();
           router.push('/login');
           Message({
             showClose: true,
-            message: response.data.msg,
+            message: res.msg,
             // type: "error"
           });
           break;
@@ -108,44 +112,71 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
           router.replace('/userModifiesPwd');
           Message({
             showClose: true,
-            message: response.data.msg,
+            message: res.msg,
             type: "error"
           });
           break;
-        // case -1:
-        //   if (!msg) {
-        //     Message({
-        //       showClose: true,
-        //       message: response.data.msg,
-        //       type: "error"
-        //     });
-        //   }
-        //   break;
+          // case -1:
+          //   if (!msg) {
+          //     Message({
+          //       showClose: true,
+          //       message: res.msg,
+          //       type: "error"
+          //     });
+          //   }
+          //   break;
 
 
       }
-      resolve(response.data)
+      resolve(res)
 
       //自定义成功或错误信息
       if (msg) {
-        if (response.data.code == 200) {
-          if (msg[0]) {
-            Message({
-              showClose: true,
-              message: msg[0],
-              type: "success"
-            });
+        let successMsg = msg[0],
+          errorMsg = msg[1];
+        if (res.code == 200) {
+          if (successMsg) {
+            switch (successMsg) {
+              case true:
+                Message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "success"
+                });
+                break
+              case false:
+                break;
+              default:
+                Message({
+                  showClose: true,
+                  message: msg[0],
+                  type: "success"
+                });
+                break;
+            }
           }
-
         } else {
-          if (msg[1]) {
-            Message({
-              showClose: true,
-              message: msg[1] || response.msg,
-              type: "error"
-            });
-          }
+          if (errorMsg) {
+            switch (errorMsg) {
+              case true:
+                Message({
+                  showClose: true,
+                  message: res.msg,
+                  type: "error"
+                });
+                break;
+                case false:
+                break;
+              default:
+                Message({
+                  showClose: true,
+                  message: errorMsg,
+                  type: "error"
+                });
+                break;
+            }
 
+          }
         }
 
       }

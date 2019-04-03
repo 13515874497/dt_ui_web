@@ -1,7 +1,7 @@
 <template>
   <el-container>
     <div style="height: 100%">
-      <Aside  style="overflow-y: auto;height: 1000px;background-color: #293846"/>
+      <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
     </div>
 
     <el-container style="float: left">
@@ -20,39 +20,120 @@
 </template>
 
 <script>
-  import Header from '@/components/HeaderTop/Header'
-  import Aside from '@/components/Aside/Aside'
-  import {repIndex} from '@/api'
+import Header from "@/components/HeaderTop/Header";
+import Aside from "@/components/Aside/Aside";
+import { repIndex, getLoginStatus } from "@/api";
+import Vue from "vue";
+import PubSub from "pubsub-js";
+import message from "@/utils/Message";
+export default {
+  data() {
+    return {
+      isRole: true,
+      ws: null
+    };
+  },
+  methods: {
+    connectWebsocket(uid) {
+      if (this.ws) return;
+      let self = this;
+      function bindEvents(socket) {
+        socket.onopen = () => {
+          console.log("Socket 已打开");
+          socket.send(
+            JSON.stringify({
+              uId: uid,
+              type: "REGISTER"
+            })
+          );
+        };
+        socket.onmessage = msg => {
+          let resMsg = msg.data;
+          // .messageBox_confirm(resMsg)
+          console.log(msg);
+          let res = JSON.parse(resMsg);
+          console.log(res);
 
-  export default {
-    data () {
-      return {
-        isRole: true,
+          if (res.code === 200) {
+            switch (res.type) {
+              case "PROGRESS_BAR":
+              case "REGISTER":
+                if (res.msg.indexOf("[{") > -1) {
+                  PubSub.publish("progressBar", JSON.parse(res.msg));
+                } else {
+                  message.successMessage(res.msg);
+                }
+                break;
+            }
+          } else if (res.code === -1) {
+            switch (res.type) {
+              case "KICK_out":
+                message
+                  .messageBox_info(res.msg)
+                  .then(() => {
+                    this.$router.replace("/login");
+                    socket.close();
+                  })
+                  .catch(() => {
+                    this.$router.replace("/login");
+                    socket.close();
+                  });
+                break;
+            }
+          }
+          // .then(() => {
+          //   // socket.close();
+          // })
+          // .catch(() => {
+          //   // socket.close();
+          // });
+        };
+        // socket.onerror = () => {
+        //   console.log("socket错误");
+
+        //   socket.close();
+        //   setTimeout(() => {
+        //     self.socket = new WebSocket(`ws://192.168.208.109:3333/ws`);
+        //     bindEvents(self.socket);
+        //   }, 5000);
+        // };
+        socket.onclose = () => {
+          console.log("socket关闭");
+        };
       }
-    },
-    async mounted () {
+      // this.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
+      this.ws = new WebSocket(`ws://192.168.208.109:3333/ws`);
 
-    },
-    components: {
-      Header,
-      Aside
+      bindEvents(this.ws);
+      //获得消息事件
     }
+  },
+  async mounted() {
+    console.log(this.ws);
+    let res = await getLoginStatus();
+    if (res.code === 200) {
+      this.connectWebsocket(+this.getCookie("uId"));
+    }
+  },
+  created() {},
+  components: {
+    Header,
+    Aside
   }
+};
 </script>
 
 <style scope lang="scss">
-  .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
-  }
-  .el-header {
-    background-color: #e7eaec;
-    color: #333;
+.el-footer {
+  background-color: #b3c0d1;
+  color: #333;
+  text-align: center;
+  line-height: 60px;
+}
+.el-header {
+  background-color: #e7eaec;
+  color: #333;
 
-    line-height: 60px;
-  }
-
-
+  line-height: 60px;
+}
 </style>

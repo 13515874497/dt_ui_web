@@ -1,27 +1,31 @@
-import {Message, MessageBox, Notification} from 'element-ui'
+import {
+  Message,
+  MessageBox,
+  Notification
+} from 'element-ui'
 
 export default {
-  successMessage (msg) {
+  successMessage(msg) {
     return Message({
       showClose: true,
       message: msg,
       type: 'success'
     })
   },
-  errorMessage (msg) {
+  errorMessage(msg) {
     return Message({
       showClose: true,
       message: msg,
       type: 'error'
     })
   },
-  infoMessage (msg) {
+  infoMessage(msg) {
     return Message({
       type: 'info',
       message: msg
     })
   },
-  messageBox (msg) {
+  messageBox(msg) {
     return MessageBox(msg, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
@@ -29,7 +33,21 @@ export default {
       center: true
     })
   },
-  messageNotSuccess (msg, title) {
+  messageBox_confirm(msg) {
+    return MessageBox.confirm(msg, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+      // center: true
+    })
+  },
+  messageBox_info(msg) {
+    return MessageBox.confirm(msg, '提示', {
+      confirmButtonText: '确定',
+      type: 'info',
+    })
+  },
+  messageNotSuccess(msg, title) {
     return Notification({
       title: title,
       message: msg,
@@ -37,14 +55,14 @@ export default {
       duration: 0
     })
   },
-  messageNotError (msg, title) {
+  messageNotError(msg, title) {
     return Notification.error({
       title: title,
       message: msg,
       duration: 0
     })
   },
-  messageNotDError (msg, title) {
+  messageNotDError(msg, title) {
     return Notification.error({
       title: title,
       message: msg,

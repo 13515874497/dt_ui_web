@@ -25,7 +25,7 @@ export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`, 'get')
 
 // http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注 新增字段信息判断名字是否存在
 
-export const newField = () => ajax(BASE_URL + `/IsHeadName?headName=备注`)
+
 //获取在线人数
 export const getOnlineNumber = () => ajax('api/login/uCount')
 // 获取用户登陆信息
@@ -106,7 +106,8 @@ export const repFindByHeads = (mId) => ajax(BASE_URL + '/findHeads', {
 
 //访问index页面测试是否登陆
 export const repIndex = () => ajax(BASE_URL + `/index`)
-
+//登陆状态
+export const getLoginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
 export const repLogout = () => ajax(`api/login/logout`)
 
@@ -436,9 +437,11 @@ export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', 
  * 菜单管理 => 菜单管理
  */
 //获取可引用的表头字段 
-export const reference = (data) => ajax(BASE_URL + '/reference', data)
+export const reference = (data) => ajax(BASE_URL + '/reference', data,'GET',[false,true])
 //新增表头字段 api/v1/saveHead
-export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST')
+export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST',[true,true])
+//新增引用数据 
+export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'POST',[true,true])
 
 
 

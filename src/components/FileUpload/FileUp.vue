@@ -16,6 +16,7 @@
         :file-list="fileUp.fileListInfo"
         v-if="fileUp.isFileUp"
       >
+        <i class="el-icon-upload"></i>
         <div class="el-upload__text">
           将{{fileUp.shopName}}店铺---{{fileUp.siteName ===''?
           fileUp.areaName:fileUp.siteName}}---文件拖到此处，或
@@ -26,21 +27,28 @@
       <div style="margin-top: 10px" v-if="fileUp.isFileUp">
         <div class="icons" v-for="(ic,index) in fileUp.icon_list" :key="ic.id" style="height: 25px">
           <span v-if="ic.isIcon" @click="download(ic)">
-            <i class="el-icon-caret-bottom"></i>
+            <i class="el-icon-download"></i>
           </span>
         </div>
       </div>
     </div>
     <div class="ces" style="float: left">
       <div>
-        <el-tag
-          style="display: block"
-          v-for="i in fileUp.newListFile"
-          :key="i.name"
-          color="#ffffff"
-          closable
-          @close="handleClose(i)"
-        >{{i.name}}</el-tag>
+        <template v-for="(i,index) in fileUp.newListFile">
+          <el-tag
+            style="display: block"
+            :key="i.name"
+            color="#ffffff"
+            closable
+            @close="handleClose(i)"
+          >{{i.name}}</el-tag>
+          <el-progress
+            :percentage="progress[index].percentage"
+            :status="progress[index].status"
+            class="elProgress"
+          ></el-progress>
+        </template>
+
         <el-steps
           :space="200"
           :active="uploadStatus.count"
@@ -65,6 +73,7 @@
           </p>
         </div>
       </div>
+
       <el-button
         v-if="fileUp.bt_show"
         round
@@ -73,7 +82,8 @@
         type="primary"
         size="mini"
         style="margin-left: 103px;float: right"
-      >确认上传
+      >
+        确认上传
         <i class="el-icon-upload el-icon--right"></i>
       </el-button>
     </div>
@@ -84,7 +94,7 @@
 import checkUtils from "@/utils/CheckUtils";
 import message from "@/utils/Message";
 import axios from "axios";
-
+import PubSub from "pubsub-js";
 // const BASE_URL = '/api'
 const BASE_URL = "/api/api/v1";
 import { repDelUploadInfo, repAddUploadInfoMysql } from "@/api";
@@ -117,13 +127,17 @@ export default {
       timer: "",
       upArr: [], //上传返回的数据数组
       param: new FormData(), //fromData
-      url: BASE_URL //上传的 api  接口,
+      url: BASE_URL, //上传的 api  接口,
+      curr_progress: 0,
+      progress: [
+        {
+          percentage: 0,
+          status: ""
+        }
+      ]
     };
   },
-  mounted() {
-    //避免上传记录操作留在页面
-    this.upArr = [];
-  },
+
   methods: {
     //批量上传
     async uploadFiles() {
@@ -163,14 +177,37 @@ export default {
             this.uploadStatus.dealWith = "数据处理中";
             this.uploadStatus.count++;
             //定时请求
-            this.getTimeCount();
+            // this.getTimeCount();
             resultAdd.then(resultReturn => {
-              if (resultReturn.code === 200) {
-                //上传状态
-                for (let i = 0; i < resultReturn.data.length; i++) {
-                  let messagesResult = resultReturn.data[i];
-                  if (messagesResult.code === 200) {
-                    if (messagesResult.data.status === 2) {
+              switch (resultReturn.code) {
+                case 200:
+                  //上传状态
+                  for (let i = 0; i < resultReturn.data.length; i++) {
+                    let messagesResult = resultReturn.data[i];
+                    // console.log(messagesResult);
+
+                    if (messagesResult.code === 200) {
+                      if (messagesResult.data.status === 2) {
+                        message.messageNotSuccess(
+                          messagesResult.msg,
+                          messagesResult.data.name
+                        );
+                        this.fileUp.newListFile.splice(
+                          this.fileUp.newListFile.indexOf(i),
+                          1
+                        );
+                        //触发记录
+                        this.fileUp.fileListInfo.push(messagesResult.data);
+                        this.fileUp.icon_list.push({
+                          isIcon: true,
+                          id: messagesResult.data.id,
+                          filePath:
+                            messagesResult.data.filePath +
+                            messagesResult.data.uuidName,
+                          name: messagesResult.data.name
+                        });
+                        continue;
+                      }
                       message.messageNotSuccess(
                         messagesResult.msg,
                         messagesResult.data.name
@@ -179,51 +216,65 @@ export default {
                         this.fileUp.newListFile.indexOf(i),
                         1
                       );
-                      //触发记录
                       this.fileUp.fileListInfo.push(messagesResult.data);
                       this.fileUp.icon_list.push({
-                        isIcon: true,
+                        isIcon: false,
                         id: messagesResult.data.id,
-                        filePath:
-                          messagesResult.data.filePath +
-                          messagesResult.data.uuidName,
                         name: messagesResult.data.name
                       });
-                      continue;
+                    } else {
+                      let msgArr = resultReturn.msg.split("*");
+                      let msg = "";
+                      msg += msgArr[0] + "\n";
+                      console.log(msgArr[1]);
+                      if (msgArr[1]) {
+                        msgArr[1] = JSON.parse(msgArr[1]);
+                        for (let key in msgArr[1]) {
+                          let value = msgArr[1][key];
+                          msg += key + ":\n";
+                          for (let i = 0; i < value.length; i++) {
+                            msg += value[i] + "\n";
+                          }
+                        }
+                      }
+                      message.messageNotError(msg);
+                      // message.messageNotError(
+                      //   messagesResult.msg,
+                      //   messagesResult.data.name
+                      // );
+                      this.fileUp.newListFile.splice(
+                        this.fileUp.newListFile.indexOf(i),
+                        1
+                      );
+                      this.progress.splice
+                      this.fileUp.fileListInfo.push(messagesResult.data);
+                      this.fileUp.icon_list.push({
+                        isIcon: false,
+                        id: messagesResult.data.id,
+                        name: messagesResult.data.name
+                      });
                     }
-                    message.messageNotSuccess(
-                      messagesResult.msg,
-                      messagesResult.data.name
-                    );
-                    this.fileUp.newListFile.splice(
-                      this.fileUp.newListFile.indexOf(i),
-                      1
-                    );
-                    this.fileUp.fileListInfo.push(messagesResult.data);
-                    this.fileUp.icon_list.push({
-                      isIcon: false,
-                      id: messagesResult.data.id,
-                      name: messagesResult.data.name
-                    });
-                  } else {
-                    message.messageNotError(
-                      messagesResult.msg,
-                      messagesResult.data.name
-                    );
-                    this.fileUp.newListFile.splice(
-                      this.fileUp.newListFile.indexOf(i),
-                      1
-                    );
-                    this.fileUp.fileListInfo.push(messagesResult.data);
-                    this.fileUp.icon_list.push({
-                      isIcon: false,
-                      id: messagesResult.data.id,
-                      name: messagesResult.data.name
-                    });
                   }
-                }
-                //全部处理完成 清空页面进度数据
-                this.upArr = [];
+                  //全部处理完成 清空页面进度数据
+                  this.upArr = [];
+                  break;
+                case -1:
+                  let msgArr = resultReturn.msg.split("*");
+                  let msg = "";
+                  msg += msgArr[0] + "\n";
+                  console.log(msgArr[1]);
+                  if (msgArr[1]) {
+                    msgArr[1] = JSON.parse(msgArr[1]);
+                    for (let key in msgArr[1]) {
+                      let value = msgArr[1][key];
+                      msg += key + ":\n";
+                      for (let i = 0; i < value.length; i++) {
+                        msg += value[i] + "\n";
+                      }
+                    }
+                  }
+                  message.messageNotError(msg);
+                  break;
               }
             });
           }
@@ -388,21 +439,58 @@ export default {
           return false;
       }
       //如果长度为为0 代表是空的时候 进来
+      this.progress.push({
+        percentage: 0,
+        status: ""
+      });
       this.fileUp.newListFile.push(file);
+      console.log(this.fileUp.newListFile);
+
       this.fileUp.disabled = false;
       this.fileUp.bt_show = true;
       return false;
     },
     //tag删除
     handleClose(tag) {
-      this.fileUp.newListFile.splice(this.fileUp.newListFile.indexOf(tag), 1);
+      let index = this.fileUp.newListFile.indexOf(tag);
+      this.fileUp.newListFile.splice(index, 1);
+      this.progress.splice(index,1);
       if (this.fileUp.newListFile.length === 0) {
         this.fileUp.bt_show = false;
       }
     }
+  },
+  mounted() {
+    let self = this;
+    //避免上传记录操作留在页面
+    this.upArr = [];
+
+    //上传后返回上传的百分比
+    PubSub.subscribe("progressBar", (a, res) => {
+      // let res = JSON.parse(msg);
+      console.log(res);
+
+      res.forEach(item => {
+        console.log(item.percentage);
+        let percentage = item.percentage;
+
+        self.progress[self.curr_progress].percentage = percentage;
+        if (item.percentage === 100) {
+          self.progress[self.curr_progress++].status = "success";
+        }
+        // self.progress.percentage = item.percentage
+        // console.log(self.progress[index]);
+      });
+      // let percentage = obj.
+      // self.progress.percentage
+      console.log(a);
+    });
   }
 };
 </script>
 
 <style scope lang="scss">
+.el-icon-download {
+  cursor: pointer;
+}
 </style>
