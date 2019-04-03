@@ -45,7 +45,6 @@ export default {
     return MessageBox.confirm(msg, '提示', {
       confirmButtonText: '确定',
       type: 'info',
-      // center: true
     })
   },
   messageNotSuccess(msg, title) {

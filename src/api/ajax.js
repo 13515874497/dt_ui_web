@@ -93,9 +93,13 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     promise.then(function (response) {
       // 成功了调用resolve()
       let res = response.data;
+      console.log(response);
+      
       switch (res.code) {
         case -2:
-
+        console.log(response.request.responseURL);
+        
+          if(response.request.responseURL.endsWith('/index/status')) break; //如果是验证状态的接口 直接退出
           // loading.loading_dom().close();
           router.push('/login');
           Message({

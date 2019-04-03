@@ -68,6 +68,9 @@ import {
 } from "@/api";
 import moment from 'moment'
 import form from './components/ElementUi/Form.vue'
+import {
+  readlink
+} from 'fs';
 
 
 
@@ -160,34 +163,36 @@ Vue.prototype.removeCookie = (key) => {
 // })
 
 
-console.log(666)
-// router.beforeEach((to, from, next) => {
-//   console.log(getLoginStatus());
-//   let loginStatus = getLoginStatus();
-//   loginStatus.then((res) => {
-//     switch (to.path) {
-//       case '/login':
-//         switch (from.path) {
-//           case '/':
-//           case '/userModifiesPwd':
-//           case '/login':
-//             next();
-//             return;
-//         }
-//         if (res.code === 200) {
-//           next(
-//             // path: from.fullPath
-//             false
-//           )
-//         }
-//         break;
-//       default:
-//         next();
-//         break;
-//     }
-//   })
-
-// })
+router.beforeEach((to, from, next) => {
+  // next()
+  getLoginStatus().then((res) => {
+    switch (to.path) {
+      case '/login':
+        switch (from.path) {
+          case '/':
+          case '/userModifiesPwd':
+            next();
+            break;
+          case '/login':
+            next(false);
+            break;
+          default:
+            if (res.code === 200) {
+              next(
+                false
+              )
+            } else {
+              next();
+            }
+            break;
+        }
+        break;
+      default:
+        next();
+        break;
+    }
+  })
+})
 
 
 
