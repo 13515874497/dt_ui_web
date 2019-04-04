@@ -84,7 +84,9 @@
 
 <script>
 import rules from "@/utils/rules.js";
-
+  import PubSub from 'pubsub-js'
+  import message from '@/utils/Message'
+import {newFileds} from '@/api'
 export default {
   props: {
     //模板
@@ -100,11 +102,32 @@ export default {
     // ],
     formItems: Array,
     formData: Object
-  },
+  }, 
   data() {
+    var filedName = (rule, value, callback) => {
+        console.log(value)
+        var reFiledName = /^[a-zA-Z][0-9a-zA-Z_]{3,9}$/
+        if (!value) {
+          return callback(new Error('账号不能为空~'))
+        }
+        if (!reFiledName.test(value)) {
+          return callback(new Error('长度在4-10之间，已字母开头，只能包含字符、数字和下划线~'))
+        } else {
+          const filedData = newFileds(value)
+          filedData.then((result) => {
+            if (result.data !== null) {
+              callback(new Error('用户名已被注册'))
+            } else {
+              callback()
+            }
+          })
+        }
+      }
+
     return {
       data_model: {},
-      rules
+      rules,
+      
     };
   },
   computed: {
@@ -121,7 +144,7 @@ export default {
     data_model: {
       handler(val) {
         if (this.isVerifyPass()) this.passData();
-        console.log(val);
+        // console.log(val);
       },
       deep: true
     }
@@ -146,21 +169,12 @@ export default {
       console.log(this.data_model);
     },
     isVerifyPass() {
-<<<<<<< HEAD
-      let flag = false;
-        // console.log(this.$refs["data_model"])
-      let validData =this.$refs["data_model"] 
-      // let validData = JSON.parse(JSON.stringify(this.$refs["data_model"])) ;
-    
-      validData.validate(valid => {
-=======
       let self = this;
       this.flag = false;
       //   console.log();
         
       // let validData = JSON.parse(JSON.stringify(this.$refs["data_model"])) ;
       this.$refs["data_model"].validate(valid => {  
->>>>>>> 22c17b8aa26db4d95fece40e84a2adc44ed539a1
         if (valid) {
           self.flag = true;
         }

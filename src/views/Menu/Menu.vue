@@ -367,15 +367,11 @@ export default {
       },
       //引入菜单表头的数据
       introList: [],
-<<<<<<< HEAD
-     
-=======
       introList_filter: {
         input: "", //输入框中的数据
         autocomplete: [], //用于筛选的数据
         data:[] //根据用户输入筛选符合的字段
       }
->>>>>>> 22c17b8aa26db4d95fece40e84a2adc44ed539a1
     };
   },
   components: {
@@ -670,39 +666,13 @@ export default {
     checkboxValue(val) {
       this.multipleSelection = val;
     },
-<<<<<<< HEAD
-
-    addUserSubmit() {
-      this.addField();
-      // console.log(this.menuHead);
-      if (this.menuHead === "") {
-        alert("请输入菜单表头");
-        return;
-      }
-      this.addDialogFormVisible = false;
-      this.tableTitle.push({ headName: this.menuHead });
-    },
-=======
     //对某个菜单进行新增字段 实时接收用户编辑中的字段
->>>>>>> 22c17b8aa26db4d95fece40e84a2adc44ed539a1
     passData_add($event) {
       let data = $event[0],
         isPass = $event[1];
       console.log($event);
       console.log(data)
       //新增的字段数据
-<<<<<<< HEAD
-      this.add_field = data;
-      console.log(this.add_field)
-    },
-    async addField() {
-      let TableHead = {
-        menuId: this.editingMenu.data.menuId,
-        ...this.add_field
-      };
-      let res = await saveHead(TableHead);
-        console.log(res);     
-=======
       this.add_field = {
         data,
         isPass
@@ -725,7 +695,6 @@ export default {
           type: "error"
         });
       }
->>>>>>> 22c17b8aa26db4d95fece40e84a2adc44ed539a1
     }
   }
 };
