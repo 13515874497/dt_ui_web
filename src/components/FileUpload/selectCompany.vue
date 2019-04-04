@@ -250,6 +250,7 @@ export default {
     },
     uploadFiles() {
       let self = this;
+      this.param = new FormData();
       this.readyFileList.forEach(file => {
         self.param.append("files", file, file.name);
       });
