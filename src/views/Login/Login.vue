@@ -2,7 +2,7 @@
   <div :style="body_height">
     <div class="div-one">
       <div class="login-box" v-show="isLogin">
-        <div style="width: 390px;margin: 0 auto;">
+        <div style="width: 340px;margin: 0 auto;">
           <div class="login">
             <img src="./img/logo.png">
           </div>
@@ -146,7 +146,7 @@ export default {
 .login-box {
   background-color: #ffffff;
   width: 430px;
-  height: 560px;
+  height: 630px;
   margin: auto auto;
   display: flex;
   border-radius: 15px !important;
@@ -155,7 +155,7 @@ export default {
 //没有边框的样式
 .login_input {
   .el-input__inner {
-    width: 390px !important;
+    width: 340px !important;
     padding-left: 50px !important;
     font-size: 15px !important;
     border-top: 0px !important;
@@ -167,13 +167,13 @@ export default {
 .login_name {
   margin-top: 50px;
   font-size: 14px;
-  width: 390px !important;
+  width: 340px !important;
 }
 
 .login_pwd {
   margin-top: 30px;
   font-size: 14px;
-  width: 390px !important;
+  width: 340px !important;
 }
 
 .login {
@@ -183,7 +183,7 @@ export default {
 }
 
 .loading {
-  width: 390px !important;
+  width: 340px !important;
   border-radius: 25px !important;
 }
 </style>
