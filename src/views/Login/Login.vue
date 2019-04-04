@@ -26,8 +26,8 @@
           ></el-input>
           <div style="margin-top: 60px">
             <el-button type="primary" class="loading" @click="Login" :disabled="isLanding">登陆</el-button>
-            <div style="text-align: center;">
-              <el-checkbox v-model="rememberMe" style="padding-left: 20px">
+            <div style="text-align: center; height:100px;line-height:100px">
+              <el-checkbox v-model="rememberMe" style="">
                 自动登陆
                 <span>(一周内)</span>
               </el-checkbox>
@@ -139,13 +139,14 @@ export default {
   width: 100%;
   height: 100%;
   display: flex;
-  /*background:url(./img/ReportServer.png) no-repeat*/
+  background:url('./img/bg-01.jpg') no-repeat;
+  background-size:cover;
 }
 
 .login-box {
   background-color: #ffffff;
   width: 430px;
-  height: 500px;
+  height: 560px;
   margin: auto auto;
   display: flex;
   border-radius: 15px !important;
@@ -178,6 +179,7 @@ export default {
 .login {
   text-align: center;
   font-size: 39px;
+  margin-top:50px;
 }
 
 .loading {

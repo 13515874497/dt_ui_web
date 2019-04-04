@@ -1,8 +1,8 @@
 
   <!--STR-->
 <script>
- import { getStr } from "../../../../api";
- import MxTable  from '../../../../components/Mixins/MxTable.vue'
+ import { getStr } from "@/api";
+ import MxTable  from '@/components/Mixins/MxTable'
 
   export default {
     mixins: [MxTable],
@@ -17,12 +17,5 @@
 
 <style>
   /*表格*/
-  #roleTable {
-    margin-top: 50px;
-  }
 
-  .el-tooltip__popper {
-    max-width: 500px;
-    line-height: 180%;
-  }
 </style>

@@ -403,6 +403,7 @@ export default {
       this.iconOptions = result.data;
     }
   },
+ 
   methods: {
     //添加 菜单
     append(data) {
@@ -670,6 +671,7 @@ export default {
       let data = $event[0],
         isPass = $event[1];
       console.log($event);
+      console.log(data)
       //新增的字段数据
       this.add_field = {
         data,

@@ -57,11 +57,11 @@
         :prop="item.topType"
         :rules="item.required? rules._number : rules.number"
       >
-        <el-input
+      <el-input
           v-model="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
-        ></el-input>
+      ></el-input>
       </el-form-item>
 
       <!-- 
@@ -84,7 +84,9 @@
 
 <script>
 import rules from "@/utils/rules.js";
-
+  import PubSub from 'pubsub-js'
+  import message from '@/utils/Message'
+import {newFileds} from '@/api'
 export default {
   props: {
     //模板
@@ -100,11 +102,32 @@ export default {
     // ],
     formItems: Array,
     formData: Object
-  },
+  }, 
   data() {
+    var filedName = (rule, value, callback) => {
+        console.log(value)
+        var reFiledName = /^[a-zA-Z][0-9a-zA-Z_]{3,9}$/
+        if (!value) {
+          return callback(new Error('账号不能为空~'))
+        }
+        if (!reFiledName.test(value)) {
+          return callback(new Error('长度在4-10之间，已字母开头，只能包含字符、数字和下划线~'))
+        } else {
+          const filedData = newFileds(value)
+          filedData.then((result) => {
+            if (result.data !== null) {
+              callback(new Error('用户名已被注册'))
+            } else {
+              callback()
+            }
+          })
+        }
+      }
+
     return {
       data_model: {},
-      rules
+      rules,
+      
     };
   },
   computed: {
@@ -121,7 +144,7 @@ export default {
     data_model: {
       handler(val) {
         if (this.isVerifyPass()) this.passData();
-        console.log(val);
+        // console.log(val);
       },
       deep: true
     }
