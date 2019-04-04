@@ -43,7 +43,7 @@
 import Query2 from "@/components/ElementUi/Query2";
 import InputQuery from "@/components/ElementUi/InputQuery";
 import SearchReset from "@/components/ElementUi/SearchReset";
-
+import loading from '@/utils/loading'
 // import { findByListProduct } from "@/api";
 
 import Message from "@/utils/Message";
@@ -69,7 +69,7 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-      showQuery: true
+      showQuery: true,
     };
   },
   components: {

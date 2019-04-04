@@ -230,10 +230,10 @@ export const getOarInfo = (data) => ajax(BASE_URL + `/ad/getOarInfo`,data, 'POST
 // http://127.0.0.1:9001/api/v1/ad/getHlInfo POST
 export const getHlInfo = (data) => ajax(BASE_URL + `/ad/getHlInfo`,data, 'POST')
 
+// 财务管理 => 结算报告
+//http://127.0.0.1:9001/api/v1/fsb/getFsbInfo post
 
-
-
-
+export const getFsbInfo = (data) => ajax(BASE_URL + `/fsb/getFsbInfo`,data, 'POST')
 
 /**
  * 

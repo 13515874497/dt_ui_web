@@ -42,7 +42,7 @@ import OP_Settlement_Report from '../views/Operate/Amazon/Presentation/Settlemen
 import OP_Transaction_Report from '../views/Operate/Amazon/Presentation/Transaction_Report'//运营管理交易报告
 import OP_Ad_CPR from '../views/Operate/Amazon/Advertisement/Ad_CPR'//运营管理CPR
 import OP_Ad_CPR_week from '../views/Operate/Amazon/Advertisement/Ad_CPR_week'//运营管理CPR周
-import OP_Ad_Hl from '../views/Operate/Amazon/Advertisement/Ad_HL'//运营管理HL
+import OP_Ad_HL from '../views/Operate/Amazon/Advertisement/Ad_HL'//运营管理HL
 import OP_Ad_OAR from '../views/Operate/Amazon/Advertisement/Ad_OAR'//运营管理OAR
 import OP_Ad_OAR_week from '../views/Operate/Amazon/Advertisement/Ad_OAR_week'//运营管理OAR周
 import OP_Ad_STR from '../views/Operate/Amazon/Advertisement/Ad_STR'//运营管理STR
@@ -129,6 +129,8 @@ import Star_level from '../views/Storage/Star_level'//星级
 
 import UserModifiesPwd from '../views/ModifiesPassword/UserModifiesPwd.vue'  //修改密码
 
+import SettlementReport from '../views/Financial/SettlementReport.vue'  //财务管理
+
 Vue.use(Router)
 
 
@@ -141,6 +143,7 @@ export default new Router({
         showLogin: true
       },
       children: [
+       
         {
           path: '/index/account_management/:id/:name',
           component: AccountManagement
@@ -302,8 +305,8 @@ export default new Router({
           component:OP_Ad_CPR_week
         },
         {
-          path:'/index/op_ad_hl/:id/:name',//运营管理HL
-          component:OP_Ad_Hl
+          path:'/index/op_ad_h1/:id/:name',//运营管理HL
+          component:OP_Ad_HL
         },
         {
           path:'/index/op_ad_oar/:id/:name',//运营管理OAR
@@ -598,7 +601,10 @@ export default new Router({
           path:'/index/star_level/:id/:name',//星级
           component:Star_level
         },
-
+        {
+          path: '/index/financial_sales_amazon_balance/:id/:name',
+          component: SettlementReport     //结算报告
+        }, 
       ]
     },
     {
@@ -612,7 +618,8 @@ export default new Router({
     {
       path: '/user_modifies_pwd',
       component: UserModifiesPwd //用户修改密码
-    },   
+    },  
+     
   ],
 
 })

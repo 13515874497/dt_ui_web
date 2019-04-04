@@ -1,7 +1,4 @@
- <template>
-   <div></div>
- </template>
- 
+
  <script>
 //HL
 import { getHlInfo } from "@/api";
