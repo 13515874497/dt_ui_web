@@ -34,7 +34,7 @@
   import {
     repGetShopIdSiteInfo,
     repGetUserUploadInfo,
-    findByListRegion, repGetShopName
+    findByListRegion, repGetShopName,
   } from '@/api'
   import FileUp from '@/components/FileUpload/FileUp'
 
@@ -96,7 +96,7 @@
         let tbId = this.uploadFrom.tbId
         //获得洲信息
         if (tbId === '109' || tbId === '110' || tbId === '113' || tbId === '114') {
-          const resultArea = await repGetRegionInfo({})
+          const resultArea = await findByListRegion({})
           console.log(resultArea)
           if (resultArea.code === 200) {
             this.areaOptions = resultArea.data
@@ -175,7 +175,7 @@
   }
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
   .icons {
     margin-top: 5px;
     height: 26px;

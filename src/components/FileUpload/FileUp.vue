@@ -94,7 +94,7 @@
 import checkUtils from "@/utils/CheckUtils";
 import message from "@/utils/Message";
 import axios from "axios";
-import PubSub from "pubsub-js";
+// import PubSub from "pubsub-js";
 // const BASE_URL = '/api'
 const BASE_URL = "/api/api/v1";
 import { repDelUploadInfo, repAddUploadInfoMysql } from "@/api";
@@ -139,6 +139,10 @@ export default {
   },
 
   methods: {
+    removeSuccessFile(i) {
+      this.fileUp.newListFile.splice(i,1);
+      this.progress.splice(i,1);
+    },
     //批量上传
     async uploadFiles() {
       this.uploadStatus.wait = "已确认";
@@ -192,10 +196,7 @@ export default {
                           messagesResult.msg,
                           messagesResult.data.name
                         );
-                        this.fileUp.newListFile.splice(
-                          this.fileUp.newListFile.indexOf(i),
-                          1
-                        );
+                
                         //触发记录
                         this.fileUp.fileListInfo.push(messagesResult.data);
                         this.fileUp.icon_list.push({
@@ -212,10 +213,7 @@ export default {
                         messagesResult.msg,
                         messagesResult.data.name
                       );
-                      this.fileUp.newListFile.splice(
-                        this.fileUp.newListFile.indexOf(i),
-                        1
-                      );
+                      
                       this.fileUp.fileListInfo.push(messagesResult.data);
                       this.fileUp.icon_list.push({
                         isIcon: false,
@@ -226,7 +224,6 @@ export default {
                       let msgArr = resultReturn.msg.split("*");
                       let msg = "";
                       msg += msgArr[0] + "\n";
-                      console.log(msgArr[1]);
                       if (msgArr[1]) {
                         msgArr[1] = JSON.parse(msgArr[1]);
                         for (let key in msgArr[1]) {
@@ -238,15 +235,6 @@ export default {
                         }
                       }
                       message.messageNotError(msg);
-                      // message.messageNotError(
-                      //   messagesResult.msg,
-                      //   messagesResult.data.name
-                      // );
-                      this.fileUp.newListFile.splice(
-                        this.fileUp.newListFile.indexOf(i),
-                        1
-                      );
-                      this.progress.splice
                       this.fileUp.fileListInfo.push(messagesResult.data);
                       this.fileUp.icon_list.push({
                         isIcon: false,
@@ -454,22 +442,15 @@ export default {
     handleClose(tag) {
       let index = this.fileUp.newListFile.indexOf(tag);
       this.fileUp.newListFile.splice(index, 1);
-      this.progress.splice(index,1);
+      this.progress.splice(index, 1);
       if (this.fileUp.newListFile.length === 0) {
         this.fileUp.bt_show = false;
       }
-    }
-  },
-  mounted() {
-    let self = this;
-    //避免上传记录操作留在页面
-    this.upArr = [];
+    },
 
-    //上传后返回上传的百分比
-    PubSub.subscribe("progressBar", (a, res) => {
-      // let res = JSON.parse(msg);
+    progressBar(res) {
       console.log(res);
-
+      let self = this;
       res.forEach(item => {
         console.log(item.percentage);
         let percentage = item.percentage;
@@ -483,8 +464,62 @@ export default {
       });
       // let percentage = obj.
       // self.progress.percentage
-      console.log(a);
-    });
+    },
+    initWs() {
+      let self = this;
+      //等待父组件连上websocket
+      setTimeout(() => {
+        if (!self.$ws) {
+          self.initWs();
+          return;
+        }
+        console.log(2222);
+        console.log(self.$ws);
+
+        self.$ws.addEventListener("message", msg => {
+          let resMsg = msg.data;
+          let res = JSON.parse(resMsg);
+          console.log(res);
+          if (res.code === 200) {
+            switch (res.type) {
+              case "PROGRESS_BAR":
+                if (res.msg.indexOf("[{") > -1) {
+                  self.progressBar(JSON.parse(res.msg));
+                } else {
+                  message.successMessage(res.msg);
+                }
+                break;
+            }
+          }
+        });
+      }, 1000);
+    }
+  },
+  async mounted() {
+    let self = this;
+    //避免上传记录操作留在页面
+    this.upArr = [];
+    this.initWs();
+    // //上传后返回上传的百分比
+    // PubSub.subscribe("progressBar", (a, res) => {
+    //   // let res = JSON.parse(msg);
+    //   console.log(res);
+
+    //   res.forEach(item => {
+    //     console.log(item.percentage);
+    //     let percentage = item.percentage;
+
+    //     self.progress[self.curr_progress].percentage = percentage;
+    //     if (item.percentage === 100) {
+    //       self.progress[self.curr_progress++].status = "success";
+    //     }
+    //     // self.progress.percentage = item.percentage
+    //     // console.log(self.progress[index]);
+    //   });
+    //   // let percentage = obj.
+    //   // self.progress.percentage
+    //   console.log(a);
+    // });
   }
 };
 </script>

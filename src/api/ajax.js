@@ -100,6 +100,7 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
         console.log(response.request.responseURL);
         
           if(response.request.responseURL.endsWith('/index/status')) break; //如果是验证状态的接口 直接退出
+          // if(response.request.responseURL.indexOf('/index/status')>-1)break;
           // loading.loading_dom().close();
           router.push('/login');
           Message({

@@ -24,7 +24,7 @@ import Header from "@/components/HeaderTop/Header";
 import Aside from "@/components/Aside/Aside";
 import { repIndex, getLoginStatus } from "@/api";
 import Vue from "vue";
-import PubSub from "pubsub-js";
+// import PubSub from "pubsub-js";
 import message from "@/utils/Message";
 export default {
   data() {
@@ -35,7 +35,9 @@ export default {
   },
   methods: {
     connectWebsocket(uid) {
-      if (this.ws) return;
+      console.log(this.ws);
+
+      if (this.$ws) return;
       let self = this;
       function bindEvents(socket) {
         socket.onopen = () => {
@@ -47,29 +49,29 @@ export default {
             })
           );
         };
-        socket.onmessage = msg => {
+        socket.addEventListener("message", msg => {
           let resMsg = msg.data;
-          // .messageBox_confirm(resMsg)
-          console.log(msg);
           let res = JSON.parse(resMsg);
           console.log(res);
-
+          console.log('接收到一条websocket消息~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
           if (res.code === 200) {
             switch (res.type) {
-              case "PROGRESS_BAR":
+              // case "PROGRESS_BAR":
+              //   if (res.msg.indexOf("[{") > -1) {
+              //     PubSub.publish("progressBar", JSON.parse(res.msg));
+              //   } else {
+              //     message.successMessage(res.msg);
+              //   }
+              //   break;
               case "REGISTER":
-                if (res.msg.indexOf("[{") > -1) {
-                  PubSub.publish("progressBar", JSON.parse(res.msg));
-                } else {
-                  message.successMessage(res.msg);
-                }
+                message.successMessage(res.msg);
                 break;
             }
           } else if (res.code === -1) {
             switch (res.type) {
-              case "KICK_out":
+              case "KICK_OUT":
                 message
-                  .messageBox_info(res.msg)
+                  .messageBox_info(JSON.parse(res.msg).msg)
                   .then(() => {
                     this.$router.replace("/login");
                     socket.close();
@@ -87,38 +89,31 @@ export default {
           // .catch(() => {
           //   // socket.close();
           // });
-        };
-        // socket.onerror = () => {
-        //   console.log("socket错误");
-
-        //   socket.close();
-        //   setTimeout(() => {
-        //     self.socket = new WebSocket(`ws://192.168.208.109:3333/ws`);
-        //     bindEvents(self.socket);
-        //   }, 5000);
-        // };
+        });
         socket.onclose = () => {
           console.log("socket关闭");
         };
       }
       // this.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
-      this.ws = new WebSocket(`ws://192.168.208.109:3333/ws`);
-
-      bindEvents(this.ws);
+      Vue.prototype.$ws =  new WebSocket(`ws://192.168.208.109:3333/ws`);
+      bindEvents(this.$ws);
       //获得消息事件
     }
   },
+  components: {
+    Header,
+    Aside
+  },
+
+  created() {},
   async mounted() {
-    console.log(this.ws);
     let res = await getLoginStatus();
     if (res.code === 200) {
       this.connectWebsocket(+this.getCookie("uId"));
     }
   },
-  created() {},
-  components: {
-    Header,
-    Aside
+  beforeDestroy() {
+    this.$ws&&this.$ws.close();
   }
 };
 </script>

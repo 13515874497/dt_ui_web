@@ -1,23 +1,26 @@
 <template>
   <div class="shopUpload">
-    <el-tag><span>{{this.$route.params.name}}</span></el-tag>
+    <!-- <el-tag><span>{{this.$route.params.name}}</span></el-tag> -->
     <!-- 店铺选择 站点选择 -->
-    <ShopSelection :ptFrom="ptFrom"/>
+    <!-- <ShopSelection :ptFrom="ptFrom"/> -->
+    <selectCompany></selectCompany>
   </div>
 </template>
 <script>
-  import ShopSelection from '../../components/FileUpload/ShopSelection'
+  // import ShopSelection from '../../components/FileUpload/ShopSelection'
+  import selectCompany from '@/components/FileUpload/selectCompany'
 
   export default {
     data () {
       return {
-        ptFrom: {
-          mShow: true
-        }
+        // ptFrom: {
+        //   mShow: true
+        // }
       }
     },
     components: {
-      ShopSelection
+      // ShopSelection
+      selectCompany
     }
   }
 </script>
