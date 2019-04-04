@@ -9,6 +9,9 @@ export default {};
 </script>
 
 <style lang="scss">
+ul,ol{
+  list-style:none
+}
 .scrollbar::-webkit-scrollbar {
   width: 8px;
   height: 1px;

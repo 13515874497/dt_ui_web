@@ -80,7 +80,8 @@ import {
   repMenu,
   repGetHead,
   repGetMenus,
-  repAdRole
+  repAdRole,
+  repDelRole
 } from "@/api";
 import MenuHeadItem from "@/components/RoleItem/MenuHeadItem/MenuHeadItem";
 

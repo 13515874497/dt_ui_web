@@ -7,7 +7,7 @@ import {
 } from 'assert';
 
 const BASE_URL = '/api/api/v1'
-
+export const BASEURL = '/api/api/v1'
 
 //用户修改密码
 export const register = ({
@@ -458,7 +458,14 @@ export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'P
 
 
 
-
+/**
+ * 
+ * 数据导入
+ */
+/**
+ * 
+ * 菜单管理 => 菜单管理
+ */
 
 
 

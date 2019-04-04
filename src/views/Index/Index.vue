@@ -73,11 +73,11 @@ export default {
                 message
                   .messageBox_info(JSON.parse(res.msg).msg)
                   .then(() => {
-                    this.$router.replace("/login");
+                    self.$router.replace("/login");
                     socket.close();
                   })
                   .catch(() => {
-                    this.$router.replace("/login");
+                    self.$router.replace("/login");
                     socket.close();
                   });
                 break;
