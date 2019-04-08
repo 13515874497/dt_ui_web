@@ -62,9 +62,13 @@
               <el-step :title="uploadStatus[index].step.wait"></el-step>
               <el-step
                 :title="uploadStatus[index].step.uploading"
+                :status="uploadStatus[index].step.uploading_status"
                 :description="uploadStatus[index].step.errorMsg"
               ></el-step>
-              <el-step :title="uploadStatus[index].step.dealWith"></el-step>
+              <el-step
+                :title="uploadStatus[index].step.dealWith"
+                :status="uploadStatus[index].step.dealWith_status"
+              ></el-step>
             </el-steps>
           </li>
         </ul>
@@ -76,6 +80,7 @@
           type="primary"
           plain
           size="mini"
+          :disabled="uploadBtn.disabled"
         >
           确认上传
           <i class="el-icon-upload el-icon--right"></i>
@@ -91,7 +96,8 @@ import {
   repGetUserUploadInfo,
   findByListRegion,
   repGetShopName,
-  BASEURL
+  BASEURL,
+  repAddUploadInfoMysql
 } from "@/api";
 import message from "@/utils/Message";
 import checkUtils from "@/utils/CheckUtils";
@@ -99,7 +105,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      url: BASEURL,
       page: {
         name: this.$route.params.name,
         id: +this.$route.params.id
@@ -114,6 +119,9 @@ export default {
         label: null,
         render: []
       },
+      uploadBtn: {
+        disabled: false
+      },
       continent: [109, 110, 113, 114], //页面id为洲的信息，其他都是站点
       isContinent: false, //判断该页面显示洲还是站点
       //根据菜单id判断上传类型
@@ -124,7 +132,23 @@ export default {
         txt: [109, 110, 113, 114]
       },
       readyFileList: [], //待上传的文件(已验证通过)
-      uploadStatus: [], //每个文件上传过程中的状态
+      uploadStatus: [
+        // {
+        //   fileName: file.name,
+        //   step: {
+        //     count: 0,
+        //     wait: "等待上传",
+        //     uploading: "",
+        //     dealWith: "",
+        //     errorMsg: ""
+        //   },
+        //   progress: {
+        //     percentage: 0,
+        //     status: ""
+        //   }
+        // }
+      ], //每个文件上传过程中的状态
+      curr_progress: 0,
       param: new FormData()
     };
   },
@@ -238,7 +262,9 @@ export default {
             count: 0,
             wait: "等待上传",
             uploading: "",
+            uploading_status: "success",
             dealWith: "",
+            dealWith_status: "success",
             errorMsg: ""
           },
           progress: {
@@ -248,8 +274,11 @@ export default {
         });
       }
     },
+    //点击上传文件
     uploadFiles() {
       let self = this;
+      this.curr_progress = 0;
+      this.uploadBtn.disabled = false;
       this.param = new FormData();
       this.readyFileList.forEach(file => {
         self.param.append("files", file, file.name);
@@ -267,15 +296,137 @@ export default {
         contentType: false,
         processData: false
       };
-      axios.post(this.url + "/upload/file", this.param, config).then(res => {
+      axios.post(BASEURL + "/upload/file", this.param, config).then(res => {
         console.log(res);
+        let data = res.data.data;
+        if (res.data.code == 200) {
+          data.forEach((item, index) => {
+            let step = self.uploadStatus[index].step;
+            switch (item.status) {
+              case 0:
+              case 2:
+                step.uploading = "上传成功";
+                break;
+              default:
+                step.uploading = "上传失败";
+                step.uploading_status = "error";
+                break;
+            }
+            step.count++;
+          });
+          if (data.length) {
+            const resultAdd = repAddUploadInfoMysql({
+              uploadSuccessList: data
+            });
+            this.uploadStatus.forEach(item => {
+              item.step.dealWith = "数据处理中";
+              item.step.count++;
+            });
+            resultAdd.then(resAdd => {
+              console.log(resAdd);
+              if (resAdd.code === 200) {
+                resAdd.data.forEach((item, index) => {
+                  let step = self.uploadStatus[index].step;
+                  let data = item.data;
+                  switch (data.status) {
+                    case 0:
+                    case 2:
+                      message.messageNotSuccess(data.remark, data.name);
+                      step.dealWith = "数据处理成功";
+                      break;
+                    case 1:
+                      message.messageNotError(data.remark, data.name);
+                      step.dealWith = "数据处理失败";
+                      break;
+                  }
+                  step.count++;
+                });
+              } else if (resAdd.code === -1) {
+                let msgArr = resAdd.msg.split("*");
+                let msg = "";
+                msg += msgArr[0] + "\n";
+                if (msgArr[1]) {
+                  msgArr[1] = JSON.parse(msgArr[1]);
+                  for (let key in msgArr[1]) {
+                    let value = msgArr[1][key];
+                    msg += key + ":\n";
+                    for (let i = 0; i < value.length; i++) {
+                      msg += value[i] + "\n";
+                    }
+                  }
+                }
+                message.messageNotError(msg);
+                self.setUploadStatus();
+              }
+            });
+          }
+        } else {
+          self.setUploadStatus();
+        }
+      });
+    },
+    setUploadStatus(msg) {
+      this.uploadStatus.forEach(item => {
+        switch (item.step.count++) {
+          case 1:
+            item.step.uploading = "上传失败";
+            item.step.uploading_status = "error";
+            break;
+          case 2:
+            item.step.dealWith = "处理数据失败";
+            item.step.dealWith_status = "error";
+            break;
+        }
+      });
+    },
+    //获取上传的进度条信息
+    initWs() {
+      let self = this;
+      //等待父组件连上websocket
+      console.log(self.$ws);
+      setTimeout(() => {
+        if (!self.$ws) {
+          self.initWs();
+          return;
+        }
+        self.$ws.addEventListener("message", msg => {
+          let resMsg = msg.data;
+          let res = JSON.parse(resMsg);
+          console.log(res);
+          if (res.code === 200) {
+            switch (res.type) {
+              case "PROGRESS_BAR":
+                if (res.msg.indexOf("[{") > -1) {
+                  self.progressBar(JSON.parse(res.msg));
+                } else {
+                  message.successMessage(res.msg);
+                }
+                break;
+            }
+          }
+        });
+      }, 1000);
+    },
+    progressBar(res) {
+      console.log(res);
+      let self = this;
+      res.forEach(item => {
+        console.log(item.percentage);
+        let percentage = item.percentage;
+
+        self.uploadStatus[self.curr_progress].progress.percentage = percentage;
+        if (item.percentage === 100) {
+          self.uploadStatus[self.curr_progress++].progress.status = "success";
+        }
       });
     }
   },
-
   created() {
     this.getSlectRender();
     this.getRadioList();
+  },
+  mounted() {
+    this.initWs();
   }
 };
 </script>

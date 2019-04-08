@@ -52,7 +52,7 @@
           shopId: '',//店铺ID
           siteId: '',//站点 ID
           pId: '', //付款类型ID
-          areaId: '',
+          areaId: '', //洲 ID
           tbId: this.$route.params.id,
           businessTime: '' //业务报告日期
         },
@@ -114,7 +114,7 @@
       //下拉时获取 通过value=siteId  查询对应的对象 获取 label
       async changeSelect (value) {
         this.fileUp.newListFile.length = 0
-        this.uploadFrom.businessTime = this.ptFrom.businessTime
+        this.uploadFrom.businessTime = this.ptFrom.businessTime || ''
         this.fileUp.fileListInfo = []
         this.fileUp.icon_list = []
         let obj = {}
