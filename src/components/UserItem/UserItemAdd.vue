@@ -88,7 +88,6 @@
             }
           })
         }
-
       }
       var pwd = (rule, value, callback) => {
         var pwd = /^[A-Za-z0-9]{6,20}$/

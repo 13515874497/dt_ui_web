@@ -23,8 +23,7 @@ export const register = ({
 //获取图标icon/getIconInfo 
 export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`, 'get')
 
-// http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注 新增字段信息判断名字是否存在
-export const newFileds = () => ajax(BASE_URL + `/IsHeadName?headName=备注`)
+
 
 //获取在线人数
 export const getOnlineNumber = () => ajax('api/login/uCount')
@@ -213,6 +212,7 @@ export const repDelHistoryUserInfo = ({
  * 
  * 运营管理 => 亚马逊 => 广告
  */
+
 //CPR分页 http://127.0.0.1:9001/api/v1/ad/getCprInfo post
 export const getCprInfo = (data) => ajax(BASE_URL + '/ad/getCprInfo', data,'POST');
 
@@ -225,6 +225,14 @@ export const getStr = (data) => ajax(BASE_URL + `/ad/getStrInfo`,data, 'POST')
 //http://127.0.0.1:9001/api/v1/ad/getOarInfo
 export const getOarInfo = (data) => ajax(BASE_URL + `/ad/getOarInfo`,data, 'POST')
 
+//运营管理 => 亚马逊 =>OARWeek查询
+//http://127.0.0.1:9001/api/v1/ad/getOarInfo
+export const getOarInfoWeek = (data) => ajax(BASE_URL + `/ad/getOarInfo`,data, 'POST')
+
+
+//运营管理 => 亚马逊 =>cprWeek查询
+//http://127.0.0.1:9001/api/v1/ad/getOarInfo
+export const getCprInfoWeek = (data) => ajax(BASE_URL + `/ad/getCprInfo`,data, 'POST')
 
 //运营管理 => 亚马逊 =>HL查询
 // http://127.0.0.1:9001/api/v1/ad/getHlInfo POST
@@ -234,6 +242,21 @@ export const getHlInfo = (data) => ajax(BASE_URL + `/ad/getHlInfo`,data, 'POST')
 //http://127.0.0.1:9001/api/v1/fsb/getFsbInfo post
 
 export const getFsbInfo = (data) => ajax(BASE_URL + `/fsb/getFsbInfo`,data, 'POST')
+
+
+// 运营管理=> 亚马逊=>报告
+
+// 业务报告 http://127.0.0.1:9001/api/v1/fba/getBusInfo
+
+export const getBusInfo = (data) => ajax(BASE_URL + `/fba/getBusInfo`,data, 'POST')
+
+// 交易报告 http://127.0.0.1:9001/api/v1/fba/getOrderRePortInfo   post
+export const getOrderRePortInfo = (data) => ajax(BASE_URL + `/fba/getOrderRePortInfo`,data, 'POST')
+
+
+//退货报告 http://127.0.0.1:9001/api/v1/fba/geRefundInfo post
+export const geRefundInfo = (data) => ajax(BASE_URL + `/fba/geRefundInfo`,data, 'POST')
+
 
 /**
  * 
@@ -495,6 +518,9 @@ export const repGetStaff = () => ajax(BASE_URL + `/staff/getStaff`)
 export const repGetUserName = (userName) => ajax(BASE_URL + `/user/getUserName`, {
   userName
 })
+
+
+// http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注 新增字段信息判断名字是否存在
 
 //新增用户信息
 export const repSaveUserInfo = ({

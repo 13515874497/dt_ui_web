@@ -58,7 +58,7 @@ export default {
     return {
       queryIds: [],
 
-      tableTitle: [ ], //表头信息
+      tableTitle: [], //表头信息
 
       multipleSelection: [], //更新按钮数组收集
 
@@ -132,7 +132,8 @@ export default {
       this.tableTitle = [...this.tableTitle];
       this.queryIds = [];
     }
-  }
+  },
+
 };
 </script>
 

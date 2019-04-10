@@ -6,7 +6,6 @@
           <div class="login">
             <img src="./img/logo.png">
           </div>
-
           <p class="login_name">用户名</p>
           <el-input
             v-model="userName"
@@ -50,7 +49,7 @@ import { getOnlineNumber } from "@/api";
 import { Message } from "element-ui";
 import Vue from 'vue';
 export default {
-  data() {
+  data() {      
     return {
       body_height: { height: "" },
       userName: "",
@@ -62,7 +61,7 @@ export default {
     };
   },
   computed: {
-    //控制 账号跟密码输入款要有value 才能登陆
+    //控制 账号跟密码输入框要有value 才能登陆
     isLanding() {
       return !(this.userName && this.passWord);
     }
