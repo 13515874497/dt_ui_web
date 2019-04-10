@@ -1,7 +1,7 @@
 <template>
   <div class="shopUpload">
     <FilesUpload :businessTime="businessTime" :showNext="showNext">
-      <template v-slot:slotType>
+      <template slot="slotType">
         <DatePicker @changeDate="changeDate"></DatePicker>
         
       </template>

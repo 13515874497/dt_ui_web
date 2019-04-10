@@ -1,7 +1,7 @@
 <template>
   <div class="shopUpload">
     <FilesUpload :pId="pId" :showNext="showNext">
-      <template v-slot:slotType>
+      <template slot="slotType">
         <payOption @pIdChange="pIdChange"></payOption>
       </template>
     </FilesUpload>

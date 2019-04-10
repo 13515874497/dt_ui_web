@@ -1,4 +1,4 @@
-import {isNumber} from './verify'
+import {isNumber,DBFieldRepeat} from './verify'
 export default {
   str: [{
     required: false,
@@ -29,15 +29,17 @@ export default {
     trigger: 'change'
   }],
 
-
-
   //必填
   _str: [{
     required: true,
     type: 'string',
     message: '请输入字符',
     trigger: 'change',
-  }],
+  },{
+    validator: DBFieldRepeat,  //验证字段在数据库是否冲突
+    trigger: 'blur'
+  }
+],
   _number: [{
     validator: isNumber,
     message: '至少输入一个数字',

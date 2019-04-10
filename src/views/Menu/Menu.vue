@@ -290,7 +290,7 @@ export default {
 
         {
           headName: "是否固定表头",
-          topType: "isFixed",
+          topType: "fixed",
           inputType: 5,
           required: true,
           statusOptions: [
@@ -334,7 +334,7 @@ export default {
         },
         {
           headName: "是否可被引用",
-          topType: "isReference",
+          topType: "reference",
           inputType: 5,
           required: true,
           statusOptions: [

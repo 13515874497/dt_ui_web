@@ -84,8 +84,6 @@
 
 <script>
 import rules from "@/utils/rules.js";
-import PubSub from 'pubsub-js'
-import message from '@/utils/Message'
 export default {
   props: {
     //模板
@@ -99,8 +97,8 @@ export default {
     //         disabled: true
     //     }
     // ],
-    formItems: Array,
-    formData: Object
+    formItems: Array, 
+    formData: Object,
   }, 
   data() {
     return {
