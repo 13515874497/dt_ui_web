@@ -685,6 +685,8 @@ export default {
           menuId: this.editingMenu.data.menuId,
           ...this.add_field.data
         };
+        console.log(TableHead);
+        
         let res = await saveHead(TableHead);
         console.log(res);
         this.addDialogFormVisible = false;

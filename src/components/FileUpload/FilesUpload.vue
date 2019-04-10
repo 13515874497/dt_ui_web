@@ -117,9 +117,10 @@
               <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
               <el-button type="text" size="small">编辑</el-button>
             </template>
-          </el-table-column> -->
+          </el-table-column>-->
         </Table>
-        <Pagination :data="existedFiles" v-on:pageData="pagination"/>
+        <OperateBtn :operateList="operateList"></OperateBtn>
+        <Pagination :data="existedFiles" v-on:pageData="pagination" style="margin-top:10px"/>
       </el-tab-pane>
     </el-tabs>
   </section>
@@ -140,6 +141,7 @@ import axios from "axios";
 import Table from "@/components/ElementUi/Table";
 import Pagination from "@/components/ElementUi/Pagination";
 import pUtils from "@/utils/PageUtils";
+import OperateBtn from "@/components/ElementUi/OperateBtn";
 export default {
   props: {
     pId: {
@@ -152,7 +154,8 @@ export default {
   },
   components: {
     Table,
-    Pagination
+    Pagination,
+    OperateBtn
   },
   data() {
     return {
@@ -236,7 +239,7 @@ export default {
           topType: "remark",
           headName: "备注",
           inputType: 0
-        },
+        }
       ];
       if (this.uploadFrom.pId) {
         arr.push({
@@ -558,22 +561,59 @@ export default {
 
     //获取已上传的文件列表
     async getExistedFiles() {
-      console.log(this.uploadFrom);
-      console.log();
-      let requestData = { ...this.uploadFrom, ...this.existedFiles };
+      this.pagination(this.existedFiles);
+
+      // console.log(this.uploadFrom);
+      // console.log();
+      // let requestData = { ...this.uploadFrom, ...this.existedFiles };
+      // delete requestData.tableData;
+      // let res = await repGetUserUploadInfo(requestData);
+      // pUtils.pageInfo(res, this.existedFiles);
+      // console.log(res);
+    },
+    //根据分页参数请求数据
+    async pagination(data) {
+      let requestData = { ...this.uploadFrom, ...data };
       delete requestData.tableData;
       let res = await repGetUserUploadInfo(requestData);
       pUtils.pageInfo(res, this.existedFiles);
-      console.log(res);
     },
-    pagination(){
-
+    initOperateBtn() {
+      let self = this;
+      this.operateList = [
+        //对已上传的文件进行操作的按钮列表
+        {
+          type: "primary",
+          icon: "el-icon-download",
+          label: "下载",
+          fn() {
+            self.download();
+          }
+        },
+        {
+          type: "danger",
+          icon: "el-icon-delete",
+          label: "删除",
+          fn() {
+            self.remove();
+          }
+        }
+      ];
+    },
+    //下载
+    download() {
+      console.log("download");
+    },
+    remove(){
+      console.log('remove');
+      
     }
   },
   created() {
     this.init();
     this.getSlectRender();
     this.getRadioList();
+    this.initOperateBtn();
   },
   mounted() {},
   activated() {
