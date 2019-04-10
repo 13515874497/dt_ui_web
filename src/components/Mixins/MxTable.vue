@@ -43,7 +43,7 @@
 import Query2 from "@/components/ElementUi/Query2";
 import InputQuery from "@/components/ElementUi/InputQuery";
 import SearchReset from "@/components/ElementUi/SearchReset";
-import loading from '@/utils/loading'
+import loading from "@/utils/loading";
 // import { findByListProduct } from "@/api";
 
 import Message from "@/utils/Message";
@@ -69,7 +69,7 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-      showQuery: true,
+      showQuery: true
     };
   },
   components: {
@@ -79,11 +79,6 @@ export default {
     Query2,
     InputQuery,
     SearchReset
-  },
-  async mounted() {
-    this.tableTitle =
-      (await requestAjax.requestGetHead(this.$route.params.id)) || [];
-    this.pagination(this.data);
   },
   methods: {
     setQuery($event) {
@@ -118,7 +113,7 @@ export default {
     //封装分页请求
     async pagination(data) {
       console.log(data);
-      let _data = {...data};
+      let _data = { ...data };
       delete _data.tableData;
       const res = await this.queryPage(_data);
       console.log(res);
@@ -133,7 +128,11 @@ export default {
       this.queryIds = [];
     }
   },
-
+  async mounted() {
+    this.tableTitle =
+      (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+    this.pagination(this.data);
+  }
 };
 </script>
 

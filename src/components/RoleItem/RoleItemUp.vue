@@ -44,7 +44,7 @@
               <!-- `checked` 为 true 或 false -->
               <el-checkbox v-model="isMenu">菜单编辑</el-checkbox>
               <span style="padding-left: 25px" v-if="isMenu">
-                <el-switch v-model="menuFlg" active-text="添加菜单" inactive-text="删除菜单"></el-switch>
+                <!-- <el-switch v-model="menuFlg" active-text="添加菜单" inactive-text="删除菜单"></el-switch> -->
                 <el-button @click="roleUpVisible = false" circle>取 消</el-button>
                 <el-button type="primary" @click="upMenuRole" circle>确 定</el-button>
               </span>
@@ -116,7 +116,7 @@ export default {
       isCViewMenu: true, //关闭菜单
       isViewMenu: true, //查看菜单
       menuHedaFlg: false, //table框的隐藏跟显示
-      menuFlg: true, //选择删除 还是添加
+      // menuFlg: true, //选择删除 还是添加
       urlMenList: [], //获得父节点 menuId
       newMenuList: [], //新的一个数组
       checkedMenuList: [], //获得选中的id 添加或更新菜单
@@ -264,7 +264,9 @@ export default {
     async upMenuRole() {
       if (confirm("请确认？")) {
         //获得当前选中的menuIds
-        let keys = this.$refs.tree.getCheckedKeys();
+        let checkedKeys = this.$refs.tree.getCheckedKeys();
+        let halfKeys = this.$refs.tree.getHalfCheckedKeys();
+        let keys = checkedKeys.concat(halfKeys);
         if(!keys.length) return;
         //获得当前半选中的menuIds
         // let half = this.$refs.tree.getHalfCheckedKeys();
@@ -273,8 +275,9 @@ export default {
         // });
         var menuIds = keys.map(item => item).join();
         const rid = this.roleFrom.rId;
-        const menuFlg = this.menuFlg;
-        const menuRole = { rid, menuIds, menuFlg };
+        // const menuFlg = this.menuFlg;
+        const menuRole = { rid, menuIds };
+        console.log(menuRole);
         const result = await repGetMenus(menuRole);
         if (result.code === 200) {
           this.roleUpVisible = false;

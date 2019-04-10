@@ -130,12 +130,10 @@ export const repCheckMenuToken = () => ajax(BASE_URL + `/menu/token/menu`)
 export const repGetMenus = ({
   rid,
   menuIds,
-  menuFlg
 }) => ajax(BASE_URL + '/rm/upMenus', {
   rid,
   menuIds,
-  menuFlg
-}, 'POST')
+}, 'POST',[true,true])
 
 //通过角色id来获取菜单id
 export const roleMenu = ({
