@@ -1,25 +1,34 @@
 <template>
-  <div>
-    <el-tag><span>{{this.$route.params.name}}</span></el-tag>
-    <!-- 店铺选择 站点选择 -->
-    <BusinessTime :ptFrom="ptFrom"/>
+  <div class="shopUpload">
+    <FilesUpload :businessTime="businessTime" :showNext="showNext">
+      <template v-slot:slotType>
+        <DatePicker @changeDate="changeDate"></DatePicker>
+        
+      </template>
+    </FilesUpload>
   </div>
 </template>
 <script>
-  import BusinessTime from '@/components/FileUpload/BusinessTime'
-
-  export default {
-    data () {
-      return {
-        ptFrom: {
-          mShow: true
-        }
-      }
-    },
-    components: {
-      BusinessTime
+import FilesUpload from "@/components/FileUpload/FilesUpload.vue";
+import DatePicker from "@/components/FileUpload/DatePicker";
+export default {
+  data() {
+    return {
+      businessTime: 0,
+      showNext:false
+    };
+  },
+  components: {
+    FilesUpload,
+    DatePicker
+  },
+  methods: {
+    changeDate(val){
+      this.businessTime = val;
+      this.showNext = true;
     }
   }
+};
 </script>
 <style scoped>
 </style>

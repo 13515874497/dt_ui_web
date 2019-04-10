@@ -499,7 +499,7 @@ export default {
     let self = this;
     //避免上传记录操作留在页面
     this.upArr = [];
-    this.initWs();
+    // this.initWs();
     // //上传后返回上传的百分比
     // PubSub.subscribe("progressBar", (a, res) => {
     //   // let res = JSON.parse(msg);

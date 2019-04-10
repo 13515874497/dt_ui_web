@@ -3,12 +3,12 @@
     <!-- <el-tag><span>{{this.$route.params.name}}</span></el-tag> -->
     <!-- 店铺选择 站点选择 -->
     <!-- <ShopSelection :ptFrom="ptFrom"/> -->
-    <selectCompany></selectCompany>
+    <FilesUpload></FilesUpload>
   </div>
 </template>
 <script>
   // import ShopSelection from '../../components/FileUpload/ShopSelection'
-  import selectCompany from '@/components/FileUpload/selectCompany'
+  import FilesUpload from '@/components/FileUpload/FilesUpload'
 
   export default {
     data () {
@@ -20,7 +20,7 @@
     },
     components: {
       // ShopSelection
-      selectCompany
+      FilesUpload
     }
   }
 </script>
