@@ -142,14 +142,13 @@ export default {
   methods: {
     // 打印
     printContent() {
-      this.bindData()
+      this.bindData() //在这里调用一次可以手动输入输入框信息
        document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("invoiceBox");
       // console.log(subOutputRankPrint.innerHTML);
       let newContent = subOutputRankPrint.innerHTML;
       let oldContent = document.body.innerHTML;
-      document.body.innerHTML = newContent;
-      
+      document.body.innerHTML = newContent;      
       window.print();
       // window.location.reload();
       // document.body.innerHTML = oldContent;
@@ -159,8 +158,8 @@ export default {
        var subOutputRankPrint = document.getElementById("invoiceBox");
        var oInputs = subOutputRankPrint.getElementsByTagName('input');
        var otextarea = subOutputRankPrint.getElementsByTagName('textarea'); 
-       console.log(oInputs); 
-      console.log(otextarea);    
+      //  console.log(oInputs); 
+      // console.log(otextarea);    
 
        for (var i=0;i<oInputs.length;i++){
           oInputs[i].setAttribute("value",oInputs[i].value)      

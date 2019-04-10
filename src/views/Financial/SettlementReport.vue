@@ -1,4 +1,4 @@
-  <!--caiwu-->
+  <!--财务管理-->
 <script>
  import {getFsbInfo} from "@/api";
  import MxTable  from '@/components/Mixins/MxTable'
