@@ -28,7 +28,7 @@ export default {
     message: '请选择状态',
     trigger: 'change'
   }],
-
+  
 
 
   //必填
@@ -63,5 +63,5 @@ export default {
     required: true,
     message: '请选择状态',
     trigger: 'change'
-  }]
+  }],
 }
