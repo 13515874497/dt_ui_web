@@ -104,7 +104,6 @@ export default {
     return {
       data_model: {},
       rules,
-      
     };
   },
   computed: {
