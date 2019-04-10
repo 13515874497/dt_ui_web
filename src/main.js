@@ -164,7 +164,6 @@ Vue.prototype.removeCookie = (key) => {
 
 
 router.beforeEach((to, from, next) => {
-  // next()
   getLoginStatus().then((res) => {
     switch (to.path) {
       case '/login':

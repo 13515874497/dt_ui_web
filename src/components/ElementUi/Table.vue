@@ -93,6 +93,7 @@
         :show-overflow-tooltip="true"
         :render-header="renderHeader"
       ></el-table-column>
+      <slot name="operate"></slot>
     </template>
   </el-table>
 </template>
