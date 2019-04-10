@@ -1,7 +1,9 @@
 <template>
   <div id="data">
+    <!-- <el-button icon="el-iconfont-miao"></el-button> -->
+    <!-- <svg>  <use xlink:href="#el-iconfont-miao"></use></svg> -->
     <!--多选输入框选择输入-->
-    <div id="printCheck" class="clearfix" v-if="tableTitle.length">
+    <div id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="20">
         <el-col :span="4">
           <Query2 :tableTitle="tableTitle" @getValue="getValue"></Query2>
@@ -28,7 +30,7 @@
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
       />
-      <div v-if="tableTitle.length">
+      <div v-if="tableTitle.length" class="control">
         <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
         <!--分页-->
         <Pagination :data="data" v-on:pageData="pagination"/>
@@ -38,18 +40,18 @@
   </div>
 </template>
 <script>
-import Query2 from "../../components/ElementUi/Query2";
-import InputQuery from "../../components/ElementUi/InputQuery";
-import SearchReset from "../../components/ElementUi/SearchReset";
+import Query2 from "@/components/ElementUi/Query2";
+import InputQuery from "@/components/ElementUi/InputQuery";
+import SearchReset from "@/components/ElementUi/SearchReset";
+import loading from "@/utils/loading";
+// import { findByListProduct } from "@/api";
 
-// import { findByListProduct } from "../../api";
-
-import Message from "../../utils/Message";
-import pUtils from "../../utils/PageUtils";
-import Pagination from "../../components/ElementUi/Pagination";
-import Table from "../../components/ElementUi/Table";
-import AddDelUpButton from "../../components/ElementUi/AddDelUpButton";
-import requestAjax from "../../api/requestAjax";
+import Message from "@/utils/Message";
+import pUtils from "@/utils/PageUtils";
+import Pagination from "@/components/ElementUi/Pagination";
+import Table from "@/components/ElementUi/Table";
+import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
+import requestAjax from "@/api/requestAjax";
 
 export default {
   data() {
@@ -66,7 +68,8 @@ export default {
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
-      }
+      },
+      showQuery: true
     };
   },
   components: {
@@ -76,11 +79,6 @@ export default {
     Query2,
     InputQuery,
     SearchReset
-  },
-  async mounted() {
-    this.tableTitle =
-      (await requestAjax.requestGetHead(this.$route.params.id)) || [];
-    this.pagination(this.data);
   },
   methods: {
     setQuery($event) {
@@ -108,26 +106,41 @@ export default {
     async search() {
       this.pagination(this.data);
     },
-    queryPage(data) {
-      // 提供一个查询分页的接口 如下
-      // return findByListProduct(data);
-    },
+    // queryPage(data) {
+    //   // 提供一个查询分页的接口 例如:
+    //   // return findByListProduct(data);
+    // },
     //封装分页请求
     async pagination(data) {
-      const res = await this.queryPage(data);
+      console.log(data);
+      let _data = { ...data };
+      delete _data.tableData;
+      const res = await this.queryPage(_data);
+      console.log(res);
       if (res.code === 200) {
         //赋值 然后显示
         pUtils.pageInfo(res, data);
       }
     },
     reset() {
+      //触发下表头变更 让子组件初始化
       this.tableTitle = [...this.tableTitle];
       this.queryIds = [];
     }
+  },
+  async mounted() {
+    this.tableTitle =
+      (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+    this.pagination(this.data);
   }
 };
 </script>
 
 
 <style lang="scss">
+.control {
+  margin-top: 20px;
+}
 </style>
+刘佳
+ok
