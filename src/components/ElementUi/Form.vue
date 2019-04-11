@@ -1,6 +1,6 @@
 <template>
   <!-- 0:字符型  1:数值型   2:日期型  3:下拉框  4：起止日期  -->
-  <el-form ref="data_model" :model="data_model" label-width="108px" label-position="left" status-icon>
+  <el-form ref="data_model" :model="data_model" label-width="108px" label-position="left" status-icon >
     <template v-for="item in data">
       <el-form-item
         v-if="item.statusOptions && item.statusOptions.length == 2"
