@@ -108,12 +108,9 @@ export const rolesId = (rule, value, callback) => {
 }
 
 export const DBFieldRepeat = (rule,val,cb)=>{
-  console.log(rule);
-  console.log(val);
   switch(rule.field){
     case 'headName':
     isHeadName({headName:val}).then(res=>{
-      console.log(res);
       switch(res.code){
         case 200:
         cb();

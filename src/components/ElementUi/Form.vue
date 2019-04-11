@@ -1,7 +1,14 @@
 <template>
   <!-- 0:字符型  1:数值型   2:日期型  3:下拉框  4：起止日期  -->
-  <el-form ref="data_model" :model="data_model" label-width="108px" label-position="left" status-icon >
-    <template v-for="item in data">
+  <el-form
+    ref="data_model"
+    :model="data_model"
+    label-width="108px"
+    label-position="left"
+    status-icon
+    @validate="handlerValidate"
+  >
+    <template v-for="item in formItems">
       <el-form-item
         v-if="item.statusOptions && item.statusOptions.length == 2"
         :label="item.headName"
@@ -57,11 +64,11 @@
         :prop="item.topType"
         :rules="item.required? rules._number : rules.number"
       >
-      <el-input
+        <el-input
           v-model="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
-      ></el-input>
+        ></el-input>
       </el-form-item>
 
       <!-- 
@@ -97,45 +104,40 @@ export default {
     //         disabled: true
     //     }
     // ],
-    formItems: Array, 
-    formData: Object,
-  }, 
+    formItems: Array,
+    formData: Object
+  },
   data() {
     return {
       data_model: {},
-      rules,
+      rules
     };
   },
-  computed: {
-    data() {
-      console.log(this.formItems);
-
-      return [...this.formItems];
-    }
-  },
+  computed: {},
   watch: {
     formData() {
       this.initData_model();
     },
     data_model: {
-      handler(val) {
-        if (this.isVerifyPass()) this.passData();
+      async handler(val) {
         console.log(val);
+        this.passData(await this.isVerifyPass());
       },
       deep: true
     }
   },
   methods: {
-    testlog(){
-
-    },
+    testlog() {},
     initData_model() {
       let self = this;
       if (this.formData) {
         this.data_model = { ...this.formData };
+        this.data_model_cache = { ...this.formData }; //只对基本数据类型做缓存
+        console.log(this.data_model_cache);
+
         return;
       }
-      this.data.forEach(item => {
+      this.formItems.forEach(item => {
         if (item.statusOptions && item.statusOptions.length) {
           self.$set(this.data_model, item.topType, item.statusOptions[0].id);
         } else {
@@ -144,30 +146,48 @@ export default {
       });
       console.log(this.data_model);
     },
-    isVerifyPass() {
-      let self = this;
-      this.flag = false;
-      //   console.log();
-        
-      // let validData = JSON.parse(JSON.stringify(this.$refs["data_model"])) ;
-      this.$refs["data_model"].validate(valid => {  
-        if (valid) {
-          self.flag = true;
+    getModifyData() {
+      let modifyData = {};
+      for (let key in this.data_model) {
+        if (this.data_model[key] !== this.data_model_cache[key]) {
+          modifyData[key] = this.data_model[key];
         }
-      });
-      this.$refs["data_model"].clearValidate();
-      return this.flag;
+      }
+      return modifyData;
     },
-    passData() {
-      this.$emit("passData", [this.data_model,this.flag]);
+    async isVerifyPass() {
+      let self = this;
+
+      //   console.log();
+      let promise = await new Promise((resolve, reject) => {
+        this.$refs["data_model"].validate((valid, obj) => {
+          resolve([valid, obj]);
+        });
+      });
+      //如果修改的字段验证错误发生时 当前值和原先的值一样, 那么验证通过 flag通过并向上传递
+      let errCount = 0;
+      for (let key in promise[1]) {
+        errCount++;
+        if (this.data_model[key] === this.data_model_cache[key]) {
+          errCount--;
+        }
+      }
+      return errCount === 0;
+    },
+    passData(isPass) {
+      // [是否验证通过,绑定的数据,修改后发生变化的数据]
+      this.$emit("passData", [isPass, this.data_model,this.getModifyData()]);
+    },
+    handlerValidate(key, valid, errMsg) {
+      if (this.data_model[key] === this.data_model_cache[key]) {
+        this.$refs["data_model"].clearValidate([key]);
+      }
     }
   },
   created() {
     this.initData_model();
   },
-  mounted() {
-
-  }
+  mounted() {}
 };
 </script>
 
