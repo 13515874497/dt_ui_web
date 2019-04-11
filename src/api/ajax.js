@@ -93,8 +93,6 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     promise.then(function (response) {
       // 成功了调用resolve()
       let res = response.data;
-      console.log(response);
-      
       switch (res.code) {
         case -2:
         console.log(response.request.responseURL);

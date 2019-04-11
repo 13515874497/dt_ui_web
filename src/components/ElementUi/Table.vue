@@ -11,7 +11,7 @@
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
   >
-    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段)-->
+    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) 90.带有超链接的-->
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column v-if="isShowNumber()" type="index" width="50" fixed></el-table-column>
     <template v-for="title  in tableTitle">
@@ -84,6 +84,16 @@
         </template>
       </el-table-column>
 
+      <!-- <el-table-colum
+        v-else-if="title.inputType==90"
+        :fixed="isFixed(title)"
+        :label="title.headName"
+        :prop="title.topType"
+        :show-overflow-tooltip="true"
+      >
+
+      </el-table-colum>-->
+
       <el-table-column
         v-else
         sortable
@@ -93,8 +103,16 @@
         :show-overflow-tooltip="true"
         :render-header="renderHeader"
       ></el-table-column>
-      <slot name="operate"></slot>
+
+     
     </template>
+     <el-table-column label="操作">
+        <template slot-scope="scope">
+          <slot name="operate" :childData="scope">
+            
+          </slot>
+        </template>
+      </el-table-column>
   </el-table>
 </template>
 <script>
@@ -145,6 +163,7 @@ export default {
           self.options[item.topType] = item.statusOptions;
         }
       });
+      console.log(this.options);
     },
     statusOptions: function(row, column, cellValue) {
       let topType = column.property;
@@ -167,7 +186,7 @@ export default {
       //挂在到页面上从而获取宽度
       let TextWidth = this.getTempDomWidth(column.label);
       // console.log(TextWidth);
-      
+
       let minWidth = TextWidth + 20;
       //如果有排序的图标则加24  排序的箭头宽度 26
       if (column.sortable) {
@@ -223,7 +242,7 @@ export default {
         return false;
       });
     },
-      //创建外层的临时dom  用来存放临时的span
+    //创建外层的临时dom  用来存放临时的span
     createTempWarpdom() {
       let tempDom = document.getElementById("tempDiv-getfieldWidth");
       if (tempDom) {
@@ -235,7 +254,7 @@ export default {
         "position:fixed;height:0;overfolw:hidden;font-weight:700";
       document.body.appendChild(this.tempDiv);
     },
-     //创建临时的span 用来存放thead中字段的文本text 挂载到外层临时dom上 从而获取到字段的宽度
+    //创建临时的span 用来存放thead中字段的文本text 挂载到外层临时dom上 从而获取到字段的宽度
     getTempDomWidth(text) {
       let tempSpan = document.createElement("span");
       tempSpan.innerHTML = text;

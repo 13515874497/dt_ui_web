@@ -475,7 +475,10 @@ export const reference = (data) => ajax(BASE_URL + '/reference', data,'GET',[fal
 export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST',[true,true])
 //新增引用数据 
 export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'POST',[true,true])
-
+//字段名称(headName)对比数据库是否重复  http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注 
+export const isHeadName = (data) => ajax(BASE_URL + '/isHeadName', data)
+//字段英文名称(topType)对比数据库是否重复 /api/v1/isTopType 
+export const isTopType = (data) => ajax(BASE_URL + '/isTopType', data)
 
 
 
@@ -518,7 +521,7 @@ export const repGetUserName = (userName) => ajax(BASE_URL + `/user/getUserName`,
 })
 
 
-// http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注 新增字段信息判断名字是否存在
+
 
 //新增用户信息
 export const repSaveUserInfo = ({
@@ -580,6 +583,7 @@ export const repDelHeadMenu = ({
   mId,
   thIds
 }, 'POST')
+//
 
 //查询用户记录  查询已上传的文件信息
 export const repGetUserUploadInfo = (data) => ajax(BASE_URL + '/upload/getInfo', data, 'POST')
@@ -589,7 +593,7 @@ export const repDelUploadInfo = (id) => ajax(BASE_URL + `/upload/delInfo`, {
   id
 })
 
-//上传成功后 发送数据给后台读数据
+//上传成功后 发送数据给后台写入数据库
 export const repAddUploadInfoMysql = ({
   uploadSuccessList
 }) => ajax(BASE_URL + '/upload/addInfo', {

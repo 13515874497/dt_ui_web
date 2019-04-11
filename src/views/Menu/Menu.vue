@@ -129,7 +129,7 @@
 
     <!-- 字段列表 =>  修改 -->
     <el-dialog title="编辑字段" :visible.sync="editDialogFormVisible">
-      <Form :formItems="formItems" :formData="data_field"></Form>
+      <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
@@ -157,7 +157,12 @@
         <i class="el-icon-edit el-input__icon" slot="suffix"></i>
       </el-autocomplete>
 
-      <el-tree :data="introList_filter.data" :props="defaultProps_introList" show-checkbox ref="tree_introList"></el-tree>
+      <el-tree
+        :data="introList_filter.data"
+        :props="defaultProps_introList"
+        show-checkbox
+        ref="tree_introList"
+      ></el-tree>
       <!-- <Table :tableTitle="tableTitle" :tableData="introList"></Table> -->
 
       <div slot="footer" class="dialog-footer">
@@ -290,7 +295,7 @@ export default {
 
         {
           headName: "是否固定表头",
-          topType: "isFixed",
+          topType: "fixed",
           inputType: 5,
           required: true,
           statusOptions: [
@@ -334,7 +339,7 @@ export default {
         },
         {
           headName: "是否可被引用",
-          topType: "isReference",
+          topType: "reference",
           inputType: 5,
           required: true,
           statusOptions: [
@@ -370,7 +375,7 @@ export default {
       introList_filter: {
         input: "", //输入框中的数据
         autocomplete: [], //用于筛选的数据
-        data:[] //根据用户输入筛选符合的字段
+        data: [] //根据用户输入筛选符合的字段
       }
     };
   },
@@ -382,9 +387,9 @@ export default {
   },
   watch: {
     "introList_filter.input": function(val) {
-      this.introList_filter.data = this.introList.filter((item)=>{
+      this.introList_filter.data = this.introList.filter(item => {
         return item.headName.indexOf(val) > -1;
-      })
+      });
     }
   },
   async mounted() {
@@ -668,15 +673,20 @@ export default {
     },
     //对某个菜单进行新增字段 实时接收用户编辑中的字段
     passData_add($event) {
-      let data = $event[0],
-        isPass = $event[1];
-      console.log($event);
-      console.log(data)
+      // debugger;
+      let isPass = $event[0];
+      let data = $event[1];
+      let modifyData = $event[2];
       //新增的字段数据
       this.add_field = {
         data,
         isPass
       };
+    },
+    passData_update($event) {
+      let isPass = $event[0];
+      let data = $event[1];
+      let modifyData = $event[2];
     },
     //对某个菜单进行新增字段 如果验证通过则向后台发起请求
     async passedData_add() {
@@ -686,7 +696,7 @@ export default {
           ...this.add_field.data
         };
         console.log(TableHead);
-        
+
         let res = await saveHead(TableHead);
         console.log(res);
         this.addDialogFormVisible = false;

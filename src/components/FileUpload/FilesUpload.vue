@@ -2,7 +2,9 @@
   <section>
     <main class="main">
       <el-tag class="tag">{{page.name}}</el-tag>
+
       <div class="sel">
+        <slot name="slotType"></slot>
         <el-radio-group
           v-model="radio.model"
           size="mini"
@@ -40,7 +42,6 @@
       <el-tab-pane label="文件上传" name="upload" class="tab-content-left">
         <section class="left">
           <!-- 根据不同类型插入不同模块 -->
-          <slot name="slotType"></slot>
 
           <div class="upload" v-show="select.model">
             <el-upload class="upload-demo" drag action multiple :before-upload="beforeAvatarUpload">
@@ -112,14 +113,13 @@
           :tableTitle="tableTitle"
           v-if="tableTitle.length"
         >
-          <!-- <el-table-column fixed="right" label="操作" width="100">
-            <template slot-scope="scope">
-              <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-              <el-button type="text" size="small">编辑</el-button>
-            </template>
-          </el-table-column>-->
+        
+          <template v-slot:operate="scope">
+            <el-button @click="download(scope)" v-if="scope.childData.row.status == 2" size="mini" type="primary" icon="el-icon-download">下载</el-button>
+            <el-button @click="remove(scope)" size="mini" type="danger" icon="el-icon-delete">删除</el-button>
+          </template>
         </Table>
-        <OperateBtn :operateList="operateList"></OperateBtn>
+        <!-- <OperateBtn :operateList="operateList"></OperateBtn> -->
         <Pagination :data="existedFiles" v-on:pageData="pagination" style="margin-top:10px"/>
       </el-tab-pane>
     </el-tabs>
@@ -229,6 +229,28 @@ export default {
           topType: "name",
           headName: "文件名",
           inputType: 0
+        },
+        {
+          topType: "status",
+          headName: "上传状态",
+          inputType: 3,
+          statusOptions: [
+            {
+              id: 0,
+              selectId: 0,
+              name: "成功"
+            },
+            {
+              id: 1,
+              selectId: 1,
+              name: "失败"
+            },
+            {
+              id: 2,
+              selectId: 2,
+              name: "部分skuId错误"
+            }
+          ]
         },
         {
           topType: "createDate",
@@ -600,13 +622,43 @@ export default {
         }
       ];
     },
-    //下载
-    download() {
+    //下载status===2的文件
+    download(scope) {
       console.log("download");
+      console.log(scope);
+      let row = scope.childData.row;
+      let config = {
+        responseType: "blob"
+      }
+      let path = row.filePath + row.uuidName
+       axios
+        .post(BASEURL + "/upload/downloadCommonFile", {filePath:path}, config)
+        .then(res => {
+          if (res.status === 200) {
+            console.log(res);
+            
+            this.downloadFile(res, row.name);
+          }
+        });
     },
-    remove(){
-      console.log('remove');
-      
+    // 下载文件
+    downloadFile(data, fileName) {
+      console.log(data);
+      if (!data) {
+        return;
+      }
+      let url = window.URL.createObjectURL(data.data);
+      let link = document.createElement("a");
+      link.style.display = "none";
+      link.href = url;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+    },
+    //删除文件
+    remove() {
+      let row = scope.childData.row;
+      console.log("remove");
     }
   },
   created() {

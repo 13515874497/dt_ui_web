@@ -1,3 +1,6 @@
+import {isHeadName,isTopType} from "@/api"
+
+
 export const isNumber = (rule, value, cb) => {
   console.log(value);
   let re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/ 
@@ -102,4 +105,37 @@ export const rolesId = (rule, value, callback) => {
   } else {
     callback()
   }
+}
+
+export const DBFieldRepeat = (rule,val,cb)=>{
+  switch(rule.field){
+    case 'headName':
+    isHeadName({headName:val}).then(res=>{
+      switch(res.code){
+        case 200:
+        cb();
+        break;
+        case -1:
+        cb(new Error('该字段名称已存在'))
+        break;
+      }
+    })
+    break;
+    case 'topType':
+    isTopType({topType:val}).then(res=>{
+      switch(res.code){
+        case 200:
+        cb();
+        break;
+        case -1:
+        cb(new Error('该字段英文名称已存在'))
+        break;
+      }
+    });
+    break;
+    default:
+    cb();
+    break;
+  }
+
 }
