@@ -51,8 +51,7 @@
                 </table>
 
                 <div class="footerOne" >
-                  <span v-for="(item,index) in information.confirm" :key="index" :style="{width:item.width}">{{item.name}}</span>
-                
+                  <span v-for="(item,index) in information.confirm" :key="index" :style="{width:item.width}">{{item.name}}</span>               
                 </div>
                 
                 <div class="footerTwo">
