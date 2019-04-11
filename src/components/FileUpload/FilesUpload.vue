@@ -1,11 +1,10 @@
 <template>
   <section>
-    
     <main class="main">
       <el-tag class="tag">{{page.name}}</el-tag>
-        
+
       <div class="sel">
-      <slot name="slotType"></slot>
+        <slot name="slotType"></slot>
         <el-radio-group
           v-model="radio.model"
           size="mini"
@@ -23,7 +22,6 @@
           v-if="select.render.length"
           v-model="select.model"
           @change="changeSelect"
-          
         >
           <el-option
             v-for="item in select.render"
@@ -44,7 +42,6 @@
       <el-tab-pane label="文件上传" name="upload" class="tab-content-left">
         <section class="left">
           <!-- 根据不同类型插入不同模块 -->
-          
 
           <div class="upload" v-show="select.model">
             <el-upload class="upload-demo" drag action multiple :before-upload="beforeAvatarUpload">
@@ -235,21 +232,24 @@ export default {
           inputType: 0
         },
         {
-          topType: 'status',
-          headName: '上传状态',
+          topType: "status",
+          headName: "上传状态",
           inputType: 3,
           statusOptions: [
             {
               id: 0,
-              name: '成功'
+              selectId: 0,
+              name: "成功"
             },
             {
               id: 1,
-              name: '失败'
+              selectId: 1,
+              name: "失败"
             },
             {
               id: 2,
-              name: 'skuId缺失'
+              selectId: 2,
+              name: "部分skuId错误"
             }
           ]
         },
@@ -262,7 +262,7 @@ export default {
           topType: "remark",
           headName: "备注",
           inputType: 0
-        },
+        }
       ];
       if (this.uploadFrom.pId) {
         arr.push({
@@ -627,9 +627,8 @@ export default {
     download() {
       console.log("download");
     },
-    remove(){
-      console.log('remove');
-      
+    remove() {
+      console.log("remove");
     }
   },
   created() {

@@ -11,7 +11,7 @@
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
   >
-    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段)-->
+    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) 99.根据条件自定义显示--> 
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column v-if="isShowNumber()" type="index" width="50" fixed></el-table-column>
     <template v-for="title  in tableTitle">
@@ -145,6 +145,8 @@ export default {
           self.options[item.topType] = item.statusOptions;
         }
       });
+      console.log(this.options);
+      
     },
     statusOptions: function(row, column, cellValue) {
       let topType = column.property;
