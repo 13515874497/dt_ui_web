@@ -56,7 +56,7 @@ import SearchReset from "@/components/ElementUi/SearchReset";
 import loading from "@/utils/loading";
 // import { findByListProduct } from "@/api";
 
-import Message from "@/utils/Message";
+import message from "@/utils/Message";
 import pUtils from "@/utils/PageUtils";
 import Pagination from "@/components/ElementUi/Pagination";
 import Table from "@/components/ElementUi/Table";
@@ -64,14 +64,12 @@ import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
 
 import requestAjax from "@/api/requestAjax";
-
+import PubSub from "pubsub-js";
 export default {
   data() {
     return {
       queryIds: [],
-
       tableTitle: [], //表头信息
-
       multipleSelection: [], //更新按钮数组收集
 
       data: {
@@ -114,12 +112,21 @@ export default {
     checkboxValue: function(value) {
       this.multipleSelection = value;
     },
-    up() {},
+
+  //修改
+    up() {      
+    },
+
     save() {},
+
     //删除历史记录查看
     async recording() {},
+
+
     //删除or 批量删除
-    async del() {},
+    async del() {        
+    },
+
     //点击查询获得table的值
     async search() {
       this.pagination(this.data);
@@ -200,7 +207,7 @@ export default {
   },
   async mounted() {
     this.tableTitle =
-      (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+    (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
   }
 };
