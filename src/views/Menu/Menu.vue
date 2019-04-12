@@ -618,6 +618,14 @@ export default {
         });
         return;
       }
+      if(checked.length >= 10){
+        Message({
+          showClose: true,
+          message: "引用字段过多",
+          type: "error"
+        });
+        return;
+      }
       let mId = this.editingMenu.data.menuId;
       let data = checked.map(item => {
         return {

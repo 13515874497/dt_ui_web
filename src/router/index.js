@@ -305,7 +305,7 @@ export default new Router({
           component:OP_Ad_CPR_week
         },
         {
-          path:'/index/op_ad_h1/:id/:name',//运营管理HL
+          path:'/index/op_ad_hl/:id/:name',//运营管理HL
           component:OP_Ad_HL
         },
         {

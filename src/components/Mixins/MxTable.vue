@@ -89,14 +89,25 @@ export default {
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
+      // console.log( this.queryIds)
     },
     //table按钮选择 传参
     checkboxValue: function(value) {
       this.multipleSelection = value;
+      console.log(this.multipleSelection)
     },
 
   //修改
     up() {      
+      const userSaveSelection = this.multipleSelection;
+      if (userSaveSelection.length <= 0) {
+        message.errorMessage("必须选中一条修改");
+        return;
+      } else if (userSaveSelection.length >= 2) {
+        message.errorMessage("修改只能选中一条");
+        return;
+      }
+
     },
 
     save() {},
@@ -106,8 +117,24 @@ export default {
 
 
     //删除or 批量删除
-    async del() {        
-    },
+    async del() {  
+      //获取表格中选中时的数据
+    const userDelSelection = this.multipleSelection;
+      if (userDelSelection.length === 0) {
+         message.errorMessage("必须选择一个或多个!");
+        return;
+      }else{
+        console.log(userDelSelection)
+      }
+      if(!confirm("确定要删除吗?")){
+           return;
+      }else{
+        var ids =this.multipleSelection.map(item => item.id).join();
+        console.log(ids)
+      }
+      },  
+  
+    
 
     //点击查询获得table的值
     async search() {

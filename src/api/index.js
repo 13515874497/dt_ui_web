@@ -236,6 +236,8 @@ export const getCprInfoWeek = (data) => ajax(BASE_URL + `/ad/getCprInfo`,data, '
 // http://127.0.0.1:9001/api/v1/ad/getHlInfo POST
 export const getHlInfo = (data) => ajax(BASE_URL + `/ad/getHlInfo`,data, 'POST')
 
+
+
 // 财务管理 => 结算报告
 //http://127.0.0.1:9001/api/v1/fsb/getFsbInfo post
 
@@ -255,6 +257,13 @@ export const getOrderRePortInfo = (data) => ajax(BASE_URL + `/fba/getOrderRePort
 //退货报告 http://127.0.0.1:9001/api/v1/fba/geRefundInfo post
 export const geRefundInfo = (data) => ajax(BASE_URL + `/fba/geRefundInfo`,data, 'POST')
 
+
+//结算报告 http://127.0.0.1:9001/api/v1/fsb/getFsbInfo post
+export const getFinalInfo= (data) => ajax(BASE_URL + `/fsb/getFsbInfo`,data, 'POST')
+
+// 业务报告(周) http://127.0.0.1:9001/api/v1/fba/getBusInfo
+
+export const getBusInfoWeek = (data) => ajax(BASE_URL + `/fba/getBusInfo`,data, 'POST')
 
 /**
  * 

@@ -155,7 +155,9 @@ export default {
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
       this.$emit("checkboxValue", val);
+      console.log(val)
     },
+
     initOptions() {
       let self = this;
       this.tableTitle.forEach(item => {
