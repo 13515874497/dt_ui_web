@@ -52,7 +52,7 @@
         :rules="item.required? rules._str:rules.str"
       >
         <el-input
-          v-model="data_model[item.topType]"
+          v-model.trim="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
         ></el-input>
@@ -145,9 +145,10 @@ export default {
         if (item.statusOptions && item.statusOptions.length) {
           self.$set(this.data_model, item.topType, item.statusOptions[0].id);
         } else {
-          self.$set(this.data_model, item.topType, "");
+          self.$set(this.data_model, item.topType, null);
         }
       });
+      this.data_model_cache = { ...this.data_model };
       console.log(this.data_model);
     },
     getModifyData() {
@@ -172,10 +173,7 @@ export default {
       let errCount = 0;
       for (let key in promise[1]) {
         errCount++;
-        if (
-          this.formData &&
-          this.data_model[key] === this.data_model_cache[key]
-        ) {
+        if (this.data_model[key] === this.data_model_cache[key]) {
           errCount--;
         }
       }
@@ -183,23 +181,18 @@ export default {
     },
     passData(isPass) {
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
-      if (!this.formData) {
-        this.$emit("passData", [isPass, this.data_model]);
-      } else {
-        this.$emit("passData", [isPass, this.data_model, this.getModifyData()]);
-      }
+      this.$emit("passData", [isPass, this.data_model, this.getModifyData()]);
     },
     handlerValidate(key, valid, errMsg) {
-      if (
-        this.formData &&
-        this.data_model[key] === this.data_model_cache[key]
-      ) {
+      if (this.data_model[key] === this.data_model_cache[key]) {
         this.$refs["data_model"].clearValidate([key]);
       }
     }
   },
   created() {
     this.initData_model();
+    console.log(this.formItems);
+    
   },
   mounted() {}
 };

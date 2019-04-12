@@ -92,6 +92,7 @@
               </el-steps>
             </li>
           </ul>
+
           <el-button
             class="uploadBtn"
             v-show="readyFileList.length"
@@ -102,8 +103,20 @@
             size="mini"
             :disabled="uploadBtn.disabled"
           >
+            <i class="el-icon-upload el-icon--left"></i>
             确认上传
-            <i class="el-icon-upload el-icon--right"></i>
+          </el-button>
+          <el-button
+            class="removeBtn"
+            v-show="readyFileList.length"
+            round
+            @click="removeReadyFile_all"
+            type="danger"
+            plain
+            size="mini"
+          >
+            <i class="el-icon-delete el-icon--left"></i>
+            删除待上传文件
           </el-button>
         </section>
       </el-tab-pane>
@@ -219,7 +232,7 @@ export default {
         businessTime: this.businessTime || "" //业务报告日期
       };
     },
-    //当前页面那些是可传的后缀
+    //当前页面哪些是可传的后缀
     validSuffix() {
       let arr = [];
       for (let key in this.suffix) {
@@ -406,8 +419,13 @@ export default {
     },
     //删除所有待上传的文件
     removeReadyFile_all() {
-      this.readyFileList.length = 0;
-      this.uploadStatus.length = 0;
+      console.log(11);
+      this.readyFileList = [];
+      this.uploadStatus = [];
+      // this.readyFileList.length = 0;
+      // this.uploadStatus.length = 0;
+      console.log(this.readyFileList);
+      
     },
     //删除待上传文件
     removeReadyFile(index) {
@@ -486,7 +504,7 @@ export default {
               if (resAdd.code === 200) {
                 resAdd.data.forEach((item, index) => {
                   let step = self.uploadStatus[index].step;
-                    let progress = self.uploadStatus[index].progress;
+                  let progress = self.uploadStatus[index].progress;
                   if (item.code === 200) {
                     let data = item.data;
                     switch (data.status) {
@@ -745,8 +763,10 @@ export default {
         margin-top: 2px;
       }
     }
-    .uploadBtn {
+    .uploadBtn,
+    .removeBtn {
       float: right;
+      margin-left: 10px;
     }
   }
 }

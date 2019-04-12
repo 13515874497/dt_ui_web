@@ -133,7 +133,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUserSubmit('editUserForm')">确 定</el-button>
+        <el-button type="primary" @click="passedData_update">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -709,6 +709,9 @@ export default {
           type: "error"
         });
       }
+    },
+    async passedData_update(){
+
     }
   }
 };

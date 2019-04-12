@@ -37,13 +37,13 @@
     </section>
     <!-- 新增 -->
     <section>
-      <el-dialog title="新增" :visible="add.visible">
+      <el-dialog title="新增" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
         <Form :formItems="tableTitle"  @passData="passData_add"></Form>
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
-          <el-button type="primary" @click="add">确 定</el-button>
+          <el-button type="primary" @click="send_add">确 定</el-button>
         </div>
       </el-dialog>
     </section>
@@ -112,21 +112,6 @@ export default {
     checkboxValue: function(value) {
       this.multipleSelection = value;
     },
-
-  //修改
-    up() {      
-    },
-
-    save() {},
-
-    //删除历史记录查看
-    async recording() {},
-
-
-    //删除or 批量删除
-    async del() {        
-    },
-
     //点击查询获得table的值
     async search() {
       this.pagination(this.data);
@@ -160,7 +145,7 @@ export default {
     passData_add(){
 
     },
-    add(){
+    send_add(){
 
     },
     initOperateBtn() {
