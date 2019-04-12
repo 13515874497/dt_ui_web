@@ -1,9 +1,7 @@
 <template>
-  <div id="data">
-    <!-- <el-button icon="el-iconfont-miao"></el-button> -->
-    <!-- <svg>  <use xlink:href="#el-iconfont-miao"></use></svg> -->
-    <!--多选输入框选择输入-->
-    <div id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
+  <main>
+    <!--表格上方查询条件-->
+    <section id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="20">
         <el-col :span="4">
           <Query2 :tableTitle="tableTitle" @getValue="getValue"></Query2>
@@ -21,9 +19,9 @@
           <SearchReset @search="search" @reset="reset"></SearchReset>
         </el-col>
       </el-row>
-    </div>
-    <!--table表格显示-->
-    <div id="dataTable">
+    </section>
+    <!--table表格-->
+    <section>
       <Table
         :tableData="data.tableData"
         :tableTitle="tableTitle"
@@ -31,13 +29,25 @@
         v-if="tableTitle.length"
       />
       <div v-if="tableTitle.length" class="control">
-        <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
+        <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
+        <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
         <Pagination :data="data" v-on:pageData="pagination"/>
       </div>
-    </div>
-    <!--隐藏新增用户记录from表单-->
-  </div>
+    </section>
+    <!-- 新增 -->
+    <section>
+      <el-dialog title="新增" :visible="add.visible">
+        <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
+        <Form :formItems="tableTitle"  @passData="passData_add"></Form>
+
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="add.visible = false">取 消</el-button>
+          <el-button type="primary" @click="add">确 定</el-button>
+        </div>
+      </el-dialog>
+    </section>
+  </main>
 </template>
 <script>
 import Query2 from "@/components/ElementUi/Query2";
@@ -51,6 +61,8 @@ import pUtils from "@/utils/PageUtils";
 import Pagination from "@/components/ElementUi/Pagination";
 import Table from "@/components/ElementUi/Table";
 import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
+import OperateBtn from "@/components/ElementUi/OperateBtn";
+
 import requestAjax from "@/api/requestAjax";
 
 export default {
@@ -69,13 +81,19 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-      showQuery: true
+      showQuery: true,
+      formItems:[],
+      //
+      add: {
+        visible: false
+      }
     };
   },
   components: {
     Pagination,
     Table,
     AddDelUpButton,
+    OperateBtn,
     Query2,
     InputQuery,
     SearchReset
@@ -126,7 +144,59 @@ export default {
       //触发下表头变更 让子组件初始化
       this.tableTitle = [...this.tableTitle];
       this.queryIds = [];
+    },
+    
+    openDialog_add() {
+      console.log("新增");
+      this.add.visible = true;
+    },
+    passData_add(){
+
+    },
+    add(){
+
+    },
+    initOperateBtn() {
+      let self = this;
+      this.operateList = [
+        //对已上传的文件进行操作的按钮列表
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "新增",
+          fn() {
+            self.openDialog_add();
+          }
+        },
+        {
+          type: "success",
+          icon: "el-icon-edit",
+          label: "修改",
+          fn() {
+            self.openDialog_update();
+          }
+        },
+        {
+          type: "danger",
+          icon: "el-icon-delete",
+          label: "删除",
+          fn() {
+            self.openDialog_remove();
+          }
+        },
+        {
+          type: "warning",
+          icon: "",
+          label: "删除记录",
+          fn() {
+            self.openDialog_removeRecord();
+          }
+        }
+      ];
     }
+  },
+  created() {
+    this.initOperateBtn();
   },
   async mounted() {
     this.tableTitle =
@@ -137,7 +207,13 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
+#printCheck {
+  width: 100%;
+  // height: 30px;
+  position: relative;
+  margin-bottom: 25px;
+}
 .control {
   margin-top: 20px;
 }

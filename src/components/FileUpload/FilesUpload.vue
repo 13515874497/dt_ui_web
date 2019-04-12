@@ -113,9 +113,14 @@
           :tableTitle="tableTitle"
           v-if="tableTitle.length"
         >
-        
           <template v-slot:operate="scope">
-            <el-button @click="download(scope)" v-if="scope.childData.row.status == 2" size="mini" type="primary" icon="el-icon-download">下载</el-button>
+            <el-button
+              @click="download(scope)"
+              v-if="scope.childData.row.status == 2"
+              size="mini"
+              type="primary"
+              icon="el-icon-download"
+            >下载</el-button>
             <el-button @click="remove(scope)" size="mini" type="danger" icon="el-icon-delete">删除</el-button>
           </template>
         </Table>
@@ -133,7 +138,8 @@ import {
   findByListRegion,
   repGetShopName,
   BASEURL,
-  repAddUploadInfoMysql
+  repAddUploadInfoMysql,
+  repDelUploadInfo
 } from "@/api";
 import message from "@/utils/Message";
 import checkUtils from "@/utils/CheckUtils";
@@ -279,6 +285,7 @@ export default {
       if (this.isContinent) {
         return;
       } else {
+        this.select.model = null;
         let res = await repGetShopIdSiteInfo(val);
         this.select.render = res.data.map(item => {
           return {
@@ -287,6 +294,11 @@ export default {
           };
         });
       }
+    },
+    "select.model"() {
+      this.removeReadyFile_all();
+      this.existedFiles.currentPage = 1;
+      this.getExistedFiles();
     },
     showNext(val) {
       console.log(val);
@@ -326,7 +338,7 @@ export default {
       }).name;
     },
     //判断slect渲染洲还是站点 如果是洲则直接请求
-    async getSlectRender() {
+    async getSelectRender() {
       if (this.continent.includes(this.page.id)) {
         this.isContinent = true;
         let res = await findByListRegion({});
@@ -391,6 +403,11 @@ export default {
         });
         this.uploadBtn.disabled = false;
       }
+    },
+    //删除所有待上传的文件
+    removeReadyFile_all() {
+      this.readyFileList.length = 0;
+      this.uploadStatus.length = 0;
     },
     //删除待上传文件
     removeReadyFile(index) {
@@ -469,40 +486,44 @@ export default {
               if (resAdd.code === 200) {
                 resAdd.data.forEach((item, index) => {
                   let step = self.uploadStatus[index].step;
-                  let progress = self.uploadStatus[index].progress;
-                  let data = item.data;
-                  switch (data.status) {
-                    case 0:
-                    case 2:
-                      message.messageNotSuccess(data.remark, data.name);
-                      step.dealWith = "数据处理成功";
-                      step.dealWith_status = "success";
-                      step.count++;
-                      break;
-                    case 1:
-                      message.messageNotError(data.remark, data.name);
-                      step.dealWith = "数据处理失败";
-                      step.dealWith_status = "error";
-                      progress.status = "exception";
-                      break;
+                    let progress = self.uploadStatus[index].progress;
+                  if (item.code === 200) {
+                    let data = item.data;
+                    switch (data.status) {
+                      case 0:
+                      case 2:
+                        message.messageNotSuccess(data.remark, data.name);
+                        step.dealWith = "数据处理成功";
+                        step.dealWith_status = "success";
+                        step.count++;
+                        break;
+                      case 1:
+                        message.messageNotError(data.remark, data.name);
+                        step.dealWith = "数据处理失败";
+                        step.dealWith_status = "error";
+                        progress.status = "exception";
+                        break;
+                    }
+                  } else if (item.code === -1) {
+                    let msgArr = item.msg.split("*");
+                    let msg = "";
+                    msg += msgArr[0] + "\n";
+                    if (msgArr[1]) {
+                      msgArr[1] = JSON.parse(msgArr[1]);
+                      for (let key in msgArr[1]) {
+                        let value = msgArr[1][key];
+                        msg += key + ":\n";
+                        for (let i = 0; i < value.length; i++) {
+                          msg += value[i] + "\n";
+                        }
+                      }
+                    }
+                    message.messageNotError(msg);
+                    step.dealWith = "数据处理失败";
+                    step.dealWith_status = "error";
+                    progress.status = "exception";
                   }
                 });
-              } else if (resAdd.code === -1) {
-                let msgArr = resAdd.msg.split("*");
-                let msg = "";
-                msg += msgArr[0] + "\n";
-                if (msgArr[1]) {
-                  msgArr[1] = JSON.parse(msgArr[1]);
-                  for (let key in msgArr[1]) {
-                    let value = msgArr[1][key];
-                    msg += key + ":\n";
-                    for (let i = 0; i < value.length; i++) {
-                      msg += value[i] + "\n";
-                    }
-                  }
-                }
-                message.messageNotError(msg);
-                self.setUploadStatus("数据处理失败", 2, "error");
               }
             });
           }
@@ -555,16 +576,25 @@ export default {
     //进度条渲染
     progressBar(res) {
       let self = this;
-      console.log(this);
-      console.log(this.uploadStatus);
-
+      let step = this.uploadStatus[this.curr_progress].step;
+      let progress = this.uploadStatus[this.curr_progress].progress;
+      console.log(res);
       switch (res.msg) {
+        case "存入数据中":
+          step.dealWith = "存入数据中";
+          step.dealWith_status = "finish";
+          break;
         case "success":
-          this.uploadStatus[this.curr_progress++].progress.status = "success";
+          progress.status = "success";
+          step.dealWith_status = "success";
+          this.curr_progress++;
           break;
         case "error":
-          this.uploadStatus[this.curr_progress++].progress.status = "error";
+          progress.status = "error";
+          step.dealWith_status = "error";
+          this.curr_progress++;
           break;
+
         default:
           if (res.msg.indexOf("[{") > -1) {
             let data = JSON.parse(res.msg);
@@ -584,14 +614,6 @@ export default {
     //获取已上传的文件列表
     async getExistedFiles() {
       this.pagination(this.existedFiles);
-
-      // console.log(this.uploadFrom);
-      // console.log();
-      // let requestData = { ...this.uploadFrom, ...this.existedFiles };
-      // delete requestData.tableData;
-      // let res = await repGetUserUploadInfo(requestData);
-      // pUtils.pageInfo(res, this.existedFiles);
-      // console.log(res);
     },
     //根据分页参数请求数据
     async pagination(data) {
@@ -629,14 +651,18 @@ export default {
       let row = scope.childData.row;
       let config = {
         responseType: "blob"
-      }
-      let path = row.filePath + row.uuidName
-       axios
-        .post(BASEURL + "/upload/downloadCommonFile", {filePath:path}, config)
+      };
+      let path = row.filePath + row.uuidName;
+      axios
+        .post(
+          BASEURL + "/upload/downloadCommonFile",
+          { filePath: path },
+          config
+        )
         .then(res => {
           if (res.status === 200) {
             console.log(res);
-            
+
             this.downloadFile(res, row.name);
           }
         });
@@ -656,14 +682,23 @@ export default {
       link.click();
     },
     //删除文件
-    remove() {
+    async remove(scope) {
       let row = scope.childData.row;
-      console.log("remove");
+      message
+        .messageBox_confirm("是否确认删除")
+        .then(() => {
+          repDelUploadInfo(row.id).then(res => {
+            if (res.code === 200) {
+              this.getExistedFiles();
+            }
+          });
+        })
+        .catch(() => {});
     }
   },
   created() {
     this.init();
-    this.getSlectRender();
+    this.getSelectRender();
     this.getRadioList();
     this.initOperateBtn();
   },

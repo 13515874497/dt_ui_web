@@ -678,6 +678,8 @@ export default {
       let data = $event[1];
       let modifyData = $event[2];
       //新增的字段数据
+      console.log(isPass,data,modifyData);
+      
       this.add_field = {
         data,
         isPass
