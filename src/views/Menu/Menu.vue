@@ -133,7 +133,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="editUserSubmit('editUserForm')">确 定</el-button>
+        <el-button type="primary" @click="passedData_update">确 定</el-button>
       </div>
     </el-dialog>
 
@@ -686,6 +686,8 @@ export default {
       let data = $event[1];
       let modifyData = $event[2];
       //新增的字段数据
+      console.log(isPass,data,modifyData);
+      
       this.add_field = {
         data,
         isPass
@@ -715,6 +717,9 @@ export default {
           type: "error"
         });
       }
+    },
+    async passedData_update(){
+
     }
   }
 };

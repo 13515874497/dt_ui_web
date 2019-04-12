@@ -25,6 +25,7 @@ export default {
 
 <style scoped>
 .operateBtn{
+  display: inline-block;
   margin-top: 10px;
 }
 </style>

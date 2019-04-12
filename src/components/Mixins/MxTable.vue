@@ -1,9 +1,7 @@
 <template>
-  <div id="data">
-    <!-- <el-button icon="el-iconfont-miao"></el-button> -->
-    <!-- <svg>  <use xlink:href="#el-iconfont-miao"></use></svg> -->
-    <!--多选输入框选择输入-->
-    <div id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
+  <main>
+    <!--表格上方查询条件-->
+    <section id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="20">
         <el-col :span="4">
           <Query2 :tableTitle="tableTitle" @getValue="getValue"></Query2>
@@ -21,9 +19,9 @@
           <SearchReset @search="search" @reset="reset"></SearchReset>
         </el-col>
       </el-row>
-    </div>
-    <!--table表格显示-->
-    <div id="dataTable">
+    </section>
+    <!--table表格-->
+    <section>
       <Table
         :tableData="data.tableData"
         :tableTitle="tableTitle"
@@ -31,13 +29,25 @@
         v-if="tableTitle.length"
       />
       <div v-if="tableTitle.length" class="control">
-        <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/>
+        <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
+        <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
         <Pagination :data="data" v-on:pageData="pagination"/>
       </div>
-    </div>
-    <!--隐藏新增用户记录from表单-->
-  </div>
+    </section>
+    <!-- 新增 -->
+    <section>
+      <el-dialog title="新增" :visible.sync="add.visible">
+        <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
+        <Form :formItems="tableTitle"  @passData="passData_add"></Form>
+
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="add.visible = false">取 消</el-button>
+          <el-button type="primary" @click="send_add">确 定</el-button>
+        </div>
+      </el-dialog>
+    </section>
+  </main>
 </template>
 <script>
 import Query2 from "@/components/ElementUi/Query2";
@@ -51,6 +61,8 @@ import pUtils from "@/utils/PageUtils";
 import Pagination from "@/components/ElementUi/Pagination";
 import Table from "@/components/ElementUi/Table";
 import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
+import OperateBtn from "@/components/ElementUi/OperateBtn";
+
 import requestAjax from "@/api/requestAjax";
 import PubSub from "pubsub-js";
 export default {
@@ -67,13 +79,19 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-      showQuery: true
+      showQuery: true,
+      formItems:[],
+      //
+      add: {
+        visible: false
+      }
     };
   },
   components: {
     Pagination,
     Table,
     AddDelUpButton,
+    OperateBtn,
     Query2,
     InputQuery,
     SearchReset
@@ -96,46 +114,6 @@ export default {
       this.multipleSelection = value;
       console.log(this.multipleSelection)
     },
-
-  //修改
-    up() {      
-      const userSaveSelection = this.multipleSelection;
-      if (userSaveSelection.length <= 0) {
-        message.errorMessage("必须选中一条修改");
-        return;
-      } else if (userSaveSelection.length >= 2) {
-        message.errorMessage("修改只能选中一条");
-        return;
-      }
-
-    },
-
-    save() {},
-
-    //删除历史记录查看
-    async recording() {},
-
-
-    //删除or 批量删除
-    async del() {  
-      //获取表格中选中时的数据
-    const userDelSelection = this.multipleSelection;
-      if (userDelSelection.length === 0) {
-         message.errorMessage("必须选择一个或多个!");
-        return;
-      }else{
-        console.log(userDelSelection)
-      }
-      if(!confirm("确定要删除吗?")){
-           return;
-      }else{
-        var ids =this.multipleSelection.map(item => item.id).join();
-        console.log(ids)
-      }
-      },  
-  
-    
-
     //点击查询获得table的值
     async search() {
       this.pagination(this.data);
@@ -161,6 +139,58 @@ export default {
       this.tableTitle = [...this.tableTitle];
       this.queryIds = [];
     },
+    
+    openDialog_add() {
+      console.log("新增");
+      this.add.visible = true;
+    },
+    passData_add(){
+
+    },
+    send_add(){
+
+    },
+    initOperateBtn() {
+      let self = this;
+      this.operateList = [
+        //对已上传的文件进行操作的按钮列表
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "新增",
+          fn() {
+            self.openDialog_add();
+          }
+        },
+        {
+          type: "success",
+          icon: "el-icon-edit",
+          label: "修改",
+          fn() {
+            self.openDialog_update();
+          }
+        },
+        {
+          type: "danger",
+          icon: "el-icon-delete",
+          label: "删除",
+          fn() {
+            self.openDialog_remove();
+          }
+        },
+        {
+          type: "warning",
+          icon: "",
+          label: "删除记录",
+          fn() {
+            self.openDialog_removeRecord();
+          }
+        }
+      ];
+    }
+  },
+  created() {
+    this.initOperateBtn();
   },
   async mounted() {
     this.tableTitle =
@@ -171,7 +201,13 @@ export default {
 </script>
 
 
-<style lang="scss">
+<style lang="scss" scoped>
+#printCheck {
+  width: 100%;
+  // height: 30px;
+  position: relative;
+  margin-bottom: 25px;
+}
 .control {
   margin-top: 20px;
 }

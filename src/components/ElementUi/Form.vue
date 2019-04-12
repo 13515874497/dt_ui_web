@@ -52,7 +52,7 @@
         :rules="item.required? rules._str:rules.str"
       >
         <el-input
-          v-model="data_model[item.topType]"
+          v-model.trim="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
         ></el-input>
@@ -70,21 +70,6 @@
           :disabled="item.disabled"
         ></el-input>
       </el-form-item>
-
-      <!-- 
-      <el-form-item
-        v-else-if="item.inputType == 'input-switch'"
-        :label="item.headName"
-        :prop="item.topType"
-        :rules="item.required? rules._boolean : rules.boolean"
-      >
-        <el-switch
-          v-model="data_model[item.topType]"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          :disabled="item.disabled"
-        ></el-switch>
-      </el-form-item>-->
     </template>
   </el-form>
 </template>
@@ -93,19 +78,38 @@
 import rules from "@/utils/rules.js";
 export default {
   props: {
-    //模板
+    // 模板
     // formItems: [
-    //     {
-    //         headName: '姓名',//*
-    //         topType: 'name',//*
-    //         inputType: 0,//*
-    //         required: true, //是否必填
-    //         placeholder: '0:String, 1:int, 2:Data, 3,statusOption, 4:timeLine', //占位符
-    //         disabled: true
-    //     }
+    //   {
+    //     headName: "姓名", //*
+    //     topType: "name", //*
+    //     inputType: 0, //*
+    //     required: true, //是否必填
+    //     statusOptions: [
+    //       {
+    //         id: false,
+    //         name: "否"
+    //       },
+    //       {
+    //         id: true,
+    //         name: "是"
+    //       },
+
+    //       {
+    //           id: 0,
+    //           name: "字符型"
+    //         },
+    //         {
+    //           id: 1,
+    //           name: "数值型"
+    //         }
+    //     ],
+    //     placeholder: "0:String, 1:int, 2:Data, 3,statusOption, 4:timeLine", //占位符
+    //     disabled: true
+    //   }
     // ],
     formItems: Array,
-    formData: Object
+    formData: Object //有传这个说明是修改
   },
   data() {
     return {
@@ -141,9 +145,10 @@ export default {
         if (item.statusOptions && item.statusOptions.length) {
           self.$set(this.data_model, item.topType, item.statusOptions[0].id);
         } else {
-          self.$set(this.data_model, item.topType, "");
+          self.$set(this.data_model, item.topType, null);
         }
       });
+      this.data_model_cache = { ...this.data_model };
       console.log(this.data_model);
     },
     getModifyData() {
@@ -176,7 +181,7 @@ export default {
     },
     passData(isPass) {
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
-      this.$emit("passData", [isPass, this.data_model,this.getModifyData()]);
+      this.$emit("passData", [isPass, this.data_model, this.getModifyData()]);
     },
     handlerValidate(key, valid, errMsg) {
       if (this.data_model[key] === this.data_model_cache[key]) {
@@ -186,6 +191,8 @@ export default {
   },
   created() {
     this.initData_model();
+    console.log(this.formItems);
+    
   },
   mounted() {}
 };

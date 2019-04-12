@@ -1,24 +1,33 @@
 <template>
-  <div style="margin-left: 150px">
-    <el-tag><span>{{this.$route.params.name}}</span></el-tag>
-    <!--订单类型选择 -->
-    <PaymentType/>
+  <div class="shopUpload">
+    <FilesUpload :pId="pId" :showNext="showNext">
+      <template slot="slotType">
+        <payOption @pIdChange="pIdChange"></payOption>
+      </template>
+    </FilesUpload>
   </div>
 </template>
 <script>
-  import PaymentType from '../../components/FileUpload/PaymentType'
-
-
-  export default {
-    data () {
-      return {}
-    },
-    components: {
-      PaymentType
+import FilesUpload from "@/components/FileUpload/FilesUpload";
+import PayOption from "@/components/FileUpload/payOption";
+export default {
+  data() {
+    return {
+      pId: '',
+      showNext:false
+    };
+  },
+  components: {
+    FilesUpload,
+    PayOption
+  },
+  methods: {
+    pIdChange(val){
+      this.pId = val;
+      this.showNext = true;
     }
   }
+};
 </script>
 <style scoped>
 </style>
-
-

@@ -3,7 +3,7 @@
     <span class="custom-tree-node" slot-scope="{ node, data }">
       <span>{{ node.label}}</span>
       <span>
-        <el-button v-if="data.isParent" type="text" size="mini" @click="() => add(data)">
+        <el-button v-if="data.parentNodeIs" type="text" size="mini" @click="() => add(data)">
           <i class="el-icon-plus"></i>
         </el-button>
         <el-button type="text" size="mini" @click="() => update(data)">
@@ -39,18 +39,20 @@ export default {
     }
   },
   components: {
-      AddDelUpBtn
+    AddDelUpBtn
   },
   computed: {
-      data_tree(){
-          return  [...this.data]
-      }
+    data_tree() {
+      return [...this.data];
+    }
   },
   data() {
     return {};
   },
   methods: {
     add(data) {
+      console.log(data);
+      
       this.$emit("add", [data]);
     },
     updata(data) {
@@ -59,11 +61,11 @@ export default {
     remove(data) {
       this.$emit("remove", [data]);
     },
-    init() {
-    }
+    init() {}
   },
-  mounted(){
-      
+  mounted() {
+    console.log(this.data_tree);
+    
   }
 };
 </script>
@@ -78,6 +80,6 @@ export default {
   padding-right: 8px;
 }
 .tree {
-    width: 300px;
+  width: 300px;
 }
 </style>

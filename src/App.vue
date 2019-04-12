@@ -39,12 +39,7 @@ body .el-table--enable-row-hover .el-table__body tr:hover > td {
 }
 
 //表格上方条件筛选行
-#printCheck {
-  width: 100%;
-  // height: 30px;
-  position: relative;
-  margin-bottom: 25px;
-}
+
 .el-notification {
   word-break: break-all;
   word-wrap: break-word;

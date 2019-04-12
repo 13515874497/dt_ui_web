@@ -597,10 +597,10 @@ export const repDelHeadMenu = ({
 //查询用户记录  查询已上传的文件信息
 export const repGetUserUploadInfo = (data) => ajax(BASE_URL + '/upload/getInfo', data, 'POST')
 
-//通过id 删除用户记录信息
+//通过id 删除用户记录信息 
 export const repDelUploadInfo = (id) => ajax(BASE_URL + `/upload/delInfo`, {
   id
-})
+},'GET',[true,true])
 
 //上传成功后 发送数据给后台写入数据库
 export const repAddUploadInfoMysql = ({
