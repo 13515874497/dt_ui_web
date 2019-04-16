@@ -108,11 +108,11 @@ import Star_level from '../views/Storage/Star_level'//星级
 
 import UserModifiesPwd from '../views/ModifiesPassword/UserModifiesPwd.vue'  //修改密码
 
-import exportDeclaration from '../views/Template/exportDeclaration.vue'  //报关单
-import packingList from '../views/Template/packingList.vue'  //装箱单
-import invoice from '../views/Template/invoice.vue'  //装箱单
-import declaration from '../views/Template/declaration.vue'  //申报要素
-import salesConfirmation from '../views/Template/salesConfirmation.vue'  //申报要素
+import exportDeclaration from '../views/Template/ExportDeclaration.vue'  //报关单
+import packingList from '../views/Template/PackingList.vue'  //装箱单
+import invoice from '../views/Template/Invoice.vue'  //装箱单
+import declaration from '../views/Template/Declaration.vue'  //申报要素
+import salesConfirmation from '../views/Template/SalesConfirmation.vue'  //申报要素
 Vue.use(Router)
 
 

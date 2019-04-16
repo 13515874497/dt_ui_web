@@ -46,7 +46,7 @@
             <span>境内自主品牌</span>
         </div>
 
-          <button @click="printContent">dayin</button>
+        <button @click="printContent" id="printBtn">dayin</button>
     </div>
 </template>
 <script>
@@ -57,6 +57,7 @@ export default {
   methods: {
     // 打印
     printContent(e) {
+      document.getElementById('printBtn').style.display="none";
       let subOutputRankPrint = document.getElementById("declarationBox");
       // console.log(subOutputRankPrint.innerHTML);
       let newContent = subOutputRankPrint.innerHTML;
@@ -78,13 +79,18 @@ export default {
      text-align: center;
 }
 .deContainer{
-    width:100%;
-   
+    width:100%;  
     display: flex;
 }
 .deContainer span{
     width:50%;
     text-align: left;
+}
+</style>
+<style media="print">
+@page {
+  size: auto A4 landscape;
+  margin: 5mm 8mm;
 }
 </style>
 
