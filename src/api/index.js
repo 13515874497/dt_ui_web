@@ -265,6 +265,19 @@ export const getFinalInfo= (data) => ajax(BASE_URL + `/fsb/getFsbInfo`,data, 'PO
 
 export const getBusInfoWeek = (data) => ajax(BASE_URL + `/fba/getBusInfo`,data, 'POST')
 
+// 运营管理=> 亚马逊=>库存
+
+// 接收库存 http://127.0.0.1:9001/api/v1/fba/getReceiveInfo  post
+export const getReceiveInfo = (data) => ajax(BASE_URL + `/fba/getReceiveInfo`,data, 'POST')
+
+//FBA遗弃 http://127.0.0.1:9002/api/v1/fba/getAbandonInfo post
+export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`,data, 'POST')
+
+// 运营管理=> 亚马逊=>通知单
+
+//出货通知单 http://127.0.0.1:9002/api/v1/fba/getNoticeInfo post
+// export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`,data, 'POST')
+
 /**
  * 
  * 人事管理 => 基础档案

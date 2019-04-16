@@ -121,7 +121,7 @@ export default {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
-      options: {} //存放各种类型的状态
+      options: {} ,//存放各种类型的状态
     };
   },
   props: {

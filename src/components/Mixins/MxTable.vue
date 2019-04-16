@@ -71,7 +71,6 @@ export default {
       queryIds: [],
       tableTitle: [], //表头信息
       multipleSelection: [], //更新按钮数组收集
-
       data: {
         tableData: [], //表信息
         currentPage: 1, //当前页
