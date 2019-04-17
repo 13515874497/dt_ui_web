@@ -498,10 +498,12 @@ export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + `/site/getByShopIdL
 
 //币别分页 repGetCurrencyInfo
 export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
+
 //汇率分页 repGetRate
 export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', data, 'POST')
 
-
+//新增汇率接口 http://127.0.0.1:9002/api/v1/rate/saveRate		POST
+export const saveRate = (data) => ajax(BASE_URL + '/rate/saveRate', data, 'POST')
 
 /**
  * 

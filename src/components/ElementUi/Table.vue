@@ -123,11 +123,7 @@ export default {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
-<<<<<<< HEAD
-      options: {}, //存放各种类型的状态
-=======
       options: {} ,//存放各种类型的状态
->>>>>>> 1c1853d2cf3618dddc9c7fd3fa650d28a335002c
     };
   },
   props: {
