@@ -123,7 +123,11 @@ export default {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
+<<<<<<< HEAD
       options: {}, //存放各种类型的状态
+=======
+      options: {} ,//存放各种类型的状态
+>>>>>>> 1c1853d2cf3618dddc9c7fd3fa650d28a335002c
     };
   },
   props: {
@@ -158,7 +162,9 @@ export default {
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
       this.$emit("checkboxValue", val);
+      console.log(val)
     },
+
     initOptions() {
       let self = this;
       this.tableTitle.forEach(item => {

@@ -1,5 +1,5 @@
 <template>
-  <!--接收库存-->
+  <!--期末库存-->
   <div>
     <!--table表格显示-->
     <div id="roleTable">

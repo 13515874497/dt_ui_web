@@ -155,12 +155,17 @@ export default {
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
+      // console.log( this.queryIds)
     },
     //table按钮选择 传参
     checkboxValue: function(value) {
       this.multipleSelection = value;
+<<<<<<< HEAD
       console.log(value);
       
+=======
+      console.log(this.multipleSelection)
+>>>>>>> 1c1853d2cf3618dddc9c7fd3fa650d28a335002c
     },
     //点击查询获得table的值
     async search() {
