@@ -23,6 +23,9 @@ import OrderUpload from '../views/Upload/OrderUploadFile'//订单报告
 import Receive from '../views/Upload/ReceiveUploadFile'//接收库存
 import Return from '../views/Upload/ReturnUploadFile'//退货报告
 import StrUpload from '../views/Upload/StrUploadFile'//STR
+import salesAmazonFbaMonthWarehousefee from '../views/Upload/salesAmazonFbaMonthWarehousefee'//月度仓储费
+import salesAmazonFbaLongWarehousefee from '../views/Upload/salesAmazonFbaLongWarehousefee'//长期仓储费
+import salesAmazonFbaHandlingfee from '../views/Upload/salesAmazonFbaHandlingfee'//订单处理费
 import Terminal from '../views/Upload/TerminalUploadFile'//期末库存
 import Category from '../views/Basic_Data/Public_Data/Category'//产品类目
 import Exchange from '../views/Basic_Data/Public_Data/Exchange-rate'//汇率
@@ -227,6 +230,18 @@ export default new Router({
         {
           path:'/index/str_upload/:id/:name',
           component:StrUpload
+        },
+        {
+          path:'/index/sales_amazon_fba_month_warehousefee/:id/:name',
+          component:salesAmazonFbaMonthWarehousefee
+        },
+        {
+          path:'/index/sales_amazon_fba_long_warehousefee/:id/:name',
+          component:salesAmazonFbaLongWarehousefee
+        },
+        {
+          path:'/index/sales_amazon_fba_handlingfee/:id/:name',
+          component:salesAmazonFbaHandlingfee
         },
         {
           path:'/index/terminal/:id/:name',//期末库存
@@ -605,6 +620,7 @@ export default new Router({
           path: '/index/financial_sales_amazon_balance/:id/:name',
           component: SettlementReport     //结算报告
         }, 
+        //
       ]
     },
     {
