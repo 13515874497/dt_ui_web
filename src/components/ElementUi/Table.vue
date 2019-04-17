@@ -10,6 +10,8 @@
     @header-dragend="handleHeaderDragend"
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
+    class="content-table"
+    v-loading="loading"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) 90.带有超链接的-->
     <el-table-column type="selection" width="55"></el-table-column>
@@ -121,12 +123,13 @@ export default {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
-      options: {} //存放各种类型的状态
+      options: {}, //存放各种类型的状态
     };
   },
   props: {
     tableData: Array,
-    tableTitle: Array
+    tableTitle: Array,
+    loading:Boolean
   },
   methods: {
     setTheadClassName() {
@@ -267,6 +270,7 @@ export default {
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
+    
   },
 
   mounted() {

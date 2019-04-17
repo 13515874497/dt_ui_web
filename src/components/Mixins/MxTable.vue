@@ -27,6 +27,7 @@
         :tableTitle="tableTitle"
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
+        :loading="loading"
       />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
@@ -37,13 +38,26 @@
     </section>
     <!-- 新增 -->
     <section>
-      <el-dialog title="新增" :visible.sync="add.visible">
+      <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form :formItems="tableTitle"  @passData="passData_add"></Form>
+        <Form :formItems="formItems" @passData="passData_add" :rule="rule"></Form>
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
           <el-button type="primary" @click="send_add">确 定</el-button>
+        </div>
+      </el-dialog>
+    </section>
+
+    <!-- 修改 -->
+    <section>
+      <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
+        <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
+        <Form :formItems="formItems" :formData="update.formData" @passData="passData_update"></Form>
+
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="update.visible = false">取 消</el-button>
+          <el-button type="primary" @click="send_update">确 定</el-button>
         </div>
       </el-dialog>
     </section>
@@ -53,7 +67,7 @@
 import Query2 from "@/components/ElementUi/Query2";
 import InputQuery from "@/components/ElementUi/InputQuery";
 import SearchReset from "@/components/ElementUi/SearchReset";
-import loading from "@/utils/loading";
+// import loading from "@/utils/loading";
 // import { findByListProduct } from "@/api";
 
 import message from "@/utils/Message";
@@ -68,10 +82,14 @@ import PubSub from "pubsub-js";
 export default {
   data() {
     return {
+      page: {
+        name: this.$route.params.name
+      },
+      loading: false,
       queryIds: [],
+      showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       multipleSelection: [], //更新按钮数组收集
-
       data: {
         tableData: [], //表信息
         currentPage: 1, //当前页
@@ -79,13 +97,43 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-      showQuery: true,
-      formItems:[],
-      //
+
+      selection: [], //多选框选择的
       add: {
-        visible: false
-      }
+        visible: false,
+        data: null,
+        isPass: false
+      },
+      primaryKey: '', //提供一个修改、删除时的主键
+      update: {
+        visible: false,
+        formData: null,
+        data: null,
+        isPass: false
+      },
+      //在form中不需要填写的
+      sysLogNotForm: [
+        "statusId",
+        // "remark",
+        // "status",
+        "createDate",
+        "createUser",
+        "modifyDate",
+        "modifyUser",
+        "auditDate",
+        "auditUser",
+        "effectiveDate"
+      ],
+      //在form中需要填写的
+      sysLogForm: ["remark", "status"]
     };
+  },
+  computed: {
+    formItems() {
+      return this.tableTitle.filter(item => {
+        return !this.sysLogNotForm.includes(item.topType);
+      });
+    }
   },
   components: {
     Pagination,
@@ -111,24 +159,28 @@ export default {
     //table按钮选择 传参
     checkboxValue: function(value) {
       this.multipleSelection = value;
+      console.log(value);
+      
     },
     //点击查询获得table的值
     async search() {
       this.pagination(this.data);
     },
-    // queryPage(data) {
-    //   // 提供一个查询分页的接口 例如:
-    //   // return findByListProduct(data);
-    // },
+    queryPage(data) {
+      // 提供一个查询分页的接口 例如:
+      // return findByListProduct(data);
+    },
     //封装分页请求
     async pagination(data) {
       console.log(data);
       let _data = { ...data };
       delete _data.tableData;
+      this.loading = true;
       const res = await this.queryPage(_data);
       console.log(res);
       if (res.code === 200) {
         //赋值 然后显示
+        this.loading = false;
         pUtils.pageInfo(res, data);
       }
     },
@@ -137,16 +189,106 @@ export default {
       this.tableTitle = [...this.tableTitle];
       this.queryIds = [];
     },
-    
+    handlerFormData(data) {
+      data.systemLogStatus = {};
+      for (let key in data) {
+        if (this.sysLogForm.includes(key)) {
+          data.systemLogStatus[key] = data[key];
+          delete data[key];
+        }
+      }
+    },
     openDialog_add() {
       console.log("新增");
       this.add.visible = true;
     },
-    passData_add(){
-
+    passData_add($event) {
+     
+      this.add.isPass = $event[0];
+      this.add.data = $event[2];
+      this.handlerFormData(this.add.data)
+  
     },
-    send_add(){
+    //需要提供一个新增的接口
+    ajax_add(data) {},
+    async send_add() {
+      let res = await this.ajax_add(this.add.data);
+      if (res.code === 200) {
+        message.successMessage(res.msg);
+        this.search();
+        this.add.visible = false;
+      } else {
+        message.errorMessage(res.msg);
+      }
+      console.log(res);
+    },
+    openDialog_update() {
+      console.log("修改");
+    
 
+      if (this.multipleSelection.length == 0) {
+        message.infoMessage("必须选中一条数据");
+        return;
+      } else if (this.multipleSelection.length > 1) {
+        message.infoMessage("只能选中一条数据");
+        return;
+      }
+      this.update.formData = this.multipleSelection[0];
+      this.update.visible = true;
+    },
+    passData_update($event) {
+      this.update.isPass = $event[0];
+      this.update.data = $event[2];
+      this.update.data[this.primaryKey] = $event[1][this.primaryKey];
+      this.update.data.statusId = $event[1].statusId;
+      this.update.data.version = $event[1].version;
+      this.handlerFormData(this.update.data);
+    },
+    ajax_remove(data){},
+    openDialog_remove(){
+      if(this.multipleSelection.length<1){
+        message.infoMessage('需要选中一条以上的数据');
+        return;
+      }
+      let thisIds = [],statusIds = [];
+      this.multipleSelection.forEach(item=>{
+        thisIds.push(item[this.primaryKey]);
+        statusIds.push(item.statusId);
+      })
+      let data = {
+        thisIds: thisIds.join(','),
+        statusIds: statusIds.join(',')
+      };
+      message.messageBox_confirm('是否确认删除')
+      .then(()=>{
+        let res = this.ajax_remove(data).then(res=>{
+        console.log(res);
+        if(res.code === 200){
+          message.successMessage(res.msg)
+          this.search();
+        }else {
+          message.errorMessage(res.msg);
+        }
+        });
+     
+        
+      })
+      .catch(()=>{
+
+      })
+    },
+    //需要提供一个修改的接口
+    ajax_update(data) {},
+    async send_update() {
+      let res = await this.ajax_update(this.update.data);
+      console.log(res);
+      if(res.code == 200){
+        message.successMessage(res.msg);
+        this.search();
+        this.update.visible = false;
+      }else {
+        message.errorMessage(res.msg);
+      }
     },
     initOperateBtn() {
       let self = this;
@@ -192,7 +334,7 @@ export default {
   },
   async mounted() {
     this.tableTitle =
-    (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+      (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
   }
 };

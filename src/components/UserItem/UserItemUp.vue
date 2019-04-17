@@ -51,6 +51,15 @@
               <el-input clearable style="width: 150px" v-model="userForm.name"></el-input>
             </el-form-item>
             <el-form-item
+              v-if="title.topType==='remark'"
+              :label="title.headName"
+              style="width: 200px"
+              class="user_margin_left"
+              prop="remark"
+            >
+              <el-input style="width:150px" clearable v-model="userForm.remark"></el-input>
+            </el-form-item>
+            <el-form-item
               :label="title.headName"
               v-if="title.topType==='userExpirationDate'"
               prop="userExpirationDate"
@@ -253,7 +262,8 @@ export default {
         pwdAlways: false, //密码始终有效 checked
         pwdValidityPeriod: "", //密码有效期
         userExpirationDate: "", //用户有效期,
-        version: 0
+        version: 0,
+        remark:''
       },
       accountStatusOptions: [
         {
@@ -273,7 +283,9 @@ export default {
         name: [{ validator: name, trigger: "blur" }],
         pwd: [{ validator: pwd, trigger: "blur" }],
         confirmPwd: [{ validator: confirmPwd, trigger: "blur" }],
-        userExpirationDate: [{ validator: userExpirationDate, trigger: "blur" }],
+        userExpirationDate: [
+          { validator: userExpirationDate, trigger: "blur" }
+        ],
         pwdValidityPeriod: [{ validator: pwdValidityPeriod, trigger: "blur" }],
         mobilePhone: [{ validator: mobilePhone, trigger: "blur" }]
       }
@@ -336,7 +348,7 @@ export default {
       this.userForm.uAlways = false; //用户始终有效  checked
       this.userForm.pwdAlways = false; //密码始终有效 checked
       console.log(upSelection);
-      
+
       const userSaveSelection = upSelection;
       if (userSaveSelection.length <= 0) {
         message.errorMessage("必须选中一条修改");
@@ -350,7 +362,7 @@ export default {
       userSaveSelection.forEach(item => {
         //获得老的userFrom对象 到时候比较监听的时候用
         console.log(item);
-        
+
         this.oldUserForm = item;
         this.userForm["userName"] = item.userName;
         this.userForm["name"] = item.name;
@@ -362,6 +374,7 @@ export default {
         this.userForm["pwdValidityPeriod"] = item.pwdValidityPeriod;
         this.userForm["userExpirationDate"] = item.userExpirationDate;
         this.userForm["version"] = item.version;
+        this.userForm['remark'] = item.remark;
       });
       //密码有效期
       if (this.userForm.pwdValidityPeriod === 0) {

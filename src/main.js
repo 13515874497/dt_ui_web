@@ -60,7 +60,8 @@ import {
   Autocomplete,
   Tabs,
   TabPane,
-  Tooltip
+  Tooltip,
+  Loading
 } from 'element-ui'
 import {
   repIndex,
@@ -126,7 +127,7 @@ Vue.component(Tooltip.name, Tooltip)
 Vue.component('Form', form);
 Vue.use(focus)
 Vue.use(VueResource)
-
+Vue.use(Loading.directive);
 
 
 

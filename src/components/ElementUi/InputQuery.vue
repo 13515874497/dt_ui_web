@@ -263,13 +263,9 @@ export default {
     },
     //向上回传数据
     changeQuery() {
-      
       let data_model = {...this.data_model};
-
-      console.log(data_model);
       for (let key in data_model) {
         if (this.sysLogInclude.includes(key)) {
-          console.log(key);
           
           data_model.systemLogStatus[key] = data_model[key];
           delete data_model[key];
@@ -279,11 +275,6 @@ export default {
       console.log(data_model);
     },
     setSysLogInclude(id){
-      console.log(this.sysLogNotInclude);
-      console.log(id);
-      
-      console.log(this.sysLogNotInclude.includes(id));
-      
       if(this.sysLogNotInclude.includes(id)){
         this.sysLogInclude.length = 0;
       }

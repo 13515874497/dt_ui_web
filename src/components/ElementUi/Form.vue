@@ -7,6 +7,7 @@
     label-position="left"
     status-icon
     @validate="handlerValidate"
+    :rules="rules"
   >
     <template v-for="item in formItems">
       <el-form-item
@@ -46,26 +47,45 @@
       </el-form-item>
 
       <el-form-item
-        v-else-if="item.inputType == 0"
+        v-else-if="item.inputType == 4"
         :label="item.headName"
         :prop="item.topType"
-        :rules="item.required? rules._str:rules.str"
+        :rules="matchedRule(item)"
       >
-        <el-input
-          v-model.trim="data_model[item.topType]"
+        <el-date-picker
+          value-format="timestamp"
+          v-model="data_model[item.topType]"
+          type="datetime"
+          placeholder="选择日期"
+        ></el-date-picker>
+        <!-- <el-input
+          v-model="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
-        ></el-input>
+        ></el-input>-->
       </el-form-item>
 
       <el-form-item
         v-else-if="item.inputType == 1"
         :label="item.headName"
         :prop="item.topType"
-        :rules="item.required? rules._number : rules.number"
+        :rules="matchedRule(item)"
       >
         <el-input
           v-model="data_model[item.topType]"
+          :placeholder="item.placeholder"
+          :disabled="item.disabled"
+        ></el-input>
+      </el-form-item>
+
+      <el-form-item
+        v-else-if="item.inputType == 0 || !item.inputType"
+        :label="item.headName"
+        :prop="item.topType"
+        :rules="matchedRule(item)"
+      >
+        <el-input
+          v-model.trim="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
         ></el-input>
@@ -109,7 +129,8 @@ export default {
     //   }
     // ],
     formItems: Array,
-    formData: Object //有传这个说明是修改
+    formData: Object, //有传这个说明是修改
+    rule: Object
   },
   data() {
     return {
@@ -119,19 +140,40 @@ export default {
   },
   computed: {},
   watch: {
+    formItem(){
+      this.initData_model();
+    },
     formData() {
       this.initData_model();
     },
     data_model: {
       async handler(val) {
-        console.log(val);
+        // console.log(val);
         this.passData(await this.isVerifyPass());
       },
       deep: true
     }
   },
   methods: {
-    testlog() {},
+    mergeRules(){
+      this.rules = Object.assign(rules,this.rule);
+      console.log(this.rules);
+    },
+    matchedRule(item){
+      let key = item.topType,
+          rules = this.rules;
+      if(rules[key]){
+        return rules[key] 
+      }
+      switch(item.inputType){
+        case 1:
+        case 4:
+          return item.required? rules._number : rules.number
+        case 0:
+        default:
+        return item.required? rules._str : rules.str
+      }
+    },
     initData_model() {
       let self = this;
       if (this.formData) {
@@ -141,6 +183,8 @@ export default {
 
         return;
       }
+      console.log(this.formItems);
+      
       this.formItems.forEach(item => {
         if (item.statusOptions && item.statusOptions.length) {
           self.$set(this.data_model, item.topType, item.statusOptions[0].id);
@@ -192,6 +236,8 @@ export default {
   created() {
     this.initData_model();
     console.log(this.formItems);
+    console.log(this.formData);
+    this.mergeRules();
     
   },
   mounted() {}

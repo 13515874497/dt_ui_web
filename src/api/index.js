@@ -155,7 +155,8 @@ export const repUpUserInfo = ({
   uAlways,
   name,
   mobilePhone,
-  version
+  version,
+  remark
 }) => ajax(BASE_URL + `/user/upUserInfo`, {
   pwd,
   accountStatus,
@@ -168,7 +169,8 @@ export const repUpUserInfo = ({
   uAlways,
   name,
   mobilePhone,
-  version
+  version,
+  remark
 }, 'POST')
 
 // 查询一个角色下的所有用户跟 菜单
@@ -413,13 +415,27 @@ export const findByListTax = (data) => ajax(BASE_URL + '/tax/findByListTax', dat
 
 //产品信息分页
 export const findByListProduct = (data) => ajax(BASE_URL + '/product/findByListProduct', data, 'POST');
+//产品信息新增
+// export const upProduct = (data) => ajax(BASE_URL + '/product/upProduct', data, 'POST');
+
+//产品信息修改
+export const upProduct = (data) => ajax(BASE_URL + '/product/upProduct', data, 'POST');
+//产品信息删除
+
 
 //国家分页
 export const findCountryInfo = (data) => ajax(BASE_URL + '/country/findCountryInfo', data, 'POST');
 
 //公司分页
 export const findByListCompany = (data) => ajax(BASE_URL + '/company/findByListCompany', data, 'POST');
+//公司添加 http://127.0.0.1:9002/api/v1/company/saveCompany	
+export const saveCompany = (data)=> ajax(BASE_URL + '/company/saveCompany', data, 'POST');
+//公司修改
+export const upCompany = (data)=> ajax(BASE_URL + '/company/upCompany', data, 'POST');
+//公司删除
+export const delCompany = (data)=> ajax(BASE_URL + '/company/delCompany', data, 'POST');
 
+// export const 
 // 国家分页
 // export const getRegional = ({
 //   currentPage,
@@ -535,7 +551,8 @@ export const repSaveUserInfo = ({
   rolesId,
   staffValue,
   pwdValidityPeriod,
-  userExpirationDate
+  userExpirationDate,
+  remark
 }) => ajax(BASE_URL + '/user/saveUserInfo', {
   userName,
   pwd,
@@ -547,7 +564,8 @@ export const repSaveUserInfo = ({
   rolesId,
   staffValue,
   pwdValidityPeriod,
-  userExpirationDate
+  userExpirationDate,
+  remark
 }, 'POST')
 
 //新增角色
@@ -608,4 +626,6 @@ export const repGetLogisticsInfo = ({
   currentPage,
   pageSize
 }, 'POST')
+//查询字段的选项
+export const getGeneralInfo = (data)=> ajax(BASE_URL + '/general/getGeneralInfo',data)
 

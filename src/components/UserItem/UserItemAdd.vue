@@ -39,6 +39,9 @@
         <el-checkbox @change="checkedAlways" v-model="addForm.pwdAlways" :disabled="isCheFlgAlways">密码始终有效
         </el-checkbox>
       </el-form-item>
+      <el-form-item label="备注:" prop="remark" >
+        <el-input v-model="addForm.remark" clearable style="width: 250px"></el-input>
+      </el-form-item>
       <el-form-item prop="rolesId" class="transfers">
         <div class="transfer">
           <el-transfer
@@ -173,7 +176,8 @@
           rolesId: [], //角色 ids
           staffValue: '', //员工对象
           pwdValidityPeriod: '', //密码有效期
-          userExpirationDate: '' //用户有效期
+          userExpirationDate: '', //用户有效期
+          remark:''
         },
         rules: {
           userName: [

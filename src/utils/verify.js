@@ -1,4 +1,7 @@
-import {isHeadName,isTopType} from "@/api"
+import {
+  isHeadName,
+  isTopType
+} from "@/api"
 
 
 export const isNumber = (rule, value, cb) => {
@@ -106,36 +109,50 @@ export const rolesId = (rule, value, callback) => {
     callback()
   }
 }
-
-export const DBFieldRepeat = (rule,val,cb)=>{
-  switch(rule.field){
+//验证数据库字段是否重复
+export const DBFieldRepeat = (rule, val, cb) => {
+  switch (rule.field) {
     case 'headName':
-    isHeadName({headName:val}).then(res=>{
-      switch(res.code){
-        case 200:
-        cb();
-        break;
-        case -1:
-        cb(new Error('该字段名称已存在'))
-        break;
-      }
-    })
-    break;
+      isHeadName({
+        headName: val
+      }).then(res => {
+        switch (res.code) {
+          case 200:
+            cb();
+            break;
+          case -1:
+            cb(new Error('该字段名称已存在'))
+            break;
+        }
+      })
+      break;
     case 'topType':
-    isTopType({topType:val}).then(res=>{
-      switch(res.code){
-        case 200:
-        cb();
-        break;
-        case -1:
-        cb(new Error('该字段英文名称已存在'))
-        break;
-      }
-    });
-    break;
+      isTopType({
+        topType: val
+      }).then(res => {
+        switch (res.code) {
+          case 200:
+            cb();
+            break;
+          case -1:
+            cb(new Error('该字段英文名称已存在'))
+            break;
+        }
+      });
+      break;
     default:
-    cb();
-    break;
+      cb();
+      break;
   }
 
+}
+//长度需要小于2
+export const lessThan2 = (rule, val, cb) => {
+  console.log(val);
+  
+  if (val !=null &&val.length > 2) {
+    cb(new Error('长度必须小于2'));
+  } else {
+    cb();
+  }
 }
