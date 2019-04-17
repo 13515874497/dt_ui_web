@@ -57,7 +57,7 @@
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="update.visible = false">取 消</el-button>
-          <el-button type="primary" @click="send_update">确 定</el-button>
+          <el-button type="primary" :disabled="!update.data" @click="send_update">确 定</el-button>
         </div>
       </el-dialog>
     </section>
