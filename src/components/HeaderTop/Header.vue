@@ -55,41 +55,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
-// .img_header {
-//   float: left;
-//   margin-top: 10px;
-// }
-// .p-one {
-//   float: right;
-//   padding-top: 0px !important;
-//   margin-top: 10px !important;
-//   margin-right: 50px;
-//   color: #888888;
-// }
-// .quit {
-//   cursor: pointer;
-//   color: #999c9e;
-// }
-// .icon_sum {
-//   color: #999c9e;
-//   font-size: 25px !important;
-//   cursor: pointer;
-// }
-// .el-col-24 {
-//   width: 64px !important;
-// }
-// .el-badge__content.is-fixed {
-//   margin-top: 12px;
-// }
-// .el-icon-message {
-//   font-size: 25px;
-// }
-// .item {
-//   margin-top: 10px;
+<style lang="scss" >
 
-//   margin-right: 60px;
-// }
 .header {
   position: relative;
   line-height: 90px;
