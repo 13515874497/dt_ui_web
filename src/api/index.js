@@ -438,11 +438,11 @@ export const findByListTax = (data) => ajax(BASE_URL + '/tax/findByListTax', dat
 //产品信息分页
 export const findByListProduct = (data) => ajax(BASE_URL + '/product/findByListProduct', data, 'POST');
 //产品信息新增
-// export const upProduct = (data) => ajax(BASE_URL + '/product/upProduct', data, 'POST');
-
+export const saveProduct = (data) => ajax(BASE_URL + '/product/saveProduct', data, 'POST');
 //产品信息修改
 export const upProduct = (data) => ajax(BASE_URL + '/product/upProduct', data, 'POST');
 //产品信息删除
+export const delProduct = (data) => ajax(BASE_URL + '/product/delProduct', data, 'POST');
 
 
 //国家分页
