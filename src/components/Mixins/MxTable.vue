@@ -105,6 +105,7 @@ export default {
         isPass: false
       },
       primaryKey: '', //提供一个修改、删除时的主键
+      rule: {},
       update: {
         visible: false,
         formData: null,
@@ -237,6 +238,9 @@ export default {
       this.update.visible = true;
     },
     passData_update($event) {
+      console.log($event[1]);
+      console.log(this.primaryKey);
+      
       this.update.isPass = $event[0];
       this.update.data = $event[2];
       this.update.data[this.primaryKey] = $event[1][this.primaryKey];
