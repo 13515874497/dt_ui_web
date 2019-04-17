@@ -242,10 +242,15 @@ export default {
       console.log(this.primaryKey);
       
       this.update.isPass = $event[0];
+   
       this.update.data = $event[2];
+
       this.update.data[this.primaryKey] = $event[1][this.primaryKey];
+  
       this.update.data.statusId = $event[1].statusId;
+     
       this.update.data.version = $event[1].version;
+   
       this.handlerFormData(this.update.data);
     },
     ajax_remove(data){},

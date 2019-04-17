@@ -505,6 +505,11 @@ export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', 
 //新增汇率接口 http://127.0.0.1:9002/api/v1/rate/saveRate		POST
 export const saveRate = (data) => ajax(BASE_URL + '/rate/saveRate', data, 'POST')
 
+// 修改汇率接口  http://127.0.0.1:9001/api/v1/rate/upRate	POST
+export const upRate = (data) => ajax(BASE_URL + '/rate/upRate', data, 'POST')
+
+//删除汇率接口   http://127.0.0.1:9002/api/v1/rate/delRate	POST
+export const delRate = (data) => ajax(BASE_URL + '/rate/delRate', data, 'POST')
 /**
  * 
  * 菜单管理 => 菜单管理

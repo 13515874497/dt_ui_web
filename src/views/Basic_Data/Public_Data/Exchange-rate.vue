@@ -1,9 +1,8 @@
 
 <script>
 //汇率
-import { findByListRate,saveRate } from "@/api";
+import { findByListRate,saveRate,upRate,delRate} from "@/api";
 import MxTable  from '@/components/Mixins/MxTable'
-import {lessThan2} from '@/utils/verify.js'
 export default {
   mixins: [MxTable],
   data(){
@@ -16,8 +15,14 @@ export default {
      queryPage(data) {
       return findByListRate(data); //查询页面的接口
     },
-    ajax_add(data){
-      return saveRate(data)//新增页面的接口
+    // ajax_add(data){
+    //   return saveRate(data) //新增页面的接口 有问题
+    // },
+    ajax_update(data){
+      return upRate(data) //修改页面接口
+    },
+    ajax_remove(data){
+      return delRate(data)//删除的接口
     }
   }
 }
