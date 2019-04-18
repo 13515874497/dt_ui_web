@@ -16,7 +16,7 @@ export default {
       return findByListRate(data); //查询页面的接口
     },
     // ajax_add(data){
-    //   return saveRate(data) //新增页面的接口 有问题
+    //   return saveRate(data) //新增页面的接口 有问题需要传入一个currencyId
     // },
     ajax_update(data){
       return upRate(data) //修改页面接口

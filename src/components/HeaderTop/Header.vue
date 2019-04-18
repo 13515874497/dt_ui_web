@@ -55,7 +55,7 @@ export default {
 };
 </script>
 
-<style lang="scss" >
+<style lang="scss" scoped>
 
 .header {
   position: relative;
@@ -63,7 +63,7 @@ export default {
   text-align: center;
   background: url('./img/logo.png') no-repeat left center;
   min-width: 790px;
-}
+
 ul.ctrl {
   position: absolute;
   right: 0;
@@ -87,5 +87,6 @@ ul.ctrl {
     }
   }
   
+}
 }
 </style>
