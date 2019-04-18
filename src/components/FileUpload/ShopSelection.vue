@@ -53,7 +53,7 @@
           siteId: '',//站点 ID
           pId: '', //付款类型ID
           areaId: '', //洲 ID
-          tbId: this.$route.params.id,
+          mId: this.$route.params.id,
           businessTime: '' //业务报告日期
         },
         //组建传递的值
@@ -93,9 +93,9 @@
         this.fileUp.shopName = value.shopName
         this.uploadFrom.shopId = value.shopId
         this.fileUp.icon_list = []
-        let tbId = this.uploadFrom.tbId
+        let mId = this.uploadFrom.mId
         //获得洲信息
-        if (tbId === '109' || tbId === '110' || tbId === '113' || tbId === '114') {
+        if (mId === '109' || mId === '110' || mId === '113' || mId === '114') {
           const resultArea = await findByListRegion({})
           console.log(resultArea)
           if (resultArea.code === 200) {
@@ -119,17 +119,17 @@
         this.fileUp.icon_list = []
         let obj = {}
         //判断 上传文件显示的 结尾类型
-        let tbId = this.uploadFrom.tbId
-        if (tbId === '85' || tbId === '108' || tbId === '104') {
+        let mId = this.uploadFrom.mId
+        if (mId === '85' || mId === '108' || mId === '104') {
           this.fileUp.fileType = '.csv'
-        } else if (tbId === '105' || tbId === '107' ||
-          tbId === '106' || tbId === '125' || tbId === '115') {
+        } else if (mId === '105' || mId === '107' ||
+          mId === '106' || mId === '125' || mId === '115') {
           this.fileUp.fileType = '.xls/xlsx'
-        } else if (tbId === '109' || tbId === '110' || tbId === '113' || tbId === '114') {
+        } else if (mId === '109' || mId === '110' || mId === '113' || mId === '114') {
           this.fileUp.fileType = '.txt'
         }
         //通过菜单ID 显示 是洲还是站点类型
-        if (tbId === '109' || tbId === '110' || tbId === '113' || tbId === '114') {
+        if (mId === '109' || mId === '110' || mId === '113' || mId === '114') {
 
           obj = this.areaOptions.find((item) => {
             return item.areaId === value

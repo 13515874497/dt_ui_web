@@ -524,6 +524,8 @@ export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'P
 export const isHeadName = (data) => ajax(BASE_URL + '/isHeadName', data)
 //字段英文名称(topType)对比数据库是否重复 /api/v1/isTopType 
 export const isTopType = (data) => ajax(BASE_URL + '/isTopType', data)
+//修改表头字段
+export const upHeadInfo = (data) => ajax(BASE_URL + '/upHeadInfo', data,'POST')
 
 
 

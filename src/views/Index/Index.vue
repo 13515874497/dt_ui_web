@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <div style="height: 100%">
+    <div style="height: 100%;overflow-y: auto">
       <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
     </div>
 
@@ -30,21 +30,21 @@ export default {
   data() {
     return {
       isRole: true,
-      ws: null
     };
   },
   methods: {
-    connectWebsocket(uid) {
-      console.log(this.ws);
+    initWs() {
+      console.log(this.$ws);
 
-      if (this.$ws) return;
+      if (this.$ws && this.$ws.readyState == 1) return;
+      let uId = +this.getCookie("uId")
       let self = this;
       function bindEvents(socket) {
         socket.onopen = () => {
           console.log("Socket 已打开");
           socket.send(
             JSON.stringify({
-              uId: uid,
+              uId,
               type: "REGISTER"
             })
           );
@@ -52,9 +52,11 @@ export default {
         socket.addEventListener("message", msg => {
           let resMsg = msg.data;
           let res = JSON.parse(resMsg);
-          console.log('接收到一条websocket消息~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
+          console.log(
+            "接收到一条websocket消息~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          );
           console.log(res);
-          
+
           if (res.code === 200) {
             switch (res.type) {
               // case "PROGRESS_BAR":
@@ -84,19 +86,15 @@ export default {
                 break;
             }
           }
-          // .then(() => {
-          //   // socket.close();
-          // })
-          // .catch(() => {
-          //   // socket.close();
-          // });
         });
         socket.onclose = () => {
           console.log("socket关闭");
         };
       }
       // this.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
-      Vue.prototype.$ws =  new WebSocket(`ws://192.168.208.109:3333/ws`);
+      Vue.prototype.$ws = new WebSocket(`ws://192.168.208.109:3333/ws`);
+      // Vue.prototype.$wsBindEvents = bindEvents;
+      Vue.prototype.$initWs = this.initWs;
       bindEvents(this.$ws);
       //获得消息事件
     }
@@ -110,16 +108,19 @@ export default {
   async mounted() {
     let res = await getLoginStatus();
     if (res.code === 200) {
-      this.connectWebsocket(+this.getCookie("uId"));
+      this.initWs();
     }
   },
   beforeDestroy() {
-    this.$ws&&this.$ws.close();
+    this.$ws && this.$ws.close();
   }
 };
 </script>
 
 <style scope lang="scss">
+.el-table .cell {
+  white-space: nowrap;
+}
 .el-footer {
   background-color: #b3c0d1;
   color: #333;

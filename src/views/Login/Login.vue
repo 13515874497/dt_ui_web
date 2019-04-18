@@ -30,7 +30,7 @@
                 自动登陆
                 <span>(一周内)</span>
               </el-checkbox>
-              <span style="padding-left: 20px;color:#606266">在线人数:{{onlineNumber}}</span>
+              <!-- <span style="padding-left: 20px;color:#606266">在线人数:{{onlineNumber}}</span> -->
             </div>
           </div>
         </div>
@@ -68,7 +68,7 @@ export default {
   },
   created() {
     this.hh();
-    this.getOnlineNumber();
+    // this.getOnlineNumber();
     // this.timer = setInterval(this.getOnlineNumber, 10000); //轮询
   },
   //在页面销毁时清除定时器
