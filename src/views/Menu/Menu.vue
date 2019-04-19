@@ -164,12 +164,13 @@
         show-checkbox
         ref="tree_introList"
         class="tree-content scrollbar"
+        @check="treeCheckNodes"
       ></el-tree>
       <!-- <Table :tableTitle="tableTitle" :tableData="introList"></Table> -->
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="IntroDialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="introList_add()">确 定</el-button>
+        <el-button type="primary" @click="introList_add()" :disabled="dis">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -379,7 +380,8 @@ export default {
         input: "", //输入框中的数据
         autocomplete: [], //用于筛选的数据
         data: [] //根据用户输入筛选符合的字段
-      }
+      },
+      dis:false,
     };
   },
   components: {
@@ -560,16 +562,36 @@ export default {
     del() {
       console.log("删除");
     },
+
+
+    //点击引用选中字段信息做长度限制
+     treeCheckNodes(dataAll, data) {
+      console.log(dataAll);
+      console.log(data);
+      this.checkedNodes = data.checkedNodes;
+      console.log(data.checkedNodes)
+      
+      if( this.checkedNodes.length >= 10 ){
+         Message({
+          showClose: true,
+          message: "引用字段过多,需小于10个",
+          type: "error"
+        });
+        //当超过限制时，将确定按钮禁用
+          this.dis = true
+      }else{
+        this.dis = false
+      }
+     },
     //点击引用
     async recording() {
       console.log("引用菜单表头");
-      console.log(this.introList);
-      
+      console.log(this.introList);        
       if (this.introList.length) {
         this.IntroDialogFormVisible = true;
         return;
       }
-      console.log(this.editingMenu);
+      console.log(this.editingMenu); 
 
       let res = await reference({ menuId: this.editingMenu.data.menuId });
       console.log(res);
@@ -609,14 +631,14 @@ export default {
         });
         return;
       }
-      if (checked.length >= 10) {
-        Message({
-          showClose: true,
-          message: "引用字段过多,需小于10个",
-          type: "error"
-        });
-        return;
-      }
+      // if (checked.length >= 10) {
+      //   Message({
+      //     showClose: true,
+      //     message: "引用字段过多,需小于10个",
+      //     type: "error"
+      //   });
+      //   return;
+      // }
       let mId = this.editingMenu.data.menuId;
       let data = checked.map(item => {
         return {

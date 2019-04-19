@@ -280,6 +280,13 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`,da
 //出货通知单 http://127.0.0.1:9002/api/v1/fba/getNoticeInfo post
 // export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`,data, 'POST')
 
+// 运营管理=> 亚马逊=>费用
+
+//月度仓储费 http://127.0.0.1:9001/api/v1/fba/getMWarInfo post
+
+// export const getMWarInfo = (data) => ajax(BASE_URL + `/fba/getMWarInfo`,data, 'POST')
+
+
 /**
  * 
  * 人事管理 => 基础档案
