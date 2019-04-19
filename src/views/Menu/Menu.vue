@@ -49,7 +49,7 @@
       v-if="editingMenu.data"
       title="提示"
       :visible.sync="editingMenu.isShow"
-      width="75%"
+      width="800px"
       center
     >
       <el-tabs v-model="activeName" type="card" @tab-click="menuTabClick">
@@ -88,7 +88,7 @@
           class="field-tree"
           name="second"
         >
-          <el-row>
+          <el-row class="field-row">
             <el-col :span="12">
               <el-tree
                 show-checkbox
@@ -100,6 +100,7 @@
                 :allow-drop="allowDrop"
                 @node-drop="handleDrop"
                 @check="treeCheck"
+                class="tree-content scrollbar"
               >
                 <span class="custom-tree-node" slot-scope="{ node, data }">
                   <span>{{ data.headName }}</span>
@@ -162,6 +163,7 @@
         :props="defaultProps_introList"
         show-checkbox
         ref="tree_introList"
+        class="tree-content scrollbar"
       ></el-tree>
       <!-- <Table :tableTitle="tableTitle" :tableData="introList"></Table> -->
 
@@ -393,7 +395,7 @@ export default {
       });
     }
   },
-   
+
   methods: {
     //添加 菜单
     append(data) {
@@ -561,12 +563,15 @@ export default {
     //点击引用
     async recording() {
       console.log("引用菜单表头");
-
+      console.log(this.introList);
+      
       if (this.introList.length) {
         this.IntroDialogFormVisible = true;
         return;
       }
-      let res = await reference();
+      console.log(this.editingMenu);
+
+      let res = await reference({ menuId: this.editingMenu.data.menuId });
       console.log(res);
       if (res.code == 200) {
         this.introList = res.data;
@@ -636,8 +641,6 @@ export default {
     },
     //处理拖拽
     handleDrop(draggingNode, dropNode, dropType, ev) {
-      console.log(111222);
-
       console.log(draggingNode);
       console.log(dropNode);
       console.log(dropType);
@@ -708,11 +711,11 @@ export default {
       modifyData.menuId = data.menuId;
       modifyData.id = data.id;
       this.update_field = {
-        data:modifyData,
+        data: modifyData,
         isPass
       };
       console.log($event[1]);
-      
+
       console.log(this.update_field);
     },
     async passedData_update() {
@@ -741,8 +744,6 @@ export default {
     if (result.code === 200) {
       this.iconOptions = result.data;
     }
-
-
   },
   async mounted() {
     this.userName = this.getCookie("name");
@@ -751,7 +752,7 @@ export default {
     this.menuList = menu;
     this.resetMenuList = menu;
     console.log(menu);
-  },
+  }
 };
 </script>
 
@@ -768,8 +769,17 @@ export default {
   font-size: 14px;
   padding-right: 8px;
 }
-.field-tree .custom-tree-node {
-  cursor: move;
+.field-tree {
+  .custom-tree-node {
+    cursor: move;
+  }
+}
+.tree-content {
+  max-height: 450px;
+  overflow-y: scroll;
+}
+.field-row {
+  margin-bottom: 15px;
 }
 .iconList {
   border: 1px solid #dcdfe6;

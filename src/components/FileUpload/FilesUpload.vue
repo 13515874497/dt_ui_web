@@ -522,7 +522,14 @@ export default {
                     let data = item.data;
                     switch (data.status) {
                       case 0:
+                       message.messageNotSuccess(data.remark, data.name);
+                        step.dealWith = "数据处理成功";
+                        step.dealWith_status = "success";
+                        step.count++;
+                        break;
                       case 2:
+                      console.log(item);
+                      
                         message.messageNotSuccess(data.remark, data.name);
                         step.dealWith = "数据处理成功";
                         step.dealWith_status = "success";
