@@ -24,6 +24,7 @@ import OrderUpload from '../views/Upload/OrderUploadFile'//订单报告
 import Receive from '../views/Upload/ReceiveUploadFile'//接收库存
 import Return from '../views/Upload/ReturnUploadFile'//退货报告
 import StrUpload from '../views/Upload/StrUploadFile'//STR
+import FBAUploadFile from '../views/Upload/FBAUploadFile'//FBA遗弃导入
 import salesAmazonFbaMonthWarehousefee from '../views/Upload/salesAmazonFbaMonthWarehousefee'//月度仓储费
 import salesAmazonFbaLongWarehousefee from '../views/Upload/salesAmazonFbaLongWarehousefee'//长期仓储费
 import salesAmazonFbaHandlingfee from '../views/Upload/salesAmazonFbaHandlingfee'//订单处理费
@@ -230,6 +231,10 @@ export default new Router({
         {
           path:'/index/str_upload/:id/:name',
           component:StrUpload
+        },
+        {
+          path:'/index/FBA_import/:id/:name',
+          component:FBAUploadFile
         },
         {
           path:'/index/sales_amazon_fba_month_warehousefee/:id/:name',

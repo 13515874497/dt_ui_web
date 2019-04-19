@@ -53,10 +53,10 @@ export default {
         socket.addEventListener("message", msg => {
           let resMsg = msg.data;
           let res = JSON.parse(resMsg);
-          console.log(
-            "接收到一条websocket消息~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-          );
-          console.log(res);
+          // console.log(
+          //   "接收到一条websocket消息~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+          // );
+          // console.log(res);
 
           if (res.code === 200) {
             switch (res.type) {

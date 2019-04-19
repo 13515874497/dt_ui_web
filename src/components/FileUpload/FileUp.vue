@@ -192,7 +192,7 @@ export default {
 
                     if (messagesResult.code === 200) {
                       if (messagesResult.data.status === 2) {
-                        message.messageNotSuccess(
+                        message.messageNotiSuccess(
                           messagesResult.msg,
                           messagesResult.data.name
                         );
@@ -209,7 +209,7 @@ export default {
                         });
                         continue;
                       }
-                      message.messageNotSuccess(
+                      message.messageNotiSuccess(
                         messagesResult.msg,
                         messagesResult.data.name
                       );
@@ -234,7 +234,7 @@ export default {
                           }
                         }
                       }
-                      message.messageNotError(msg);
+                      message.messageNotiError(msg);
                       this.fileUp.fileListInfo.push(messagesResult.data);
                       this.fileUp.icon_list.push({
                         isIcon: false,
@@ -261,7 +261,7 @@ export default {
                       }
                     }
                   }
-                  message.messageNotError(msg);
+                  message.messageNotiError(msg);
                   break;
               }
             });
