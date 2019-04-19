@@ -600,7 +600,7 @@ export default {
       if (this.checkedNodes.length >= 10) {
         Message({
           showClose: true,
-          message: "引用字段过多,需小于10个",
+          message: "引用字段过多,须小于10条",
           type: "error"
         });
         //当超过限制时，将确定按钮禁用
