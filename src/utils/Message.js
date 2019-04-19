@@ -47,7 +47,7 @@ export default {
       type: 'info',
     })
   },
-  messageNotSuccess(msg, title) {
+  messageNotiSuccess(msg, title) {
     return Notification({
       title: title,
       message: msg,
@@ -55,14 +55,24 @@ export default {
       duration: 0
     })
   },
-  messageNotError(msg, title) {
+  messageNotiSuccessHtml(msg, title) {
+    return Notification({
+      title: title,
+      message: msg,
+      type: 'success',
+      dangerouslyUseHTMLString: true,
+      duration: 0
+    })
+  },
+
+  messageNotiError(msg, title) {
     return Notification.error({
       title: title,
       message: msg,
       duration: 0
     })
   },
-  messageNotDError(msg, title) {
+  messageNotiDError(msg, title) {
     return Notification.error({
       title: title,
       message: msg,

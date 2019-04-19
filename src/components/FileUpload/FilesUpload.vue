@@ -26,7 +26,7 @@
           <el-option
             v-for="item in select.render"
             :key="item.id"
-            :label="item.name"
+            :label="`${item.name}(${item.shortName})`"
             :value="item.id"
           ></el-option>
         </el-select>
@@ -194,7 +194,7 @@ export default {
         isShow: true
       },
       select: {
-        model: '',
+        model: "",
         label: null,
         render: [],
         shortName: ""
@@ -202,14 +202,14 @@ export default {
       uploadBtn: {
         disabled: false
       },
-      continent: [109, 110, 113, 114, 269, 270], //页面id为洲的信息，其他都是站点
+      continent: [109, 110, 113, 114, 269, 270, 325], //页面id为洲的信息，其他都是站点
       isContinent: false, //判断该页面显示洲还是站点
       //根据菜单id判断上传类型
       suffix: {
         csv: [85, 108, 104],
         xls: [105, 107, 106, 125, 115, 271],
         xlsx: [105, 107, 106, 125, 115, 271],
-        txt: [109, 110, 113, 114, 269, 270]
+        txt: [109, 110, 113, 114, 269, 270, 325]
       },
       readyFileList: [], //待上传的文件(已验证通过)
       uploadStatus: [], //每个文件上传过程中的状态
@@ -222,7 +222,8 @@ export default {
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
-      }
+      },
+      notifys:[]//当前页面的所有提示信息
     };
   },
   computed: {
@@ -271,7 +272,7 @@ export default {
             {
               id: 2,
               selectId: 2,
-              name: "部分skuId错误"
+              name: "部分skuId信息错误"
             }
           ]
         },
@@ -411,9 +412,9 @@ export default {
           );
           return;
         }
-        let rule = { radio:this.radio,select:this.select};
-        let flag = checkUtils.checkFileInfo(file,rule,this.onlyShowUpload);
-        if(!flag) return ;
+        let rule = { radio: this.radio, select: this.select };
+        let flag = checkUtils.checkFileInfo(file, rule, this.onlyShowUpload);
+        if (!flag) return;
 
         this.readyFileList.push(file);
         this.uploadStatus.push({
@@ -444,7 +445,6 @@ export default {
     },
     //删除待上传文件
     removeReadyFile(index) {
-
       this.uploadBtn.disabled = false;
       this.readyFileList.splice(index, 1);
       this.uploadStatus.splice(index, 1);
@@ -522,21 +522,28 @@ export default {
                     let data = item.data;
                     switch (data.status) {
                       case 0:
-                       message.messageNotSuccess(data.remark, data.name);
+                        message.messageNotiSuccess(data.remark, data.name);
                         step.dealWith = "数据处理成功";
                         step.dealWith_status = "success";
                         step.count++;
                         break;
                       case 2:
-                      console.log(item);
-                      
-                        message.messageNotSuccess(data.remark, data.name);
-                        step.dealWith = "数据处理成功";
+                        console.log(item);
+                        let msg = `<p>${
+                          data.remark
+                        }<button path="${data.filePath +
+                          data.uuidName}" fileName="${
+                          data.name
+                        }"  type="button" class="sku_download_btn el-button el-button--primary el-button--mini"><i class="el-icon-download"></i><span>下载</span></button></p>`;
+                        this.notifys.push(message.messageNotiSuccessHtml(msg, data.name)); 
+                        console.log(this);
+                        
+                        step.dealWith = "数据处理成功,部分skuId信息错误";
                         step.dealWith_status = "success";
                         step.count++;
                         break;
                       case 1:
-                        message.messageNotError(data.remark, data.name);
+                        message.messageNotiError(data.remark, data.name);
                         step.dealWith = "数据处理失败";
                         step.dealWith_status = "error";
                         progress.status = "exception";
@@ -556,7 +563,7 @@ export default {
                         }
                       }
                     }
-                    message.messageNotError(msg);
+                    message.messageNotiError(msg);
                     step.dealWith = "数据处理失败";
                     step.dealWith_status = "error";
                     progress.status = "exception";
@@ -587,29 +594,49 @@ export default {
         }
       });
     },
+    bindEventDelegation() {
+      document.addEventListener("click", this.eventDelegationFn);
+    },
+    eventDelegationFn(e) {
+      function getDom(target, className) {
+        if (target === document) {
+          return null;
+        }
+        if (target.className.indexOf(className) === -1) {
+          return getDom(target.parentNode, className);
+        } else {
+          return target;
+        }
+      }
+      let target = getDom(e.target, "sku_download_btn");
+      if (!target) return;
+      let path = target.getAttribute("path");
+      let fileName = target.getAttribute("fileName");
+      this.download(null, path, fileName);
+    },
     //获取上传的进度条信息
     initWs() {
       let self = this;
       //等待父组件连上websocket
       console.log(self.$ws);
       this.wsTimer = setTimeout(() => {
-        if(self.$ws){
-          switch(self.$ws.readyState){
+        if (self.$ws) {
+          switch (self.$ws.readyState) {
             case 0:
-            self.initWs();
-            break;
+              self.initWs();
+              break;
             case 1:
-            self.$ws.addEventListener("message", self.wsOnMessage);
-            self.$ws.addEventListener("close", self.wsOnClose);
-            self.$ws.addEventListener("error", self.wsOnError);
-            break;
+              self.$ws.addEventListener("message", self.wsOnMessage);
+              self.$ws.addEventListener("close", self.wsOnClose);
+              self.$ws.addEventListener("error", self.wsOnError);
+              break;
             default:
-            self.$initWs();
-            self.initWs();
+              self.$initWs();
+              self.initWs();
           }
-        }else {
-           self.$initWs();
-           self.initWs();
+        } else {
+          self.$initWs();
+          self.initWs();
         }
       }, 1000);
     },
@@ -636,7 +663,7 @@ export default {
       let self = this;
       let step = this.uploadStatus[this.curr_progress].step;
       let progress = this.uploadStatus[this.curr_progress].progress;
-      console.log(res);
+      // console.log(res);
       switch (res.msg) {
         case "存入数据中":
           step.dealWith = "存入数据中";
@@ -656,10 +683,10 @@ export default {
         default:
           if (res.msg.indexOf("[{") > -1) {
             let data = JSON.parse(res.msg);
-            console.log(self.curr_progress);
+            // console.log(self.curr_progress);
             data.forEach(item => {
               let percentage = item.percentage;
-              console.log(percentage);
+              // console.log(percentage);
               self.uploadStatus[
                 self.curr_progress
               ].progress.percentage = percentage;
@@ -702,15 +729,19 @@ export default {
         }
       ];
     },
-    //下载status===2的文件
-    download(scope) {
+    //下载status===2的文件 //这里要么传scope(表格上的下载)，要么传path和fileName(上传后直接下载)
+    download(scope, path, fileName) {
       console.log("download");
       console.log(scope);
-      let row = scope.childData.row;
+      if (scope) {
+        let row = scope.childData.row;
+        let path = row.filePath + row.uuidName;
+        let fileName = row.name;
+      }
       let config = {
         responseType: "blob"
       };
-      let path = row.filePath + row.uuidName;
+      // let self = this;
       axios
         .post(
           BASEURL + "/upload/downloadCommonFile",
@@ -720,8 +751,7 @@ export default {
         .then(res => {
           if (res.status === 200) {
             console.log(res);
-
-            this.downloadFile(res, row.name);
+            this.downloadFile(res, fileName);
           }
         });
     },
@@ -752,6 +782,11 @@ export default {
           });
         })
         .catch(() => {});
+    },
+    closeNotifys(){
+      this.notifys.forEach(item=>{
+        item.close();
+      })
     }
   },
   created() {
@@ -763,12 +798,15 @@ export default {
   mounted() {},
   activated() {
     this.initWs();
+    this.bindEventDelegation();
   },
   deactivated() {
     if (this.$ws) {
       this.$ws.removeEventListener("message", this.wsOnMessage);
       this.$ws.removeEventListener("close", this.wsOnClose);
       this.$ws.removeEventListener("error", this.wsOnError);
+      document.removeEventListener("click",this.eventDelegationFn);
+      this.closeNotifys();
     }
     this.wsTimer && clearTimeout(this.wsTimer);
   }
