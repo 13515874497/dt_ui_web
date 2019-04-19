@@ -37,9 +37,6 @@ export default {
     type: 'string',
     message: '请输入字符',
     trigger: 'change',
-  },{
-    validator: DBFieldRepeat,  //验证字段在数据库是否冲突
-    trigger: 'change'
   }
 ],
   _number: [{
