@@ -16,6 +16,7 @@ import Declaration from '../views/Basic_Data/Basic_Logistics/Customs-declaration
 import EleContent from '../views/Basic_Data/Basic_Logistics/ele_content'
 import Err from '../views/Err/Err'
 import Freight from '../views/Freight/Freight'
+
 import CprUpload from '../views/Upload/CprUploadFile'
 import Business from '../views/Upload/BusinessUploadFile'//业务报告
 import OarUpload from '../views/Upload/OarUploadFile'//OAR
@@ -146,7 +147,6 @@ export default new Router({
         showLogin: true
       },
       children: [
-       
         {
           path: '/index/account_management/:id/:name',
           component: AccountManagement

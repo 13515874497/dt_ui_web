@@ -3,7 +3,7 @@
     <main class="main">
       <el-tag class="tag">{{page.name}}</el-tag>
 
-      <div class="sel">
+      <div class="sel" v-if="!onlyShowUpload">
         <slot name="slotType"></slot>
         <el-radio-group
           v-model="radio.model"
@@ -19,7 +19,7 @@
         </el-radio-group>
         <el-select
           placeholder="请选择"
-          v-if="select.render.length"
+          v-if="select.render.length && uploadFrom.shopId"
           v-model="select.model"
           @change="changeSelect"
         >
@@ -37,18 +37,19 @@
       type="card"
       style="margin-top:10px"
       v-model="tab_model"
-      v-show="uploadFrom.siteId || uploadFrom.areaId"
+      v-show="(uploadFrom.siteId || uploadFrom.areaId) || onlyShowUpload"
     >
       <el-tab-pane label="文件上传" name="upload" class="tab-content-left">
         <section class="left">
           <!-- 根据不同类型插入不同模块 -->
 
-          <div class="upload" v-show="select.model">
+          <div class="upload">
             <el-upload class="upload-demo" drag action multiple :before-upload="beforeAvatarUpload">
               <i class="el-icon-upload"></i>
               <div class="el-upload__text">
                 <!-- 将{{}}文件拖到此处，或 -->
-                将{{radio.label}}店铺---{{select.label}}---文件拖到此处，或
+                <!-- {{radio.label}}店铺---{{select.label}}--- -->
+                将{{onlyShowUpload?'': radio.label+'店铺---' +select.label}}文件拖到此处，或
                 <em>点击上传</em>
               </div>
               <div class="el-upload__tip" slot="tip">只能上传{{validSuffix.join('/')}}文件，且不超过100mb</div>
@@ -183,6 +184,8 @@ export default {
         id: +this.$route.params.id
       },
       tab_model: "upload",
+
+      showUploadmId: [271],
       // -------------------------------文件上传
       radio: {
         model: "",
@@ -191,21 +194,22 @@ export default {
         isShow: true
       },
       select: {
-        model: null,
+        model: '',
         label: null,
-        render: []
+        render: [],
+        shortName: ""
       },
       uploadBtn: {
         disabled: false
       },
-      continent: [109, 110, 113, 114,269,270,271], //页面id为洲的信息，其他都是站点
+      continent: [109, 110, 113, 114, 269, 270], //页面id为洲的信息，其他都是站点
       isContinent: false, //判断该页面显示洲还是站点
       //根据菜单id判断上传类型
       suffix: {
         csv: [85, 108, 104],
-        xls: [105, 107, 106, 125, 115],
-        xlsx: [105, 107, 106, 125, 115],
-        txt: [109, 110, 113, 114,269,270,271]
+        xls: [105, 107, 106, 125, 115, 271],
+        xlsx: [105, 107, 106, 125, 115, 271],
+        txt: [109, 110, 113, 114, 269, 270]
       },
       readyFileList: [], //待上传的文件(已验证通过)
       uploadStatus: [], //每个文件上传过程中的状态
@@ -228,7 +232,7 @@ export default {
         siteId: this.isContinent ? "" : this.select.model, //站点 ID
         areaId: this.isContinent ? this.select.model : "", //洲 ID
         pId: this.pId || "", //付款类型ID
-        tbId: this.page.id,
+        mId: this.page.id,
         businessTime: this.businessTime || "" //业务报告日期
       };
     },
@@ -290,6 +294,14 @@ export default {
         });
       }
       return arr;
+    },
+    //直接显示文件上传
+    onlyShowUpload() {
+      if (this.showUploadmId.includes(this.page.id)) {
+        return true;
+      } else {
+        return false;
+      }
     }
   },
   watch: {
@@ -303,7 +315,8 @@ export default {
         this.select.render = res.data.map(item => {
           return {
             id: item.siteId,
-            name: item.siteName
+            name: item.siteName,
+            shortName: item.siteShortNameEng
           };
         });
       }
@@ -340,26 +353,32 @@ export default {
       }
     },
     changeRadio(val) {
-      this.radio.label = this.radio.render.find(item => {
+      let option = this.radio.render.find(item => {
         return item.shopId === val;
-      }).shopName;
+      });
+      this.radio.label = option.shopName;
+      this.radio.shortName = option.shopShortCode;
     },
     changeSelect(val) {
       console.log(val);
-      this.select.label = this.select.render.find(item => {
+      let option = this.select.render.find(item => {
         return item.id === val;
-      }).name;
+      });
+      this.select.label = option.name;
+      this.select.shortName = option.shortName;
     },
     //判断slect渲染洲还是站点 如果是洲则直接请求
     async getSelectRender() {
       if (this.continent.includes(this.page.id)) {
+        if (this.select.render.length) return;
         this.isContinent = true;
         let res = await findByListRegion({});
         if (res.code === 200) {
           this.select.render = res.data.map(item => {
             return {
               id: item.areaId,
-              name: item.areaName
+              name: item.areaName,
+              shortName: item.areaShortNameEng
             };
           });
         }
@@ -392,10 +411,9 @@ export default {
           );
           return;
         }
-        const isFlg = checkUtils.checkFileInfo(file, this.uploadFrom);
-        if (!isFlg) {
-          return isFlg;
-        }
+        let rule = { radio:this.radio,select:this.select};
+        let flag = checkUtils.checkFileInfo(file,rule,this.onlyShowUpload);
+        if(!flag) return ;
 
         this.readyFileList.push(file);
         this.uploadStatus.push({
@@ -419,17 +437,13 @@ export default {
     },
     //删除所有待上传的文件
     removeReadyFile_all() {
-      console.log(11);
       this.readyFileList = [];
       this.uploadStatus = [];
       // this.readyFileList.length = 0;
       // this.uploadStatus.length = 0;
-      console.log(this.readyFileList);
-      
     },
     //删除待上传文件
     removeReadyFile(index) {
-      console.log(index);
 
       this.uploadBtn.disabled = false;
       this.readyFileList.splice(index, 1);
@@ -466,7 +480,7 @@ export default {
       this.param.append("sId", this.uploadFrom.shopId);
       this.param.append("seId", this.uploadFrom.siteId);
       this.param.append("payId", this.uploadFrom.pId);
-      this.param.append("menuId", this.uploadFrom.tbId);
+      this.param.append("menuId", this.uploadFrom.mId);
       this.param.append("areaId", this.uploadFrom.areaId);
       this.param.append("businessTime", this.uploadFrom.businessTime);
       let config = {
@@ -500,7 +514,6 @@ export default {
             });
             self.setUploadStatus("数据处理中", 2, "process");
             resultAdd.then(resAdd => {
-              console.log(resAdd);
               if (resAdd.code === 200) {
                 resAdd.data.forEach((item, index) => {
                   let step = self.uploadStatus[index].step;
@@ -573,15 +586,28 @@ export default {
       //等待父组件连上websocket
       console.log(self.$ws);
       this.wsTimer = setTimeout(() => {
-        if (!self.$ws) {
-          self.initWs();
-          return;
+        if(self.$ws){
+          switch(self.$ws.readyState){
+            case 0:
+            self.initWs();
+            break;
+            case 1:
+            self.$ws.addEventListener("message", self.wsOnMessage);
+            self.$ws.addEventListener("close", self.wsOnClose);
+            self.$ws.addEventListener("error", self.wsOnError);
+            break;
+            default:
+            self.$initWs();
+            self.initWs();
+          }
+        }else {
+           self.$initWs();
+           self.initWs();
         }
-        self.$ws.addEventListener("message", self.bindWsEvent);
       }, 1000);
     },
-    //websock绑定事件
-    bindWsEvent(msg) {
+    //只在该页面的  websock onmessage事件
+    wsOnMessage(msg) {
       let resMsg = msg.data;
       let res = JSON.parse(resMsg);
       if (
@@ -590,6 +616,13 @@ export default {
       ) {
         this.progressBar(res);
       }
+    },
+    //只在该页面的  websock onclose事件
+    wsOnClose() {
+      this.initWs();
+    },
+    wsOnError() {
+      this.initWs();
     },
     //进度条渲染
     progressBar(res) {
@@ -725,7 +758,11 @@ export default {
     this.initWs();
   },
   deactivated() {
-    this.$ws && this.$ws.removeEventListener("message", this.bindWsEvent);
+    if (this.$ws) {
+      this.$ws.removeEventListener("message", this.wsOnMessage);
+      this.$ws.removeEventListener("close", this.wsOnClose);
+      this.$ws.removeEventListener("error", this.wsOnError);
+    }
     this.wsTimer && clearTimeout(this.wsTimer);
   }
 };

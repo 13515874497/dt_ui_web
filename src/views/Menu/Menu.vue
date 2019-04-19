@@ -183,6 +183,7 @@ import {
   upHeadSort,
   upMenu,
   saveHead,
+  upHeadInfo,
   reference,
   saveReference
 } from "@/api";
@@ -300,12 +301,12 @@ export default {
           required: true,
           statusOptions: [
             {
-              id: false,
-              name: "否"
-            },
-            {
               id: true,
               name: "是"
+            },
+            {
+              id: false,
+              name: "否"
             }
           ]
         },
@@ -344,12 +345,12 @@ export default {
           required: true,
           statusOptions: [
             {
-              id: false,
-              name: "否"
-            },
-            {
               id: true,
               name: "是"
+            },
+            {
+              id: false,
+              name: "否"
             }
           ]
         },
@@ -392,23 +393,7 @@ export default {
       });
     }
   },
-  async mounted() {
-    this.userName = this.getCookie("name");
-    //读取本地缓存
-    const menu = storage.readData(this.userName + "menu");
-    this.menuList = menu;
-    this.resetMenuList = menu;
-    console.log(menu);
-  },
-  //添加图标
-  async created() {
-    const result = await icons();
-    console.log(result);
-    if (result.code === 200) {
-      this.iconOptions = result.data;
-    }
-  },
-
+   
   methods: {
     //添加 菜单
     append(data) {
@@ -536,6 +521,7 @@ export default {
           break;
       }
     },
+    // async get
 
     //菜单信息  字段tree被选中
     treeCheck(dataAll, data) {
@@ -618,10 +604,10 @@ export default {
         });
         return;
       }
-      if(checked.length >= 10){
+      if (checked.length >= 10) {
         Message({
           showClose: true,
-          message: "引用字段过多",
+          message: "引用字段过多,需小于10个",
           type: "error"
         });
         return;
@@ -640,6 +626,7 @@ export default {
     async sort() {
       console.log("保存排序接口");
       let res = await upHeadSort(this.sortedAjaxObj);
+
       console.log(res);
     },
     //拖拽跟踪 防止拖到内部
@@ -686,21 +673,9 @@ export default {
       let data = $event[1];
       let modifyData = $event[2];
       //新增的字段数据
-      console.log(isPass,data,modifyData);
-      
+      console.log(isPass, data, modifyData);
+
       this.add_field = {
-        data,
-        isPass
-      };
-    },
-    passData_update($event) {
-      let isPass = $event[0];
-      let data = $event[1];
-      let modifyData = $event[2];
-      // console.log(modifyData)
-      // console.log(isPass)
-      console.log(data);
-      this.up_field = {
         data,
         isPass
       };
@@ -713,7 +688,6 @@ export default {
           ...this.add_field.data
         };
         console.log(TableHead);
-
         let res = await saveHead(TableHead);
         console.log(res);
         this.addDialogFormVisible = false;
@@ -725,10 +699,58 @@ export default {
         });
       }
     },
-    async passedData_update(){
-      console.log('修改编辑字段')
+    passData_update($event) {
+      let isPass = $event[0];
+      let data = $event[1];
+      let modifyData = $event[2];
+      modifyData.version = data.version;
+      modifyData.menuId = data.menuId;
+      modifyData.id = data.id;
+      this.update_field = {
+        data:modifyData,
+        isPass
+      };
+      console.log($event[1]);
+      
+      console.log(this.update_field);
+    },
+    async passedData_update() {
+      if (this.update_field && this.update_field.isPass) {
+        let TableHead = {
+          // menuId: this.editingMenu.data.menuId,
+          ...this.update_field.data
+        };
+        console.log(TableHead);
+        let res = await upHeadInfo(TableHead);
+        console.log(res);
+        this.editDialogFormVisible = false;
+      } else {
+        Message({
+          showClose: true,
+          message: "验证未通过",
+          type: "error"
+        });
+      }
     }
-  }
+  },
+  //添加图标
+  async created() {
+    const result = await icons();
+    console.log(result);
+    if (result.code === 200) {
+      this.iconOptions = result.data;
+    }
+
+
+  },
+  async mounted() {
+    this.userName = this.getCookie("name");
+    //读取本地缓存
+    const menu = storage.readData(this.userName + "menu");
+    this.menuList = menu;
+    this.resetMenuList = menu;
+    console.log(menu);
+  },
 };
 </script>
 
