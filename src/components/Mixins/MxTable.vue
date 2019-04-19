@@ -40,11 +40,17 @@
     <section>
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
+        <div class="form-content scrollbar">
+
         <Form :formItems="formItems" @passData="passData_add" :rule="rule"></Form>
+        </div>
 
         <div slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="send_add">保 存</el-button>
+          <el-button>保存并复制</el-button>
+          <el-button>保存并继续</el-button>
+          <el-button>重 置</el-button>
           <el-button @click="add.visible = false">取 消</el-button>
-          <el-button type="primary" @click="send_add">确 定</el-button>
         </div>
       </el-dialog>
     </section>
@@ -57,7 +63,7 @@
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="update.visible = false">取 消</el-button>
-          <el-button type="primary" :disabled="!update.data" @click="send_update">确 定</el-button>
+          <el-button type="primary" :disabled="!update.data" @click="send_update">保 存</el-button>
         </div>
       </el-dialog>
     </section>
@@ -278,7 +284,7 @@ export default {
         }else {
           message.errorMessage(res.msg);
         }
-        });           
+        });
       })
       .catch(()=>{
 
@@ -357,5 +363,10 @@ export default {
 }
 .control {
   margin-top: 20px;
+}
+.form-content {
+  max-height: 500px;
+  overflow-y: scroll;
+  padding-right: 15px;
 }
 </style>

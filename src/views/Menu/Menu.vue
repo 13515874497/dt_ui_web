@@ -130,7 +130,7 @@
 
     <!-- 字段列表 =>  修改 -->
     <el-dialog title="编辑字段" :visible.sync="editDialogFormVisible">
-      <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form>
+      <Form :formItems="formItems" :formData="data_field" @passData="passData_update" :rule="rule"></Form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
@@ -140,7 +140,7 @@
 
     <!-- 点击新增 -->
     <el-dialog title="新增字段" :visible.sync="addDialogFormVisible">
-      <Form :formItems="formItems" @passData="passData_add"></Form>
+      <Form :formItems="formItems" @passData="passData_add" :rule="rule"></Form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="passedData_add">确 定</el-button>
@@ -196,6 +196,7 @@ import AddDelUpBtn from "@/components/ElementUi/AddDelUpBtn"; //增删改组件
 import requestAjax from "@/api/requestAjax";
 import Table from "@/components/ElementUi/Table";
 import { Message } from "element-ui";
+import { DBFieldRepeat } from "@/utils/verify";
 let id = 1000; //假菜单ID
 export default {
   data() {
@@ -257,6 +258,32 @@ export default {
           topType: "inputType"
         }
       ], //表头信息
+      rule: {
+        headName: [
+          {
+            required: true,
+            type: "string",
+            message: "请输入字符",
+            trigger: "change"
+          },
+          {
+            validator: DBFieldRepeat, //验证字段在数据库是否冲突
+            trigger: "change"
+          }
+        ],
+        topType: [
+          {
+            required: true,
+            type: "string",
+            message: "请输入字符",
+            trigger: "change"
+          },
+          {
+            validator: DBFieldRepeat, //验证字段在数据库是否冲突
+            trigger: "change"
+          }
+        ]
+      },
       multipleSelection: [],
       showSortBtn: false, //是否显示字段排序的按钮
       activeName: "first",
@@ -381,7 +408,7 @@ export default {
         autocomplete: [], //用于筛选的数据
         data: [] //根据用户输入筛选符合的字段
       },
-      dis:false,
+      dis: false
     };
   },
   components: {
@@ -563,35 +590,34 @@ export default {
       console.log("删除");
     },
 
-
     //点击引用选中字段信息做长度限制
-     treeCheckNodes(dataAll, data) {
+    treeCheckNodes(dataAll, data) {
       console.log(dataAll);
       console.log(data);
       this.checkedNodes = data.checkedNodes;
-      console.log(data.checkedNodes)
-      
-      if( this.checkedNodes.length >= 10 ){
-         Message({
+      console.log(data.checkedNodes);
+
+      if (this.checkedNodes.length >= 10) {
+        Message({
           showClose: true,
           message: "引用字段过多,须小于10条",
           type: "error"
         });
         //当超过限制时，将确定按钮禁用
-          this.dis = true
-      }else{
-        this.dis = false
+        this.dis = true;
+      } else {
+        this.dis = false;
       }
-     },
+    },
     //点击引用
     async recording() {
       console.log("引用菜单表头");
-      console.log(this.introList);        
+      console.log(this.introList);
       if (this.introList.length) {
         this.IntroDialogFormVisible = true;
         return;
       }
-      console.log(this.editingMenu); 
+      console.log(this.editingMenu);
 
       let res = await reference({ menuId: this.editingMenu.data.menuId });
       console.log(res);
