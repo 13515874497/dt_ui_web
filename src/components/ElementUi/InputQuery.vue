@@ -46,7 +46,7 @@
           :rules="rules.date"
         >
           <el-date-picker
-            v-show="tableTitle._isShow"
+            
             value-format="timestamp"
             v-model="data_model[tableTitle.topType]"
             type="datetime"
