@@ -20,7 +20,7 @@ ul,ol{
 .scrollbar::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0);
-  background: #7a7a7a;
+  background: rgba(0, 0, 0, 0.2);
 }
 /*滚动条轨道*/
 .scrollbar::-webkit-scrollbar-track {
