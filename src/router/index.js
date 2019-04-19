@@ -605,7 +605,7 @@ export default new Router({
           component:Additional_tariff
         },
         {
-          path:'/index/sku/:id/:name',//SUK信息表
+          path:'/index/sku/:id/:name',//SKU信息表
           component:SKU
         },
         {

@@ -278,9 +278,7 @@ export default {
         }else {
           message.errorMessage(res.msg);
         }
-        });
-     
-        
+        });           
       })
       .catch(()=>{
 

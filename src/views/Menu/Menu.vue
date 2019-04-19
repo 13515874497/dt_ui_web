@@ -697,6 +697,13 @@ export default {
       let isPass = $event[0];
       let data = $event[1];
       let modifyData = $event[2];
+      // console.log(modifyData)
+      // console.log(isPass)
+      console.log(data);
+      this.up_field = {
+        data,
+        isPass
+      };
     },
     //对某个菜单进行新增字段 如果验证通过则向后台发起请求
     async passedData_add() {
@@ -719,7 +726,7 @@ export default {
       }
     },
     async passedData_update(){
-
+      console.log('修改编辑字段')
     }
   }
 };
