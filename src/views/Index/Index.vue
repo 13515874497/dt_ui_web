@@ -1,6 +1,7 @@
 <template>
   <el-container>
-    <div style="height: 100%;overflow-y: auto">
+    <!-- <div style="height: 100%;overflow-y: auto"> -->
+      <div style="height: 100%;">
       <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
     </div>
 
@@ -117,7 +118,7 @@ export default {
 };
 </script>
 
-<style scope lang="scss">
+<style scoped lang="scss">
 .el-table .cell {
   white-space: nowrap;
 }
