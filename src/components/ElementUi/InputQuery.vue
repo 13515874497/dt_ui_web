@@ -45,8 +45,7 @@
           :prop="tableTitle.topType"
           :rules="rules.date"
         >
-          <el-date-picker
-            
+          <el-date-picker           
             value-format="timestamp"
             v-model="data_model[tableTitle.topType]"
             type="datetime"
