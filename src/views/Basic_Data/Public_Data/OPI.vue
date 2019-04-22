@@ -1,6 +1,6 @@
 <script>
 //产品信息
-import { findByListProduct, saveProduct, upProduct, delProduct } from "@/api";
+import { findByListProduct, saveProduct, upProduct, delProduct,findByListProducts } from "@/api";
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
@@ -23,7 +23,14 @@ export default {
     ajax_remove(data) {
       //删除的接口
       return delProduct(data);
+    },
+    async inputType5(){
+      let res = await findByListProducts();
+      console.log(res);
     }
+  },
+  created(){
+    this.inputType5();
   }
 };
 </script>

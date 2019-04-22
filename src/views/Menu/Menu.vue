@@ -82,14 +82,14 @@
         </el-tab-pane>
 
         <el-tab-pane
-          style="min-width:600px"
+          style="min-width:500px"
           v-if="editingMenu.data.url"
           label="字段信息"
           class="field-tree"
           name="second"
         >
           <el-row class="field-row">
-            <el-col :span="12">
+            <el-col :span="21">
               <el-tree
                 show-checkbox
                 :data="menu.tableData"
@@ -774,6 +774,11 @@ export default {
         console.log(TableHead);
         let res = await upHeadInfo(TableHead);
         console.log(res);
+        if(res.code === 200){
+          message.successMessage(res.msg);
+        }else {
+          message.errorMessage(res.msg);
+        }
         this.editDialogFormVisible = false;
       } else {
         Message({

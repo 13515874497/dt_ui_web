@@ -8,6 +8,7 @@
     status-icon
     @validate="handlerValidate"
     :rules="rules"
+    class="form-content scrollbar"
   >
     <template v-for="item in formItems">
       <el-form-item
@@ -130,7 +131,8 @@ export default {
     // ],
     formItems: Array,
     formData: Object, //有传这个说明是修改
-    rule: Object
+    rule: Object,
+    reset:Boolean
   },
   data() {
     return {
@@ -144,6 +146,9 @@ export default {
       this.initData_model();
     },
     formData() {
+      this.initData_model();
+    },
+    reset(){
       this.initData_model();
     },
     data_model: {
@@ -244,5 +249,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.form-content {
+  max-height: 500px;
+  overflow-y: scroll;
+  padding-right: 15px;
+}
 </style>
