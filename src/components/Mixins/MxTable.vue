@@ -40,16 +40,13 @@
     <section>
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <div class="form-content scrollbar">
-
-        <Form :formItems="formItems" @passData="passData_add" :rule="rule"></Form>
-        </div>
+        <Form :formItems="formItems" @passData="passData_add" :rule="rule" :reset="add.reset"></Form>
 
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="send_add">保 存</el-button>
-          <el-button>保存并复制</el-button>
-          <el-button>保存并继续</el-button>
-          <el-button>重 置</el-button>
+          <el-button type="primary" @click="send_add(true)">保 存</el-button>
+          <el-button @click="send_add(false)">保存并复制</el-button>
+          <el-button @click="send_add(false,true)">保存并继续</el-button>
+          <el-button @click="resetForm_add">重 置</el-button>
           <el-button @click="add.visible = false">取 消</el-button>
         </div>
       </el-dialog>
@@ -108,7 +105,8 @@ export default {
       add: {
         visible: false,
         data: null,
-        isPass: false
+        isPass: false,
+        reset: false
       },
       primaryKey: '', //提供一个修改、删除时的主键
       rule: {},
@@ -194,7 +192,7 @@ export default {
     reset() {
       //触发下表头变更 让子组件初始化
       this.tableTitle = [...this.tableTitle];
-      this.queryIds = [];
+      // this.queryIds = [];
     },
     handlerFormData(data) {
       data.systemLogStatus = {};
@@ -218,12 +216,21 @@ export default {
     },
     //需要提供一个新增的接口
     ajax_add(data) {},
-    async send_add() {
+    async send_add(isClose,isReset) {
+      if(!this.add.isPass) {
+        message.errorMessage('验证未通过');
+        return;
+      }
       let res = await this.ajax_add(this.add.data);
       if (res.code === 200) {
         message.successMessage(res.msg);
         this.search();
-        this.add.visible = false;
+        if(isClose){
+          this.add.visible = false;
+        }
+        if(isReset){
+          this.resetForm_add();
+        }
       } else {
         message.errorMessage(res.msg);
       }
@@ -302,6 +309,9 @@ export default {
       }else {
         message.errorMessage(res.msg);
       }
+    },
+    resetForm_add(){
+      this.add.reset = !this.add.reset;
     },
     initOperateBtn() {
       let self = this;
