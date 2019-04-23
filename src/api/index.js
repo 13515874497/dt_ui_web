@@ -272,6 +272,10 @@ export const getBusInfoWeek = (data) => ajax(BASE_URL + `/fba/getBusInfo`,data, 
 // 接收库存 http://127.0.0.1:9001/api/v1/fba/getReceiveInfo  post
 export const getReceiveInfo = (data) => ajax(BASE_URL + `/fba/getReceiveInfo`,data, 'POST')
 
+// 查询期末库存信息 http://127.0.0.1:9001/api/v1/fba/getInventoryInfo 
+export const getInventoryInfo = (data) => ajax(BASE_URL + `/fba/getInventoryInfo`,data, 'POST')
+
+
 //FBA遗弃 http://127.0.0.1:9002/api/v1/fba/getAbandonInfo post
 export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`,data, 'POST')
 
@@ -287,6 +291,15 @@ export const getMWarInfo = (data) => ajax(BASE_URL + `/fba/getMWarInfo`,data, 'P
 
 //长期仓储费  http://127.0.0.1:9001/api/v1/fba/getLWarInfo post
 export const getLWarInfo = (data) => ajax(BASE_URL + `/fba/getLWarInfo`,data, 'POST')
+
+//订单处理费 http://127.0.0.1:9001/api/v1/fba/getHlFee 
+export const getHlFee = (data) => ajax(BASE_URL + `/fba/getHlFee`,data, 'POST')
+
+
+//运营管理 => 其他
+// Feedback  http://127.0.0.1:9001/api/v1/fba/getFeedback 
+export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`,data, 'POST')
+
 
 /**
  * 
@@ -668,3 +681,11 @@ export const repGetLogisticsInfo = ({
 //查询字段的选项
 export const getGeneralInfo = (data)=> ajax(BASE_URL + '/general/getGeneralInfo',data)
 
+// 文件上传时间区间控制
+//   http://127.0.0.1:9001/api/v1/ing/getCheckoutDate?menuId=20
+
+export const getCheckoutDate = ({
+  menuId
+}) => ajax(BASE_URL + '/ing/getCheckoutDate', {
+  menuId
+}, 'POST')
