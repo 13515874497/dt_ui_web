@@ -28,8 +28,12 @@
             :key="item.id"
             :label="`${item.name}(${item.shortName})`"
             :value="item.id"
-          ></el-option>
+          ></el-option>         
         </el-select>
+
+        <DatePicker></DatePicker>
+
+        <el-button type="primary" class="el-btn">设为默认按钮</el-button>
       </div>
     </main>
 
@@ -153,7 +157,8 @@ import {
   repGetShopName,
   BASEURL,
   repAddUploadInfoMysql,
-  repDelUploadInfo
+  repDelUploadInfo,
+  getCheckoutDate
 } from "@/api";
 import message from "@/utils/Message";
 import checkUtils from "@/utils/CheckUtils";
@@ -162,6 +167,7 @@ import Table from "@/components/ElementUi/Table";
 import Pagination from "@/components/ElementUi/Pagination";
 import pUtils from "@/utils/PageUtils";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
+import DatePicker from "@/components/FileUpload/DatePicker";//时间选择器
 export default {
   props: {
     pId: {
@@ -175,7 +181,8 @@ export default {
   components: {
     Table,
     Pagination,
-    OperateBtn
+    OperateBtn,
+    DatePicker
   },
   data() {
     return {
@@ -223,7 +230,8 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-      notifys:[]//当前页面的所有提示信息
+      notifys:[],//当前页面的所有提示信息
+      menuId:''
     };
   },
   computed: {
@@ -353,6 +361,13 @@ export default {
         this.radio.render = res.data;
       }
     },
+  async getDate(){
+      let menuId = +this.$route.params.id
+      console.log(menuId)
+      let result = await getCheckoutDate(this.page.id);
+      console.log(result);
+    },
+
     changeRadio(val) {
       let option = this.radio.render.find(item => {
         return item.shopId === val;
@@ -787,15 +802,18 @@ export default {
       this.notifys.forEach(item=>{
         item.close();
       })
-    }
+    },
   },
   created() {
     this.init();
     this.getSelectRender();
     this.getRadioList();
     this.initOperateBtn();
+    this.getDate()
   },
-  mounted() {},
+  mounted() {
+  
+  },
   activated() {
     this.initWs();
     this.bindEventDelegation();
@@ -809,7 +827,8 @@ export default {
       this.closeNotifys();
     }
     this.wsTimer && clearTimeout(this.wsTimer);
-  }
+  },
+
 };
 </script>
 
@@ -851,6 +870,9 @@ export default {
       margin-left: 10px;
     }
   }
+}
+.el-btn{
+  margin-left:20px;
 }
 </style>
 

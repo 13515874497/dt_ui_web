@@ -27,9 +27,9 @@ export default {
   methods: {
     //付款类型
     changeDate(value) {
-      this.$emit('changeDate',value);   
-    }
-  }
+      this.$emit('changeDate',value);
+    },  
+  },
 };
 </script>
 
