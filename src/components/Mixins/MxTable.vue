@@ -40,7 +40,7 @@
     <section>
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form :formItems="formItems" @passData="passData_add" :rule="rule" :reset="add.reset"></Form>
+        <Form :formItems="formItems" @passData="passData_add" :rule="rule" :reset="add.reset" :customField="customField"></Form>
 
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="send_add(true)">保 存</el-button>
