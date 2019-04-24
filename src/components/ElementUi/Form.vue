@@ -200,6 +200,10 @@ export default {
     initCustomField() {
       let self = this;
       return new Promise(async (resolve, reject) => {
+        if(!self.customField) {
+          resolve(null);
+          return;
+        }
         self._customField = [...self.customField];
         for (let i = 0; i < self._customField.length; i++) {
           let item = self._customField[i];
@@ -250,6 +254,8 @@ export default {
     initData_model() {
       let self = this;
       if (this.formData) {
+        console.log(this.formData);
+        
         this.data_model = { ...this.formData };
         this.data_model_cache = { ...this.formData }; //只对基本数据类型做缓存
         return;
@@ -346,6 +352,8 @@ export default {
     }
   },
   async created() {
+    console.log(111);
+    
     this._formItems = [...this.formItems];
 
     await this.initCustomField();
