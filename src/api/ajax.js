@@ -93,40 +93,48 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     promise.then(function (response) {
       // 成功了调用resolve()
       let res = response.data;
-      switch (res.code) {
-        case -2:
-        console.log(response.request.responseURL);
-        
-          if(response.request.responseURL.endsWith('/index/status')) break; //如果是验证状态的接口 直接退出
-          // if(response.request.responseURL.indexOf('/index/status')>-1)break;
-          // loading.loading_dom().close();
-          router.push('/login');
-          Message({
-            showClose: true,
-            message: res.msg,
-            // type: "error"
-          });
-          break;
-        case -3:
-          router.replace('/userModifiesPwd');
-          Message({
-            showClose: true,
-            message: res.msg,
-            type: "error"
-          });
-          break;
-          // case -1:
-          //   if (!msg) {
-          //     Message({
-          //       showClose: true,
-          //       message: res.msg,
-          //       type: "error"
-          //     });
-          //   }
-          //   break;
+      console.log(response);
 
 
+      if (!(response.config.url && response.config.url.endsWith('/index/status'))) {
+        switch (res.code) {
+          case -2:
+            console.log(response.request.responseURL);
+            console.log(response);
+
+            // if(response.request.responseURL&&response.request.responseURL.endsWith('/index/status')) break; //如果是验证状态的接口 直接退出
+            // if(response.config.url && response.config.url.endsWith('/index/status')) break;
+            // if(response.request.responseURL.indexOf('/index/status')>-1)break;
+            // loading.loading_dom().close();
+            router.push('/login');
+            Message({
+              showClose: true,
+              message: res.msg,
+              // type: "error"
+            });
+            break;
+          case -3:
+            // router.replace('/userModifiesPwd');
+            // Message({
+            //   showClose: true,
+            //   message: res.msg,
+            //   type: "error"
+            // });
+            break;
+            // case -1:
+            //   if (!msg) {
+            //     Message({
+            //       showClose: true,
+            //       message: res.msg,
+            //       type: "error"
+            //     });
+            //   }
+            //   break;
+
+
+        }
       }
+
       resolve(res)
 
       //自定义成功或错误信息
@@ -164,7 +172,7 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
                   type: "error"
                 });
                 break;
-                case false:
+              case false:
                 break;
               default:
                 Message({
