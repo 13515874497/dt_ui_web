@@ -79,23 +79,22 @@
         ></el-input>
       </el-form-item>
 
-
-
       <el-form-item
         v-else-if="item.inputType === 5"
         :label="item.headName"
         :props="item.topType"
         :rules="matchedRule(item)"
+       
       >
         <el-cascader
           expand-trigger="hover"
           :options="item.data"
+          v-model="data_model['_'+item.topType]"
+          @change="triggerFormChange"
           :props="props_inputType5"
-          v-model="data_model[item.topType]"
+           :filterable="true"
         ></el-cascader>
       </el-form-item>
-
-
 
       <el-form-item
         v-else-if="item.inputType == 0 || !item.inputType"
@@ -174,7 +173,7 @@ export default {
         label: "treeName",
         children: "childNode"
       },
-      customField_cache:[] //自定义的字段，特殊的字段需要拆开来再获取值
+      customField_cache: [] //自定义的字段，特殊的字段需要拆开来再获取值
     };
   },
   computed: {},
@@ -191,42 +190,39 @@ export default {
     data_model: {
       async handler(val) {
         // console.log(val);
-        this.passData(await this.isVerifyPass());
+        // this.passData(await this.isVerifyPass());
+        this.triggerFormChange();
       },
       deep: true
     }
   },
   methods: {
     initCustomField() {
-      return new Promise((resolve,reject)=>{
+      let self = this;
+      return new Promise(async (resolve, reject) => {
+        self._customField = [...self.customField];
+        for (let i = 0; i < self._customField.length; i++) {
 
-        this._customField = [...this.customField];
-        this._customField.forEach(async item => {
+          let item = self._customField[i];
+
+          let formItem = self._formItems.find(formItem => {
+            return formItem.topType === item.topType;
+          });
+          formItem.inputType = item.inputType;
           switch (item.inputType) {
             case 5:
-              item.data = [];
+              formItem.data = [];
               let res = await item.ajax();
-              console.log(1111);
-              
               if (res.code === 200) {
-                  item.data = res.data;
+                // res.data[0].childNode[0].childNode = null;
+               formItem.data = res.data;
               }
-              this.data_model[item.topType] = [];
-              console.log(this.data_model);
-              this.customField_cache.push(item.topType.join(','));
-              item.topType.forEach(t=>{
-                // delete this.data_model[t];
-                let index = this._formItems.findIndex(item=>{
-                  return item.topType === t; 
-                });
-                this._formItems.splice(index,1);
-              });
-              this._formItems.unshift(item);
-              console.log(this._formItems);
-              // this.for
+              self.data_model["_" + item.topType] = [];
+              // console.log(self.data_model);
+              self.customField_cache.push("_" + item.topType);
               break;
           }
-        });
+        }
         resolve(null);
       });
     },
@@ -265,11 +261,11 @@ export default {
       });
       this.data_model_cache = { ...this.data_model };
     },
-    getModifyData() {
+    getModifyData(data_model) {
       let modifyData = {};
-      for (let key in this.data_model) {
-        if (this.data_model[key] !== this.data_model_cache[key]) {
-          modifyData[key] = this.data_model[key];
+      for (let key in data_model) {
+        if (data_model[key] !== this.data_model_cache[key]) {
+          modifyData[key] = data_model[key];
         }
       }
       return modifyData;
@@ -293,25 +289,36 @@ export default {
     },
     passData(isPass) {
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
-      this.$emit("passData", [isPass, this.data_model, this.getModifyData()]);
+      let data_model = { ...this.data_model };
+      for (let key in data_model) {
+        if (this.customField_cache && this.customField_cache.includes(key)) {
+            
+        }
+      }
+      this.$emit("passData", [
+        isPass,
+        data_model,
+        this.getModifyData(data_model)
+      ]);
     },
     handlerValidate(key, valid, errMsg) {
       if (this.data_model[key] === this.data_model_cache[key]) {
         this.$refs["data_model"].clearValidate([key]);
       }
+    },
+    async triggerFormChange() {
+      this.passData(await this.isVerifyPass());
     }
   },
   async created() {
     this._formItems = [...this.formItems];
-    console.log(this._formItems);
-    let aa = await this.initCustomField();
-    console.log(aa);
-    
+
+    await this.initCustomField();
+
     this.initData_model();
     this.mergeRules();
   },
   mounted() {}
-  //1.传递 inputType数据 2._formItem新增一个字段，讲inputType改为five
 };
 </script>
 

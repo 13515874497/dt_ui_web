@@ -100,7 +100,6 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-
       selection: [], //多选框选择的
       add: {
         visible: false,
@@ -116,6 +115,7 @@ export default {
         data: null,
         isPass: false
       },
+      customField: null,
       //在form中不需要填写的
       sysLogNotForm: [
         "statusId",
@@ -208,7 +208,8 @@ export default {
       this.add.visible = true;
     },
     passData_add($event) {
-     
+      console.log($event);
+      
       this.add.isPass = $event[0];
       this.add.data = $event[2];
       this.handlerFormData(this.add.data)

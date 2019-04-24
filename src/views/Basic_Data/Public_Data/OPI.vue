@@ -16,10 +16,9 @@ export default {
       customField: [
         {
           //类目名称=>产品名称
-          topType: ["productsName", "productName"],
+          topType: "productsName",
           inputType: 5,
-          headName: "产品类目和产品名称",
-          ajax: findByListProducts
+          ajax: findByListProducts,
         }
       ]
     };
