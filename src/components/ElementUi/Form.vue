@@ -84,7 +84,6 @@
         :label="item.headName"
         :props="item.topType"
         :rules="matchedRule(item)"
-       
       >
         <el-cascader
           expand-trigger="hover"
@@ -92,7 +91,7 @@
           v-model="data_model['_'+item.topType]"
           @change="triggerFormChange"
           :props="props_inputType5"
-           :filterable="true"
+          :filterable="true"
         ></el-cascader>
       </el-form-item>
 
@@ -173,7 +172,8 @@ export default {
         label: "treeName",
         children: "childNode"
       },
-      customField_cache: [] //自定义的字段，特殊的字段需要拆开来再获取值
+      //自定义的字段
+      customField_cache: []
     };
   },
   computed: {},
@@ -202,7 +202,6 @@ export default {
       return new Promise(async (resolve, reject) => {
         self._customField = [...self.customField];
         for (let i = 0; i < self._customField.length; i++) {
-
           let item = self._customField[i];
 
           let formItem = self._formItems.find(formItem => {
@@ -215,11 +214,15 @@ export default {
               let res = await item.ajax();
               if (res.code === 200) {
                 // res.data[0].childNode[0].childNode = null;
-               formItem.data = res.data;
+                formItem.data = res.data;
               }
               self.data_model["_" + item.topType] = [];
               // console.log(self.data_model);
-              self.customField_cache.push("_" + item.topType);
+              self.customField_cache.push({
+                inputType: 5,
+                topType: item.topType,
+                topType_model: "_" + item.topType
+              });
               break;
           }
         }
@@ -261,13 +264,46 @@ export default {
       });
       this.data_model_cache = { ...this.data_model };
     },
-    getModifyData(data_model) {
+    //isModify 为true时，只获取修改的部分
+    getFormData(data_model, isModify) {
       let modifyData = {};
-      for (let key in data_model) {
-        if (data_model[key] !== this.data_model_cache[key]) {
-          modifyData[key] = data_model[key];
+      if (isModify) {
+        for (let key in data_model) {
+          if (data_model[key] !== this.data_model_cache[key]) {
+            modifyData[key] = data_model[key];
+          }
         }
+      }else {
+        modifyData = {...this.data_model}
       }
+
+      this.customField_cache.forEach(item => {
+        switch (item.inputType) {
+          case 5:
+            let values = this.data_model[item.topType_model];
+            if (!values.length) {
+              this.data_model[item.topType] = "";
+            } else {
+              let value = values[values.length - 1];
+              this.data_model[item.topType] = value;
+              delete modifyData[item.topType_model];
+            }
+            break;
+        }
+      });
+      // for (let inputType in this.customField_cache) {
+      //   let data = this.customField_cache[inputType];
+      //   if (!data.length) continue;
+      //   switch (inputType) {
+      //     case "5":
+      //       data.forEach(key => {
+      //         let value = this.data_model[key];
+      //         this.data_model;
+      //       });
+      //       break;
+      //   }
+      // }
+
       return modifyData;
     },
     async isVerifyPass() {
@@ -292,13 +328,12 @@ export default {
       let data_model = { ...this.data_model };
       for (let key in data_model) {
         if (this.customField_cache && this.customField_cache.includes(key)) {
-            
         }
       }
       this.$emit("passData", [
         isPass,
-        data_model,
-        this.getModifyData(data_model)
+        this.getFormData(data_model),
+        this.getFormData(data_model, true)
       ]);
     },
     handlerValidate(key, valid, errMsg) {
