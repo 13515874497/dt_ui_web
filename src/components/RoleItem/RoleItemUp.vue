@@ -65,6 +65,19 @@
             </div>
           </el-form>
         </el-tab-pane>
+        
+ <el-tab-pane label="配置店铺" name="three"></el-tab-pane>
+ <el-tab-pane label="配置站点" name="four"></el-tab-pane>
+
+
+
+
+
+
+
+
+
+
       </el-tabs>
     </el-dialog>
     <MenuHeadItem @moved="refreshTabel"/>
@@ -149,7 +162,8 @@ export default {
       this.menuHedaFlg = false;
       this.isCViewMenu = true;
       const roleUpSelection = roleSelection;
-
+      console.log(roleUpSelection);
+      
       if (roleUpSelection.length <= 0) {
         message.errorMessage("必须选中一条修改");
         return;

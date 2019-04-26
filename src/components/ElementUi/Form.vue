@@ -1,5 +1,5 @@
 <template>
-  <!-- 0:字符型  1:数值型   2:日期型  3:下拉框  4：起止日期  -->
+  <!-- 0:字符型  1:数值型   2:日期型  3:下拉框  4：起止日期  5:级联选择器-->
   <el-form
     ref="data_model"
     :model="data_model"
@@ -10,7 +10,7 @@
     :rules="rules"
     class="form-content scrollbar"
   >
-    <template v-for="item in formItems">
+    <template v-for="item in _formItems">
       <el-form-item
         v-if="item.statusOptions && item.statusOptions.length == 2"
         :label="item.headName"
@@ -80,6 +80,22 @@
       </el-form-item>
 
       <el-form-item
+        v-else-if="item.inputType === 5"
+        :label="item.headName"
+        :props="item.topType"
+        :rules="matchedRule(item)"
+      >
+        <el-cascader
+          expand-trigger="hover"
+          :options="item.data"
+          v-model="data_model['_'+item.topType]"
+          @change="triggerFormChange"
+          :props="props_inputType5"
+          :filterable="true"
+        ></el-cascader>
+      </el-form-item>
+
+      <el-form-item
         v-else-if="item.inputType == 0 || !item.inputType"
         :label="item.headName"
         :prop="item.topType"
@@ -129,68 +145,123 @@ export default {
     //     disabled: true
     //   }
     // ],
+
+    // custom_field: [
+    //   {
+    //     //类目名称=>产品名称
+    //     topType: ["productsName", "productName"],
+    //     inputType: 5,
+    //     headName: "产品类目和产品名称",
+    //     ajax: findByListProducts
+    //   }
+    // ],
     formItems: Array,
     formData: Object, //有传这个说明是修改
-    rule: Object,
-    reset:Boolean
+    rule: Object, //某些特殊字段的验证规则
+    reset: Boolean, // 改变时重置数据
+    customField: Array //某些特殊字段在填写时需要想后台请求数据
   },
   data() {
     return {
       data_model: {},
-      rules
+      rules,
+      _formItems: null,
+      _inputType: null,
+      props_inputType5: {
+        value: "treeId",
+        label: "treeName",
+        children: "childNode"
+      },
+      //自定义的字段
+      customField_cache: []
     };
   },
   computed: {},
   watch: {
-    formItem(){
+    formItem() {
       this.initData_model();
     },
     formData() {
       this.initData_model();
     },
-    reset(){
+    reset() {
       this.initData_model();
     },
     data_model: {
       async handler(val) {
         // console.log(val);
-        this.passData(await this.isVerifyPass());
+        // this.passData(await this.isVerifyPass());
+        this.triggerFormChange();
       },
       deep: true
     }
   },
   methods: {
-    mergeRules(){
-      this.rules = Object.assign(rules,this.rule);
-      console.log(this.rules);
+    initCustomField() {
+      let self = this;
+      return new Promise(async (resolve, reject) => {
+        if(!self.customField) {
+          resolve(null);
+          return;
+        }
+        self._customField = [...self.customField];
+        for (let i = 0; i < self._customField.length; i++) {
+          let item = self._customField[i];
+
+          let formItem = self._formItems.find(formItem => {
+            return formItem.topType === item.topType;
+          });
+          formItem.inputType = item.inputType;
+          switch (item.inputType) {
+            case 5:
+              formItem.data = [];
+              let res = await item.ajax();
+              if (res.code === 200) {
+                // res.data[0].childNode[0].childNode = null;
+                formItem.data = res.data;
+              }
+              self.data_model["_" + item.topType] = [];
+              // console.log(self.data_model);
+              self.customField_cache.push({
+                inputType: 5,
+                topType: item.topType,
+                topType_model: "_" + item.topType
+              });
+              break;
+          }
+        }
+        resolve(null);
+      });
     },
-    matchedRule(item){
+    mergeRules() {
+      this.rules = Object.assign(rules, this.rule);
+    },
+    matchedRule(item) {
       let key = item.topType,
-          rules = this.rules;
-      if(rules[key]){
-        return rules[key] 
+        rules = this.rules;
+      if (rules[key]) {
+        return rules[key];
       }
-      switch(item.inputType){
+      switch (item.inputType) {
         case 1:
         case 4:
-          return item.required? rules._number : rules.number
+          return item.required ? rules._number : rules.number;
         case 0:
         default:
-        return item.required? rules._str : rules.str
+          return item.required ? rules._str : rules.str;
       }
     },
     initData_model() {
       let self = this;
       if (this.formData) {
+        console.log(this.formData);
+        
         this.data_model = { ...this.formData };
         this.data_model_cache = { ...this.formData }; //只对基本数据类型做缓存
-        console.log(this.data_model_cache);
-
         return;
       }
-      console.log(this.formItems);
-      
-      this.formItems.forEach(item => {
+
+      this._formItems.forEach(item => {
         if (item.statusOptions && item.statusOptions.length) {
           self.$set(this.data_model, item.topType, item.statusOptions[0].id);
         } else {
@@ -198,21 +269,51 @@ export default {
         }
       });
       this.data_model_cache = { ...this.data_model };
-      console.log(this.data_model);
     },
-    getModifyData() {
+    //isModify 为true时，只获取修改的部分
+    getFormData(data_model, isModify) {
       let modifyData = {};
-      for (let key in this.data_model) {
-        if (this.data_model[key] !== this.data_model_cache[key]) {
-          modifyData[key] = this.data_model[key];
+      if (isModify) {
+        for (let key in data_model) {
+          if (data_model[key] !== this.data_model_cache[key]) {
+            modifyData[key] = data_model[key];
+          }
         }
+      }else {
+        modifyData = {...this.data_model}
       }
+
+      this.customField_cache.forEach(item => {
+        switch (item.inputType) {
+          case 5:
+            let values = this.data_model[item.topType_model];
+            if (!values.length) {
+              this.data_model[item.topType] = "";
+            } else {
+              let value = values[values.length - 1];
+              this.data_model[item.topType] = value;
+              delete modifyData[item.topType_model];
+            }
+            break;
+        }
+      });
+      // for (let inputType in this.customField_cache) {
+      //   let data = this.customField_cache[inputType];
+      //   if (!data.length) continue;
+      //   switch (inputType) {
+      //     case "5":
+      //       data.forEach(key => {
+      //         let value = this.data_model[key];
+      //         this.data_model;
+      //       });
+      //       break;
+      //   }
+      // }
+
       return modifyData;
     },
     async isVerifyPass() {
       let self = this;
-
-      //   console.log();
       let promise = await new Promise((resolve, reject) => {
         this.$refs["data_model"].validate((valid, obj) => {
           resolve([valid, obj]);
@@ -230,20 +331,35 @@ export default {
     },
     passData(isPass) {
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
-      this.$emit("passData", [isPass, this.data_model, this.getModifyData()]);
+      let data_model = { ...this.data_model };
+      for (let key in data_model) {
+        if (this.customField_cache && this.customField_cache.includes(key)) {
+        }
+      }
+      this.$emit("passData", [
+        isPass,
+        this.getFormData(data_model),
+        this.getFormData(data_model, true)
+      ]);
     },
     handlerValidate(key, valid, errMsg) {
       if (this.data_model[key] === this.data_model_cache[key]) {
         this.$refs["data_model"].clearValidate([key]);
       }
+    },
+    async triggerFormChange() {
+      this.passData(await this.isVerifyPass());
     }
   },
-  created() {
-    this.initData_model();
-    console.log(this.formItems);
-    console.log(this.formData);
-    this.mergeRules();
+  async created() {
+    console.log(111);
     
+    this._formItems = [...this.formItems];
+
+    await this.initCustomField();
+
+    this.initData_model();
+    this.mergeRules();
   },
   mounted() {}
 };

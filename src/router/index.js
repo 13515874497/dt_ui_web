@@ -637,7 +637,7 @@ export default new Router({
       redirect: '/login'
     },
     {
-      path: '/user_modifies_pwd',
+      path: '/userModifiesPwd',
       component: UserModifiesPwd //用户修改密码
     },  
      

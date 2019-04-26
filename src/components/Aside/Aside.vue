@@ -19,6 +19,7 @@ export default {
             background-color="#293846"
             text-color="#fff"
             active-text-color="#ffd04b"
+           
           >
             {this.renderMenuItem(this.menuList)}
           </el-menu>
@@ -56,10 +57,10 @@ export default {
           return (
             <el-submenu index={item.menuId.toString()} key={item.menuId}>
               <template slot="title">
-                <span>
+                
                   <i class={item.icon ? item.icon : "el-icon-loading"} />
-                </span>
-                <span class="mName">{item.mName}</span>
+
+                <span slot="title" class="mName">{item.mName}</span>
               </template>
               <el-menu-item-group key={item.menuId}>
                 {this.renderMenuItem(item.childMenus)}
