@@ -1,6 +1,6 @@
 <script>
 //review
-import {getReview} from '@/api'
+import {getReview,saveReview} from '@/api'
 import MxTable from '@/components/Mixins/MxTable'
 export default {
   mixins:[MxTable],
@@ -10,7 +10,10 @@ export default {
   methods:{
     queryPage(data){
       return getReview(data)
-    }
+    },
+    ajax_add(data){
+      return saveReview(data) 
+    },
   }
 }
 </script>

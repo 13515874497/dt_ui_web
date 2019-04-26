@@ -303,8 +303,14 @@ export const getHlFee = (data) => ajax(BASE_URL + `/fba/getHlFee`,data, 'POST')
 // Feedback  http://127.0.0.1:9001/api/v1/fba/getFeedback 
 export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`,data, 'POST')
 
+
+
 //  http://127.0.0.1:9002/api/v1/fba/getReview  review
 export const getReview = (data) => ajax(BASE_URL + `/fba/getReview`,data, 'POST')
+
+//  http://127.0.0.1:9001/api/v1/fba/saveReview 新增 post
+export const saveReview = (data) => ajax(BASE_URL + `/fba/saveReview`,data, 'POST')
+
 
 
 /**

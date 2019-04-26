@@ -31,6 +31,14 @@
           ></el-option>
         </el-select>
 
+<<<<<<< HEAD
+        <el-date-picker
+          v-model="value2"
+          type="month"
+          placeholder="选择月"
+          :picker-options="pickerOptions">
+        </el-date-picker>
+=======
         <el-select
           placeholder="请选择"
           v-if="select_site.render.length && select_area.model"
@@ -46,6 +54,7 @@
         </el-select>
 
         <el-date-picker v-model="value2" type="month" placeholder="选择月"></el-date-picker>
+>>>>>>> f7e2a8a2fb07c56910f1d7fd09b73c71a3fbca7d
 
         <el-button type="primary" class="el-btn">设为默认按钮</el-button>
       </div>
@@ -256,7 +265,6 @@ export default {
       },
       notifys: [], //当前页面的所有提示信息
       financialIntroduction: [85] //财务导入的id
-      // operationIntroduction:[102],//运营导入的id
     };
   },
   computed: {
@@ -399,10 +407,14 @@ export default {
     async getDate() {
       if (this.financialIntroduction.includes(this.page.id)) {
         let res = await getCheckoutDate({ menuId: "111" });
-        console.log(res);
+        console.log(res);  //财务导入
+        if(res.code === 200){
+          this.value2 = res.data 
+        }
+        
       } else {
         let res = await getCheckoutDate({ menuId: "102" });
-        console.log(res);
+        console.log(res); //运营导入
       }
     },
 
@@ -879,6 +891,12 @@ export default {
     this.getRadioList();
     this.initOperateBtn();
     this.getDate();
+<<<<<<< HEAD
+  },
+  mounted() {
+  
+=======
+>>>>>>> f7e2a8a2fb07c56910f1d7fd09b73c71a3fbca7d
   },
   mounted() {},
   activated() {
