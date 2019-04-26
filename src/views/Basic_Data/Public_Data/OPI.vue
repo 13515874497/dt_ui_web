@@ -15,7 +15,7 @@ export default {
       primaryKey: "productId",
       customField: [
         {
-          //类目名称=>产品名称
+          //类目名称
           topType: "productsName",
           inputType: 5,
           ajax: findByListProducts,

@@ -79,6 +79,24 @@
         ></el-input>
       </el-form-item>
 
+
+
+      <!-- <el-form-item
+        v-else-if="item.inputType == 3"
+        :label="item.headName"
+        :prop="item.topType"
+        :rules="matchedRule(item)"
+      >
+         <el-select v-model="data_model[item.topType]" placeholder="请选择">
+          <el-option
+            v-for="option in item.data"
+            :key="option.id"
+            :label="option.name"
+            :value="option.id"
+          ></el-option>
+        </el-select>
+      </el-form-item> -->
+
       <el-form-item
         v-else-if="item.inputType === 5"
         :label="item.headName"
@@ -94,6 +112,8 @@
           :filterable="true"
         ></el-cascader>
       </el-form-item>
+
+
 
       <el-form-item
         v-else-if="item.inputType == 0 || !item.inputType"
@@ -213,7 +233,15 @@ export default {
           });
           formItem.inputType = item.inputType;
           switch (item.inputType) {
-            case 5:
+            case 3:
+            // formItem.data = [];
+            // let res = await item.ajax();
+            // if(res.code === 200){
+            //   formItem.data = res.data;
+            // }
+            break;
+            
+            case 5: 
               formItem.data = [];
               let res = await item.ajax();
               if (res.code === 200) {
@@ -352,8 +380,6 @@ export default {
     }
   },
   async created() {
-    console.log(111);
-    
     this._formItems = [...this.formItems];
 
     await this.initCustomField();

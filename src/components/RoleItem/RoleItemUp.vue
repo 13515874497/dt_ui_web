@@ -81,7 +81,9 @@
 
           <!-- <el-tree :data="shopTree" show-checkbox node-key="id" ref="shopTree"></el-tree> -->
         </el-tab-pane>
-        <el-tab-pane label="配置站点" name="site"></el-tab-pane>
+        <el-tab-pane label="配置站点" name="site">
+          <el-tree v-for="(area,index) in areas" :key="index" :data="areas[index]" show-checkbox node-key="id"></el-tree>
+        </el-tab-pane>
       </el-tabs>
     </el-dialog>
     <MenuHeadItem @moved="refreshTabel"/>
@@ -100,9 +102,9 @@ import {
   repAdRole,
   repDelRole,
   selectShopList,
-  selectSiteList,
   saveShopRole,
-  selectArea //
+  selectReg_admin, //获取所有洲
+  selectSite //获取所有站点
 } from "@/api";
 import MenuHeadItem from "@/components/RoleItem/MenuHeadItem/MenuHeadItem";
 
@@ -167,7 +169,16 @@ export default {
       shopTree: [],
       shops: [], //全部的店铺
       shop_exist: [], //已有的店铺Id
-      shop_exist_cache: []
+      shop_exist_cache: [],
+
+      areas: [
+        // {
+        //   areaId: 1,
+        //   areaname: '北美洲',
+        //   arId: 7,
+        //   siteIds:[1,2,3]
+        // }
+      ] //全部的洲
     };
   },
   watch: {
@@ -177,6 +188,7 @@ export default {
           this.initShop();
           break;
         case "site":
+          this.initSite();
           break;
       }
     },
@@ -205,9 +217,6 @@ export default {
         return;
       }
       this.roleUpVisible = true;
-      console.log(22222222);
-      console.log(this.data === roleSelection[0]);
-
       this.data = roleSelection[0];
 
       this.roleFrom["rName"] = this.data.rName;
@@ -321,14 +330,8 @@ export default {
         let halfKeys = this.$refs.tree.getHalfCheckedKeys();
         let keys = checkedKeys.concat(halfKeys);
         if (!keys.length) return;
-        //获得当前半选中的menuIds
-        // let half = this.$refs.tree.getHalfCheckedKeys();
-        // keys.forEach(i => {
-        //   half.push(i);
-        // });
         var menuIds = keys.map(item => item).join();
         const rid = this.roleFrom.rid;
-        // const menuFlg = this.menuFlg;
         const menuRole = { rid, menuIds };
         console.log(menuRole);
         const result = await repGetMenus(menuRole);
@@ -341,23 +344,6 @@ export default {
     handleClick(row) {
       PubSub.publish("upMenuHead", row);
     },
-    // //递归遍历菜单获取id 点击修改的时候自动勾选
-    // getMenuId(arr, noUrlMenuList) {
-    //   arr.forEach(item => {
-    //     //判断是否为空
-    //     if (item.menuId) {
-    //       if (item.url) {
-    //         noUrlMenuList.push(item.menuId);
-    //       } else {
-    //         this.urlMenList.push(item.menuId);
-    //       }
-    //       if (item.childMenus && item.childMenus.length > 0) {
-    //         this.getMenuId(item.childMenus, noUrlMenuList);
-    //       }
-    //     }
-    //   });
-    //   this.noUrlCheckedKeys = noUrlMenuList;
-    // },
     getMenuId(data, arr) {
       data.forEach(item => {
         // if (item.menuId) {
@@ -401,18 +387,11 @@ export default {
     },
     //店铺按钮是否可以点击
     isShopSave() {
-      console.log(this.shop_exist.join());
-      console.log(this.shop_exist_cache.join());
-
       return this.shop_exist.join() === this.shop_exist_cache.join();
     },
     //店铺发生改变时
     shopChange() {
       console.log(123);
-      // let res = saveShopRole({
-      //   sIds: this.shop_exist.join(","),
-      //   rId: this.data.rid
-      // });
       let origin = this.shop_exist_cache;
       let curr = this.shop_exist;
       let add = curr
@@ -442,6 +421,36 @@ export default {
       if (res.code === 200) {
         this.shop_exist_cache = [...this.shop_exist];
         this.$emit("refresh");
+      }
+    },
+    //初始化洲和站点
+    async initSite() {
+      if (this.areas.length) return;
+      let res = await selectReg_admin();
+      console.log(res);
+      if (res.code === 200) {
+        let data = res.data;
+        let areas = [];
+        for (let i = 0; i < data.length; i++) {
+          let area = data[i];
+          let res2 = await selectSite({ aid: area.areaId });
+          let sites = [];
+          if (res2.code === 200) {
+            sites = res2.data.map(site => {
+              return {
+                label: site.siteName,
+                id: "site_" + site.siteId
+              };
+            });
+          }
+          areas.push({
+            label: area.areaName,
+            id: area.areaId,
+            children: sites
+          });
+        }
+        this.areas = areas;
+        console.log(this.areas);
       }
     }
   },
