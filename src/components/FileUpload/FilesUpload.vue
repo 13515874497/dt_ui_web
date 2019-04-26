@@ -34,7 +34,8 @@
         <el-date-picker
           v-model="value2"
           type="month"
-          placeholder="选择月">
+          placeholder="选择月"
+          :picker-options="pickerOptions">
         </el-date-picker>
 
         <el-button type="primary" class="el-btn">设为默认按钮</el-button>
@@ -162,8 +163,7 @@ import {
   BASEURL,
   repAddUploadInfoMysql,
   repDelUploadInfo,
-  getCheckoutDate,
-  
+  getCheckoutDate
 } from "@/api";
 import message from "@/utils/Message";
 import checkUtils from "@/utils/CheckUtils";
@@ -185,15 +185,15 @@ export default {
   components: {
     Table,
     Pagination,
-    OperateBtn,
+    OperateBtn
   },
   data() {
     return {
-      value2: '',
-       pickerOptions: {
-        disabledDate(time) {
-          return time.getTime() > Date.now();
-        }
+      value2: "",
+      pickerOptions: {
+         disabledDate(time) {
+            return time.getTime() > Date.now();
+          },
       },
       page: {
         name: this.$route.params.name,
@@ -239,9 +239,8 @@ export default {
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25]
       },
-      notifys:[],//当前页面的所有提示信息
-      financialIntroduction:[85],//财务导入的id
-      operationIntroduction:[102],//运营导入的id
+      notifys: [], //当前页面的所有提示信息
+      financialIntroduction: [85] //财务导入的id
     };
   },
   computed: {
@@ -372,17 +371,19 @@ export default {
       }
     },
 
-      async getDate(){
-      if (this.financialIntroduction.includes(this.page.id)){
-        let res = await getCheckoutDate({menuId:'111'});
-        console.log(res)
+    async getDate() {
+      if (this.financialIntroduction.includes(this.page.id)) {
+        let res = await getCheckoutDate({ menuId: "111" });
+        console.log(res);  //财务导入
+        if(res.code === 200){
+          this.value2 = res.data 
+        }
+        
+      } else {
+        let res = await getCheckoutDate({ menuId: "102" });
+        console.log(res); //运营导入
       }
-      // else if (this.operationIntroduction.includes(this.page.id)){
-      //   let res = await getCheckoutDate({menuId:'102'});
-      //   console.log(res)
-      // }
     },
-
 
     changeRadio(val) {
       let option = this.radio.render.find(item => {
@@ -566,9 +567,11 @@ export default {
                           data.uuidName}" fileName="${
                           data.name
                         }"  type="button" class="sku_download_btn el-button el-button--primary el-button--mini"><i class="el-icon-download"></i><span>下载</span></button></p>`;
-                        this.notifys.push(message.messageNotiSuccessHtml(msg, data.name)); 
+                        this.notifys.push(
+                          message.messageNotiSuccessHtml(msg, data.name)
+                        );
                         console.log(this);
-                        
+
                         step.dealWith = "数据处理成功,部分skuId信息错误";
                         step.dealWith_status = "success";
                         step.count++;
@@ -814,18 +817,18 @@ export default {
         })
         .catch(() => {});
     },
-    closeNotifys(){
-      this.notifys.forEach(item=>{
+    closeNotifys() {
+      this.notifys.forEach(item => {
         item.close();
-      })
-    },
+      });
+    }
   },
   created() {
     this.init();
     this.getSelectRender();
     this.getRadioList();
     this.initOperateBtn();
-    this.getDate()
+    this.getDate();
   },
   mounted() {
   
@@ -839,12 +842,11 @@ export default {
       this.$ws.removeEventListener("message", this.wsOnMessage);
       this.$ws.removeEventListener("close", this.wsOnClose);
       this.$ws.removeEventListener("error", this.wsOnError);
-      document.removeEventListener("click",this.eventDelegationFn);
+      document.removeEventListener("click", this.eventDelegationFn);
       this.closeNotifys();
     }
     this.wsTimer && clearTimeout(this.wsTimer);
-  },
-
+  }
 };
 </script>
 
@@ -887,8 +889,8 @@ export default {
     }
   }
 }
-.el-btn{
-  margin-left:20px;
+.el-btn {
+  margin-left: 20px;
 }
 </style>
 
