@@ -172,7 +172,7 @@ export default {
     },
     //删除or 批量删除
     async del() {
-      const userDelSelection = this.upSelection;
+      const userDelSelection = this.multipleSelection;
       if (userDelSelection.length === 0) {
         message.errorMessage("必须选择一个或多个!");
         return;

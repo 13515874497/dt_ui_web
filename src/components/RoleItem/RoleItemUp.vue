@@ -1,9 +1,9 @@
 <template>
   <div>
-    <el-dialog title="提示" :visible.sync="roleUpVisible" width="850px">
+    <el-dialog title="提示" :visible.sync="roleUpVisible" width="780px">
       <el-tabs v-model="activeName" type="card">
         <el-tab-pane label="配置角色信息" name="first">
-          <div class="transfer" style="margin-left: 80px;margin-bottom: 20px">
+          <div class="transfer">
             <el-transfer
               filterable
               :filter-method="filterMethod"
@@ -65,19 +65,26 @@
             </div>
           </el-form>
         </el-tab-pane>
-        
- <el-tab-pane label="配置店铺" name="three"></el-tab-pane>
- <el-tab-pane label="配置站点" name="four"></el-tab-pane>
+
+        <el-tab-pane label="配置店铺" name="shop">
 
 
+          <div class="transfer">
+            <el-transfer
+              filterable
+              filter-placeholder="请输入店铺名称"
+              v-model="shop_exist"
+              :data="shops"
+              :titles="['全部店铺', '已有店铺']"
+              :button-texts="['移除', '添加']"
+            ></el-transfer>
+          <el-button type="primary" class="saveBtn" @click="shopSave" :disabled="isShopSave()">保存</el-button>
+          </div>
 
 
-
-
-
-
-
-
+          <!-- <el-tree :data="shopTree" show-checkbox node-key="id" ref="shopTree"></el-tree> -->
+        </el-tab-pane>
+        <el-tab-pane label="配置站点" name="site"></el-tab-pane>
       </el-tabs>
     </el-dialog>
     <MenuHeadItem @moved="refreshTabel"/>
@@ -94,7 +101,11 @@ import {
   repGetHead,
   repGetMenus,
   repAdRole,
-  repDelRole
+  repDelRole,
+  selectShopList,
+  selectSiteList,
+  saveShopRole,
+  selectArea //
 } from "@/api";
 import MenuHeadItem from "@/components/RoleItem/MenuHeadItem/MenuHeadItem";
 
@@ -142,8 +153,9 @@ export default {
       roleFrom: {
         rName: "",
         uIds: "",
-        rId: ""
+        rid: ""
       },
+
       defaultProps: {
         children: "childMenus",
         label: "mName"
@@ -152,8 +164,35 @@ export default {
         rNameAdd: [{ validator: rNameAdd, trigger: "blur" }],
         rSign: [{ validator: rSign, trigger: "blur" }]
       },
-      menuIds:[] //当前表格中要查看的菜单id
+      menuIds: [], //当前表格中要查看的菜单id
+
+      data: null, //当前选中项的数据
+      shopTree: [],
+      shops: [], //全部的店铺
+      shop_exist: [], //已有的店铺Id
+      shop_exist_cache: []
     };
+  },
+  watch: {
+    activeName(val) {
+      switch (val) {
+        case "shop":
+          this.initShop();
+          break;
+        case "site":
+          break;
+      }
+    },
+    data(val) {
+      console.log(val);
+      if (!val.sIds) {
+        this.shop_exist = [];
+        this.shop_exist_cache = [...this.shop_exist];
+        return;
+      }
+      this.shop_exist = val.sIds.split(",");
+      this.shop_exist_cache = [...this.shop_exist];
+    }
   },
   async mounted() {
     PubSub.subscribe("roleUp", (msg, roleSelection) => {
@@ -161,24 +200,26 @@ export default {
       this.menuTableTitleData = [];
       this.menuHedaFlg = false;
       this.isCViewMenu = true;
-      const roleUpSelection = roleSelection;
-      console.log(roleUpSelection);
-      
-      if (roleUpSelection.length <= 0) {
+      if (roleSelection.length <= 0) {
         message.errorMessage("必须选中一条修改");
         return;
-      } else if (roleUpSelection.length >= 2) {
+      } else if (roleSelection.length >= 2) {
         message.errorMessage("修改只能选中一条");
         return;
       }
       this.roleUpVisible = true;
-      roleUpSelection.forEach(item => {
-        this.roleFrom["rName"] = item.rName;
-        this.roleFrom["uIds"] = item.uIds;
-        this.roleFrom["rId"] = item.rId;
-      });
+      console.log(22222222);
+      console.log(this.data === roleSelection[0]);
+
+      this.data = roleSelection[0];
+
+      this.roleFrom["rName"] = this.data.rName;
+      this.roleFrom["uIds"] = this.data.uIds;
+      this.roleFrom["rid"] = this.data.rid;
       const resultUsers = repGetUsers();
+
       resultUsers.then(result => {
+        console.log(result);
 
         if (result.code === 200) {
           const generateData = _ => {
@@ -205,7 +246,7 @@ export default {
               this.menuDateList = result.data;
             }
           });
-          roleMenu({ rid: this.roleFrom.rId }).then(res => {
+          roleMenu({ rid: this.roleFrom.rid }).then(res => {
             this.getMenuId(res.data, this.noUrlCheckedKeys);
           });
         }
@@ -222,7 +263,7 @@ export default {
     },
     async transferChange(value, direction, movedKeys) {
       const uid = movedKeys;
-      const rolesId = this.roleFrom.rId;
+      const rolesId = "" + this.roleFrom.rid;
       const rid = { rolesId, uid };
       if (direction === "left") {
         const resultDel = await repDelRole(rid);
@@ -244,18 +285,20 @@ export default {
       //获得当前选中的节点对象
       let sel_nodes = this.$refs.tree.getCheckedNodes();
       // 筛选没有url的并返回menuId的数组
-      this.menuIds = sel_nodes.filter((item)=>{
-        return item.url
-      }).map(item => item.menuId);
+      this.menuIds = sel_nodes
+        .filter(item => {
+          return item.url;
+        })
+        .map(item => item.menuId);
 
       this.refreshTabel();
     },
     //刷新表格信息
-    async refreshTabel(){
-      const resultHead = await repGetHead({menuIds:this.menuIds});
+    async refreshTabel() {
+      const resultHead = await repGetHead({ menuIds: this.menuIds });
       if (resultHead.code === 200) {
         console.log(resultHead);
-        
+
         this.menuTableTitleData = resultHead.data;
       }
     },
@@ -265,7 +308,6 @@ export default {
     },
     //indeterminate节点的子数有没有被选中
     async checkChange(data, daraArr) {
-      
       if (daraArr.checkedNodes.length <= 0) {
         this.isViewMenu = true;
         this.menuHedaFlg = false;
@@ -281,14 +323,14 @@ export default {
         let checkedKeys = this.$refs.tree.getCheckedKeys();
         let halfKeys = this.$refs.tree.getHalfCheckedKeys();
         let keys = checkedKeys.concat(halfKeys);
-        if(!keys.length) return;
+        if (!keys.length) return;
         //获得当前半选中的menuIds
         // let half = this.$refs.tree.getHalfCheckedKeys();
         // keys.forEach(i => {
         //   half.push(i);
         // });
         var menuIds = keys.map(item => item).join();
-        const rid = this.roleFrom.rId;
+        const rid = this.roleFrom.rid;
         // const menuFlg = this.menuFlg;
         const menuRole = { rid, menuIds };
         console.log(menuRole);
@@ -322,16 +364,16 @@ export default {
     getMenuId(data, arr) {
       data.forEach(item => {
         // if (item.menuId) {
-          if (item.url) {
-            arr.push(item.menuId);
-          }
-          if (item.childMenus && item.childMenus) {
-            this.getMenuId(item.childMenus, arr);
-          }
-      
+        if (item.url) {
+          arr.push(item.menuId);
+        }
+        if (item.childMenus && item.childMenus) {
+          this.getMenuId(item.childMenus, arr);
+        }
+
         // }
       });
-      this.isViewMenu = arr.length? false: true;
+      this.isViewMenu = arr.length ? false : true;
     },
     //新增角色信息
     addRoleInfo(formName) {
@@ -343,8 +385,70 @@ export default {
           return false;
         }
       });
+    },
+
+    //初始化 配置店铺
+    async initShop() {
+      // if (this.shops.length) return;
+      //获取全部店铺
+      let res = await selectShopList();
+      console.log(res);
+      if (res.code === 200) {
+        this.shops = res.data.map(item => {
+          return {
+            key: "" + item.shopId,
+            label: item.shopName
+          };
+        });
+      }
+    },
+    //店铺按钮是否可以电机
+    isShopSave(){
+      console.log(this.shop_exist.join());
+      console.log(this.shop_exist_cache.join());
+      
+      return this.shop_exist.join() === this.shop_exist_cache.join();
+    },
+    //店铺发生改变时
+    shopChange() {
+      console.log(123);
+      // let res = saveShopRole({
+      //   sIds: this.shop_exist.join(","),
+      //   rId: this.data.rid
+      // });
+      let origin = this.shop_exist_cache;
+      let curr = this.shop_exist;
+      let add = curr
+        .filter(item => {
+          return !origin.includes(item);
+        })
+        .join(",");
+      let del = origin
+        .filter(item => {
+          return !curr.includes(item);
+        })
+        .join(",");
+      add = add ? add : null;
+      del = del ? del : null;
+      console.log("add:   " + add);
+      console.log("del:   " + del);
+      return {
+        rId: this.data.rid,
+        sIds: add,
+        delSid: del
+      };
+    },
+    async shopSave() {
+      console.log(this.shopChange());
+      let res = await saveShopRole(this.shopChange())
+      console.log(res);
+      if(res.code === 200){
+        this.shop_exist_cache = [...this.shop_exist];
+        this.$emit('refresh');
+      }
     }
-  }
+  },
+  created() {}
 };
 </script>
 
@@ -373,6 +477,10 @@ export default {
 
 //自定义添加转移
 .transfer {
+  // position: relative;
+  display: flex;
+  justify-content: space-around;
+  // flex-direction: row-reverse;
   .el-transfer {
     .el-transfer__buttons {
       width: 150px;
@@ -387,6 +495,9 @@ export default {
         font-family: "宋体";
       }
     }
+  }
+  .saveBtn {
+    align-self: flex-end;
   }
 }
 

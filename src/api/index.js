@@ -43,7 +43,8 @@ export const repGetUsers = () => ajax(BASE_URL + '/user/getUsers')
 
 //用户信息列表分页查询
 export const repUsers = (data) =>
-  ajax(BASE_URL + `/user/show`, data, 'POST')
+  // ajax(BASE_URL + `/user/show`, data, 'POST')
+  ajax(BASE_URL + `/admin/show`, data, 'POST')
 
 
 
@@ -130,7 +131,7 @@ export const repCheckMenuToken = () => ajax(BASE_URL + `/menu/token/menu`)
 export const repGetMenus = ({
   rid,
   menuIds,
-}) => ajax(BASE_URL + '/rm/upMenus', {
+}) => ajax(BASE_URL + '/admin/upMenus', {
   rid,
   menuIds,
 }, 'POST',[true,true])
@@ -141,6 +142,8 @@ export const roleMenu = ({
 }) => ajax(BASE_URL + '/menu/role/menu', {
   rid
 })
+//设置角色拥有的店铺
+export const saveShopRole = (data)=>ajax(BASEURL+'/sr/saveShopRole',data,'post',['保存成功',true])
 
 //更新用户信息
 export const repUpUserInfo = ({
@@ -157,7 +160,7 @@ export const repUpUserInfo = ({
   mobilePhone,
   version,
   remark
-}) => ajax(BASE_URL + `/user/upUserInfo`, {
+}) => ajax(BASE_URL + `/admin/upUserInfo`, {
   pwd,
   accountStatus,
   uid,
@@ -179,7 +182,7 @@ export const repGetRoles = ({
   pageSize,
   rName,
   userName
-}) => ajax(BASE_URL + '/role/getRoles', {
+}) => ajax(BASE_URL + '/admin/getRoles', {
   currentPage,
   pageSize,
   rName,
@@ -195,14 +198,14 @@ export const repDelUserInfo = ({
 //恢复一个用户或者多个用户
 export const repReUserInfo = ({
   ids
-}) => ajax(BASE_URL + '/user/reUserInfo', {
+}) => ajax(BASE_URL + '/admin/reUserInfo', {
   ids
 }, 'POST')
 //获得历史删除用户的信息
 export const repDelHistoryUserInfo = ({
   currentPage,
   pageSize
-}) => ajax(BASE_URL + '/user/getDelUser', {
+}) => ajax(BASE_URL + '/admin/getDelUser', {
   currentPage,
   pageSize
 }, 'POST')
@@ -501,8 +504,14 @@ export const delCompany = (data)=> ajax(BASE_URL + '/company/delCompany', data, 
 
 //店铺分页
 export const findByListShop = (data) => ajax(BASE_URL + `/shop/findByListShop`, data, 'POST')
-//获取店铺名字
+//获取店铺列表(有权限)
 export const repGetShopName = () => ajax(BASE_URL + `/shop/getListShopName`)
+//查询店铺列表(全部)
+export const selectShopList = () => ajax(BASE_URL + `/admin/selectShopList`)
+//查询站点列表(全部)
+export const selectSiteList = (data) => ajax(BASE_URL + `/admin/selectSiteList`,data)
+//查询洲列表(全部)
+export const selectArea = (data) => ajax(BASE_URL + `/admin/selectArea`)
 
 
 //区域分页 repGetRegionInfo
@@ -513,8 +522,8 @@ export const findByListRegion = (data) => ajax(BASE_URL + '/reg/findByListRegion
 export const findByListSite = (data) => ajax(BASE_URL + '/site/findByListSite', data, 'POST')
 
 //通过shop id 获取站点信息
-export const repGetShopIdSiteInfo = (sId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {
-  sId
+export const repGetShopIdSiteInfo = (sid) => ajax(BASE_URL + `/site/getByShopIdListSite`, {
+  sid
 })
 
 //币别分页 repGetCurrencyInfo
@@ -578,7 +587,7 @@ export const upHeadInfo = (data) => ajax(BASE_URL + '/upHeadInfo', data,'POST')
 
 
 //获取所有角色信息
-export const repFindRoles = () => ajax(BASE_URL + `/role/findByListRoles`)
+export const repFindRoles = () => ajax(BASE_URL + `/admin/findByListRoles`)
 
 //获取员工信息 还没被注册的
 export const repGetStaff = () => ajax(BASE_URL + `/staff/getStaff`)
@@ -605,7 +614,7 @@ export const repSaveUserInfo = ({
   pwdValidityPeriod,
   userExpirationDate,
   remark
-}) => ajax(BASE_URL + '/user/saveUserInfo', {
+}) => ajax(BASE_URL + '/admin/saveUserInfo', {
   userName,
   pwd,
   confirmPwd,

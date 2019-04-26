@@ -41,7 +41,7 @@
       </div>
     </div>
     <!--修改隐藏页面-->
-    <RoleItemUp/>
+    <RoleItemUp @refresh="refresh"/>
   </div>
 </template>
 <script>
@@ -131,13 +131,18 @@ export default {
     async pagination(data) {
       const resultRoles = await repGetRoles(data);
       console.log(resultRoles);
-      
+
       if (resultRoles.code === 200) {
         //赋值 然后显示
         pUtils.pageInfo(resultRoles, data);
       }
     },
     //重置
+    refresh() {
+      console.log('刷新');
+      
+      this.pagination(this.role);
+    },
     reset() {
       this.role.rName = "";
       this.role.owner_menu = "";
@@ -161,11 +166,12 @@ export default {
   max-width: 500px;
   line-height: 180%;
 }
-.check2,.check1{
-margin-right:10px;
-float: left;
+.check2,
+.check1 {
+  margin-right: 10px;
+  float: left;
 }
-#printCheck{
+#printCheck {
   height: 60px;
 }
 </style>
