@@ -109,10 +109,10 @@ export default {
           // 去个主界面
           this.$router.replace("/index");
         } else {
-          message.messageNotDError(result.msg, "登陆失败");
+          message.messageNotiDError(result.msg, "登陆失败");
         }
       } else {
-        message.messageNotDError("账号或密码不能为空~", "登陆失败");
+        message.messageNotiDError("账号或密码不能为空~", "登陆失败");
       }
     },
     async getOnlineNumber() {

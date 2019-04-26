@@ -19,24 +19,42 @@
         </el-radio-group>
         <el-select
           placeholder="请选择"
-          v-if="select.render.length && uploadFrom.shopId"
-          v-model="select.model"
-          @change="changeSelect"
+          v-if="select_area.render.length && uploadFrom.shopId"
+          v-model="select_area.model"
+          @change="changeSelect_area"
         >
           <el-option
-            v-for="item in select.render"
+            v-for="item in select_area.render"
             :key="item.id"
             :label="`${item.name}(${item.shortName})`"
             :value="item.id"
-          ></el-option>         
+          ></el-option>
         </el-select>
 
+<<<<<<< HEAD
         <el-date-picker
           v-model="value2"
           type="month"
           placeholder="选择月"
           :picker-options="pickerOptions">
         </el-date-picker>
+=======
+        <el-select
+          placeholder="请选择"
+          v-if="select_site.render.length && select_area.model"
+          v-model="select_site.model"
+          @change="changeSelect_site"
+        >
+          <el-option
+            v-for="item in select_site.render"
+            :key="item.id"
+            :label="`${item.name}(${item.shortName})`"
+            :value="item.id"
+          ></el-option>
+        </el-select>
+
+        <el-date-picker v-model="value2" type="month" placeholder="选择月"></el-date-picker>
+>>>>>>> f7e2a8a2fb07c56910f1d7fd09b73c71a3fbca7d
 
         <el-button type="primary" class="el-btn">设为默认按钮</el-button>
       </div>
@@ -46,7 +64,7 @@
       type="card"
       style="margin-top:10px"
       v-model="tab_model"
-      v-show="(uploadFrom.siteId || uploadFrom.areaId) || onlyShowUpload"
+      v-show="(select.model !== '') || onlyShowUpload"
     >
       <el-tab-pane label="文件上传" name="upload" class="tab-content-left">
         <section class="left">
@@ -158,7 +176,7 @@
 import {
   repGetShopIdSiteInfo,
   repGetUserUploadInfo, //获取已上传的文件信息
-  findByListRegion,
+  selectReg,
   repGetShopName,
   BASEURL,
   repAddUploadInfoMysql,
@@ -191,9 +209,9 @@ export default {
     return {
       value2: "",
       pickerOptions: {
-         disabledDate(time) {
-            return time.getTime() > Date.now();
-          },
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
       },
       page: {
         name: this.$route.params.name,
@@ -209,7 +227,13 @@ export default {
         render: [],
         isShow: true
       },
-      select: {
+      select_area: {
+        model: "",
+        label: null,
+        render: [],
+        shortName: ""
+      },
+      select_site: {
         model: "",
         label: null,
         render: [],
@@ -244,11 +268,14 @@ export default {
     };
   },
   computed: {
+    select() {
+      return this.select_site.model ? this.select_site : this.select_area;
+    },
     uploadFrom() {
       return {
         shopId: this.radio.model, //店铺ID
-        siteId: this.isContinent ? "" : this.select.model, //站点 ID
-        areaId: this.isContinent ? this.select.model : "", //洲 ID
+        siteId: this.select_site.model, //站点 ID
+        areaId: this.select_area.model, //洲 ID
         pId: this.pId || "", //付款类型ID
         mId: this.page.id,
         businessTime: this.businessTime || "" //业务报告日期
@@ -323,29 +350,36 @@ export default {
     }
   },
   watch: {
-    async "radio.model"(val) {
-      console.log(val);
-      if (this.isContinent) {
-        return;
-      } else {
-        this.select.model = null;
-        let res = await repGetShopIdSiteInfo(val);
-        this.select.render = res.data.map(item => {
-          return {
-            id: item.siteId,
-            name: item.siteName,
-            shortName: item.siteShortNameEng
-          };
-        });
-      }
+    // async "radio.model"(val) {
+    //   console.log(val);
+    //   if (this.isContinent) {
+    //     return;
+    //   } else {
+    //     this.select.model = null;
+    //     let res = await repGetShopIdSiteInfo(val);
+    //     this.select.render = res.data.map(item => {
+    //       return {
+    //         id: item.siteId,
+    //         name: item.siteName,
+    //         shortName: item.siteShortNameEng
+    //       };
+    //     });
+    //   }
+    // },
+    "select_area.model"() {
+      this.removeReadyFile_all();
+      this.existedFiles.currentPage = 1;
+      this.getExistedFiles();
+      this.select_site.model = '';
+      this.getSelect_site();
+      //--------
     },
-    "select.model"() {
+    "select_site.model"() {
       this.removeReadyFile_all();
       this.existedFiles.currentPage = 1;
       this.getExistedFiles();
     },
     showNext(val) {
-      console.log(val);
       if (val !== undefined) {
         this.radio.isShow = val;
       }
@@ -365,7 +399,6 @@ export default {
     //渲染radio店铺列表
     async getRadioList() {
       let res = await repGetShopName();
-      console.log(res);
       if (res.code === 200) {
         this.radio.render = res.data;
       }
@@ -392,30 +425,61 @@ export default {
       this.radio.label = option.shopName;
       this.radio.shortName = option.shopShortCode;
     },
-    changeSelect(val) {
-      console.log(val);
-      let option = this.select.render.find(item => {
+    changeSelect_area(val) {
+      let option = this.select_area.render.find(item => {
         return item.id === val;
       });
-      this.select.label = option.name;
-      this.select.shortName = option.shortName;
+      this.select_area.label = option.name;
+      this.select_area.shortName = option.shortName;
+      this.select_area.arId = option.arId;
     },
-    //判断slect渲染洲还是站点 如果是洲则直接请求
-    async getSelectRender() {
-      if (this.continent.includes(this.page.id)) {
-        if (this.select.render.length) return;
-        this.isContinent = true;
-        let res = await findByListRegion({});
-        if (res.code === 200) {
-          this.select.render = res.data.map(item => {
+    changeSelect_site(val) {
+      let option = this.select_site.render.find(item => {
+        return item.id === val;
+      });
+      this.select_site.label = option.name;
+      this.select_site.shortName = option.shortName;
+    },
+    //获取洲
+    async getSelect_area() {
+      // if (this.continent.includes(this.page.id)) {
+      //   if (this.select.render.length) return;
+      //   this.isContinent = true;
+      //   let res = await selectReg();
+      //   if (res.code === 200) {
+      //     this.select.render = res.data.map(item => {
+      //       return {
+      //         id: item.areaId,
+      //         name: item.areaName,
+      //         shortName: item.areaShortNameEng
+      //       };
+      //     });
+      //   }
+      // }
+      let res = await selectReg();
+      if (res.code === 200) {
+        this.select_area.render = res.data.map(item => {
+          return {
+            id: item.areaId,
+            name: item.areaName,
+            shortName: item.areaShortNameEng,
+            arId: item.arId
+          };
+        });
+      }
+    },
+    //获取站点
+    async getSelect_site() {
+        let res = await repGetShopIdSiteInfo(this.select_area.arId);
+        if(res.code === 200){
+          this.select_site.render = res.data.map(item => {
             return {
-              id: item.areaId,
-              name: item.areaName,
-              shortName: item.areaShortNameEng
+              id: item.siteId,
+              name: item.siteName,
+              shortName: item.siteShortNameEng
             };
           });
         }
-      }
     },
     verifySuffix(fileName) {
       let pointIndex = fileName.lastIndexOf(".");
@@ -429,7 +493,6 @@ export default {
     //上传校验
     beforeAvatarUpload(file) {
       console.log(this.uploadFrom);
-
       console.log(file);
       let repeatFile = this.readyFileList.find(item => {
         return item.name === file.name;
@@ -444,6 +507,7 @@ export default {
           );
           return;
         }
+
         let rule = { radio: this.radio, select: this.select };
         let flag = checkUtils.checkFileInfo(file, rule, this.onlyShowUpload);
         if (!flag) return;
@@ -472,8 +536,6 @@ export default {
     removeReadyFile_all() {
       this.readyFileList = [];
       this.uploadStatus = [];
-      // this.readyFileList.length = 0;
-      // this.uploadStatus.length = 0;
     },
     //删除待上传文件
     removeReadyFile(index) {
@@ -825,14 +887,18 @@ export default {
   },
   created() {
     this.init();
-    this.getSelectRender();
+    this.getSelect_area();
     this.getRadioList();
     this.initOperateBtn();
     this.getDate();
+<<<<<<< HEAD
   },
   mounted() {
   
+=======
+>>>>>>> f7e2a8a2fb07c56910f1d7fd09b73c71a3fbca7d
   },
+  mounted() {},
   activated() {
     this.initWs();
     this.bindEventDelegation();

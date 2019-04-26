@@ -494,7 +494,7 @@ export default {
     //删除菜单
     remove(node, data) {
       if (node.childNodes.length > 0) {
-        message.messageNotDError("该节点下还有子菜单", "操作错误");
+        message.messageNotiDError("该节点下还有子菜单", "操作错误");
         return;
       }
       const parent = node.parent;
