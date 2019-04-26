@@ -300,6 +300,9 @@ export const getHlFee = (data) => ajax(BASE_URL + `/fba/getHlFee`,data, 'POST')
 // Feedback  http://127.0.0.1:9001/api/v1/fba/getFeedback 
 export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`,data, 'POST')
 
+//  http://127.0.0.1:9002/api/v1/fba/getReview  review
+export const getReview = (data) => ajax(BASE_URL + `/fba/getReview`,data, 'POST')
+
 
 /**
  * 
@@ -688,4 +691,4 @@ export const getCheckoutDate = ({
   menuId
 }) => ajax(BASE_URL + '/ing/getCheckoutDate', {
   menuId
-}, 'POST')
+}, 'GET',[true,true])

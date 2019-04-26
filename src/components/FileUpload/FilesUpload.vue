@@ -31,7 +31,11 @@
           ></el-option>         
         </el-select>
 
-        <DatePicker></DatePicker>
+        <el-date-picker
+          v-model="value2"
+          type="month"
+          placeholder="选择月">
+        </el-date-picker>
 
         <el-button type="primary" class="el-btn">设为默认按钮</el-button>
       </div>
@@ -158,7 +162,8 @@ import {
   BASEURL,
   repAddUploadInfoMysql,
   repDelUploadInfo,
-  getCheckoutDate
+  getCheckoutDate,
+  
 } from "@/api";
 import message from "@/utils/Message";
 import checkUtils from "@/utils/CheckUtils";
@@ -167,7 +172,6 @@ import Table from "@/components/ElementUi/Table";
 import Pagination from "@/components/ElementUi/Pagination";
 import pUtils from "@/utils/PageUtils";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
-import DatePicker from "@/components/FileUpload/DatePicker";//时间选择器
 export default {
   props: {
     pId: {
@@ -182,10 +186,15 @@ export default {
     Table,
     Pagination,
     OperateBtn,
-    DatePicker
   },
   data() {
     return {
+      value2: '',
+       pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
       page: {
         name: this.$route.params.name,
         id: +this.$route.params.id
@@ -231,7 +240,8 @@ export default {
         page_sizes: [5, 10, 15, 20, 25]
       },
       notifys:[],//当前页面的所有提示信息
-      menuId:''
+      financialIntroduction:[85],//财务导入的id
+      operationIntroduction:[102],//运营导入的id
     };
   },
   computed: {
@@ -361,12 +371,18 @@ export default {
         this.radio.render = res.data;
       }
     },
-  async getDate(){
-      let menuId = +this.$route.params.id
-      console.log(menuId)
-      let result = await getCheckoutDate(this.page.id);
-      console.log(result);
+
+      async getDate(){
+      if (this.financialIntroduction.includes(this.page.id)){
+        let res = await getCheckoutDate({menuId:'111'});
+        console.log(res)
+      }
+      // else if (this.operationIntroduction.includes(this.page.id)){
+      //   let res = await getCheckoutDate({menuId:'102'});
+      //   console.log(res)
+      // }
     },
+
 
     changeRadio(val) {
       let option = this.radio.render.find(item => {
