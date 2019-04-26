@@ -45,7 +45,7 @@
           ></el-option>
         </el-select>
 
-        <el-date-picker v-model="value2" type="month" placeholder="选择月"></el-date-picker>
+        <el-date-picker v-model="value2"  type="month" placeholder="选择月" :picker-options="pickerOptions" v-if="flag"></el-date-picker>
 
         <el-button type="primary" class="el-btn">设为默认按钮</el-button>
       </div>
@@ -199,11 +199,12 @@ export default {
   data() {
     return {
       value2: "",
-      pickerOptions: {
+      pickerOptions: {     
         disabledDate(time) {
-          return time.getTime() > Date.now();
+          return time.getTime() > Date.now()
         }
       },
+      flag:true,
       page: {
         name: this.$route.params.name,
         id: +this.$route.params.id
@@ -255,7 +256,8 @@ export default {
         page_sizes: [5, 10, 15, 20, 25]
       },
       notifys: [], //当前页面的所有提示信息
-      financialIntroduction: [85] //财务导入的id
+      financialIntroduction: [85] ,//财务导入的id,
+      businessReport:[108],//业务报告id
     };
   },
   computed: {
@@ -399,15 +401,36 @@ export default {
     },
 
     async getDate() {
+      if(this.businessReport.includes(this.page.id)){
+        this.flag = false;
+      }
       if (this.financialIntroduction.includes(this.page.id)) {
         let res = await getCheckoutDate({ menuId: "111" });
-        console.log(res); //财务导入
-        if (res.code === 200) {
-          this.value2 = res.data;
-        }
+        console.log(res);  //财务导入
+       if(res.code === 200){
+         this.value2 = res.data.split(":")[0];  
+        let time = res.data.split(':')
+        let startTime = time[0]
+        let endTime = time[1]
+        let startTime_ym = startTime.split('-')
+        let startTime_y = startTime_ym[0]
+        let startTime_m = startTime_ym[1]
+        var date = (new Date(startTime_y,startTime_m )) -1; 
+        console.log(date)
+        
+        let endTime_ym = endTime.split('-')
+        let endTime_y = endTime_ym[0]
+        let endTime_m = endTime_ym[1]
+        var date1 = (new Date(endTime_y,endTime_m)) -1; 
+        console.log(date1)
+       }
+        
       } else {
         let res = await getCheckoutDate({ menuId: "102" });
         console.log(res); //运营导入
+        if(res.code === 200){
+         this.value2 = res.data.split(":")[0]
+       }
       }
     },
 
