@@ -88,8 +88,8 @@ export default {
     },
     async transferChange(value, direction, movedKeys) {
       const thIds = movedKeys;
-      const mId = this.menuHeadFrom.menuId;
-      const menuHead = { mId, thIds };
+      const mid = this.menuHeadFrom.menuId;
+      const menuHead = { mid, thIds };
       console.log(value);
       console.log(direction);
       console.log(movedKeys);

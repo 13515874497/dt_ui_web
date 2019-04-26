@@ -67,8 +67,6 @@
         </el-tab-pane>
 
         <el-tab-pane label="配置店铺" name="shop">
-
-
           <div class="transfer">
             <el-transfer
               filterable
@@ -78,9 +76,8 @@
               :titles="['全部店铺', '已有店铺']"
               :button-texts="['移除', '添加']"
             ></el-transfer>
-          <el-button type="primary" class="saveBtn" @click="shopSave" :disabled="isShopSave()">保存</el-button>
+            <el-button type="primary" class="saveBtn" @click="shopSave" :disabled="isShopSave()">保存</el-button>
           </div>
-
 
           <!-- <el-tree :data="shopTree" show-checkbox node-key="id" ref="shopTree"></el-tree> -->
         </el-tab-pane>
@@ -402,11 +399,11 @@ export default {
         });
       }
     },
-    //店铺按钮是否可以电机
-    isShopSave(){
+    //店铺按钮是否可以点击
+    isShopSave() {
       console.log(this.shop_exist.join());
       console.log(this.shop_exist_cache.join());
-      
+
       return this.shop_exist.join() === this.shop_exist_cache.join();
     },
     //店铺发生改变时
@@ -440,11 +437,11 @@ export default {
     },
     async shopSave() {
       console.log(this.shopChange());
-      let res = await saveShopRole(this.shopChange())
+      let res = await saveShopRole(this.shopChange());
       console.log(res);
-      if(res.code === 200){
+      if (res.code === 200) {
         this.shop_exist_cache = [...this.shop_exist];
-        this.$emit('refresh');
+        this.$emit("refresh");
       }
     }
   },

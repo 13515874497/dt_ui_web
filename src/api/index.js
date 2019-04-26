@@ -519,14 +519,15 @@ export const selectArea = (data) => ajax(BASE_URL + `/admin/selectArea`)
 
 //区域分页 repGetRegionInfo
 export const findByListRegion = (data) => ajax(BASE_URL + '/reg/findByListRegion', data, 'POST')
+//查询区域 
+export const selectReg = () => ajax(BASE_URL + '/reg/selectReg')
 
 
 //站点分页 repGetSiteInfo
 export const findByListSite = (data) => ajax(BASE_URL + '/site/findByListSite', data, 'POST')
-
-//通过shop id 获取站点信息
-export const repGetShopIdSiteInfo = (sid) => ajax(BASE_URL + `/site/getByShopIdListSite`, {
-  sid
+//通过洲的arId获取站点
+export const repGetShopIdSiteInfo = (arId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {
+  arId
 })
 
 //币别分页 repGetCurrencyInfo
@@ -650,19 +651,19 @@ export const repDelRole = ({
 }, 'POST')
 //新增菜单关联表头字段
 export const repAddHeadMenu = ({
-  mId,
+  mid,
   thIds
 }) => ajax(BASE_URL + '/hm/saveHeadMenu', {
-  mId,
+  mid,
   thIds
 }, 'POST')
 
 //删除菜单关联表头字段
 export const repDelHeadMenu = ({
-  mId,
+  mid,
   thIds
 }) => ajax(BASE_URL + '/hm/delTbHeadMenu', {
-  mId,
+  mid,
   thIds
 }, 'POST')
 //
