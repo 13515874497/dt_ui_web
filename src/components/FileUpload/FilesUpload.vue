@@ -164,6 +164,8 @@
 </template>
 
 <script>
+let starDate= ""
+let endDate = ""
 import {
   repGetShopIdSiteInfo,
   repGetUserUploadInfo, //获取已上传的文件信息
@@ -199,13 +201,12 @@ export default {
   data() {
     return {
       value2: "",
-      start:'',
-      end:'',
       pickerOptions: {
         disabledDate(time) {
-           return (time.getTime() < this.start || time.getTime() > this.end);
-          }
-          
+          // console.log(new Date(starDate).toLocaleDateString(), new Date(endDate).toLocaleDateString())
+          //8.64e7=1000*60*60*24 一天
+           return (time.getTime() < starDate - 8.64e7 || time.getTime() >endDate);
+          }          
         },  
       flag:true,
       page: {
@@ -420,16 +421,16 @@ export default {
         let startTime_ym = startTime.split('-')
         let startTime_y = startTime_ym[0]
         let startTime_m = startTime_ym[1]
-        _this.start = (new Date(startTime_y,startTime_m )) -1; 
+       starDate = (new Date(startTime_y,startTime_m )) -1 ; 
 
-        console.log(_this.start) //开始的时间
+        console.log(starDate) //开始的时间
         
         let endTime_ym = endTime.split('-')
         let endTime_y = endTime_ym[0]
         let endTime_m = endTime_ym[1]
-        _this.end = (new Date(endTime_y,endTime_m)) -1;
+        endDate = (new Date(endTime_y,endTime_m)) -1;
 
-        console.log(_this.end)//结束的时间
+        console.log(endDate)//结束的时间
 
        }
         
@@ -438,6 +439,25 @@ export default {
         console.log(res); //运营导入
         if(res.code === 200){
          _this.value2 = res.data.split(":")[0]
+         let time = res.data.split(':')
+        let startTime = time[0]
+        let endTime = time[1]
+        let startTime_ym = startTime.split('-')
+        let startTime_y = startTime_ym[0]
+        let startTime_m = startTime_ym[1]
+
+       starDate = (new Date(startTime_y,startTime_m )) -1 ; 
+
+        console.log(starDate) //开始的时间
+        
+        let endTime_ym = endTime.split('-')
+        let endTime_y = endTime_ym[0]
+        let endTime_m = endTime_ym[1]
+
+        endDate = (new Date(endTime_y,endTime_m)) -1;
+
+        console.log(endDate)//结束的时间
+
        }
       }
     },
