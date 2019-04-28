@@ -45,7 +45,7 @@
           ></el-option>
         </el-select>
 
-        <el-date-picker v-model="value2"  type="month" placeholder="选择月" :picker-options="pickerOptions" v-if="flag"></el-date-picker>
+        <el-date-picker v-model="value2"  type="month" placeholder="选择月" :picker-options="pickerOptions" v-if="flag" ></el-date-picker>
 
         <el-button type="primary" class="el-btn">设为默认按钮</el-button>
       </div>
@@ -164,6 +164,8 @@
 </template>
 
 <script>
+let starDate= ""
+let endDate = ""
 import {
   repGetShopIdSiteInfo,
   repGetUserUploadInfo, //获取已上传的文件信息
@@ -199,11 +201,13 @@ export default {
   data() {
     return {
       value2: "",
-      pickerOptions: {     
+      pickerOptions: {
         disabledDate(time) {
-          return time.getTime() > Date.now()
-        }
-      },
+          // console.log(new Date(starDate).toLocaleDateString(), new Date(endDate).toLocaleDateString())
+          //8.64e7=1000*60*60*24 一天
+           return (time.getTime() < starDate - 8.64e7 || time.getTime() >endDate);
+          }          
+        },  
       flag:true,
       page: {
         name: this.$route.params.name,
@@ -401,6 +405,8 @@ export default {
     },
 
     async getDate() {
+      console.log(this)
+      let _this = this
       if(this.businessReport.includes(this.page.id)){
         this.flag = false;
       }
@@ -408,32 +414,53 @@ export default {
         let res = await getCheckoutDate({ menuId: "111" });
         console.log(res);  //财务导入
        if(res.code === 200){
-         this.value2 = res.data.split(":")[0];  
+        _this.value2 = res.data.split(":")[0];  
         let time = res.data.split(':')
         let startTime = time[0]
         let endTime = time[1]
         let startTime_ym = startTime.split('-')
         let startTime_y = startTime_ym[0]
         let startTime_m = startTime_ym[1]
-        var date = (new Date(startTime_y,startTime_m )) -1; 
-        console.log(date)
+       starDate = (new Date(startTime_y,startTime_m )) -1 ; 
+
+        console.log(starDate) //开始的时间
         
         let endTime_ym = endTime.split('-')
         let endTime_y = endTime_ym[0]
         let endTime_m = endTime_ym[1]
-        var date1 = (new Date(endTime_y,endTime_m)) -1; 
-        console.log(date1)
+        endDate = (new Date(endTime_y,endTime_m)) -1;
+
+        console.log(endDate)//结束的时间
+
        }
         
       } else {
         let res = await getCheckoutDate({ menuId: "102" });
         console.log(res); //运营导入
         if(res.code === 200){
-         this.value2 = res.data.split(":")[0]
+         _this.value2 = res.data.split(":")[0]
+         let time = res.data.split(':')
+        let startTime = time[0]
+        let endTime = time[1]
+        let startTime_ym = startTime.split('-')
+        let startTime_y = startTime_ym[0]
+        let startTime_m = startTime_ym[1]
+
+       starDate = (new Date(startTime_y,startTime_m )) -1 ; 
+
+        console.log(starDate) //开始的时间
+        
+        let endTime_ym = endTime.split('-')
+        let endTime_y = endTime_ym[0]
+        let endTime_m = endTime_ym[1]
+
+        endDate = (new Date(endTime_y,endTime_m)) -1;
+
+        console.log(endDate)//结束的时间
+
        }
       }
     },
-
     changeRadio(val) {
       let option = this.radio.render.find(item => {
         return item.shopId === val;
@@ -894,7 +921,9 @@ export default {
     this.getRadioList();
     this.initOperateBtn();
     this.getDate();
+      
   },
+  
   mounted() {},
   activated() {
     this.initWs();
