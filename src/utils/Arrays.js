@@ -17,14 +17,17 @@
       .filter(item => {
         return !origin.includes(item);
       })
-      .join(",");
     let del = origin
       .filter(item => {
         return !curr.includes(item);
       })
-      .join(",");
+    let isRemoveAll = false;
+    if(!add.length && origin.length === del.length ){
+      isRemoveAll = true
+    }
     return {
       add,
-      del
+      del,
+      isRemoveAll
     }
   }

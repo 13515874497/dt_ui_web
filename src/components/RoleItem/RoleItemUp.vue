@@ -81,7 +81,7 @@
 
           <!-- <el-tree :data="shopTree" show-checkbox node-key="id" ref="shopTree"></el-tree> -->
         </el-tab-pane>
-        <el-tab-pane label="配置站点" name="site" v-if="data&&data.sIds">
+        <el-tab-pane label="配置站点" name="site" v-if="shop_exist_cache.length">
           <el-tree
             v-for="(area,index) in areas"
             :key="index"
@@ -113,10 +113,11 @@ import {
   selectShopList,
   saveShopRole,
   selectReg_admin, //获取所有洲
-  selectSite //获取所有站点
+  selectSite, //获取所有站点
+  setAreaRole
 } from "@/api";
 import MenuHeadItem from "@/components/RoleItem/MenuHeadItem/MenuHeadItem";
-import { getDiffrent } from "@/utils/Arrays";
+import { getDifferent } from "@/utils/Arrays";
 
 export default {
   data() {
@@ -206,13 +207,23 @@ export default {
     },
     data(val) {
       console.log(val);
+      //设置已有店铺的缓存
       if (!val.sIds) {
         this.shop_exist = [];
+        this.shop_exist_cache = [];
+      } else {
+        this.shop_exist = val.sIds.split(",");
         this.shop_exist_cache = [...this.shop_exist];
-        return;
       }
-      this.shop_exist = val.sIds.split(",");
-      this.shop_exist_cache = [...this.shop_exist];
+
+      //设置已有的站点
+      if (!val.seIds) {
+        this.site_exist = [];
+      } else {
+        this.site_exist = val.seIds.split(",").map(siteId => {
+          return `site_${siteId}`;
+        });
+      }
     }
   },
   async mounted() {
@@ -387,7 +398,7 @@ export default {
       if (this.shops.length) return;
       //获取全部店铺
       let res = await selectShopList();
-      console.log(res);
+
       if (res.code === 200) {
         this.shops = res.data.map(item => {
           return {
@@ -403,33 +414,23 @@ export default {
     },
     //店铺发生改变时
     shopChange() {
-      console.log(123);
       let origin = this.shop_exist_cache;
       let curr = this.shop_exist;
-      let add = curr
-        .filter(item => {
-          return !origin.includes(item);
-        })
-        .join(",");
-      let del = origin
-        .filter(item => {
-          return !curr.includes(item);
-        })
-        .join(",");
+      let diff = getDifferent(origin, curr);
+
+      let add = diff.add.join(",");
+      let del = diff.del.join(",");
       add = add ? add : null;
       del = del ? del : null;
-      console.log("add:   " + add);
-      console.log("del:   " + del);
       return {
         rId: this.data.rid,
         sIds: add,
         delSid: del
       };
     },
+    //点击保存店铺
     async shopSave() {
-      console.log(this.shopChange());
       let res = await saveShopRole(this.shopChange());
-      console.log(res);
       if (res.code === 200) {
         this.shop_exist_cache = [...this.shop_exist];
         this.$emit("refresh");
@@ -438,21 +439,15 @@ export default {
     //初始化洲和站点
     async initSite() {
       if (this.areas.length) return;
-      //设置已有站点的缓存
-      if (!this.data.seIds) {
-        this.site_exist = [];
-      } else {
-        this.site_exist = this.data.seIds.split(",").map(siteId => {
-          return `site_${siteId}`;
-        });
-      }
-
-      console.log(this.data.seIds);
-
-      console.log(this.site_exist);
-
+      // //设置已有站点的缓存
+      // if (!this.data.seIds) {
+      //   this.site_exist = [];
+      // } else {
+      //   this.site_exist = this.data.seIds.split(",").map(siteId => {
+      //     return `site_${siteId}`;
+      //   });
+      // }
       let res = await selectReg_admin();
-      console.log(res);
       if (res.code === 200) {
         let data = res.data;
         let areas = [];
@@ -460,12 +455,16 @@ export default {
           let area = data[i];
           let res2 = await selectSite({ aid: area.areaId });
           let sites = []; //全部的站点
-          let sites_cache = [];
-          if (res2.code === 200) {
+          let site_cache = [];
+          if (res2.code === 200 && res2.data) {
             sites = res2.data.map(site => {
+              let siteId = `site_${site.siteId}`;
+              if (this.site_exist.includes(siteId)) {
+                site_cache.push(siteId);
+              }
               return {
                 label: site.siteName,
-                id: "site_" + site.siteId
+                id: siteId
               };
             });
           }
@@ -477,24 +476,43 @@ export default {
               children: sites
             }
           ]);
+          this.site_exist_cache.push(site_cache);
         }
         this.areas = areas;
       }
     },
-    getSiteCheckedKeys() {
+    async getSiteCheckedKeys() {
+      let post = {
+        rid: this.data.rid,
+        areaRoleDtoList: []
+      };
+
       for (let i = 0; i < this.areas.length; i++) {
         let tree = this.$refs[`site${i}`][0];
-        let siteIds = tree
-          .getCheckedKeys(true)
-          .map(siteId => {
-            return siteId.slice(5);
-          })
-          .join(",");
-        let areaId = this.areas[i][0].id;
-        console.log({
-          aid: areaId,
-          siteIds
-        });
+        let siteIds = tree.getCheckedKeys(true);
+        let area = this.areas[i][0];
+        let diff = getDifferent(this.site_exist_cache[i], siteIds);
+        for (let key in diff) {
+          if (Array.isArray(diff[key])) {
+            diff[key] = diff[key].map(item => {
+              return item.slice(5);
+            });
+          }
+        }
+        if (diff.add.length || diff.del.length) {
+          post.areaRoleDtoList.push({
+            aid: area.id,
+            arId: area.arId,
+            removeArea: diff.isRemoveAll,
+            seIds: diff.add.join(","),
+            delSeId: diff.del.join(",")
+          });
+        }
+      }
+      let res = await setAreaRole(post);
+      if (res.code === 200) {
+        
+        this.$emit("refresh");
       }
     }
   },
