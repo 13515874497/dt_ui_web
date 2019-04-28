@@ -156,3 +156,5 @@ export const lessThan2 = (rule, val, cb) => {
     cb();
   }
 }
+//不能同时输入多个字段 
+// export const 

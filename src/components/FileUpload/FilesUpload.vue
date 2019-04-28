@@ -237,8 +237,8 @@ export default {
       uploadBtn: {
         disabled: false
       },
-      continent: [109, 110, 113, 114, 269, 270, 325], //页面id为洲的信息，其他都是站点
-      isContinent: false, //判断该页面显示洲还是站点
+      continent: [109, 110, 113, 114, 269, 270, 325], //页面id为洲的信息，其他都是站点(在这个里面的页面只要选择到洲就可以上传文件)
+
       //根据菜单id判断上传类型
       suffix: {
         csv: [85, 108, 104],
@@ -264,8 +264,11 @@ export default {
     };
   },
   computed: {
+    isContinent() {
+      return this.continent.includes(this.page.id);
+    },
     select() {
-      return this.select_site.model ? this.select_site : this.select_area;
+      return this.isContinent ? this.select_area : this.select_site;
     },
     uploadFrom() {
       return {
@@ -366,7 +369,7 @@ export default {
       this.removeReadyFile_all();
       this.existedFiles.currentPage = 1;
       this.getExistedFiles();
-      this.select_site.model = '';
+      this.select_site.model = "";
       this.getSelect_site();
       //--------
     },
@@ -462,20 +465,6 @@ export default {
     },
     //获取洲
     async getSelect_area() {
-      // if (this.continent.includes(this.page.id)) {
-      //   if (this.select.render.length) return;
-      //   this.isContinent = true;
-      //   let res = await selectReg();
-      //   if (res.code === 200) {
-      //     this.select.render = res.data.map(item => {
-      //       return {
-      //         id: item.areaId,
-      //         name: item.areaName,
-      //         shortName: item.areaShortNameEng
-      //       };
-      //     });
-      //   }
-      // }
       let res = await selectReg();
       if (res.code === 200) {
         this.select_area.render = res.data.map(item => {
@@ -490,16 +479,17 @@ export default {
     },
     //获取站点
     async getSelect_site() {
-        let res = await repGetShopIdSiteInfo(this.select_area.arId);
-        if(res.code === 200){
-          this.select_site.render = res.data.map(item => {
-            return {
-              id: item.siteId,
-              name: item.siteName,
-              shortName: item.siteShortNameEng
-            };
-          });
-        }
+      if (this.isContinent) return;
+      let res = await repGetShopIdSiteInfo(this.select_area.arId);
+      if (res.code === 200) {
+        this.select_site.render = res.data.map(item => {
+          return {
+            id: item.siteId,
+            name: item.siteName,
+            shortName: item.siteShortNameEng
+          };
+        });
+      }
     },
     verifySuffix(fileName) {
       let pointIndex = fileName.lastIndexOf(".");
@@ -654,7 +644,7 @@ export default {
                         );
                         console.log(this);
 
-                        step.dealWith = "数据处理成功,部分skuId信息错误";
+                        step.dealWith = "数据处理成功";
                         step.dealWith_status = "success";
                         step.count++;
                         break;
@@ -689,7 +679,7 @@ export default {
             });
           }
         } else {
-          self.setUploadStatus("上传失败", 1, "error");
+          self.setUploadStatus(res.data.msg, 1, "error");
         }
       });
     },

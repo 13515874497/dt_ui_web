@@ -665,6 +665,8 @@ export default {
       //   });
       //   return;
       // }
+      console.log(checked);
+      
       let mId = this.editingMenu.data.menuId;
       let data = checked.map(item => {
         return {

@@ -515,18 +515,19 @@ export const delCompany = (data)=> ajax(BASE_URL + '/company/delCompany', data, 
 export const findByListShop = (data) => ajax(BASE_URL + `/shop/findByListShop`, data, 'POST')
 //获取店铺列表(有权限)
 export const repGetShopName = () => ajax(BASE_URL + `/shop/getListShopName`)
+//查询区域(洲)(有权限) 
+export const selectReg = () => ajax(BASE_URL + '/reg/selectReg')
 //查询店铺列表(全部)
 export const selectShopList = () => ajax(BASE_URL + `/admin/selectShopList`)
-//查询站点列表(全部)
-export const selectSiteList = (data) => ajax(BASE_URL + `/admin/selectSiteList`,data)
 //查询洲列表(全部)
-export const selectArea = (data) => ajax(BASE_URL + `/admin/selectArea`)
+export const selectReg_admin = () => ajax(BASE_URL + `/admin/selectReg`)
+//查询站点列表(全部)
+export const selectSite = (data) => ajax(BASE_URL + `/admin/selectSite`,data)
 
 
 //区域分页 repGetRegionInfo
 export const findByListRegion = (data) => ajax(BASE_URL + '/reg/findByListRegion', data, 'POST')
-//查询区域 
-export const selectReg = () => ajax(BASE_URL + '/reg/selectReg')
+
 
 
 //站点分页 repGetSiteInfo
