@@ -81,8 +81,17 @@
 
           <!-- <el-tree :data="shopTree" show-checkbox node-key="id" ref="shopTree"></el-tree> -->
         </el-tab-pane>
-        <el-tab-pane label="配置站点" name="site">
-          <el-tree v-for="(area,index) in areas" :key="index" :data="areas[index]" show-checkbox node-key="id"></el-tree>
+        <el-tab-pane label="配置站点" name="site" v-if="data&&data.sIds">
+          <el-tree
+            v-for="(area,index) in areas"
+            :key="index"
+            :data="areas[index]"
+            show-checkbox
+            node-key="id"
+            :ref="`site${index}`"
+            :default-checked-keys="site_exist"
+          ></el-tree>
+          <el-button type="primary" class="saveBtn" @click="getSiteCheckedKeys">保存</el-button>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -107,6 +116,7 @@ import {
   selectSite //获取所有站点
 } from "@/api";
 import MenuHeadItem from "@/components/RoleItem/MenuHeadItem/MenuHeadItem";
+import { getDiffrent } from "@/utils/Arrays";
 
 export default {
   data() {
@@ -178,7 +188,9 @@ export default {
         //   arId: 7,
         //   siteIds:[1,2,3]
         // }
-      ] //全部的洲
+      ], //全部的洲
+      site_exist: [], //已有的站点
+      site_exist_cache: []
     };
   },
   watch: {
@@ -372,7 +384,7 @@ export default {
 
     //初始化 配置店铺
     async initShop() {
-      // if (this.shops.length) return;
+      if (this.shops.length) return;
       //获取全部店铺
       let res = await selectShopList();
       console.log(res);
@@ -426,6 +438,19 @@ export default {
     //初始化洲和站点
     async initSite() {
       if (this.areas.length) return;
+      //设置已有站点的缓存
+      if (!this.data.seIds) {
+        this.site_exist = [];
+      } else {
+        this.site_exist = this.data.seIds.split(",").map(siteId => {
+          return `site_${siteId}`;
+        });
+      }
+
+      console.log(this.data.seIds);
+
+      console.log(this.site_exist);
+
       let res = await selectReg_admin();
       console.log(res);
       if (res.code === 200) {
@@ -434,7 +459,8 @@ export default {
         for (let i = 0; i < data.length; i++) {
           let area = data[i];
           let res2 = await selectSite({ aid: area.areaId });
-          let sites = [];
+          let sites = []; //全部的站点
+          let sites_cache = [];
           if (res2.code === 200) {
             sites = res2.data.map(site => {
               return {
@@ -443,14 +469,32 @@ export default {
               };
             });
           }
-          areas.push({
-            label: area.areaName,
-            id: area.areaId,
-            children: sites
-          });
+          areas.push([
+            {
+              label: area.areaName,
+              id: area.areaId,
+              arId: area.arId,
+              children: sites
+            }
+          ]);
         }
         this.areas = areas;
-        console.log(this.areas);
+      }
+    },
+    getSiteCheckedKeys() {
+      for (let i = 0; i < this.areas.length; i++) {
+        let tree = this.$refs[`site${i}`][0];
+        let siteIds = tree
+          .getCheckedKeys(true)
+          .map(siteId => {
+            return siteId.slice(5);
+          })
+          .join(",");
+        let areaId = this.areas[i][0].id;
+        console.log({
+          aid: areaId,
+          siteIds
+        });
       }
     }
   },
