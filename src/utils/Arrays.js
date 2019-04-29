@@ -21,13 +21,13 @@
       .filter(item => {
         return !curr.includes(item);
       })
-    let isRemoveAll = false;
-    if(!add.length && origin.length === del.length ){
-      isRemoveAll = true
+    let isChange = false;
+    if(add.length || del.length){
+      isChange = true;
     }
     return {
       add,
       del,
-      isRemoveAll
+      isChange
     }
   }

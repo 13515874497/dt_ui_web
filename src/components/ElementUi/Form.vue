@@ -79,23 +79,22 @@
         ></el-input>
       </el-form-item>
 
-
-
-      <!-- <el-form-item
+      <el-form-item
         v-else-if="item.inputType == 3"
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
+        :required="true"
       >
-         <el-select v-model="data_model[item.topType]" placeholder="请选择">
+        <el-select v-model="data_model[item.topType]" placeholder="请选择">
           <el-option
             v-for="option in item.data"
-            :key="option.id"
-            :label="option.name"
-            :value="option.id"
+            :key="option.key"
+            :label="option.label"
+            :value="option.key"
           ></el-option>
         </el-select>
-      </el-form-item> -->
+      </el-form-item>
 
       <el-form-item
         v-else-if="item.inputType === 5"
@@ -112,8 +111,6 @@
           :filterable="true"
         ></el-cascader>
       </el-form-item>
-
-
 
       <el-form-item
         v-else-if="item.inputType == 0 || !item.inputType"
@@ -168,11 +165,18 @@ export default {
 
     // custom_field: [
     //   {
-    //     //类目名称=>产品名称
-    //     topType: ["productsName", "productName"],
+    //     //类目名称
+    //     topType: "productsName",
     //     inputType: 5,
-    //     headName: "产品类目和产品名称",
     //     ajax: findByListProducts
+    //   },
+    //   {
+    //     //店铺列表
+    //     topType: "shopName",
+    //     inputType: 3,
+    //     ajax: repGetShopName,
+    //     key: shopId,
+    //     label: "shopName"
     //   }
     // ],
     formItems: Array,
@@ -220,7 +224,7 @@ export default {
     initCustomField() {
       let self = this;
       return new Promise(async (resolve, reject) => {
-        if(!self.customField) {
+        if (!self.customField) {
           resolve(null);
           return;
         }
@@ -234,14 +238,26 @@ export default {
           formItem.inputType = item.inputType;
           switch (item.inputType) {
             case 3:
-            // formItem.data = [];
-            // let res = await item.ajax();
-            // if(res.code === 200){
-            //   formItem.data = res.data;
-            // }
-            break;
-            
-            case 5: 
+              formItem.data = [];
+              formItem.key = item.key;
+              formItem.label = item.label
+              let res3 = await item.ajax();
+              if (res3.code === 200) {
+                let { key, label } = formItem;
+                formItem.data = res3.data.map(item => {
+                  console.log(key);
+                  
+                  return {
+                    key: ''+item[key],
+                    label: item[label]
+                  };
+                });
+                console.log(formItem);
+                
+              }
+              break;
+
+            case 5:
               formItem.data = [];
               let res = await item.ajax();
               if (res.code === 200) {
@@ -272,9 +288,12 @@ export default {
       }
       switch (item.inputType) {
         case 1:
+        
         case 4:
           return item.required ? rules._number : rules.number;
+        break;
         case 0:
+        case 3:
         default:
           return item.required ? rules._str : rules.str;
       }
@@ -283,7 +302,7 @@ export default {
       let self = this;
       if (this.formData) {
         console.log(this.formData);
-        
+
         this.data_model = { ...this.formData };
         this.data_model_cache = { ...this.formData }; //只对基本数据类型做缓存
         return;
@@ -307,8 +326,8 @@ export default {
             modifyData[key] = data_model[key];
           }
         }
-      }else {
-        modifyData = {...this.data_model}
+      } else {
+        modifyData = { ...this.data_model };
       }
 
       this.customField_cache.forEach(item => {

@@ -76,22 +76,43 @@
               :titles="['全部店铺', '已有店铺']"
               :button-texts="['移除', '添加']"
             ></el-transfer>
+          </div>
+          <div class="fe">
             <el-button type="primary" class="saveBtn" @click="shopSave" :disabled="isShopSave()">保存</el-button>
           </div>
 
           <!-- <el-tree :data="shopTree" show-checkbox node-key="id" ref="shopTree"></el-tree> -->
         </el-tab-pane>
         <el-tab-pane label="配置站点" name="site" v-if="shop_exist_cache.length">
-          <el-tree
-            v-for="(area,index) in areas"
-            :key="index"
-            :data="areas[index]"
-            show-checkbox
-            node-key="id"
-            :ref="`site${index}`"
-            :default-checked-keys="site_exist"
-          ></el-tree>
+          <template v-for="(area,index) in areas">
+            <el-tree
+              :key="index"
+              :data="areas[index]"
+              show-checkbox
+              node-key="id"
+              :ref="`area${index}`"
+              :default-checked-keys="area_exist"
+              @check-change="areaCheckChange"
+            ></el-tree>
+
+            <el-tree
+              v-show="areas[index][0]['_children'].length"
+              class="site-tree"
+              :key="`_${index}`"
+              :data="areas[index][0]['_children']"
+              show-checkbox
+              node-key="id"
+              :ref="`site${index}`"
+              :default-checked-keys="site_exist"
+              @check-change="siteCheckChange"
+            ></el-tree>
+          </template>
+          <div class="fe">
+
+          <el-button type="primary" class="saveBtn" @click="resetSiteChecked">重置</el-button>
           <el-button type="primary" class="saveBtn" @click="getSiteCheckedKeys">保存</el-button>
+
+          </div>
         </el-tab-pane>
       </el-tabs>
     </el-dialog>
@@ -182,14 +203,9 @@ export default {
       shop_exist: [], //已有的店铺Id
       shop_exist_cache: [],
 
-      areas: [
-        // {
-        //   areaId: 1,
-        //   areaname: '北美洲',
-        //   arId: 7,
-        //   siteIds:[1,2,3]
-        // }
-      ], //全部的洲
+      areas: [], //全部的洲
+      area_exist: [],
+      area_exist_cache: [],
       site_exist: [], //已有的站点
       site_exist_cache: []
     };
@@ -207,7 +223,7 @@ export default {
     },
     data(val) {
       console.log(val);
-      //设置已有店铺的缓存
+      //设置已有的店铺和缓存
       if (!val.sIds) {
         this.shop_exist = [];
         this.shop_exist_cache = [];
@@ -215,14 +231,25 @@ export default {
         this.shop_exist = val.sIds.split(",");
         this.shop_exist_cache = [...this.shop_exist];
       }
-
+      //设置已有的区域(洲)和缓存
+      if (!val.aids) {
+        this.area_exist = [];
+        this.area_exist_cache = [];
+      } else {
+        this.area_exist = val.aids.split(",");
+        this.area_exist_cache = [...this.area_exist];
+      }
       //设置已有的站点
       if (!val.seIds) {
         this.site_exist = [];
       } else {
-        this.site_exist = val.seIds.split(",").map(siteId => {
-          return `site_${siteId}`;
-        });
+        this.site_exist = val.seIds.split(",");
+      }
+    },
+    site_exist: {
+      deep: true,
+      handler(val) {
+        this.setsiteCache();
       }
     }
   },
@@ -439,14 +466,6 @@ export default {
     //初始化洲和站点
     async initSite() {
       if (this.areas.length) return;
-      // //设置已有站点的缓存
-      // if (!this.data.seIds) {
-      //   this.site_exist = [];
-      // } else {
-      //   this.site_exist = this.data.seIds.split(",").map(siteId => {
-      //     return `site_${siteId}`;
-      //   });
-      // }
       let res = await selectReg_admin();
       if (res.code === 200) {
         let data = res.data;
@@ -455,66 +474,141 @@ export default {
           let area = data[i];
           let res2 = await selectSite({ aid: area.areaId });
           let sites = []; //全部的站点
-          let site_cache = [];
           if (res2.code === 200 && res2.data) {
             sites = res2.data.map(site => {
-              let siteId = `site_${site.siteId}`;
-              if (this.site_exist.includes(siteId)) {
-                site_cache.push(siteId);
-              }
+              let siteId = site.siteId;
               return {
                 label: site.siteName,
-                id: siteId
+                id: "" + site.siteId
               };
             });
           }
           areas.push([
             {
               label: area.areaName,
-              id: area.areaId,
+              id: "" + area.areaId,
               arId: area.arId,
-              children: sites
+              _children: sites
             }
           ]);
-          this.site_exist_cache.push(site_cache);
         }
         this.areas = areas;
+        this.setsiteCache();
       }
     },
+
+    //设置站点缓存
+    setsiteCache() {
+      if (!this.areas.length) return null;
+      let self = this;
+      let site_exist_cache = [];
+      for (let i = 0; i < this.areas.length; i++) {
+        let area = this.areas[i][0];
+        let siteList = area._children;
+        let site_cache = [];
+        siteList.forEach(item => {
+          let siteId = item.id;
+          if (self.site_exist.includes(siteId)) {
+            site_cache.push(siteId);
+          }
+        });
+        site_exist_cache.push(site_cache);
+      }
+      this.site_exist_cache = site_exist_cache;
+    },
+    //取消区域选中时  删除区域对应的所有站点
+    areaCheckChange(node, isChecked) {
+      if (isChecked) return;
+      let areas = this.areas.flat();
+      let index = areas.indexOf(node);
+      this.$refs[`site${index}`][0].setCheckedKeys([]);
+    },
+    //站点选中时，对应区域也选中
+    siteCheckChange(node, isChecked) {
+      if (!isChecked) return;
+      let areas = this.areas.flat();
+      let index = null;
+      areas.forEach((item, i) => {
+        let site = item._children;
+        if (site.includes(node)) {
+          index = i;
+        }
+      });
+      let key = areas[index].id;
+      this.$refs[`area${index}`][0].setCheckedKeys([key]);
+      console.log(index);
+    },
+    //点击保存
     async getSiteCheckedKeys() {
       let post = {
         rid: this.data.rid,
-        areaRoleDtoList: []
+        areaRoleDtoList: [] //每个洲对应的添加和删除的站点
       };
-
+      // let area_checked = [];
+      let curr_area_checked = [];
+      let curr_site_checked = [];
       for (let i = 0; i < this.areas.length; i++) {
-        let tree = this.$refs[`site${i}`][0];
-        let siteIds = tree.getCheckedKeys(true);
         let area = this.areas[i][0];
-        let diff = getDifferent(this.site_exist_cache[i], siteIds);
-        for (let key in diff) {
-          if (Array.isArray(diff[key])) {
-            diff[key] = diff[key].map(item => {
-              return item.slice(5);
-            });
+        let area_tree = this.$refs[`area${i}`][0];
+        let area_checked = area_tree.getCheckedKeys();
+        curr_area_checked = [...curr_area_checked, ...area_checked];
+      }
+      let area_diff = getDifferent(this.area_exist_cache, curr_area_checked);
+     
+      
+      
+      for (let i = 0; i < this.areas.length; i++) {
+        let area = this.areas[i][0];
+        let removeArea; //在其他页面是否不显示洲
+
+        if (area_diff.isChange) {
+          if (area_diff.add.includes(area.id)) {
+            removeArea = false;
+          } else if (area_diff.del.includes(area.id)) {
+            removeArea = true;
           }
         }
-        if (diff.add.length || diff.del.length) {
-          post.areaRoleDtoList.push({
+
+        let site_tree = this.$refs[`site${i}`][0];
+        let site_checked = site_tree.getCheckedKeys();
+        curr_site_checked.push(site_checked);
+        let site_diff = getDifferent(this.site_exist_cache[i], site_checked);
+
+        if (removeArea != undefined || site_diff.isChange) {
+          let data = {
             aid: area.id,
             arId: area.arId,
-            removeArea: diff.isRemoveAll,
-            seIds: diff.add.join(","),
-            delSeId: diff.del.join(",")
-          });
+            // removeArea: removeArea,
+            seIds: site_diff.add.join(","),
+            delSeId: site_diff.del.join(",")
+          };
+          if (removeArea != undefined) {
+            data.removeArea = removeArea;
+          }
+          post.areaRoleDtoList.push(data);
         }
       }
+      
       let res = await setAreaRole(post);
       if (res.code === 200) {
-        
         this.$emit("refresh");
+        this.area_exist_cache = curr_area_checked;
+        this.site_exist_cache = curr_site_checked;
+      }
+    },
+    //点击重置
+    resetSiteChecked(){
+      console.log(this.area_exist_cache);
+      console.log(this.site_exist_cache);
+      
+      for(let i = 0; i< this.site_exist_cache.length;i++){
+        this.$refs[`area${i}`][0].setCheckedKeys(this.area_exist_cache);
+        this.$refs[`site${i}`][0].setCheckedKeys(this.site_exist_cache[i]);
       }
     }
+  },
+  beforeCreate() {
+    this.aa = "99";
   },
   created() {}
 };
@@ -542,7 +636,10 @@ export default {
     }
   }
 }
-
+.fe {
+  display: flex;
+  justify-content: flex-end;
+}
 //自定义添加转移
 .transfer {
   // position: relative;
@@ -611,5 +708,8 @@ export default {
   border-top-right-radius: 25px;
   border-bottom-left-radius: 25px;
   border-bottom-right-radius: 25px;
+}
+.site-tree {
+  padding-left: 21px;
 }
 </style>
