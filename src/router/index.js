@@ -1,19 +1,19 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Index from '../views/Index/Index'
-import Login from '../views/Login/Login'
-import AccountManagement from '../views/AccountManagement/AccountManagement'
-import Menu from '../views/Menu/Menu'
-import RoleManagement from '../views/RoleManagement/RoleManagement'
-import Company from '../views/Basic_Data/Public_Data/Company'
-import Shop from '../views/Basic_Data/Public_Data/Shop'
-import Region from '../views/Basic_Data/Public_Data/Region'
-import Site from '../views/Basic_Data/Public_Data/Site'
-import Currency from '../views/Basic_Data/Public_Data/Currency'
+import Index from '../views/Index/Index'  //首页
+import Login from '../views/Login/Login'  //登录
+import AccountManagement from '../views/AccountManagement/AccountManagement' //账号管理
+import Menu from '../views/Menu/Menu'                                        //菜单
+import RoleManagement from '../views/RoleManagement/RoleManagement'          //角色管理
+import Company from '../views/Basic_Data/Public_Data/Company'                //公司
+import Shop from '../views/Basic_Data/Public_Data/Shop' // 店铺
+import Region from '../views/Basic_Data/Public_Data/Region' //区域
+import Site from '../views/Basic_Data/Public_Data/Site' //站点
+import Currency from '../views/Basic_Data/Public_Data/Currency'  //币别
 import Upload from '../views/Upload/FinanceUploadFile'
 import Clearance from '../views/Basic_Data/Basic_Logistics/Customs-clearance'
-import Declaration from '../views/Basic_Data/Basic_Logistics/Customs-declaration'
-import EleContent from '../views/Basic_Data/Basic_Logistics/ele_content'
+import Declaration from '../views/Basic_Data/Basic_Logistics/Customs-declaration'   
+import EleContent from '../views/Basic_Data/Basic_Logistics/ele_content'  //要素内容
 import Err from '../views/Err/Err'
 import Freight from '../views/Freight/Freight'
 
@@ -31,7 +31,7 @@ import salesAmazonFbaHandlingfee from '../views/Upload/salesAmazonFbaHandlingfee
 import Terminal from '../views/Upload/TerminalUploadFile'//期末库存
 import Category from '../views/Basic_Data/Public_Data/Category'//产品类目
 import Exchange from '../views/Basic_Data/Public_Data/Exchange-rate'//汇率
-import Measurement from '../views/Basic_Data/Public_Data/Measurement'//计量单位
+import Measurement from '../views/Basic_Data/Public_Data/Measurement'//计量单位 
 import OPI from '../views/Basic_Data/Public_Data/OPI'//产品信息
 import HL from '../views/Upload/HlUploadFile'//HL
 import Warehouse from '../views/Basic_Data/Public_Data/Warehouse'//仓库
@@ -125,10 +125,10 @@ import Turnover_type from '../views/Storage/Turnover_type'//离职类型
 import Regional from '../views/Storage/Regional'//地区市
 import Province_table from '../views/Storage/Province_table'//省州关联表
 import Menu_header from '../views/Storage/Menu_header'//菜单头部
-import Tariff_rate from '../views/Storage/Tariff_rate'//关税税率
+import Tariff_rate from '../views/Storage/tariff_rate'//关税税率
 import Additional_tariff from '../views/Storage/Additional_tariff'//附加税率
 import SKU from '../views/Storage/SKU'//SUK信息表
-import VAT from '../views/Storage/VAT'//VAT信息表
+import VAT from '../views/Storage/VAT'//VAT附加税
 
 import Star_level from '../views/Storage/Star_level'//星级
 
@@ -147,57 +147,84 @@ export default new Router({
       meta: {
         showLogin: true
       },
+      meta: { title: '系统首页' },   //首页
+      name:'Index',
       children: [
         {
-          path: '/index/account_management/:id/:name',
-          component: AccountManagement
+          path: '/index/account_management/:id/:name',   //系统管理-> 用户管理->账号管理
+          component: AccountManagement,
+          meta: { title: '账号管理' },
+          name:'AccountManagement',
         },
         {
-          path: '/index/role_management/:id/:name',
-          component: RoleManagement
+          path: '/index/role_management/:id/:name',  //系统管理-> 用户管理->角色管理
+          component: RoleManagement,
+          meta: { title: '角色管理' }, 
+          name:'RoleManagement',
         },
         {
-          path: '/index/menu/:id/:name',
-          component: Menu
+          path: '/index/menu/:id/:name',  //系统管理-> 菜单管理-> 菜单管理
+          component: Menu,
+          meta: { title: '菜单管理' }, 
+          name:'Menu',
         },
         {
-          path: '/index/company/:id/:name',
-          component: Company
+          path: '/index/company/:id/:name',  //基础资料->公共资料->公司
+          component: Company,
+          meta: { title: '公司' },
+          name:'Company',
         },
         {
-          path: '/index/shop/:id/:name',
-          component: Shop
+          path: '/index/shop/:id/:name',    //基础资料->公共资料->店铺
+          component: Shop,
+          meta: { title: '店铺' },
+          name:'Shop',
         },
         {
-          path: '/index/region/:id/:name',
-          component: Region
+          path: '/index/region/:id/:name',  //基础资料->公共资料->区域
+          component: Region,
+          meta: { title: '区域' },
+          name:'Region',
         },
         {
-          path: '/index/site/:id/:name',
-          component: Site
+          path: '/index/site/:id/:name',  //基础资料->公共资料->站点
+          component: Site,
+          meta: { title: '站点' },
+          name:'Site',
         },
         {
-          path: '/index/currency/:id/:name',
-          component: Currency
+          path: '/index/currency/:id/:name',  //基础资料->公共资料->币别
+          component: Currency,
+          meta: { title: '币别' },
+          name:'Currency',
         },
         {
-          path: '/index/upload/:id/:name',
-          component: Upload
+          path: '/index/upload/:id/:name',   //数据导入->财务导入-> 亚马逊 -> 结算报告
+          component: Upload,
+          meta: { title: '结算报告' },
+          name:'FinanceUploadFile',
         },
         {
-          path: '/index/customs_clearance/:id/:name', //清关类型
-          component: Clearance
+          path: '/index/customs_clearance/:id/:name', //基础资料—>出口管理->清关类型
+          component: Clearance,
+          meta: { title: '清关类型' },
+          name:'Customs-clearance',
         },
         {
-          path:'/index/customs_declaration/:id/:name',//报关类型
-          component:Declaration
+          path:'/index/customs_declaration/:id/:name',//基础资料—>出口管理->报关类型
+          component:Declaration,
+          meta: { title: '报关类型' },
+          name:'Customs-declaration',
         },
         {
-          path:'/index/ele_content/:id/:name',//报关类型
-          component:EleContent
+          path:'/index/ele_content/:id/:name',//基础资料—>出口管理->要素内容
+          component:EleContent,
+          meta: { title: '要素内容' },
+          name:'ele_content',
+          
         },
         {
-         path:'/index/err/:id/:name',
+         path:'/index/err/:id/:name',    
          component:Err
         },
         {
@@ -205,428 +232,679 @@ export default new Router({
           component:Freight
         },
         {
-          path:'/index/cpr_upload/:id/:name',
-          component:CprUpload
+          path:'/index/cpr_upload/:id/:name',  //运营导入-> 亚马逊 -> 广告-> cpr
+          component:CprUpload,
+          meta: { title: 'CPR' }, 
+          name:'CprUploadFile',
         },
         {
-          path:'/index/business/:id/:name',
-          component:Business
+          path:'/index/business/:id/:name',      //运营导入-> 亚马逊 -> 报告-> 业务报告
+          component:Business, 
+          meta: { title: '业务报告' }, 
+          name:'BusinessUploadFile',
         },
         {
-          path:'/index/oar_upload/:id/:name',
-          component:OarUpload
+          path:'/index/oar_upload/:id/:name',   //运营导入-> 亚马逊 -> 广告-> oar
+          component:OarUpload,
+          meta: { title: 'OAR' }, 
+          name:'BusinessUploadFile',
         },
         {
-          path:'/index/order_upload/:id/:name',
-          component:OrderUpload
-        },
-        {
-          path:'/index/receive/:id/:name',
-          component:Receive
-        },
-        {
-          path:'/index/return/:id/:name',
-          component:Return
-        },
-        {
-          path:'/index/str_upload/:id/:name',
-          component:StrUpload
-        },
-        {
-          path:'/index/FBA_import/:id/:name',
-          component:FBAUploadFile
-        },
-        {
-          path:'/index/sales_amazon_fba_month_warehousefee/:id/:name',
-          component:salesAmazonFbaMonthWarehousefee
-        },
-        {
-          path:'/index/sales_amazon_fba_long_warehousefee/:id/:name',
-          component:salesAmazonFbaLongWarehousefee
-        },
-        {
-          path:'/index/sales_amazon_fba_handlingfee/:id/:name',
-          component:salesAmazonFbaHandlingfee
-        },
-        {
-          path:'/index/terminal/:id/:name',//期末库存
-          component:Terminal
-        },
-        {
-          path:'/index/category_item/:id/:name',//产品类目
-          component:Category
-        },
-        {
-          path:'/index/exchange/:id/:name',//汇率
-          component:Exchange
-        },
-        {
-          path:'/index/measurement/:id/:name',//计量单位
-          component:Measurement
-        },
-        {
-          path:'/index/opi_item/:id/:name',//OPI
-          component:OPI
-        },
-        {
-          path:'/index/hl/:id/:name',//HL
-          component:HL
-        },
-        {
-          path:'/index/warehouse/:id/:name',//仓库
-          component:Warehouse
-        },
-        {
-          path:'/index/yy_upload/:id/:name',
-          component:YyFinanceUploadFile
-        },
-        {
-          path:'/index/op_sales_target/:id/:name',//运营管理销售目标
-          component:OP_Sales_target
-        },
-        {
-          path:'/index/op_sales_plan/:id/:name',//运营管理销售计划
-          component:OP_Sales_plan
-        },
-        {
-          path:'/index/op_monthly_cost/:id/:name',//运营管理月度仓储费
-          component:OP_Monthly_cost
-        },
-        {
-          path:'/index/op_order_cost/:id/:name',//运营管理订单处理费
-          component:OP_Order_cost
-        },
-        {
-          path:'/index/op_permanent_cost/:id/:name',//运营管理长期仓储费
-          component:OP_Permanent_cost
-        },
-        {
-          path:'/index/op_business_report/:id/:name',//运营管理业务报告
-          component:OP_Business_Report
-        },
-        {
-          path:'/index/op_settlement_report/:id/:name',//运营管理结算报告
-          component:OP_Settlement_Report
-        },
-        {
-         
-          path:'/index/op_return_report/:id/:name',//运营管理退货报告
-          component:OP_Return_Report
-        },
-        {
-          path:'/index/op_transaction_report/:id/:name',//运营管理交易报告
-          component:OP_Transaction_Report
-        },
-        {
-          path:'/index/op_ad_cpr/:id/:name',//运营管理CPR
-          component:OP_Ad_CPR
-        },
-        {
-          path:'/index/op_ad_cpr_week/:id/:name',//运营管理CPR周
-          component:OP_Ad_CPR_week
-        },
-        {
-          path:'/index/op_ad_hl/:id/:name',//运营管理HL
-          component:OP_Ad_HL
-        },
-        {
-          path:'/index/op_ad_oar/:id/:name',//运营管理OAR
-          component:OP_Ad_OAR
-        },
-        {
-          path:'/index/op_ad_oar_week/:id/:name',//运营管理OAR周
-          component:OP_Ad_OAR_week
-        },
-        {
-          path:'/index/op_ad_str/:id/:name',//运营管理STR
-          component:OP_Ad_STR
-        },
-        {
-          path:'/index/op_receiving_stock/:id/:name',//运营管理接收库存
-          component:OP_Receiving_stock
-        },
-        {
-          path:'/index/op_ending_stock/:id/:name',//运营管理期末库存
-          component:OP_Ending_stock
-        },
-        {
-          path:'/index/op_shipment_not/:id/:name',//运营管理出货通知单
-          component:OP_Shipment_not
-        },
-        {
-          path:'/index/op_transfer_not/:id/:name',//运营管理移仓通知单
-          component:OP_Transfer_not
-        },
-        {
-          path:'/index/op_fba_stock/:id/:name',//FBA遗弃
-          component:OP_FBA_stock
-        },
-        {
-          path:'/index/op_feedback/:id/:name',//Feedback
-          component:OP_Feedback
-        },
-        {
-          path:'/index/op_review/:id/:name',//Review
-          component:OP_Review
-        },
-        {
-          path:'/index/op_closing/:id/:name',//期末关帐
-          component:OP_Closing
-        },
-        {
-          path:'/index/op_settle/:id/:name',//期末结账
-          component:OP_Settle
-        },
-        {
-          path:'/index/log_status/:id/:name',//物流状态
-          component:LOG_Status
-        },
-        {
-          path:'/index/log_query/:id/:name',//物流查询
-          component:LOG_Query
-        },
-        {
-          path:'/index/log_record/:id/:name',//物流发货记录
-          component:LOG_Record
-        },
-        {
-          path:'/index/log_customs/:id/:name',//物流报关单
-          component:LOG_Customs,
+          path:'/index/order_upload/:id/:name',   //运营导入-> 亚马逊 -> 报告-> 交易报告
+          component:OrderUpload,
+          meta: { title: '交易报告' }, 
+          name:'OarUploadFile',
           
         },
         {
-          path:'/index/log_packing/:id/:name',//物流装箱单
-          component:LOG_Packing
+          path:'/index/receive/:id/:name',   //运营导入-> 亚马逊 -> 库存-> 接收库存
+          component:Receive,
+          meta: { title: '接收库存' }, 
+          name:'ReceiveUploadFile',
+          
+          
         },
         {
-          path:'/index/log_invoice/:id/:name',//发票
-          component:LOG_Invoice
+          path:'/index/return/:id/:name',  //运营导入-> 亚马逊 -> 报告-> 退货报告
+          component:Return,
+          meta: { title: '退货报告' }, 
+          name:'ReturnUploadFile',
         },
         {
-          path:'/index/log_contract/:id/:name',//外销合同
-          component:LOG_Contract
+          path:'/index/str_upload/:id/:name', //运营导入-> 亚马逊 -> 报告-> STR
+          component:StrUpload,
+          meta: { title: 'STR' }, 
+          name:'StrUploadFile',
+          
         },
         {
-          path:'/index/bas_transport/:id/:name',//物流性质
-          component:Bas_Transport
+          path:'/index/FBA_import/:id/:name',  //运营导入-> 亚马逊 -> 库存->fba遗弃
+          component:FBAUploadFile,
+          meta: { title: 'FBA遗弃' }, 
+          name:'FBAUploadFile', 
         },
         {
-          path:'/index/bas_types/:id/:name',//物流运输类型
-          component:Bas_Types
+          path:'/index/sales_amazon_fba_month_warehousefee/:id/:name',   //数据导入->运营导入->亚马逊->费用->月度仓储费
+          component:salesAmazonFbaMonthWarehousefee,
+          meta: { title: '月度仓储费' },
+          name:'salesAmazonFbaMonthWarehousefee',          
         },
         {
-          path:'/index/price_type/:id/:name',//物流计价方式
-          component:Price_Type
+          path:'/index/sales_amazon_fba_long_warehousefee/:id/:name', //数据导入->运营导入->亚马逊->费用->长期仓储费
+          component:salesAmazonFbaLongWarehousefee,
+          meta: { title: '长期仓储费' },
+          name:'salesAmazonFbaLongWarehousefee',
+          
         },
         {
-          path:'/index/pricing_range/:id/:name',//物流计价范围
-          component:Pricing_Range
+          path:'/index/sales_amazon_fba_handlingfee/:id/:name', //数据导入->运营导入->亚马逊->费用->订单处理费
+          component:salesAmazonFbaHandlingfee,
+          meta: { title: '订单处理费' }, 
+          name:'salesAmazonFbaHandlingfee',
         },
         {
-          path:'/index/freight_level/:id/:name',//运价等级
-          component:Freight_Level
+          path:'/index/terminal/:id/:name',//数据导入 -> 运营导入-> 期末库存
+          component:Terminal,
+          meta: { title: '期末库存' }, 
+          name:'TerminalUploadFile',
+          
         },
         {
-          path:'/index/bas_err/:id/:name',//物流异常类型
-          component:Bas_Err
+          path:'/index/category_item/:id/:name',//基础资料->公共资料->产品类目
+          component:Category,
+          meta: { title: '产品类目' }, 
+          name:'Category',
         },
         {
-          path:'/index/bas_freight/:id/:name',//物流货运公司
-          component:Bas_Freight
+          path:'/index/exchange/:id/:name',//基础资料->公共资料->汇率
+          component:Exchange,
+          meta: { title: '汇率' }, 
+          name:' Exchange-rate',
+         
         },
         {
-          path:'/index/packing_type/:id/:name',//物流货运公司
-          component:Packing_Type
+          path:'/index/measurement/:id/:name',//基础资料-> 公共资料->计量单位
+          component:Measurement,
+          meta: { title: '计量单位' }, 
+          name:' Measurement',
+          
+        },
+        {
+          path:'/index/opi_item/:id/:name',// 基础资料-> 公共资料->产品信息
+          component:OPI,
+          meta: { title: '产品信息 ' }, 
+          name:'OPI',
+        },
+        {
+          path:'/index/hl/:id/:name',//     //运营导入-> 亚马逊 -> 报告-> HL 
+          component:HL,
+          meta: { title: 'HL ' }, 
+          name:'HlUploadFile',
+        },
+        {
+          path:'/index/warehouse/:id/:name',//基础资料-> 公共资料->仓库
+          component:Warehouse,
+          meta: { title: '仓库 ' }, 
+          name:'Warehouse',
+        },
+        {
+          path:'/index/yy_upload/:id/:name',  //运营导入-> 亚马逊 -> 报告-> 结算报告
+          component:YyFinanceUploadFile,
+          meta: { title: '结算报告' },
+          name:'YyFinanceUploadFile',
+        },
+        {
+          path:'/index/op_sales_target/:id/:name',//绩效管理->销售指标——>销售目标
+          component:OP_Sales_target,
+          meta: { title: '销售目标' },
+          name:'Sales_target',
+        },
+        {
+          path:'/index/op_sales_plan/:id/:name',//绩效管理->销售指标——>销售计划
+          component:OP_Sales_plan,
+          meta: { title: '销售计划' },
+          name:'Sales_plan',
+        },
+        {
+          path:'/index/op_monthly_cost/:id/:name',//运营管理->亚马逊->费用->月度仓储费
+          component:OP_Monthly_cost,
+          meta: { title: '月度仓储费' },
+          name:'Monthly_cost',
+        },
+        {
+          path:'/index/op_order_cost/:id/:name',//运营管理->亚马逊->费用-长期仓储费
+          component:OP_Order_cost,
+          meta: { title: '长期仓储费' },
+          name:'Order_cost',
+        },
+        {
+          path:'/index/op_permanent_cost/:id/:name',  //运营管理->亚马逊->费用->订单处理费
+          component:OP_Permanent_cost,
+          meta: { title: '订单处理费' },
+          name:'Permanent_cost',
+          
+        },
+        {
+          path:'/index/op_business_report/:id/:name',//运营管理->亚马逊->报告->业务报告
+          component:OP_Business_Report,
+          meta: { title: '业务报告' },
+          name:'Business_Report',
+        },
+        {
+          path:'/index/op_settlement_report/:id/:name',//运营管理->亚马逊->报告->结算报告
+          component:OP_Settlement_Report,
+          meta: { title: '结算报告' },
+          name:'Settlement_Report',
+        },
+        {
+         
+          path:'/index/op_return_report/:id/:name',//运营管理->亚马逊->报告->退货报告
+          component:OP_Return_Report,
+          meta: { title: '退货报告' },
+          name:'Return_Report',
+          
+        },
+        {
+          path:'/index/op_transaction_report/:id/:name',//运营管理->亚马逊->报告->交易报告
+          component:OP_Transaction_Report,
+          meta: { title: '交易报告' },
+          name:'Transaction_Report',
+          
+        },
+        {
+          path:'/index/op_ad_cpr/:id/:name',//运营管理->亚马逊->广告->CPR
+          component:OP_Ad_CPR,
+          meta: { title: 'CPR' },
+          name:'Ad_CPR',
+        },
+        {
+          path:'/index/op_ad_cpr_week/:id/:name',//运营管理->亚马逊->广告->CPR周
+          component:OP_Ad_CPR_week,
+          meta: { title: 'CPR(周)' },
+          name:'Ad_CPR_week',
+          
+        },
+        {
+          path:'/index/op_ad_hl/:id/:name',//运营管理->亚马逊->广告->HL
+          component:OP_Ad_HL,
+          meta: { title: 'HL' },
+          name:' Ad_HL',
+        },
+        {
+          path:'/index/op_ad_oar/:id/:name',//运营管理->亚马逊->广告->OAR
+          component:OP_Ad_OAR,
+          meta: { title: 'OAR' },
+          name:' Ad_OAR',
+         
+        },
+        {
+          path:'/index/op_ad_oar_week/:id/:name',//运营管理->亚马逊->广告->OAR周
+          component:OP_Ad_OAR_week,
+          meta: { title: 'OAR(周)' },
+          name:' Ad_OAR_wek',
+        },
+        {
+          path:'/index/op_ad_str/:id/:name',//运营管理->亚马逊->广告->STR
+          component:OP_Ad_STR,
+          meta: { title: 'STR' },
+          name:' Ad_STR',
+        },
+        {
+          path:'/index/op_receiving_stock/:id/:name',//运营管理->亚马逊->库存->接收库存
+          component:OP_Receiving_stock,
+          meta: { title: '接收库存' },
+          name:' Receiving_stock',
+          
+        },
+        {
+          path:'/index/op_ending_stock/:id/:name',//运营管理->亚马逊->库存->期末库存
+          component:OP_Ending_stock,
+          meta: { title: '期末库存' },
+          name:' Ending_stock',
+        },
+        {
+          path:'/index/op_shipment_not/:id/:name',//运营管理->亚马逊->通知单->出货通知单
+          component:OP_Shipment_not,
+          meta: { title: '出货通知单' },
+          name:'Shipment_not',
+      
+        },
+        {
+          path:'/index/op_transfer_not/:id/:name', //运营管理->亚马逊->通知单->移仓通知单
+          component:OP_Transfer_not,
+          meta: { title: '移仓通知单' },
+          name:'Transfer_not',
+        },
+        {
+          path:'/index/op_fba_stock/:id/:name',//运营管理->亚马逊->库存->FBA遗弃
+          component:OP_FBA_stock,
+          meta: { title: 'FBA遗弃' },
+          name:'FBA_stock',
+          
+        },
+        {
+          path:'/index/op_feedback/:id/:name',//运营管理->亚马逊->库存->Feedback
+          component:OP_Feedback,
+          meta: { title: 'Feedback' },
+          name:'Feedback',
+        },
+        {
+          path:'/index/op_review/:id/:name',//运营管理->亚马逊->库存->Review
+          component:OP_Review,
+          meta: { title: 'Review' },
+          name:'Review',
+          
+        },
+        {
+          path:'/index/op_closing/:id/:name',//运营管理->期末处理->期末关帐
+          component:OP_Closing,
+          meta: { title: '期末关帐' },
+          name:' Closing_accounts',
+         
+        },
+        {
+          path:'/index/op_settle/:id/:name',//运营管理->期末处理->期末结账
+          component:OP_Settle,
+          meta: { title: '期末结账' },
+          name:' Settle_accounts',
+        },
+        {
+          path:'/index/log_status/:id/:name',// 物流管理-> 物流更踪->物流状态
+          component:LOG_Status,
+          meta: { title: '物流状态' },
+          name:' Logistics_status',
+        },
+        {
+          path:'/index/log_query/:id/:name',//物流管理-> 物流更踪->物流查询
+          component:LOG_Query,
+          meta: { title: '物流查询' },
+          name:' Logistics_query',
+        },
+        {
+          path:'/index/log_record/:id/:name',//物流管理-> 物流更踪->物流发货记录
+          component:LOG_Record,
+          meta: { title: '发货记录' },
+          name:' Delivery_record',
+        },
+        {
+          path:'/index/log_customs/:id/:name',//出口管理->报关单
+          component:LOG_Customs,
+          meta: { title: '报关单' },
+          name:'Customs',
+          
+        },
+        {
+          path:'/index/log_packing/:id/:name',//出口管理->装箱单
+          component:LOG_Packing,
+          meta: { title: '装箱单' },
+          name:'Packing',
+        },
+        {
+          path:'/index/log_invoice/:id/:name',//出口管理->发票
+          component:LOG_Invoice,
+          meta: { title: '发票' },
+          name:'Invoice',
+        },
+        {
+          path:'/index/log_contract/:id/:name',//出口管理->外销合同
+          component:LOG_Contract,
+          meta: { title: '外销合同' },
+          name:'contract',
+        },
+        {
+          path:'/index/bas_transport/:id/:name',//基础资料->物流管理->运输性质
+          component:Bas_Transport,
+          meta: { title: '运输性质' },
+          name:'Transport_nature',
+          
+        },
+        {
+          path:'/index/bas_types/:id/:name',//基础资料->物流管理->运输类型
+          component:Bas_Types,
+          meta: { title: '运输类型' },
+          name:'Types',
+        },
+        {
+          path:'/index/price_type/:id/:name',//基础资料->物流管理->物流计价方式
+          component:Price_Type,
+          meta: { title: '物流计价方式' },
+          name:'Price_Type',
+        },
+        {
+          path:'/index/pricing_range/:id/:name',//基础资料->物流管理->物流计价范围
+          component:Pricing_Range,
+          meta: { title: '物流计价范围' },
+          name:'Pricing_Range',
+          
+        },
+        {
+          path:'/index/freight_level/:id/:name',//基础资料->物流管理->运价等级
+          component:Freight_Level,
+          meta: { title: '运价等级' },
+          name:' Freight_Level',
+        },
+        {
+          path:'/index/bas_err/:id/:name',//基础资料->物流管理->异常类型
+          component:Bas_Err,
+          meta: { title: '异常类型' },
+          name:' Err',
+         
+        },
+        {
+          path:'/index/bas_freight/:id/:name',//基础资料->物流管理->货运公司
+          component:Bas_Freight,
+          meta: { title: '货运公司' },
+          name:' Freight_company',
+        },
+        {
+          path:'/index/packing_type/:id/:name',//基础资料->出口管理->包装种类
+          component:Packing_Type,
+          meta: { title: '包装种类' },
+          name:' Packing_Type',
+          
         },
 
         { name:'Declare',
-          path:'/index/exp_declare/:id/:name',//出口管理申报要素
+          path:'/index/exp_declare/:id/:name',//出口管理->申报要素
           component:Exp_Declare,
           meta: { title: '申报要素' }
         },
         {
-          path:'/index/exp_hs/:id/:name',//出口管理HS
-          component:Exp_HS
+          path:'/index/exp_hs/:id/:name',//基础资料->出口管理->HScode
+          component:Exp_HS,
+          meta: { title: 'HS CODE' },
+          name:' HS_Code',
+          
         },
         {
-          path:'/index/monitoring_condition/:id/:name',//监管方式
-          component:Monitoring_Condition
+          path:'/index/monitoring_condition/:id/:name',//基础资料->出口管理->监管方式
+          component:Monitoring_Condition,
+          meta: { title: '监管方式' },
+          name:' Monitoring_Condition',
+          
         },
         {
-          path:'/index/mode_of_transport/:id/:name',//运输方式
-          component:Mode_Of_Transport
+          path:'/index/mode_of_transport/:id/:name',//基础资料->出口管理->运输方式
+          component:Mode_Of_Transport,
+          meta: { title: '运输方式' },
+          name:' Mode_Of_Transport',
+          
         },
         {
-          path:'/index/exit_customs/:id/:name',//出口关别
-          component:Exit_Customs
+          path:'/index/exit_customs/:id/:name',//基础资料->出口管理->出口关别
+          component:Exit_Customs,
+          meta: { title: '出口关别' },
+          name:' Exit_Customs',
+          
         },
         {
-          path:'/index/way_of_closing/:id/:name',//出口关别
-          component:way_of_closing
+          path:'/index/way_of_closing/:id/:name',//基础资料->出口管理->成交方式
+          component:way_of_closing,
+          meta: { title: '成交方式' },
+          name:' way_of_closing',
         },
         {
-          path:'/index/quarantine_type/:id/:name',//出口关别
-          component:quarantine_type
+          path:'/index/quarantine_type/:id/:name',//基础资料->出口管理->检验检疫类别
+          component:quarantine_type,
+          meta: { title: '检验检疫类别' },
+          name:'quarantine_type',
+          
         },
         {
-          path:'/index/exp_off/:id/:name',//出口管理离岸公司
-          component:Exp_Off
+          path:'/index/exp_off/:id/:name',//基础资料->出口管理->离岸公司
+          component:Exp_Off,
+          meta: { title: '离岸公司' },
+          name:'Off_Shore_Company',
+          
         },
         {
-          path:'/index/purchase/:id/:name',//采购价格
-          component:Purchase
+          path:'/index/purchase/:id/:name',//基础资料-> 采购管理->采购价格管理
+          component:Purchase,
+          meta: { title: '采购价格管理' },
+          name:'Price',
+          
         },
         {
-          path:'/index/nation/:id/:name',//民族
-          component:Nation
+          path:'/index/nation/:id/:name',//基础资料->人事管理->民族
+          component:Nation,
+          meta: { title: '民族' },
+          name:'Nation',
+          
         },
         {
-          path:'/index/ama_describe/:id/:name',//亚马逊描述
-          component:Ama_Describe
+          path:'/index/ama_describe/:id/:name',//基础资料->运营管理-> 亚马逊->亚马逊描述
+          component:Ama_Describe,
+          meta: { title: '亚马逊描述' },
+          name:'Describe',
+          
         },
         {
-          path:'/index/ama_order/:id/:name',//订单处理类
-          component:Ama_Order
+          path:'/index/ama_order/:id/:name',//基础资料->运营管理-> 亚马逊->订单处理类
+          component:Ama_Order,
+          meta: { title: '订单处理类' },
+          name:'Order_processing',
         },
         {
-          path:'/index/ama_payment/:id/:name',//付款类型
-          component:Ama_Payment
+          path:'/index/ama_payment/:id/:name',//基础资料->运营管理-> 亚马逊->付款类型
+          component:Ama_Payment,
+          meta: { title: '付款类型' },
+          name:'Payment_type',
         },
         {
-          path:'/index/ama_type/:id/:name',//亚马逊Type
-          component:Ama_Type
+          path:'/index/ama_type/:id/:name',//基础资料->运营管理-> 亚马逊->亚马逊Type
+          component:Ama_Type,
+          meta: { title: '亚马逊Type' },
+          name:'Type',
         },
         {
-          path:'/index/ama_warehouse/:id/:name',//亚马逊仓库
-          component:Ama_Warehouse
+          path:'/index/ama_warehouse/:id/:name',//基础资料->运营管理-> 亚马逊->亚马逊仓库
+          component:Ama_Warehouse,
+          meta: { title: '亚马逊仓库' },
+          name:'Ama_Warehouse',
         },
         {
-          path:'/index/sup_delivery/:id/:name',//辅助资料发货方式
-          component:Sup_Delivery
+          path:'/index/sup_delivery/:id/:name',//基础资料->运营管理->辅助资料->发货方式
+          component:Sup_Delivery,
+          meta: { title: '发货方式' },
+          name:'Delivery',
         },
         {
-          path:'/index/sub_platform/:id/:name',//辅助资料平台类型
-          component:Sub_Platform
+          path:'/index/sub_platform/:id/:name',//基础资料->运营管理->辅助资料->平台类型
+          component:Sub_Platform,
+          meta: { title: '平台类型' },
+          name:'Platform_type',
         },
         {
-          path:'/index/user_config/:id/:name',//用户配置
-          component:User_config
+          path:'/index/user_config/:id/:name',//系统管理->用户管理->用户配置
+          component:User_config,
+          meta: { title: '用户配置' },
+          name:'User_config',
+          
         },
         {
-          path:'/index/library/:id/:name',//库类型
-          component:Library
+          path:'/index/library/:id/:name',//系统管理->数据库->库类型
+          component:Library,
+          meta: { title: '库类型' },
+          name:'Library',
+          
         },
         {
-          path:'/index/table/:id/:name',//表类型
-          component:Table
+          path:'/index/table/:id/:name',//系统管理->数据库->表类型
+          component:Table,
+          meta: { title: '表类型' },
+          name:'Table',
         },
         {
-          path:'/index/edition/:id/:name',//版本信息
-          component:Edition
+          path:'/index/edition/:id/:name',//系统管理-> 系统信息->版本信息
+          component:Edition,
+          meta: { title: '版本信息' },
+          name:'Edition',
+          
         },
         {
-          path:'/index/company_inf/:id/:name',//公司信息
-          component:Company_inf
+          path:'/index/company_inf/:id/:name',//系统管理-> 系统信息->公司信息
+          component:Company_inf,
+          meta: { title: '公司信息' },
+          name:'Company_inf',
         },
         {
-          path:'/index/register/:id/:name',//注册信息
-          component:Register
+          path:'/index/register/:id/:name',//系统管理-> 系统信息->注册信息
+          component:Register,
+          meta: { title: '注册信息' },
+          name:'Register',
         },
         {
-          path:'/index/data_table/:id/:name',//数据表
-          component:Data_Table
+          path:'/index/data_table/:id/:name',//系统管理->数据库->数据表
+          component:Data_Table,
+          meta: { title: '数据表' },
+          name:'Data_Table',
+          
         },
         {
-          path:'/index/data_view/:id/:name',//数据视图
-          component:Data_View
+          path:'/index/data_view/:id/:name',//系统管理->数据库->数据视图
+          component:Data_View,
+          meta: { title: '数据视图' },
+          name:'Data_View',
         },
         {
-          path:'/index/stored/:id/:name',//存储过程
-          component:Stored
+          path:'/index/stored/:id/:name',//系统管理->数据库->存储过程
+          component:Stored,
+          meta: { title: '存储过程' },
+          name:'Stored',
+          
         },
         {
-          path:'/index/table_field/:id/:name',//表字段
-          component:Table_field
+          path:'/index/table_field/:id/:name',//系统管理->数据库->表字段
+          component:Table_field,
+          meta: { title: '表字段' },
+          name:'Table_field',         
         },
         {
-          path:'/index/landing_diary/:id/:name',//登陆日志
-          component:Landing_diary
+          path:'/index/landing_diary/:id/:name',//系统管理->日志管理->登陆日志
+          component:Landing_diary,
+          meta: { title: '登陆日志' },
+          name:'Landing_diary',  
         },
         {
-          path:'/index/operation_diary/:id/:name',//操作日志
-          component:Operation_diary
+          path:'/index/operation_diary/:id/:name',//系统管理->日志管理->操作日志
+          component:Operation_diary,
+          meta: { title: '操作日志' },
+          name:'Operation_diary',  
         },
         {
-          path:'/index/import_tem/:id/:name',//导入模板
-          component:Import_tem
+          path:'/index/import_tem/:id/:name',//系统管理->菜单管理->导入模板
+          component:Import_tem,
+          meta: { title: '导入模板' },
+          name:'Import_template', 
         },
         {
-          path:'/index/report_week/:id/:name',//业务报告周
-          component:Report_week
+          path:'/index/report_week/:id/:name',////运营管理->亚马逊->报告->业务报告周
+          component:Report_week,
+          meta: { title: '业务报告(周)' },
+          name:'Business_Report_week',
+
         },
         {
-          path:'/index/brush_type/:id/:name',//刷单类型
-          component:Brush_type
+          path:'/index/brush_type/:id/:name',//基础资料->运营管理->辅助资料->刷单类型
+          component:Brush_type,
+          meta: { title: '刷单类型' },
+          name:'Brush_type',
+          
         },
         {
-          path:'/index/department/:id/:name',//部门
-          component:Department
+          path:'/index/department/:id/:name',//人事管理->基础档案->部门
+          component:Department,
+          meta: { title: '部门' },
+          name:'Department',
+          
         },
         {
-          path:'/index/staff_member/:id/:name',//职员
-          component:Staff_member
+          path:'/index/staff_member/:id/:name',//人事管理->基础档案->职员
+          component:Staff_member,
+          meta: { title: '职员' },
+          name:'Staff_member',
         },
         {
-          path:'/index/education/:id/:name',//学历
-          component:Education
+          path:'/index/education/:id/:name',//基础资料->人事管理->学历
+          component:Education,
+          meta: { title: '学历' },
+          name:'Education',
+          
         },
         {
-          path:'/index/staff_type/:id/:name',//职员类型
-          component:Staff_type
+          path:'/index/staff_type/:id/:name',//基础资料->人事管理->职员类型
+          component:Staff_type,
+          meta: { title: '职员类型' },
+          name:'Staff_type',
         },
         {
-          path:'/index/employment_type/:id/:name',//雇佣类型
-          component:Employment_type
+          path:'/index/employment_type/:id/:name',//基础资料->人事管理->雇佣类型
+          component:Employment_type,
+          meta: { title: '雇佣类型' },
+          name:'Employment_type',
         },
         {
-          path:'/index/turnover_type/:id/:name',//离职类型
-          component:Turnover_type
+          path:'/index/turnover_type/:id/:name',//基础资料->人事管理->离职类型
+          component:Turnover_type,
+          meta: { title: '离职类型' },
+          name:'Turnover_type',
+          
         },
         {
-          path:'/index/regional/:id/:name',//地区市
-          component:Regional
+          path:'/index/regional/:id/:name',//基础资料->公共资料-> 国家
+          component:Regional,
+          meta: { title: '国家' },
+          name:'Regional', 
         },
         {
-          path:'/index/province_table/:id/:name',//省州关联表
-          component:Province_table
+          path:'/index/province_table/:id/:name',//基础资料->公共资料-> 省州关联表
+          component:Province_table,
+          meta: { title: '省州关联表' },
+          name:'Province_table', 
+          
         },
         {
-          path:'/index/menu_header/:id/:name',//菜单头部
-          component:Menu_header
+          path:'/index/menu_header/:id/:name',//系统管理->菜单管理->菜单头部
+          component:Menu_header,
+          meta: { title: '菜单头部' },
+          name:'Menu_header', 
+          
         },
         {
-          path:'/index/tariff_rate/:id/:name',//关税税率
-          component:Tariff_rate
+          path:'/index/tariff_rate/:id/:name',//基础资料->公共资料->关税税率
+          component:Tariff_rate,
+          meta: { title: '关税税率' },
+          name:'tariff_rate',
+ 
         },
         {
-          path:'/index/additional_tariff/:id/:name',//附加税率
+          path:'/index/additional_tariff/:id/:name',//基础资料->公共资料->附加税率
           component:Additional_tariff
         },
         {
-          path:'/index/sku/:id/:name',//SKU信息表
-          component:SKU
+          path:'/index/sku/:id/:name',//基础资料->公共资料->SKU信息表
+          component:SKU,
+          meta: { title: 'SKU信息表' },
+          name:'SKU',
         },
         {
-          path:'/index/vat/:id/:name',//VAT附加税
-          component:VAT
+          path:'/index/vat/:id/:name',//基础资料->公共资料->VAT附加税
+          component:VAT,
+          meta: { title: 'VAT附加税' },
+          name:'VAT',
         },
         {
-          path:'/index/star_level/:id/:name',//星级
-          component:Star_level
+          path:'/index/star_level/:id/:name',//基础资料->运营管理->辅助资料->星级
+          component:Star_level,
+          meta: { title: '星级' },
+          name:'Star_level',
+          
         },
         {
-          path: '/index/financial_sales_amazon_balance/:id/:name',
-          component: SettlementReport     //结算报告
+          path: '/index/financial_sales_amazon_balance/:id/:name',  //财务管理-> 销售报告-> 亚马逊-> 结算报告
+          component: SettlementReport ,
+          meta: { title: '结算报告' },
+          name:'SettlementReport',   
         }, 
         //
       ]
