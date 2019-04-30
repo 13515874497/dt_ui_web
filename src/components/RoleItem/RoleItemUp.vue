@@ -245,11 +245,13 @@ export default {
       } else {
         this.site_exist = val.seIds.split(",");
       }
+     
     },
     site_exist: {
       deep: true,
       handler(val) {
         this.setsiteCache();
+         this.resetSiteChecked();
       }
     }
   },
@@ -499,7 +501,7 @@ export default {
 
     //设置站点缓存
     setsiteCache() {
-      if (!this.areas.length) return null;
+      if (!this.areas.length) return;
       let self = this;
       let site_exist_cache = [];
       for (let i = 0; i < this.areas.length; i++) {
@@ -598,9 +600,6 @@ export default {
     },
     //点击重置
     resetSiteChecked(){
-      console.log(this.area_exist_cache);
-      console.log(this.site_exist_cache);
-      
       for(let i = 0; i< this.site_exist_cache.length;i++){
         this.$refs[`area${i}`][0].setCheckedKeys(this.area_exist_cache);
         this.$refs[`site${i}`][0].setCheckedKeys(this.site_exist_cache[i]);

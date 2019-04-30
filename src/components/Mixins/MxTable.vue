@@ -27,20 +27,21 @@
         :tableTitle="tableTitle"
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
-        :loading="loading"
+        
+        v-loading="loading"
       />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
-        <Pagination :data="data" v-on:pageData="pagination"/>
+        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading" />
       </div>
     </section>
     <!-- 新增 -->
     <section>
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form :formItems="formItems" @passData="passData_add" :rule="rule" :reset="add.reset" :customField="customField"></Form>
+        <Form ref="form_add" :formItems="formItems" @passData="passData_add" :rule="rule" :reset="add.reset" :customField="customField"></Form>
 
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="send_add(true)">保 存</el-button>
@@ -56,7 +57,7 @@
     <section>
       <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form :formItems="formItems" :formData="update.formData" @passData="passData_update"></Form>
+        <Form ref="form_update" :formItems="formItems" :formData="update.formData" @passData="passData_update"></Form>
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="update.visible = false">取 消</el-button>
@@ -101,7 +102,9 @@ export default {
         page_sizes: [5, 10, 15, 20, 25]
       },
       selection: [], //多选框选择的
-      passData:null, //form表单验证通过后返还的数据
+      ref: {
+        // form: null,
+      },
       add: {
         visible: false,
         data: null,
@@ -131,7 +134,7 @@ export default {
         "effectiveDate"
       ],
       //在form中需要填写的
-      sysLogForm: ["remark", "status"]
+      sysLogForm: ["remark", "status"],
     };
   },
   computed: {
@@ -139,6 +142,20 @@ export default {
       return this.tableTitle.filter(item => {
         return !this.sysLogNotForm.includes(item.topType);
       });
+    },
+    //当前的子组件的form
+    ref_form(){
+      if(this.add.visible && this.$refs.form_add){
+        return this.$refs.form_add
+      }else if(this.update.visible && this.$refs.form_update){
+        return this.$refs.form_update
+      }
+    },
+    //当前form绑定的数据(主要用于验证)
+    ref_form_model(){
+      if(this.ref_form){
+        return this.ref_form.data_model
+      }
     }
   },
   components: {
@@ -212,7 +229,6 @@ export default {
       console.log($event);
       
       this.add.isPass = $event[0];
-      this.passData = $event[1];
       this.add.data = $event[2];
       this.handlerFormData(this.add.data)
     },
@@ -240,8 +256,6 @@ export default {
     },
     openDialog_update() {
       console.log("修改");
-    
-
       if (this.multipleSelection.length == 0) {
         message.infoMessage("必须选中一条数据");
         return;
@@ -253,9 +267,6 @@ export default {
       this.update.visible = true;
     },
     passData_update($event) {
-      console.log($event[1]);
-      console.log(this.primaryKey);
-      
       this.update.isPass = $event[0];
    
       this.update.data = $event[2];
@@ -312,6 +323,7 @@ export default {
         message.errorMessage(res.msg);
       }
     },
+    //reset值发生改变即重置表单
     resetForm_add(){
       this.add.reset = !this.add.reset;
     },

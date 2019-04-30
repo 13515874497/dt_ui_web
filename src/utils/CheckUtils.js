@@ -13,11 +13,7 @@ export default {
       message.errorMessage('文件不能超过100MB')
       return false
     }
-    console.log(11111111111111);
     if(onlyShowUpload) return true;
-    console.log(file);
-    console.log(rule);
-
 
     let fileName = file.name.toUpperCase();
     let shop = rule.radio;

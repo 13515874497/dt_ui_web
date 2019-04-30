@@ -273,6 +273,7 @@ export default {
     },
     uploadFrom() {
       return {
+        closingDate: this.value2,
         shopId: this.radio.model, //店铺ID
         siteId: this.select_site.model, //站点 ID
         areaId: this.select_area.model, //洲 ID
@@ -370,6 +371,7 @@ export default {
       this.removeReadyFile_all();
       this.existedFiles.currentPage = 1;
       this.getExistedFiles();
+      this.select_site.render = [];
       this.select_site.model = "";
       this.getSelect_site();
       //--------
@@ -607,6 +609,7 @@ export default {
       this.param.append("menuId", this.uploadFrom.mId);
       this.param.append("areaId", this.uploadFrom.areaId);
       this.param.append("businessTime", this.uploadFrom.businessTime);
+      this.param.append("closingDate", this.uploadFrom.closingDate);
       let config = {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -745,6 +748,8 @@ export default {
       let self = this;
       //等待父组件连上websocket
       console.log(self.$ws);
+      console.log(111111111111111111111);
+      
       this.wsTimer = setTimeout(() => {
         if (self.$ws) {
           switch (self.$ws.readyState) {
@@ -770,6 +775,8 @@ export default {
     wsOnMessage(msg) {
       let resMsg = msg.data;
       let res = JSON.parse(resMsg);
+      console.log(res);
+      
       if (
         (res.code === 200 || res.code === -1) &&
         res.type === "PROGRESS_BAR"
@@ -925,6 +932,8 @@ export default {
   
   mounted() {},
   activated() {
+    console.log('999999999');
+    
     this.initWs();
     this.bindEventDelegation();
   },
