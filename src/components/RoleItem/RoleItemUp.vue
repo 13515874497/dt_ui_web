@@ -559,13 +559,13 @@ export default {
       
       for (let i = 0; i < this.areas.length; i++) {
         let area = this.areas[i][0];
-        let removeArea; //在其他页面是否不显示洲
+        let areaChecked; //在其他页面是否不显示洲
 
         if (area_diff.isChange) {
           if (area_diff.add.includes(area.id)) {
-            removeArea = false;
+            areaChecked = true;
           } else if (area_diff.del.includes(area.id)) {
-            removeArea = true;
+            areaChecked = false;
           }
         }
 
@@ -574,16 +574,16 @@ export default {
         curr_site_checked.push(site_checked);
         let site_diff = getDifferent(this.site_exist_cache[i], site_checked);
 
-        if (removeArea != undefined || site_diff.isChange) {
+        if (areaChecked != undefined || site_diff.isChange) {
           let data = {
             aid: area.id,
             arId: area.arId,
-            // removeArea: removeArea,
+            // areaChecked: areaChecked,
             seIds: site_diff.add.join(","),
             delSeId: site_diff.del.join(",")
           };
-          if (removeArea != undefined) {
-            data.removeArea = removeArea;
+          if (areaChecked != undefined) {
+            data.areaChecked = areaChecked;
           }
           post.areaRoleDtoList.push(data);
         }
@@ -606,9 +606,6 @@ export default {
         this.$refs[`site${i}`][0].setCheckedKeys(this.site_exist_cache[i]);
       }
     }
-  },
-  beforeCreate() {
-    this.aa = "99";
   },
   created() {}
 };

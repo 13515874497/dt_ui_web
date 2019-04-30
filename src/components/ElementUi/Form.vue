@@ -172,7 +172,7 @@ export default {
     //   },
     //   {
     //     //店铺列表
-    //     topType: "shopName",
+    //     topType: "shopName", 
     //     inputType: 3,
     //     ajax: repGetShopName,
     //     key: shopId,
@@ -202,6 +202,12 @@ export default {
   },
   computed: {},
   watch: {
+    rule:{
+      deep: true,
+      handler(){
+        this.mergeRules();
+      }
+    },
     formItem() {
       this.initData_model();
     },

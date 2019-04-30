@@ -101,6 +101,7 @@ export default {
         page_sizes: [5, 10, 15, 20, 25]
       },
       selection: [], //多选框选择的
+      passData:null, //form表单验证通过后返还的数据
       add: {
         visible: false,
         data: null,
@@ -211,9 +212,9 @@ export default {
       console.log($event);
       
       this.add.isPass = $event[0];
+      this.passData = $event[1];
       this.add.data = $event[2];
       this.handlerFormData(this.add.data)
-  
     },
     //需要提供一个新增的接口
     ajax_add(data) {},
