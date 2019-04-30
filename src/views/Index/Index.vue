@@ -8,15 +8,14 @@
 
     <el-container style="float: left">  
       <el-header style="height: 90px">          
-        <Header/>
-         <Tags></Tags>
+        <Header/>   
       </el-header>
+      <Tags></Tags>
       <el-main>
         <!--缓存路由组件-->
-                   
-              <keep-alive :include="tagsList">
-                <router-view style="height: 805px"></router-view>
-              </keep-alive>
+        <keep-alive :include="tagsList">
+            <router-view style="height: 805px"></router-view>
+        </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
     </el-container>
@@ -153,6 +152,6 @@ export default {
   background-color: #e7eaec;
   color: #333;
 
-  line-height: 60px;
+  // line-height: 60px;
 }
 </style>
