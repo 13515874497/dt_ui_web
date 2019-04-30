@@ -19,8 +19,7 @@ export default {
             background-color="#293846"
             text-color="#fff"
             active-text-color="#ffd04b"
-           
-          >
+             >
             {this.renderMenuItem(this.menuList)}
           </el-menu>
         </el-row>
@@ -30,7 +29,7 @@ export default {
   data() {
     return {
       userName: this.getCookie("name"),
-      menuList: []
+      menuList: [],
     };
   },
   methods: {

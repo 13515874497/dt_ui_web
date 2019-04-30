@@ -309,6 +309,7 @@ export default new Router({
           component:OP_Settlement_Report
         },
         {
+         
           path:'/index/op_return_report/:id/:name',//运营管理退货报告
           component:OP_Return_Report
         },
@@ -390,7 +391,8 @@ export default new Router({
         },
         {
           path:'/index/log_customs/:id/:name',//物流报关单
-          component:LOG_Customs
+          component:LOG_Customs,
+          
         },
         {
           path:'/index/log_packing/:id/:name',//物流装箱单
@@ -437,9 +439,10 @@ export default new Router({
           component:Packing_Type
         },
 
-        {
+        { name:'Declare',
           path:'/index/exp_declare/:id/:name',//出口管理申报要素
-          component:Exp_Declare
+          component:Exp_Declare,
+          meta: { title: '申报要素' }
         },
         {
           path:'/index/exp_hs/:id/:name',//出口管理HS

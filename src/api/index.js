@@ -284,7 +284,7 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`,da
 // 运营管理=> 亚马逊=>通知单
 
 //出货通知单 http://127.0.0.1:9002/api/v1/fba/getNoticeInfo post
-// export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`,data, 'POST')
+export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`,data, 'POST')
 
 // 运营管理=> 亚马逊=>费用
 
