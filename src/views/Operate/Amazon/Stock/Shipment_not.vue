@@ -39,10 +39,13 @@
 
 </template>
 <script>
+  // import {getNoticeInfo} from　'@/api'
+  // import MxTable from '@/components/Mixins/MxTable'
   import PubSub_Ship from 'pubsub-js'
   import AddShipment from '../../../../components/Operate/Amazon/AddShipment'
 
   export default {
+    // mixins:[MxTable],
     data () {
       return {
         msgInput: '',//当选择后获得第一个下拉框的id
@@ -142,7 +145,10 @@
       // })
     },
     methods: {
-      //分页
+      // queryPage(data){
+      //   return getNoticeInfo(data)
+      // }
+      // //分页
       handleSizeChange (val) {
         console.log(`每页 ${val} 条`)
       },

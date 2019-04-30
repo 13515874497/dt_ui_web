@@ -205,7 +205,7 @@ export default {
         disabledDate(time) {
           // console.log(new Date(starDate).toLocaleDateString(), new Date(endDate).toLocaleDateString())
           //8.64e7=1000*60*60*24 一天
-           return (time.getTime() < starDate - 8.64e7 || time.getTime() >endDate);
+           return (time.getTime() < starDate - 8.64e7 || time.getTime() > endDate);
           }          
         },  
       flag:true,
@@ -421,7 +421,7 @@ export default {
         let startTime_ym = startTime.split('-')
         let startTime_y = startTime_ym[0]
         let startTime_m = startTime_ym[1]
-       starDate = (new Date(startTime_y,startTime_m )) -1 ; 
+        starDate = (new Date(startTime_y,startTime_m )) -1 ; 
 
         console.log(starDate) //开始的时间
         
@@ -920,8 +920,7 @@ export default {
     this.getSelect_area();
     this.getRadioList();
     this.initOperateBtn();
-    this.getDate();
-      
+    this.getDate();     
   },
   
   mounted() {},

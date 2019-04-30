@@ -1,36 +1,43 @@
 <template>
-  <el-container>
+  <div class="wrapper">
+      <el-container>
     <!-- <div style="height: 100%;overflow-y: auto"> -->
       <div style="height: 100%;">
       <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
     </div>
 
-    <el-container style="float: left">
-      <el-header style="height: 90px">
+    <el-container style="float: left">  
+      <el-header style="height: 90px">          
         <Header/>
+         <Tags></Tags>
       </el-header>
       <el-main>
         <!--缓存路由组件-->
-        <keep-alive>
-          <router-view style="height: 805px"></router-view>
-        </keep-alive>
+                   
+              <keep-alive :include="tagsList">
+                <router-view style="height: 805px"></router-view>
+              </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
     </el-container>
   </el-container>
+  </div>
 </template>
 
 <script>
 import Header from "@/components/HeaderTop/Header";
 import Aside from "@/components/Aside/Aside";
+import Tags from '@/components/HeaderTop/Tags'
 import { repIndex, getLoginStatus } from "@/api";
 import Vue from "vue";
 // import PubSub from "pubsub-js";
 import message from "@/utils/Message";
+import bus from '@/api/bus';
 export default {
   data() {
     return {
       isRole: true,
+       tagsList: [],
     };
   },
   methods: {
@@ -102,10 +109,23 @@ export default {
   },
   components: {
     Header,
-    Aside
+    Aside,
+    Tags,
   },
 
-  created() {},
+  created() {
+     // 只有在标签页列表里的页面才使用keep-alive，即关闭标签之后就不保存到内存中了。
+            bus.$on('tags', msg => {
+                let arr = [];
+                for(let i = 0, len = msg.length; i < len; i ++){
+                    msg[i].name && arr.push(msg[i].name);
+                }
+               
+                this.tagsList = arr;
+                console.log( this.tagsList)
+                console.log( msg)
+            })
+  },
   async mounted() {
     let res = await getLoginStatus();
     if (res.code === 200) {
@@ -115,6 +135,7 @@ export default {
   beforeDestroy() {
     this.$ws && this.$ws.close();
   }
+  
 };
 </script>
 
