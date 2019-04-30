@@ -142,8 +142,7 @@ export const roleMenu = ({
 }) => ajax(BASE_URL + '/menu/role/menu', {
   rid
 })
-//设置角色拥有的店铺
-export const saveShopRole = (data)=>ajax(BASEURL+'/sr/saveShopRole',data,'post',['保存成功',true])
+
 
 //更新用户信息
 export const repUpUserInfo = ({
@@ -673,7 +672,10 @@ export const repDelHeadMenu = ({
   mid,
   thIds
 }, 'POST')
-//
+//设置角色拥有的店铺
+export const saveShopRole = (data)=>ajax(BASEURL+'/sr/saveShopRole',data,'post',['保存成功',true])
+//角色配置站点
+export const setAreaRole = (data)=>ajax(BASEURL+'/admin/setAreaRole',data,'post',['保存成功',true])
 
 //查询用户记录  查询已上传的文件信息
 export const repGetUserUploadInfo = (data) => ajax(BASE_URL + '/upload/getInfo', data, 'POST')

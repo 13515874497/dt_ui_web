@@ -12,6 +12,8 @@ export default {
           topType: "shopName",
           inputType: 3,
           ajax: repGetShopName,
+          key:'shopId',
+          label:'shopName',
         }
       ]
     }
