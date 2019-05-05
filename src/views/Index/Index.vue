@@ -14,7 +14,7 @@
       <el-main>
         <!--缓存路由组件-->
         <keep-alive :include="tagsList">
-            <router-view style="height: 805px"></router-view>
+            <router-view></router-view>
         </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
