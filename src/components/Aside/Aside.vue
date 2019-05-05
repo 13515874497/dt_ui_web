@@ -5,7 +5,7 @@ import { repMenu, repCheckMenuToken } from "@/api";
 export default {
   render() {
     return (
-      <div class="test-1">
+      <div class="test-1" style="height:100%">
         <h2 class="user_aside">
           <img class="user_img" src={pig} />
           <p class="user_name">{this.userName}</p>
@@ -107,17 +107,17 @@ export default {
 }
 
 .user_name {
-  margin-left: 25px;
   font-size: 13px;
   color: aliceblue;
-  margin-top: 0;
-  margin-bottom: 0;
+  padding-left: 13px;
+  padding-top: 5px;
+  margin: 0;
 }
 
 .user_img {
-  margin-top: 33px;
-  margin-bottom: 10px;
-  margin-left: 25px;
+  // margin-top: 33px;
+  // margin-bottom: 10px;
+  // margin-left: 25px;
   width: 50px;
   height: 50px;
   border-radius: 50px 50px 50px 50px;
@@ -125,9 +125,9 @@ export default {
 
 .user_aside {
   background-color: #2f4050;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  height: 155px;
+  // height: 80px;
+  padding: 10px;
+  margin: 0;
 }
 
 //列表item

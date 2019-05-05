@@ -72,7 +72,7 @@ export default {
         return item.path === route.fullPath;
       });
       if (!isExist) {
-        if (this.tagsList.length >= 8) {
+        if (this.tagsList.length >= 7) {
           this.tagsList.shift();
         }
         this.tagsList.push({
@@ -114,13 +114,14 @@ export default {
           } else if (i > 0) {
             this.$router.push(this.tagsList[i - 1].path);
           } else {
-            this.$router.push("/");
+            this.$router.push("/index");
           }
           this.tagsList.splice(i, 1);
           break;
         }
       }
     });
+   
   }
 };
 </script>

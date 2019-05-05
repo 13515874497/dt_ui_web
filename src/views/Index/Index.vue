@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
-      <el-container>
+      <el-container style="height:100%">
     <!-- <div style="height: 100%;overflow-y: auto"> -->
       <div style="height: 100%;">
-      <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
+      <Aside style="overflow-y: auto;background-color: #293846"/>
     </div>
 
     <el-container style="float: left">  
@@ -14,7 +14,7 @@
       <el-main>
         <!--缓存路由组件-->
         <keep-alive :include="tagsList">
-            <router-view style="height: 805px" v-if="isRouterAlive"></router-view>
+            <router-view  v-if="isRouterAlive"></router-view>
         </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
@@ -152,6 +152,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.wrapper {
+  height: 100%;
+}
 .el-table .cell {
   white-space: nowrap;
 }
