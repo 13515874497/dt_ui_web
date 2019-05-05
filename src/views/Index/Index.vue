@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       isRole: true,
-       tagsList: [],
+      tagsList: [],
     };
   },
   methods: {
@@ -121,8 +121,8 @@ export default {
                 }
                
                 this.tagsList = arr;
-                console.log( this.tagsList)
-                console.log( msg)
+                // console.log( this.tagsList)
+                // console.log( msg)
             })
   },
   async mounted() {

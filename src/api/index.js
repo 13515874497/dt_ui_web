@@ -710,4 +710,4 @@ export const getCheckoutDate = ({
   menuId
 }) => ajax(BASE_URL + '/ing/getCheckoutDate', {
   menuId
-}, 'GET',[true,true])
+}, 'GET')

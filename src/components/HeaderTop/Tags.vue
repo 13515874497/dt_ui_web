@@ -72,9 +72,9 @@ export default {
           path: route.fullPath,
           name: route.name
         });
-        console.log(route.meta.title);
-        console.log(route.fullPath);
-        console.log(route.matched[1]);
+        // console.log(route.meta.title);
+        // console.log(route.fullPath);
+        // console.log(route.matched[1]);
       }
       bus.$emit("tags", this.tagsList);
     },
@@ -90,12 +90,12 @@ export default {
   watch: {
     $route(newValue, oldValue) {
       this.setTags(newValue);
-      console.log(this.setTags(newValue));
+    //   console.log(this.setTags(newValue));
     }
   },
   created() {
     this.setTags(this.$route);
-    console.log(this.setTags(this.$route));
+    // console.log(this.setTags(this.$route));
     // 监听关闭当前页面的标签页
     bus.$on("close_current_tags", () => {
       for (let i = 0, len = this.tagsList.length; i < len; i++) {
