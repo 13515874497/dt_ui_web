@@ -14,7 +14,7 @@
       <el-main>
         <!--缓存路由组件-->
         <keep-alive :include="tagsList">
-            <router-view style="height: 805px"></router-view>
+            <router-view style="height: 805px" v-if="isRouterAlive"></router-view>
         </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
@@ -33,13 +33,26 @@ import Vue from "vue";
 import message from "@/utils/Message";
 import bus from '@/api/bus';
 export default {
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
   data() {
     return {
+      isRouterAlive:true,
       isRole: true,
       tagsList: [],
     };
   },
   methods: {
+    //页面刷新
+    reload(){
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
+    },
     initWs() {
       console.log(this.$ws);
 

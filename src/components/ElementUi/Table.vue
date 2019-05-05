@@ -11,7 +11,7 @@
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
     class="content-table"
-    v-loading="loading"
+    
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) 90.带有超链接的-->
     <el-table-column type="selection" width="55"></el-table-column>
@@ -129,7 +129,7 @@ export default {
   props: {
     tableData: Array,
     tableTitle: Array,
-    loading:Boolean
+    // loading:Boolean
   },
   methods: {
     setTheadClassName() {
@@ -256,7 +256,7 @@ export default {
       this.tempDiv = document.createElement("div");
       this.tempDiv.setAttribute("id", "tempDiv-getfieldWidth");
       this.tempDiv.style.cssText =
-        "position:fixed;height:0;overfolw:hidden;font-weight:700";
+        "position:fixed;height:0;overfolw:hidden;font-weight:700;overflow:hidden";
       document.body.appendChild(this.tempDiv);
     },
     //创建临时的span 用来存放thead中字段的文本text 挂载到外层临时dom上 从而获取到字段的宽度
