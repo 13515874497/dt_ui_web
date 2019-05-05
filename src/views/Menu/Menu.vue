@@ -543,16 +543,21 @@ export default {
           let menuId = this.editingMenu.data.menuId;
           console.log(menuId);
           if (menuId == this.cacheField) return;
-          let res = await repHead(menuId);
-          console.log(res);
-          if (res.code == 200) {
-            this.menu.tableData = res.data;
-            this.cacheField = menuId;
-          }
+          this.getRepHead();
           break;
       }
     },
-    // async get
+    async getRepHead() {
+      let menuId = this.editingMenu.data.menuId;
+      console.log(menuId);
+      // if (menuId == this.cacheField) return;
+      let res = await repHead(menuId);
+      console.log(res);
+      if (res.code == 200) {
+        this.menu.tableData = res.data;
+        this.cacheField = menuId;
+      }
+    },
 
     //菜单信息  字段tree被选中
     treeCheck(dataAll, data) {
@@ -666,12 +671,13 @@ export default {
       //   return;
       // }
       console.log(checked);
-      
+
       let mId = this.editingMenu.data.menuId;
       let data = checked.map(item => {
         return {
           id: item.id,
-          menuId: item.menuId + "," + mId
+          menuId: item.menuId + "," + mId,
+          version: item.version
         };
       });
 
@@ -776,9 +782,10 @@ export default {
         console.log(TableHead);
         let res = await upHeadInfo(TableHead);
         console.log(res);
-        if(res.code === 200){
+        if (res.code === 200) {
           message.successMessage(res.msg);
-        }else {
+          this.getRepHead();
+        } else {
           message.errorMessage(res.msg);
         }
         this.editDialogFormVisible = false;

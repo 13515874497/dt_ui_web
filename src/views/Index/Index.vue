@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
-      <el-container>
+      <el-container style="height:100%">
     <!-- <div style="height: 100%;overflow-y: auto"> -->
       <div style="height: 100%;">
-      <Aside style="overflow-y: auto;height: 1000px;background-color: #293846"/>
+      <Aside style="overflow-y: auto;background-color: #293846"/>
     </div>
 
     <el-container style="float: left">  
@@ -139,6 +139,9 @@ export default {
 </script>
 
 <style scoped lang="scss">
+.wrapper {
+  height: 100%;
+}
 .el-table .cell {
   white-space: nowrap;
 }
