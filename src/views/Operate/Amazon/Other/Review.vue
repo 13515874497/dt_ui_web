@@ -1,6 +1,6 @@
 <script>
 //review
-import { getReview, saveReview, repGetShopName } from "@/api";
+import { getReview, saveReview, repGetShopName,getSelectSiteRole } from "@/api";
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
@@ -13,8 +13,23 @@ export default {
           inputType: 3,
           ajax: repGetShopName,
           key: "shopId",
-          label: "shopName"
-        }
+          label: "shopName",
+          placeholder: '请选择店铺'
+        },
+        {
+          topType: 'siteName',
+          inputType: 3,
+          ajax: getSelectSiteRole,
+          key: 'siteId',
+          label: 'siteName',
+          filterable: true,
+          placeholder: '请选择站点'
+        },
+        // {
+        //   topType: 'sku',
+        //   inputType: 3,
+        //   filterable: true,
+        // }
       ],
       rule: {
         //某些字段的验证规则
@@ -32,7 +47,7 @@ export default {
     ajax_add(data) {
       return saveReview(data);
     },
-    //form表单中add字段的验证规则,需要用到form表单中字段的数据
+    //form表单中add字段的验证规则,需要用到form表单中其他字段的数据来进行验证
     rule_add(rule, val, cb) {
       let data = { ...this.ref_form_model };
       if (val === "") {
@@ -45,6 +60,7 @@ export default {
         cb();
       }
     },
+    //同上
     rule_move(rule, val, cb) {
       let data = { ...this.ref_form_model };
       if (val === "") {
@@ -57,6 +73,7 @@ export default {
         cb();
       }
     },
+
     setRule() {
       let rule = {
         add: [
@@ -75,8 +92,11 @@ export default {
       this.rule = { ...this.rule, ...rule };
     }
   },
-  created() {
+  async created() {
     this.setRule();
+    // let res =await getSelectSiteRole()
+    // console.log(res);
+    
   }
 };
 </script>

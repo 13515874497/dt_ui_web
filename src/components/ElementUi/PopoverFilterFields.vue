@@ -1,6 +1,6 @@
 <template>
-  <el-popover placement="left" title="打√为不显示" width="200" trigger="hover">
-    <el-tree ref="tree" node-key="id" :data="data" :props="props" show-checkbox @check="check"></el-tree>
+  <el-popover popper-class="field-popper" placement="left" title="打√为不显示" width="200" trigger="hover">
+    <el-tree class="scrollbar" ref="tree" node-key="id" :data="data" :props="props" show-checkbox @check="check"></el-tree>
     <div slot="reference" class="fieldShow el-button el-button--primary is-plain"></div>
   </el-popover>
 </template>
@@ -23,7 +23,7 @@ export default {
     };
   },
   watch: {
-    tableTitle(val){
+    data(val){
       if(val.length){
         this.readCache();
       }
@@ -61,6 +61,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 .fieldShow {
   position: absolute;
   right: -9px;

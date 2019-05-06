@@ -110,7 +110,7 @@ export default {
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
-      tableTitle_show: [], //排除需要隐藏的表头
+      tableTitle_show: [],
       multipleSelection: [], //更新按钮数组收集
       data: {
         tableData: [], //表信息
@@ -120,9 +120,6 @@ export default {
         page_sizes: [5, 10, 15, 20, 25]
       },
       selection: [], //多选框选择的
-      ref: {
-        // form: null,
-      },
       add: {
         visible: false,
         data: null,
@@ -161,7 +158,7 @@ export default {
         return !this.sysLogNotForm.includes(item.topType);
       });
     },
-    //当前的子组件的form
+    //当前打开的新增或修改的form表单
     ref_form() {
       if (this.add.visible && this.$refs.form_add) {
         return this.$refs.form_add;
@@ -169,7 +166,7 @@ export default {
         return this.$refs.form_update;
       }
     },
-    //当前form绑定的数据(主要用于验证)
+    //通过ref拿到当前form(新增、修改)绑定的数据
     ref_form_model() {
       if (this.ref_form) {
         return this.ref_form.data_model;

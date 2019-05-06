@@ -56,7 +56,7 @@
         <el-date-picker
           value-format="timestamp"
           v-model="data_model[item.topType]"
-          type="datetime"
+          type="date"
           placeholder="选择日期"
         ></el-date-picker>
         <!-- <el-input
@@ -86,12 +86,13 @@
         :rules="matchedRule(item)"
         :required="true"
       >
-        <el-select v-model="data_model[item.topType]" placeholder="请选择">
+        <el-select v-model="data_model[item.topType]" :placeholder="item.placeholder || '请选择'" :filterable="item.filterable">
           <el-option
             v-for="option in item.data"
             :key="option.key"
             :label="option.label"
             :value="option.key"
+            
           ></el-option>
         </el-select>
       </el-form-item>
@@ -241,12 +242,15 @@ export default {
           let formItem = self._formItems.find(formItem => {
             return formItem.topType === item.topType;
           });
-          formItem.inputType = item.inputType;
+          for(let key in item){
+            formItem[key] = item[key];
+          }
+          // formItem.inputType = item.inputType;
           switch (item.inputType) {
             case 3:
               formItem.data = [];
-              formItem.key = item.key;
-              formItem.label = item.label
+              // formItem.key = item.key;
+              // formItem.label = item.label
               let res3 = await item.ajax();
               if (res3.code === 200) {
                 let { key, label } = formItem;
@@ -416,10 +420,14 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .form-content {
   max-height: 500px;
   overflow-y: scroll;
   padding-right: 15px;
+}
+.form-content .el-form--label-left .el-form-item__label {
+    text-align: justify;
+    text-align-last: justify;
 }
 </style>

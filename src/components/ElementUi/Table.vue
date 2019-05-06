@@ -27,6 +27,7 @@
         :prop="title.topType"
         :render-header="renderHeader"
         :show-overflow-tooltip="true"
+        :key="title.id"
       ></el-table-column>
 
       <el-table-column
@@ -35,6 +36,7 @@
         :fixed="isFixed(title)"
         :show-overflow-tooltip="true"
         :render-header="renderHeader"
+        :key="title.id"
       >
         <template slot-scope="scope">
           <span
@@ -49,6 +51,7 @@
         :fixed="isFixed(title)"
         :show-overflow-tooltip="true"
         :render-header="renderHeader"
+        :key="title.id"
       >
         <template slot-scope="scope">
           <span
@@ -66,6 +69,7 @@
         :prop="title.topType"
         :show-overflow-tooltip="true"
         :render-header="renderHeader"
+        :key="title.id"
         sortable
       >
         <template slot-scope="scope">
@@ -84,6 +88,7 @@
         :prop="title.topType"
         :show-overflow-tooltip="true"
         :render-header="renderHeader"
+        :key="title.id"
       ></el-table-column>
 
      
