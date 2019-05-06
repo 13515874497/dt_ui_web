@@ -7,8 +7,9 @@
                 </router-link>
                 <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
             </li>
-        </ul>
-        <div class="tags-close-box">
+        </ul>  
+         
+        <div class="tags-close-box">        
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary">
                     标签选项<i class="el-icon-arrow-down el-icon--right"></i>
@@ -18,6 +19,7 @@
                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
+             <el-button type="primary"  @click="refresh" class="el-icon-refresh fresh" size="mini">刷新页面</el-button > 
         </div>
     </div>
 </template>
@@ -25,6 +27,7 @@
 <script>
 import bus from "../../api/bus";
 export default {
+  inject:['reload'],
   data() {
     return {
       tagsList: []
@@ -58,13 +61,18 @@ export default {
       });
       this.tagsList = curItem;
     },
+    //刷新页面
+    refresh(){
+      this.reload()
+    },
+  
     // 设置标签
     setTags(route) {
       const isExist = this.tagsList.some(item => {
         return item.path === route.fullPath;
       });
       if (!isExist) {
-        if (this.tagsList.length >= 8) {
+        if (this.tagsList.length >= 7) {
           this.tagsList.shift();
         }
         this.tagsList.push({
@@ -72,9 +80,9 @@ export default {
           path: route.fullPath,
           name: route.name
         });
-        console.log(route.meta.title);
-        console.log(route.fullPath);
-        console.log(route.matched[1]);
+        // console.log(route.meta.title);
+        // console.log(route.fullPath);
+        // console.log(route.matched[1]);
       }
       bus.$emit("tags", this.tagsList);
     },
@@ -90,12 +98,12 @@ export default {
   watch: {
     $route(newValue, oldValue) {
       this.setTags(newValue);
-      console.log(this.setTags(newValue));
+    //   console.log(this.setTags(newValue));
     }
   },
   created() {
     this.setTags(this.$route);
-    console.log(this.setTags(this.$route));
+    // console.log(this.setTags(this.$route));
     // 监听关闭当前页面的标签页
     bus.$on("close_current_tags", () => {
       for (let i = 0, len = this.tagsList.length; i < len; i++) {
@@ -106,13 +114,14 @@ export default {
           } else if (i > 0) {
             this.$router.push(this.tagsList[i - 1].path);
           } else {
-            this.$router.push("/");
+            this.$router.push("/index");
           }
           this.tagsList.splice(i, 1);
           break;
         }
       }
     });
+   
   }
 };
 </script>
@@ -136,6 +145,8 @@ a {
   width: 100%;
   height: 100%;
   text-decoration: underline;
+  padding:0px;
+  margin:0px;
 }
 
 .tags-li {
@@ -181,7 +192,11 @@ a {
 .tags-li.active .tags-li-title {
   color: #fff;
 }
-
+.fresh{
+  position: absolute;
+  right:5px;
+  top:7px;
+}
 .tags-close-box {
   position: absolute;
   right: 0;
@@ -189,7 +204,7 @@ a {
   box-sizing: border-box;
   padding-top: 1px;
   text-align: center;
-  width: 110px;
+  width: 205px;
   height: 40px;
   background: #fff;
   box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
