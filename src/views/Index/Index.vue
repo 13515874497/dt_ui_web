@@ -1,25 +1,28 @@
 <template>
-  <div class="wrapper">
-      <el-container style="height:100%">
+
+  <div class="wrapper" >
+      <el-container style="height:100%" >
     <!-- <div style="height: 100%;overflow-y: auto"> -->
       <div style="height: 100%;">
       <Aside style="overflow-y: auto;background-color: #293846"/>
-    </div>
+      </div>
 
     <el-container style="float: left">  
-      <el-header style="height: 90px">          
-        <Header/>   
+      <el-header style="height: 90px" >          
+        <Header  />   
       </el-header>
+      
       <Tags></Tags>
-      <el-main>
+      
+      <el-main >
         <!--缓存路由组件-->
         <keep-alive :include="tagsList">
             <router-view  v-if="isRouterAlive"></router-view>
         </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
+     </el-container>
     </el-container>
-  </el-container>
   </div>
 </template>
 
@@ -43,6 +46,7 @@ export default {
       isRouterAlive:true,
       isRole: true,
       tagsList: [],
+
     };
   },
   methods: {
@@ -146,8 +150,8 @@ export default {
   },
   beforeDestroy() {
     this.$ws && this.$ws.close();
-  }
-  
+  },
+
 };
 </script>
 

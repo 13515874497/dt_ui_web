@@ -1,7 +1,6 @@
 <template>
   <div class="header">
     <!-- <img class="img_header" src="./img/logo.png"> -->
-    <i class="el-icon-menu icon_dt-zhedie"></i>
     <div class="main">
       <p>欢迎来到 XXX 中文管理后台</p>
       <ul class="ctrl">
@@ -41,17 +40,17 @@
 <script>
 import { repLogout } from "@/api";
 import QueryFiles from "@/components/FileUpload/QueryFiles";
-
 export default {
   components: {
     QueryFiles
   },
   data() {
     return {
-      showQueryFiles: false
+      showQueryFiles: false,
     };
   },
   methods: {
+
     async logout() {
       const result = await repLogout();
       if (result.code === 200) {
@@ -70,8 +69,9 @@ export default {
     queryFiles() {
       // this.$router.push('/index/queryFiles')
       this.showQueryFiles = true;
-    }
-  }
+    },
+
+  },
 };
 </script>
 
@@ -84,13 +84,6 @@ export default {
   .main {
     line-height: 90px;
     text-align: center;
-  }
-  .icon_dt-zhedie{
-    font-size:25px;
-    position: absolute;
-    top:20px;
-    left:-17px;
-    line-height:50px;
   }
 }
 ul.ctrl {
@@ -116,5 +109,4 @@ ul.ctrl {
     }
   }
 }
-
 </style>
