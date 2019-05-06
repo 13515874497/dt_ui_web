@@ -14,6 +14,7 @@ export default {
         <h2 class="user_aside">
           <img class="user_img" src={pig} />
           <p class="user_name">{this.userName}</p>
+         
         </h2>
         <el-row class="tac" >
           <el-menu
@@ -108,7 +109,7 @@ export default {
         this.getRepMenu();
         break;
     }
-  }
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -139,6 +140,7 @@ export default {
   // height: 80px;
   padding: 10px;
   margin: 0;
+
 }
 
 //列表item
@@ -246,4 +248,19 @@ export default {
   border-radius: 10px;
   background: #2f4050;
 }
+.test1{
+    width: 180px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transition: width 0.28s;
+    z-index: 1001;
+    overflow: hidden;
+    .el-menu-vertical:not(.el-menu--collapse) {
+        width: 180px;
+}
+}
+
 </style>

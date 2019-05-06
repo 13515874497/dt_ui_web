@@ -1,25 +1,28 @@
 <template>
-  <div class="wrapper">
-      <el-container style="height:100%">
+
+  <div class="wrapper" >
+      <el-container style="height:100%" >
     <!-- <div style="height: 100%;overflow-y: auto"> -->
       <div style="height: 100%;">
       <Aside style="overflow-y: auto;background-color: #293846"/>
-    </div>
+      </div>
 
     <el-container style="float: left">  
-      <el-header style="height: 90px">          
-        <Header/>   
+      <el-header style="height: 90px" >          
+        <Header  />   
       </el-header>
+      
       <Tags></Tags>
-      <el-main>
+      
+      <el-main >
         <!--缓存路由组件-->
         <keep-alive :include="tagsList">
-            <router-view></router-view>
+            <router-view  v-if="isRouterAlive"></router-view>
         </keep-alive>
       </el-main>
       <el-footer style="height: 65px">Footer</el-footer>
+     </el-container>
     </el-container>
-  </el-container>
   </div>
 </template>
 
@@ -33,13 +36,27 @@ import Vue from "vue";
 import message from "@/utils/Message";
 import bus from '@/api/bus';
 export default {
+  provide(){
+    return{
+      reload:this.reload
+    }
+  },
   data() {
     return {
+      isRouterAlive:true,
       isRole: true,
-       tagsList: [],
+      tagsList: [],
+
     };
   },
   methods: {
+    //页面刷新
+    reload(){
+      this.isRouterAlive = false
+      this.$nextTick(function () {
+        this.isRouterAlive = true
+      })
+    },
     initWs() {
       console.log(this.$ws);
 
@@ -121,8 +138,8 @@ export default {
                 }
                
                 this.tagsList = arr;
-                console.log( this.tagsList)
-                console.log( msg)
+                // console.log( this.tagsList)
+                // console.log( msg)
             })
   },
   async mounted() {
@@ -133,8 +150,8 @@ export default {
   },
   beforeDestroy() {
     this.$ws && this.$ws.close();
-  }
-  
+  },
+
 };
 </script>
 
