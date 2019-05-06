@@ -24,24 +24,30 @@
     <section>
       <Table
         :tableData="data.tableData"
-        :tableTitle="tableTitle"
+        :tableTitle="tableTitle_show"
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
-        
         v-loading="loading"
       />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
-        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading" />
+        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
       </div>
     </section>
     <!-- 新增 -->
     <section>
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form ref="form_add" :formItems="formItems" @passData="passData_add" :rule="rule" :reset="add.reset" :customField="customField"></Form>
+        <Form
+          ref="form_add"
+          :formItems="formItems"
+          @passData="passData_add"
+          :rule="rule"
+          :reset="add.reset"
+          :customField="customField"
+        ></Form>
 
         <div slot="footer" class="dialog-footer">
           <el-button type="primary" @click="send_add(true)">保 存</el-button>
@@ -57,13 +63,23 @@
     <section>
       <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form ref="form_update" :formItems="formItems" :formData="update.formData" @passData="passData_update"></Form>
+        <Form
+          ref="form_update"
+          :formItems="formItems"
+          :formData="update.formData"
+          @passData="passData_update"
+        ></Form>
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="update.visible = false">取 消</el-button>
           <el-button type="primary" :disabled="!update.data" @click="send_update">保 存</el-button>
         </div>
       </el-dialog>
+    </section>
+    <!-- 表格字段筛选 -->
+    <section>
+      <PopoverFilterFields :data="tableTitle" @hideField="hideField"></PopoverFilterFields>
+      <!-- <div class="el-button fieldShow el-button--primary is-plain"></div> -->
     </section>
   </main>
 </template>
@@ -80,6 +96,7 @@ import Pagination from "@/components/ElementUi/Pagination";
 import Table from "@/components/ElementUi/Table";
 import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
+import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 
 import requestAjax from "@/api/requestAjax";
 import PubSub from "pubsub-js";
@@ -93,6 +110,7 @@ export default {
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
+      tableTitle_show: [], //排除需要隐藏的表头
       multipleSelection: [], //更新按钮数组收集
       data: {
         tableData: [], //表信息
@@ -111,7 +129,7 @@ export default {
         isPass: false,
         reset: false
       },
-      primaryKey: '', //提供一个修改、删除时的主键
+      primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
       update: {
         visible: false,
@@ -134,7 +152,7 @@ export default {
         "effectiveDate"
       ],
       //在form中需要填写的
-      sysLogForm: ["remark", "status"],
+      sysLogForm: ["remark", "status"]
     };
   },
   computed: {
@@ -144,19 +162,19 @@ export default {
       });
     },
     //当前的子组件的form
-    ref_form(){
-      if(this.add.visible && this.$refs.form_add){
-        return this.$refs.form_add
-      }else if(this.update.visible && this.$refs.form_update){
-        return this.$refs.form_update
+    ref_form() {
+      if (this.add.visible && this.$refs.form_add) {
+        return this.$refs.form_add;
+      } else if (this.update.visible && this.$refs.form_update) {
+        return this.$refs.form_update;
       }
     },
     //当前form绑定的数据(主要用于验证)
-    ref_form_model(){
-      if(this.ref_form){
-        return this.ref_form.data_model
+    ref_form_model() {
+      if (this.ref_form) {
+        return this.ref_form.data_model;
       }
-    }
+    },
   },
   components: {
     Pagination,
@@ -165,7 +183,8 @@ export default {
     OperateBtn,
     Query2,
     InputQuery,
-    SearchReset
+    SearchReset,
+    PopoverFilterFields
   },
   methods: {
     setQuery($event) {
@@ -183,7 +202,7 @@ export default {
     //table按钮选择 传参
     checkboxValue: function(value) {
       this.multipleSelection = value;
-      console.log(this.multipleSelection)
+      console.log(this.multipleSelection);
     },
     //点击查询获得table的值
     async search() {
@@ -212,6 +231,19 @@ export default {
       this.tableTitle = [...this.tableTitle];
       // this.queryIds = [];
     },
+    //根据勾选的表头字段id去隐藏对应字段
+    hideField($event) {
+      let list = $event[0];
+      console.log(list);
+      if (!list) {
+        return;
+      } else {
+        this.tableTitle_show = this.tableTitle.filter(item => {
+          return !list.includes(item.id);
+        });
+      }
+       console.log(this.tableTitle_show);
+    },
     handlerFormData(data) {
       data.systemLogStatus = {};
       for (let key in data) {
@@ -227,26 +259,26 @@ export default {
     },
     passData_add($event) {
       console.log($event);
-      
+
       this.add.isPass = $event[0];
       this.add.data = $event[2];
-      this.handlerFormData(this.add.data)
+      this.handlerFormData(this.add.data);
     },
     //需要提供一个新增的接口
     ajax_add(data) {},
-    async send_add(isClose,isReset) {
-      if(!this.add.isPass) {
-        message.errorMessage('验证未通过');
+    async send_add(isClose, isReset) {
+      if (!this.add.isPass) {
+        message.errorMessage("验证未通过");
         return;
       }
       let res = await this.ajax_add(this.add.data);
       if (res.code === 200) {
         message.successMessage(res.msg);
         this.search();
-        if(isClose){
+        if (isClose) {
           this.add.visible = false;
         }
-        if(isReset){
+        if (isReset) {
           this.resetForm_add();
         }
       } else {
@@ -268,63 +300,63 @@ export default {
     },
     passData_update($event) {
       this.update.isPass = $event[0];
-   
+
       this.update.data = $event[2];
 
       this.update.data[this.primaryKey] = $event[1][this.primaryKey];
-  
+
       this.update.data.statusId = $event[1].statusId;
-     
+
       this.update.data.version = $event[1].version;
-   
+
       this.handlerFormData(this.update.data);
     },
-    ajax_remove(data){},
-    openDialog_remove(){
-      if(this.multipleSelection.length<1){
-        message.infoMessage('需要选中一条以上的数据');
+    ajax_remove(data) {},
+    openDialog_remove() {
+      if (this.multipleSelection.length < 1) {
+        message.infoMessage("需要选中一条以上的数据");
         return;
       }
-      let thisIds = [],statusIds = [];
-      this.multipleSelection.forEach(item=>{
+      let thisIds = [],
+        statusIds = [];
+      this.multipleSelection.forEach(item => {
         thisIds.push(item[this.primaryKey]);
         statusIds.push(item.statusId);
-      })
+      });
       let data = {
-        thisIds: thisIds.join(','),
-        statusIds: statusIds.join(',')
+        thisIds: thisIds.join(","),
+        statusIds: statusIds.join(",")
       };
-      message.messageBox_confirm('是否确认删除')
-      .then(()=>{
-        let res = this.ajax_remove(data).then(res=>{
-        console.log(res);
-        if(res.code === 200){
-          message.successMessage(res.msg)
-          this.search();
-        }else {
-          message.errorMessage(res.msg);
-        }
-        });
-      })
-      .catch(()=>{
-
-      })
+      message
+        .messageBox_confirm("是否确认删除")
+        .then(() => {
+          let res = this.ajax_remove(data).then(res => {
+            console.log(res);
+            if (res.code === 200) {
+              message.successMessage(res.msg);
+              this.search();
+            } else {
+              message.errorMessage(res.msg);
+            }
+          });
+        })
+        .catch(() => {});
     },
     //需要提供一个修改的接口
     ajax_update(data) {},
     async send_update() {
       let res = await this.ajax_update(this.update.data);
       console.log(res);
-      if(res.code == 200){
+      if (res.code == 200) {
         message.successMessage(res.msg);
         this.search();
         this.update.visible = false;
-      }else {
+      } else {
         message.errorMessage(res.msg);
       }
     },
     //reset值发生改变即重置表单
-    resetForm_add(){
+    resetForm_add() {
       this.add.reset = !this.add.reset;
     },
     initOperateBtn() {
@@ -364,21 +396,26 @@ export default {
           }
         }
       ];
-    }
+    },
   },
-  created() {
+  async created() {
     this.initOperateBtn();
-  },
-  async mounted() {
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
+    this.tableTitle_show = [...this.tableTitle];
+  },
+  async mounted() {
+    
   }
 };
 </script>
 
 
 <style lang="scss" scoped>
+main {
+  position: relative;
+}
 #printCheck {
   width: 100%;
   // height: 30px;
@@ -393,4 +430,27 @@ export default {
   overflow-y: scroll;
   padding-right: 15px;
 }
+// .fieldShow {
+//   position: absolute;
+//   right: -9px;
+//   top: 0;
+//   bottom: 0;
+//   margin: auto 0;
+//   height: 68px;
+//   width: 23px;
+//   writing-mode: tb-rl;
+//   padding: 5px;
+//   transform: perspective(100px) rotateY(-30deg);
+// }
+// .fieldShow::before {
+//   content: "字段信息"; /*用伪元素来生成一个矩形*/
+//   position: absolute;
+//   top: 0;
+//   right: 2px;
+//   bottom: 0;
+//   left: 0;
+//   z-index: 1;
+//   transform: perspective(100px) rotateY(30deg);
+
+// }
 </style>

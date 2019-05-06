@@ -1,7 +1,7 @@
 <template>
   <el-table
     :data="tableData"
-    style="width: 100%"
+   
     height="500"
     :span-method="arraySpanMethod"
     @selection-change="handleSelectionChange"
@@ -13,7 +13,7 @@
     class="content-table"
     
   >
-    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) 90.带有超链接的-->
+    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column v-if="isShowNumber()" type="index" width="50" fixed></el-table-column>
     <template v-for="title  in tableTitle">
@@ -58,18 +58,6 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-column
-        v-else-if="title.topType==='eDate'"
-        :label="title.headName"
-        :fixed="isFixed(title)"
-        :show-overflow-tooltip="true"
-         :render-header="renderHeader"
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time"></i>
-          <span>{{ scope.row.userExpirationDate | date-format}}</span>
-        </template>
-      </el-table-column>-->
 
       <el-table-column
         v-else-if="title.inputType==4"
@@ -86,15 +74,7 @@
         </template>
       </el-table-column>
 
-      <!-- <el-table-colum
-        v-else-if="title.inputType==90"
-        :fixed="isFixed(title)"
-        :label="title.headName"
-        :prop="title.topType"
-        :show-overflow-tooltip="true"
-      >
 
-      </el-table-colum>-->
 
       <el-table-column
         v-else
@@ -294,5 +274,8 @@ export default {
 .el-table td,
 .el-table th {
   padding: 6px 0;
+}
+.content-table {
+  width: calc(100% - 15px)
 }
 </style>
