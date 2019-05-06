@@ -79,7 +79,7 @@ export default {
   position: relative;
 
   background: url("./img/logo.png") no-repeat left center;
-  min-width: 790px;
+  min-width: 930px;
   .main {
     line-height: 90px;
     text-align: center;
