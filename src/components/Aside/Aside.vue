@@ -5,13 +5,17 @@ import { repMenu, repCheckMenuToken } from "@/api";
 export default {
   render() {
     return (
-      <div class="test-1" style="height:100%">
+      <div class="test-1" style="height:100%;position:relative" >
+        {/* start    时间:2019/05/06 15：04  修改人：乌日娜   修改内容：增加左侧导航点击伸缩功能 */}
+        <div >
+          <div style='width:15px;height:100px;background-color:#e3e3e3;position:absolute;right:0;top:50%;text-align:center;line-height:100px;font-weight:700;z-index:999' onClick={this.handleClick} >{this.isCollapse?'》':'《'}</div>
+        </div>
+        {/* end */}
         <h2 class="user_aside">
           <img class="user_img" src={pig} />
           <p class="user_name">{this.userName}</p>
-         
         </h2>
-        <el-row class="tac">
+        <el-row class="tac" >
           <el-menu
             default-active={this.$router.path}
             router
@@ -20,6 +24,7 @@ export default {
             background-color="#293846"
             text-color="#fff"
             active-text-color="#ffd04b"
+            collapse={this.isCollapse}
              >
             {this.renderMenuItem(this.menuList)}
           </el-menu>
@@ -31,6 +36,7 @@ export default {
     return {
       userName: this.getCookie("name"),
       menuList: [],
+      isCollapse: false //控制导航栏伸缩
     };
   },
   methods: {
@@ -41,6 +47,10 @@ export default {
         return;
       }
       this.menuList = menu;
+    },
+    handleClick(){
+      //控制导航栏伸缩
+      this.isCollapse = !this.isCollapse
     },
     async getRepMenu() {
       let res = await repMenu();
@@ -57,7 +67,7 @@ export default {
           return (
             <el-submenu index={item.menuId.toString()} key={item.menuId}>
               <template slot="title">
-                
+
                   <i class={item.icon ? item.icon : "el-icon-loading"} />
 
                 <span slot="title" class="mName">{item.mName}</span>
@@ -84,7 +94,7 @@ export default {
 
       return arr;
     }
-  },
+    },
 
   async mounted() {
 
