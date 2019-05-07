@@ -205,6 +205,7 @@ export default {
         disabledDate(time) {
           // console.log(new Date(starDate).toLocaleDateString(), new Date(endDate).toLocaleDateString())
           //8.64e7=1000*60*60*24 一天
+          
            return (time.getTime() < starDate - 8.64e7 || time.getTime() > endDate);
           }          
         },  
@@ -272,8 +273,18 @@ export default {
       return this.isContinent ? this.select_area : this.select_site;
     },
     uploadFrom() {
+      let date = new Date(this.value2)
+        // 年
+      let y = date.getFullYear()
+        // 月
+      let m = (date.getMonth() + 1).toString().padStart(2, '0')
+        
+      let Timea = `${y}-${m}`
+
+      console.log(Timea);
+
       return {
-        closingDate: this.value2,
+        closingDate: Timea, //时间月份
         shopId: this.radio.model, //店铺ID
         siteId: this.select_site.model, //站点 ID
         areaId: this.select_area.model, //洲 ID
@@ -423,14 +434,14 @@ export default {
         let startTime_ym = startTime.split('-')
         let startTime_y = startTime_ym[0]
         let startTime_m = startTime_ym[1]
-        starDate = (new Date(startTime_y,startTime_m )) -1 ; 
 
+        starDate =((new Date(startTime_y,startTime_m )) -1);
         console.log(starDate) //开始的时间
         
         let endTime_ym = endTime.split('-')
         let endTime_y = endTime_ym[0]
         let endTime_m = endTime_ym[1]
-        endDate = (new Date(endTime_y,endTime_m)) -1;
+        endDate =((new Date(endTime_y,endTime_m)) -1) ;
 
         console.log(endDate)//结束的时间
 
@@ -448,16 +459,13 @@ export default {
         let startTime_y = startTime_ym[0]
         let startTime_m = startTime_ym[1]
 
-       starDate = (new Date(startTime_y,startTime_m )) -1 ; 
+       starDate = (new Date(startTime_y,startTime_m )) -1 ;
+        console.log(starDate) //开始的时间  
 
-        console.log(starDate) //开始的时间
-        
         let endTime_ym = endTime.split('-')
         let endTime_y = endTime_ym[0]
         let endTime_m = endTime_ym[1]
-
         endDate = (new Date(endTime_y,endTime_m)) -1;
-
         console.log(endDate)//结束的时间
 
        }
@@ -526,6 +534,7 @@ export default {
     beforeAvatarUpload(file) {
       console.log(this.uploadFrom);
       console.log(file);
+
       let repeatFile = this.readyFileList.find(item => {
         return item.name === file.name;
       });
@@ -593,8 +602,9 @@ export default {
         sp.status = "";
       }
     },
+
     //点击上传文件
-    uploadFiles() {
+    uploadFiles() { 
       let self = this;
       this.curr_progress = 0;
       this.uploadBtn.disabled = true;
@@ -610,8 +620,6 @@ export default {
       this.param.append("areaId", this.uploadFrom.areaId);
       this.param.append("businessTime", this.uploadFrom.businessTime);
       this.param.append("closingDate", this.uploadFrom.closingDate);
-      console.log(this.uploadFrom.closingDate);
-      
       let config = {
         headers: {
           "Content-Type": "multipart/form-data"
