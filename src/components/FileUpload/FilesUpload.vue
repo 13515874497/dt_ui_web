@@ -750,8 +750,6 @@ export default {
       let self = this;
       //等待父组件连上websocket
       console.log(self.$ws);
-      console.log(111111111111111111111);
-      
       this.wsTimer = setTimeout(() => {
         if (self.$ws) {
           switch (self.$ws.readyState) {
@@ -936,8 +934,6 @@ export default {
     
   },
   activated() {
-    console.log('999999999');
-    
     this.initWs();
     this.bindEventDelegation();
   },

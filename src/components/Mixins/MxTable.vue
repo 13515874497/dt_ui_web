@@ -68,6 +68,7 @@
           :formItems="formItems"
           :formData="update.formData"
           @passData="passData_update"
+          :customField="customField"
         ></Form>
 
         <div slot="footer" class="dialog-footer">
@@ -217,9 +218,9 @@ export default {
       this.loading = true;
       const res = await this.queryPage(_data);
       console.log(res);
+      this.loading = false;
       if (res.code === 200) {
         //赋值 然后显示
-        this.loading = false;
         pUtils.pageInfo(res, data);
       }
     },
@@ -293,7 +294,10 @@ export default {
         return;
       }
       this.update.formData = this.multipleSelection[0];
-      this.update.formData.productsName = 18;
+      console.log(this.update.formData);
+      
+      // this.update.formData.productsName = 18;
+
       this.update.visible = true;
     },
     passData_update($event) {
