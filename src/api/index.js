@@ -20,7 +20,7 @@ export const register = ({
 
 
 
-//获取图标icon/getIconInfo 
+//获取图标icon/getIconInfo
 export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`, 'get')
 
 
@@ -211,7 +211,7 @@ export const repDelHistoryUserInfo = ({
 
 
 /**
- * 
+ *
  * 运营管理 => 亚马逊 => 广告
  */
 
@@ -274,7 +274,7 @@ export const getBusInfoWeek = (data) => ajax(BASE_URL + `/fba/getBusInfo`,data, 
 // 接收库存 http://127.0.0.1:9001/api/v1/fba/getReceiveInfo  post
 export const getReceiveInfo = (data) => ajax(BASE_URL + `/fba/getReceiveInfo`,data, 'POST')
 
-// 查询期末库存信息 http://127.0.0.1:9001/api/v1/fba/getInventoryInfo 
+// 查询期末库存信息 http://127.0.0.1:9001/api/v1/fba/getInventoryInfo
 export const getInventoryInfo = (data) => ajax(BASE_URL + `/fba/getInventoryInfo`,data, 'POST')
 
 
@@ -294,12 +294,12 @@ export const getMWarInfo = (data) => ajax(BASE_URL + `/fba/getMWarInfo`,data, 'P
 //长期仓储费  http://127.0.0.1:9001/api/v1/fba/getLWarInfo post
 export const getLWarInfo = (data) => ajax(BASE_URL + `/fba/getLWarInfo`,data, 'POST')
 
-//订单处理费 http://127.0.0.1:9001/api/v1/fba/getHlFee 
+//订单处理费 http://127.0.0.1:9001/api/v1/fba/getHlFee
 export const getHlFee = (data) => ajax(BASE_URL + `/fba/getHlFee`,data, 'POST')
 
 
 //运营管理 => 其他
-// Feedback  http://127.0.0.1:9001/api/v1/fba/getFeedback 
+// Feedback  http://127.0.0.1:9001/api/v1/fba/getFeedback
 export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`,data, 'POST')
 
 
@@ -313,7 +313,7 @@ export const saveReview = (data) => ajax(BASE_URL + `/fba/saveReview`,data, 'POS
 
 
 /**
- * 
+ *
  * 人事管理 => 基础档案
  */
 //职员分页
@@ -324,7 +324,7 @@ export const findByListDepartment = (data) => ajax(BASE_URL + '/staff/findByList
 
 
 /**
- * 
+ *
  * 基础资料 => 采购管理 => 采购价格
  */
 //采购价格分页
@@ -338,20 +338,20 @@ export const findByListPrice = (data) => ajax(BASE_URL + '/price/findByListPrice
 
 
 /**
- * 
+ *
  * 基础资料 => 出口管理
  */
-//HS Code分页 
+//HS Code分页
 export const findHsCodeInfo = (data) => ajax(BASE_URL + '/code/findHsCodeInfo', data, 'POST');
-//要素内容分页 
+//要素内容分页
 export const findElementInfo = (data) => ajax(BASE_URL + '/ele/findElementInfo', data, 'POST');
-//报关类型分页 
+//报关类型分页
 export const findByListDeclareType = (data) => ajax(BASE_URL + '/declare/findByListDeclareType', data);
-//清关类型分页 
+//清关类型分页
 export const findByListGrosscustoms = (data) => ajax(BASE_URL + '/gro/findByListGrosscustoms', data);
 //包装种类分页
 export const findByListPackingType = (data) => ajax(BASE_URL + '/packing/findByListPackingType', data);
-//监管方式分页 
+//监管方式分页
 export const findMonitoringInfo = (data) => ajax(BASE_URL + '/condition/findMonitoringInfo', data, 'POST');
 //运输方式分页 http://127.0.0.1:9001/api/v1/mode/findByListModeOfTransport?pageSize=10&currentPage=10 get
 export const findByListModeOfTransport = (data) => ajax(BASE_URL + '/mode/findByListModeOfTransport', data);
@@ -362,22 +362,22 @@ export const findByListCompanyOffshore = (data) => ajax(BASE_URL + '/Offshore/fi
 
 
 /**
- * 
+ *
  * 基础资料 => 运营管理 => 亚马逊
  */
 
 
-//亚马逊描述分页 
+//亚马逊描述分页
 export const findByListDescription = (data) => ajax(BASE_URL + '/description/findByListDescription', data, 'POST');
-//付款类型分页  
+//付款类型分页
 export const findPayByListProperty = (data) => ajax(BASE_URL + '/pay/findByListProperty', data);
-//订单处理类分页  
+//订单处理类分页
 export const findByListHandling = (data) => ajax(BASE_URL + '/handling/findByListHandling', data, 'POST');
 
 
 //亚马逊type(订单类型)分页
 export const findByListAmazon = (data) => ajax(BASE_URL + '/type/findByListAmazon', data, 'POST');
-//亚马逊仓库分页  
+//亚马逊仓库分页
 export const findByListWarehouse = (data) => ajax(BASE_URL + '/amazon/war/findByListWarehouse', data, 'POST');
 
 
@@ -385,14 +385,14 @@ export const findByListWarehouse = (data) => ajax(BASE_URL + '/amazon/war/findBy
 
 
 /**
- * 
+ *
  * 基础资料 => 运营管理 => 辅助资料
  */
 
-//发货方式分页   
+//发货方式分页
 export const findByListDelivery = (data) => ajax(BASE_URL + '/deli/findByListDelivery', data);
 
-//星级分页   
+//星级分页
 export const findByListStarLevel = (data) => ajax(BASE_URL + '/star/findByListStarLevel', data);
 
 //刷单类型分页
@@ -406,7 +406,7 @@ export const findByListPlatform = (data) => ajax(BASE_URL + '/plat/findByListPla
 
 
 /**
- * 
+ *
  * 基础资料 => 物流管理
  */
 //运输性质分页
@@ -415,11 +415,11 @@ export const findByListProperty = (data) => ajax(BASE_URL + '/property/findByLis
 export const findByListType = (data) => ajax(BASE_URL + '/type/findByListType', data);
 //货运公司分页
 export const findByListFreight = (data) => ajax(BASE_URL + '/freight/findByListFreight', data, 'POST');
-//异常类型tree 
+//异常类型tree
 export const findByListAbnormal = (data) => ajax(BASE_URL + '/abnormal/findByListAbnormal', data);
 //运价等级tree
 export const findByListLevel = (data) => ajax(BASE_URL + '/level/findByListLevel', data);
-//计价方式tree 
+//计价方式tree
 export const findByListValuationMethod = (data) => ajax(BASE_URL + '/valuation/findByListValuationMethod', data);
 //计价范围分页
 export const findByListRange = (data) => ajax(BASE_URL + '/range/findByListRange', data);
@@ -428,7 +428,7 @@ export const findByListQuarantine = (data) => ajax(BASE_URL + '/inspection/findB
 //成交方式分页 http://127.0.0.1:9001/api/v1/closing/findByListWayOfClosing?pageSize=10&currentPage=10 get
 export const findByListWayOfClosing = (data) => ajax(BASE_URL + '/closing/findByListWayOfClosing', data);
 /**
- * 
+ *
  * 基础资料 => 人事管理
  */
 //学历分页  /staff/getEducation
@@ -437,13 +437,13 @@ export const getEducation = (data) => ajax(BASE_URL + '/staff/getEducation', dat
 export const getEmployee = (data) => ajax(BASE_URL + '/staff/getEmployee', data)
 //雇佣类型分页  staff/getEmployment
 export const getEmployment = (data) => ajax(BASE_URL + '/staff/getEmployment', data)
-//离职类型分页 
+//离职类型分页
 export const getHrLeave = (data) => ajax(BASE_URL + '/staff/getHrLeave', data)
 //民族分页 http://127.0.0.1:9001/api/v1/nation/findByListNationInfo?
 export const findByListNationInfo = (data) => ajax(BASE_URL + '/nation/findByListNationInfo', data)
 
 /**
- * 
+ *
  * 基础资料 => 公共资料
  */
 //省州关联表分页 省州关联表 http://127.0.0.1:9001/api/v1/rel/findByListRelation post
@@ -464,7 +464,7 @@ export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')
 export const findByListProducts = () => ajax(BASE_URL + '/pro/findByListProducts')
 //导入模板分页
 export const getTemplate = (data) => ajax(BASE_URL + '/ctx/getTemplate', data, 'POST');
-//关税税率分页 
+//关税税率分页
 export const findByListTax = (data) => ajax(BASE_URL + '/tax/findByListTax', data, 'POST');
 
 //产品信息分页
@@ -482,14 +482,14 @@ export const findCountryInfo = (data) => ajax(BASE_URL + '/country/findCountryIn
 
 //公司分页
 export const findByListCompany = (data) => ajax(BASE_URL + '/company/findByListCompany', data, 'POST');
-//公司添加 http://127.0.0.1:9002/api/v1/company/saveCompany	
+//公司添加 http://127.0.0.1:9002/api/v1/company/saveCompany
 export const saveCompany = (data)=> ajax(BASE_URL + '/company/saveCompany', data, 'POST');
 //公司修改
 export const upCompany = (data)=> ajax(BASE_URL + '/company/upCompany', data, 'POST');
 //公司删除
 export const delCompany = (data)=> ajax(BASE_URL + '/company/delCompany', data, 'POST');
 
-// export const 
+// export const
 // 国家分页
 // export const getRegional = ({
 //   currentPage,
@@ -514,7 +514,7 @@ export const delCompany = (data)=> ajax(BASE_URL + '/company/delCompany', data, 
 export const findByListShop = (data) => ajax(BASE_URL + `/shop/findByListShop`, data, 'POST')
 //获取店铺列表(有权限)
 export const repGetShopName = () => ajax(BASE_URL + `/shop/getListShopName`)
-//查询区域(洲)(有权限) 
+//查询区域(洲)(有权限)
 export const selectReg = () => ajax(BASE_URL + '/reg/selectReg')
 //查询所有站点(有权限)
 export const getSelectSiteRole = () => ajax(BASE_URL + '/site/getSelectSiteRole')
@@ -553,18 +553,18 @@ export const upRate = (data) => ajax(BASE_URL + '/rate/upRate', data, 'POST')
 //删除汇率接口   http://127.0.0.1:9002/api/v1/rate/delRate	POST
 export const delRate = (data) => ajax(BASE_URL + '/rate/delRate', data, 'POST')
 /**
- * 
+ *
  * 菜单管理 => 菜单管理
  */
-//获取可引用的表头字段 
+//获取可引用的表头字段
 export const reference = (data) => ajax(BASE_URL + '/reference', data,'GET',[false,true])
 //新增表头字段 api/v1/saveHead
 export const saveHead = (data) => ajax(BASE_URL + '/saveHead', data,'POST',[true,true])
-//新增引用数据 
+//新增引用数据
 export const saveReference = (data) => ajax(BASE_URL + '/saveReference', data,'POST',[true,true])
-//字段名称(headName)对比数据库是否重复  http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注 
+//字段名称(headName)对比数据库是否重复  http://127.0.0.1:9001/api/v1/IsHeadName?headName=备注
 export const isHeadName = (data) => ajax(BASE_URL + '/isHeadName', data)
-//字段英文名称(topType)对比数据库是否重复 /api/v1/isTopType 
+//字段英文名称(topType)对比数据库是否重复 /api/v1/isTopType
 export const isTopType = (data) => ajax(BASE_URL + '/isTopType', data)
 //修改表头字段
 export const upHeadInfo = (data) => ajax(BASE_URL + '/upHeadInfo', data,'POST')
@@ -572,11 +572,11 @@ export const upHeadInfo = (data) => ajax(BASE_URL + '/upHeadInfo', data,'POST')
 
 
 /**
- * 
+ *
  * 数据导入
  */
 /**
- * 
+ *
  * 菜单管理 => 菜单管理
  */
 
@@ -682,7 +682,7 @@ export const setAreaRole = (data)=>ajax(BASEURL+'/admin/setAreaRole',data,'post'
 //查询用户记录  查询已上传的文件信息
 export const repGetUserUploadInfo = (data) => ajax(BASE_URL + '/upload/getInfo', data, 'POST')
 
-//通过id 删除用户记录信息 
+//通过id 删除用户记录信息
 export const repDelUploadInfo = (id) => ajax(BASE_URL + `/upload/delInfo`, {
   id
 },'GET',[true,true])
