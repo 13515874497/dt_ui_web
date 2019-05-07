@@ -40,6 +40,7 @@
 <script>
 import { repLogout } from "@/api";
 import QueryFiles from "@/components/FileUpload/QueryFiles";
+import bus from "../../api/bus";
 export default {
   components: {
     QueryFiles
@@ -50,7 +51,6 @@ export default {
     };
   },
   methods: {
-
     async logout() {
       const result = await repLogout();
       if (result.code === 200) {
@@ -70,7 +70,6 @@ export default {
       // this.$router.push('/index/queryFiles')
       this.showQueryFiles = true;
     },
-
   },
 };
 </script>
@@ -84,6 +83,9 @@ export default {
   .main {
     line-height: 90px;
     text-align: center;
+  }
+  .toggle-btn {
+    font-size: 25px;
   }
 }
 ul.ctrl {

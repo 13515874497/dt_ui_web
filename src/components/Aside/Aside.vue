@@ -1,7 +1,9 @@
+
 <script>
 import pig from "@/components/HeaderTop/img/pig.jpg";
 import storage from "@/utils/storageUtils";
 import { repMenu, repCheckMenuToken } from "@/api";
+
 export default {
   render() {
     return (
@@ -9,7 +11,6 @@ export default {
         <h2 class="user_aside">
           <img class="user_img" src={pig} />
           <p class="user_name">{this.userName}</p>
-         
         </h2>
         <el-row class="tac">
           <el-menu
@@ -20,7 +21,7 @@ export default {
             background-color="#293846"
             text-color="#fff"
             active-text-color="#ffd04b"
-             >
+          >
             {this.renderMenuItem(this.menuList)}
           </el-menu>
         </el-row>
@@ -57,10 +58,11 @@ export default {
           return (
             <el-submenu index={item.menuId.toString()} key={item.menuId}>
               <template slot="title">
-                
-                  <i class={item.icon ? item.icon : "el-icon-loading"} />
+                <i class={item.icon ? item.icon : "el-icon-loading"} />
 
-                <span slot="title" class="mName">{item.mName}</span>
+                <span slot="title" class="mName">
+                  {item.mName}
+                </span>
               </template>
               <el-menu-item-group key={item.menuId}>
                 {this.renderMenuItem(item.childMenus)}
@@ -87,7 +89,6 @@ export default {
   },
 
   async mounted() {
-
     //传给后台校验接口
     const resultCheck = await repCheckMenuToken();
     switch (resultCheck.code) {
@@ -129,7 +130,6 @@ export default {
   // height: 80px;
   padding: 10px;
   margin: 0;
-
 }
 
 //列表item
@@ -237,19 +237,18 @@ export default {
   border-radius: 10px;
   background: #2f4050;
 }
-.test1{
+.test1 {
+  width: 180px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transition: width 0.28s;
+  z-index: 1001;
+  overflow: hidden;
+  .el-menu-vertical:not(.el-menu--collapse) {
     width: 180px;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    transition: width 0.28s;
-    z-index: 1001;
-    overflow: hidden;
-    .el-menu-vertical:not(.el-menu--collapse) {
-        width: 180px;
+  }
 }
-}
-
 </style>
