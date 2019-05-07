@@ -516,11 +516,13 @@ export const findByListShop = (data) => ajax(BASE_URL + `/shop/findByListShop`, 
 export const repGetShopName = () => ajax(BASE_URL + `/shop/getListShopName`)
 //查询区域(洲)(有权限) 
 export const selectReg = () => ajax(BASE_URL + '/reg/selectReg')
+//查询所有站点(有权限)
+export const getSelectSiteRole = () => ajax(BASE_URL + '/site/getSelectSiteRole')
 //查询店铺列表(全部)
 export const selectShopList = () => ajax(BASE_URL + `/admin/selectShopList`)
 //查询洲列表(全部)
 export const selectReg_admin = () => ajax(BASE_URL + `/admin/selectReg`)
-//查询站点列表(全部)
+//根据区域查询站点列表(全部)
 export const selectSite = (data) => ajax(BASE_URL + `/admin/selectSite`,data)
 
 

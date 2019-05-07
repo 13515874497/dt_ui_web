@@ -610,6 +610,8 @@ export default {
       this.param.append("areaId", this.uploadFrom.areaId);
       this.param.append("businessTime", this.uploadFrom.businessTime);
       this.param.append("closingDate", this.uploadFrom.closingDate);
+      console.log(this.uploadFrom.closingDate);
+      
       let config = {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -930,7 +932,9 @@ export default {
     this.getDate();     
   },
   
-  mounted() {},
+  mounted() {
+    
+  },
   activated() {
     console.log('999999999');
     

@@ -1,6 +1,6 @@
 <template>
-  <el-popover placement="left" title="打√为不显示" width="200" trigger="hover">
-    <el-tree node-key="id" :data="data" :props="props" show-checkbox @check="check"></el-tree>
+  <el-popover popper-class="field-popper" placement="left" title="打√为不显示" width="200" trigger="hover">
+    <el-tree class="scrollbar" ref="tree" node-key="id" :data="data" :props="props" show-checkbox @check="check"></el-tree>
     <div slot="reference" class="fieldShow el-button el-button--primary is-plain"></div>
   </el-popover>
 </template>
@@ -22,6 +22,13 @@ export default {
       list: null
     };
   },
+  watch: {
+    data(val){
+      if(val.length){
+        this.readCache();
+      }
+    }
+  },
   methods: {
     check(node, checked) {
     let keys = checked.checkedKeys;
@@ -40,16 +47,21 @@ export default {
             list = JSON.parse(list);
         }
         this.list = list;
+        let checked = this.list[this.page.id]
+        if(checked){
+            this.$emit('hideField',[checked]);
+             this.$refs.tree.setCheckedKeys(checked);
+        }
     }
   },
-  mounted(){
-      this.readCache();
-      this.$emit('hideField',[this.list[this.page.id]])
-  }
+  // mounted(){
+  //     this.readCache();
+  // }
 };
 </script>
 
 <style lang="scss" scoped>
+
 .fieldShow {
   position: absolute;
   right: -9px;
