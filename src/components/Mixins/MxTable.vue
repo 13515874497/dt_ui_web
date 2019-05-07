@@ -293,6 +293,7 @@ export default {
         return;
       }
       this.update.formData = this.multipleSelection[0];
+      this.update.formData.productsName = 18;
       this.update.visible = true;
     },
     passData_update($event) {
