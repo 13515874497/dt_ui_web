@@ -1,7 +1,9 @@
+
 <script>
 import pig from "@/components/HeaderTop/img/pig.jpg";
 import storage from "@/utils/storageUtils";
 import { repMenu, repCheckMenuToken } from "@/api";
+
 export default {
   render() {
     return (
@@ -70,7 +72,9 @@ export default {
 
                   <i class={item.icon ? item.icon : "el-icon-loading"} />
 
-                <span slot="title" class="mName">{item.mName}</span>
+                <span slot="title" class="mName">
+                  {item.mName}
+                </span>
               </template>
               <el-menu-item-group key={item.menuId}>
                 {this.renderMenuItem(item.childMenus)}
@@ -97,7 +101,6 @@ export default {
     },
 
   async mounted() {
-
     //传给后台校验接口
     const resultCheck = await repCheckMenuToken();
     switch (resultCheck.code) {
@@ -139,7 +142,6 @@ export default {
   // height: 80px;
   padding: 10px;
   margin: 0;
-
 }
 
 //列表item
@@ -247,19 +249,18 @@ export default {
   border-radius: 10px;
   background: #2f4050;
 }
-.test1{
+.test1 {
+  width: 180px;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  transition: width 0.28s;
+  z-index: 1001;
+  overflow: hidden;
+  .el-menu-vertical:not(.el-menu--collapse) {
     width: 180px;
-    height: 100%;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    transition: width 0.28s;
-    z-index: 1001;
-    overflow: hidden;
-    .el-menu-vertical:not(.el-menu--collapse) {
-        width: 180px;
+  }
 }
-}
-
 </style>

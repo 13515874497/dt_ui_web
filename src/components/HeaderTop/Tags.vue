@@ -1,13 +1,16 @@
 <template>
     <div class="tags" v-if="showTags">
-        <ul>
-            <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index">
-                <router-link :to="item.path" class="tags-li-title">
-                    {{item.title}}
+     
+          <ul>
+            <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title">
+                <router-link :to="item.path" class="tags-li-title" >
+                 {{item.title | ellipsis}}
                 </router-link>
                 <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
             </li>
         </ul>  
+    
+      
          
         <div class="tags-close-box">        
             <el-dropdown @command="handleTags">
@@ -28,6 +31,15 @@
 import bus from "../../api/bus";
 export default {
   inject:['reload'],
+   filters: {
+    ellipsis (value) {
+      if (!value) return ''
+      if (value.length > 4) {
+        return value.slice(0,4) + '...'
+      }
+      return value
+    }
+  },
   data() {
     return {
       tagsList: []
@@ -46,7 +58,7 @@ export default {
       if (item) {
         delItem.path === this.$route.fullPath && this.$router.push(item.path);
       } else {
-        this.$router.push("/");
+        this.$router.push("/index");
       }
     },
     // 关闭全部标签
@@ -71,8 +83,9 @@ export default {
       const isExist = this.tagsList.some(item => {
         return item.path === route.fullPath;
       });
+      console.log(isExist)
       if (!isExist) {
-        if (this.tagsList.length >= 7) {
+        if (this.tagsList.length >=7) {
           this.tagsList.shift();
         }
         this.tagsList.push({
@@ -80,9 +93,9 @@ export default {
           path: route.fullPath,
           name: route.name
         });
-        // console.log(route.meta.title);
-        // console.log(route.fullPath);
-        // console.log(route.matched[1]);
+        console.log(route.meta.title);
+        console.log(route.fullPath);
+        console.log(route.matched[1]);
       }
       bus.$emit("tags", this.tagsList);
     },
@@ -134,9 +147,9 @@ a {
 .tags {
   position: relative;
   height: 40px;
-  overflow: hidden;
+  width:100%;
   background: #fff;
-  padding-right: 120px;
+  padding-right: 205px;
   box-shadow: 0 5px 10px #ddd;
 }
 
@@ -154,7 +167,7 @@ a {
   margin: 7px 5px 2px 3px;
   border-radius: 3px;
   font-size: 12px;
-  overflow: hidden;
+  // overflow: hidden;
   cursor: pointer;
   height: 28px;
   line-height: 28px;
