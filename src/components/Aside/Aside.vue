@@ -7,7 +7,7 @@ import { repMenu, repCheckMenuToken } from "@/api";
 export default {
   render() {
     return (
-      <div class="test-1" style="height:100%;position:relative" >
+      <div class="test-1" style="height:100%;position:relative;z-index:99" >
         {/* start    时间:2019/05/06 15：04  修改人：乌日娜   修改内容：增加左侧导航点击伸缩功能 */}
         <div >
           <div style='width:15px;height:100px;background-color:#e3e3e3;position:absolute;right:0;top:50%;text-align:center;line-height:100px;font-weight:700;z-index:999' onClick={this.handleClick} >{this.isCollapse?'》':'《'}</div>

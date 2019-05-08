@@ -1,18 +1,18 @@
 <template>
-    <div class="tags" v-if="showTags">
-     
-          <ul>
-            <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title">
-                <router-link :to="item.path" class="tags-li-title" >
-                 {{item.title | ellipsis}}
-                </router-link>
-                <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
-            </li>
-        </ul>  
-    
-      
-         
-        <div class="tags-close-box">        
+    <div class="tags" v-if="showTags" id="box">
+      <div style="position:relative ;height:40px">
+        <ul class="tablist" ref="ulId" style="position: absolute;left:0;width:1500px;transition: all 1s;">
+              <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title" >
+                  <router-link :to="item.path" class="tags-li-title" >
+                  {{item.title | ellipsis}}
+                  </router-link>
+                  <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
+              </li>
+          </ul> 
+      </div>
+        <a class="arrow arrow_left" @click="next_pic" ><</a>
+        <a class="arrow arrow_right" @click="prev_pic" >></a>
+      <div class="tags-close-box">        
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary">
                     标签选项<i class="el-icon-arrow-down el-icon--right"></i>
@@ -30,19 +30,20 @@
 <script>
 import bus from "../../api/bus";
 export default {
-  inject:['reload'],
-   filters: {
-    ellipsis (value) {
-      if (!value) return ''
+  
+  inject: ["reload"],
+  filters: {
+    ellipsis(value) {
+      if (!value) return "";
       if (value.length > 4) {
-        return value.slice(0,4) + '...'
+        return value.slice(0, 4) + "...";
       }
-      return value
+      return value;
     }
   },
   data() {
     return {
-      tagsList: []
+      tagsList: [],
     };
   },
   methods: {
@@ -58,7 +59,7 @@ export default {
       if (item) {
         delItem.path === this.$route.fullPath && this.$router.push(item.path);
       } else {
-        this.$router.push("/index");
+        this.$router.push("/");
       }
     },
     // 关闭全部标签
@@ -74,34 +75,50 @@ export default {
       this.tagsList = curItem;
     },
     //刷新页面
-    refresh(){
-      this.reload()
+    refresh() {
+      this.reload();
     },
-  
+    
     // 设置标签
     setTags(route) {
       const isExist = this.tagsList.some(item => {
         return item.path === route.fullPath;
       });
-      console.log(isExist)
+      console.log(isExist);
       if (!isExist) {
-        if (this.tagsList.length >=7) {
-          this.tagsList.shift();
-        }
-        this.tagsList.push({
-          title: route.meta.title,
-          path: route.fullPath,
-          name: route.name
-        });
+        // if (this.tagsList.length >=7) {
+        //   this.tagsList.shift();
+        // }
+    this.tagsList.push({
+      title: route.meta.title,
+      path: route.fullPath,
+      name: route.name
+    });
         console.log(route.meta.title);
         console.log(route.fullPath);
         console.log(route.matched[1]);
       }
       bus.$emit("tags", this.tagsList);
     },
+
     handleTags(command) {
       command === "other" ? this.closeOther() : this.closeAll();
-    }
+    },
+
+     next_pic() {
+        let wrap = this.$refs.ulId;
+        var newLeft;
+        newLeft = parseInt(wrap.style.left) - 40;
+         wrap.style.left = newLeft + "px";
+
+        },
+    prev_pic() {
+        let wrap = this.$refs.ulId;
+        var newLeft;
+        newLeft = parseInt(wrap.style.left) + 40;
+        wrap.style.left = newLeft + "px";
+
+      },
   },
   computed: {
     showTags() {
@@ -111,7 +128,7 @@ export default {
   watch: {
     $route(newValue, oldValue) {
       this.setTags(newValue);
-    //   console.log(this.setTags(newValue));
+      //   console.log(this.setTags(newValue));
     }
   },
   created() {
@@ -134,23 +151,51 @@ export default {
         }
       }
     });
-   
   }
 };
 </script>
 
 
 <style lang="scss" scoped>
+.arrow_left{
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    display: inline-block;
+    /* margin-top: 6px; */
+    z-index: 999;
+    font-size: 20px;
+    height: 40px;
+    line-height: 40px;
+    width: 20px;
+    text-align: center;
+    background: antiquewhite;
+}
+.arrow_right{
+  position: absolute;
+    top: 0px;
+    right: 205px;
+    display: inline-block;
+    /* margin-top: 6px; */
+    z-index: 999;
+    font-size: 20px;
+    height: 40px;
+    line-height: 40px;
+    width: 20px;
+    text-align: center;
+    background: antiquewhite;
+}
 a {
   text-decoration: none;
 }
 .tags {
   position: relative;
   height: 40px;
-  width:100%;
+  width: 100%;
   background: #fff;
   padding-right: 205px;
   box-shadow: 0 5px 10px #ddd;
+  // overflow: hidden;
 }
 
 .tags ul {
@@ -158,8 +203,8 @@ a {
   width: 100%;
   height: 100%;
   text-decoration: underline;
-  padding:0px;
-  margin:0px;
+  padding: 0px;
+  margin-left: 20px;
 }
 
 .tags-li {
@@ -167,7 +212,7 @@ a {
   margin: 7px 5px 2px 3px;
   border-radius: 3px;
   font-size: 12px;
-  // overflow: hidden;
+  overflow: hidden;
   cursor: pointer;
   height: 28px;
   line-height: 28px;
@@ -179,7 +224,6 @@ a {
   -webkit-transition: all 0.3s ease-in;
   -moz-transition: all 0.3s ease-in;
   transition: all 0.3s ease-in;
-
 }
 
 .tags-li:not(.active):hover {
@@ -189,7 +233,6 @@ a {
 .tags-li.active {
   // color: #fff;
   background: #409eff;
-
 }
 
 .tags-li-title {
@@ -205,10 +248,10 @@ a {
 .tags-li.active .tags-li-title {
   color: #fff;
 }
-.fresh{
+.fresh {
   position: absolute;
-  right:5px;
-  top:7px;
+  right: 5px;
+  top: 7px;
 }
 .tags-close-box {
   position: absolute;
