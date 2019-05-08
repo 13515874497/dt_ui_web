@@ -296,7 +296,7 @@ export default {
       this.update.formData = this.multipleSelection[0];
       console.log(this.update.formData);
       
-      // this.update.formData.productsName = 18;
+      
 
       this.update.visible = true;
     },

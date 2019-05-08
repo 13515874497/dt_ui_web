@@ -106,7 +106,6 @@
         :props="item.topType"
         :rules="matchedRule(item)"
       >
-      <!-- {{JSON.stringify(item.data)}} -->
         <el-cascader
           expand-trigger="hover"
           :options="item.data"
@@ -135,6 +134,7 @@
 
 <script>
 import rules from "@/utils/rules.js";
+import {getTreePath} from "@/utils/Arrays";
 export default {
   props: {
     // 模板
@@ -217,7 +217,7 @@ export default {
       // this.initData_model();
     },
     formData() {
-      // this.initData_model();
+      this.initData_model();
     },
     reset() {
       this.initData_model();
@@ -271,17 +271,26 @@ export default {
               break;
 
             case 5:
-              // formItem.data = [];
+              formItem.data = [];
               let res = await item.ajax();
-              
+
               if (res.code === 200) {
                 formItem.data = res.data;
+                console.log(res.data);
+                
+                if (this.formData && this.formData[item.bindKey]) {
+                  console.log(this.formData[item.bindKey]);
+
+                  let path = [];
+                  path = getTreePath(18,formItem.data,this.props_inputType5.value,this.props_inputType5.children);
+                  console.log(path);
+                }
               }
               self.data_model["_" + item.topType] = [];
-
               self.customField_cache.push({
                 inputType: 5,
                 topType: item.topType,
+                bindKey: item.bindKey,
                 topType_model: "_" + item.topType
               });
               break;
@@ -316,7 +325,28 @@ export default {
 
       if (this.formData) {
         //修改
-        this.data_model = { ...this.formData };
+       
+       
+        this.customField_cache.forEach(item=>{
+          let formItem = self._formItems.find(formItem => {
+            return formItem.topType === item.topType;
+          });
+          switch(item.inputType){
+            case 5:
+            console.log(formItem);
+            console.log(item);
+            
+              // item.topType_model = getTreePath()
+               
+              formItem[item.topType_model] = getTreePath(this.formData[item.bindKey],formItem.data,this.props_inputType5.value,this.props_inputType5.children);
+              console.log(formItem);
+              
+            break;
+          }
+        });
+         for (let key in this.formData) {
+          this.$set(this.data_model, key, this.formData[key]);
+        }
       } else {
         //新增
         this._formItems.forEach(item => {
@@ -333,6 +363,23 @@ export default {
     //isModify 为true时，只获取修改的部分
     getFormData(data_model, isModify) {
       let modifyData = {};
+      let self = this;
+      this.customField_cache.forEach(item => {
+        switch (item.inputType) {
+          case 5:
+            let values = data_model[item.topType_model];
+
+            if (!values.length) {
+              data_model[item.bindKey] = "";
+            } else {
+              let value = values[values.length - 1];
+              data_model[item.bindKey] = value;
+              delete modifyData[item.topType_model];
+            }
+            break;
+        }
+      });
+
       if (isModify) {
         for (let key in data_model) {
           if (data_model[key] !== this.data_model_cache[key]) {
@@ -342,21 +389,6 @@ export default {
       } else {
         modifyData = { ...this.data_model };
       }
-
-      this.customField_cache.forEach(item => {
-        switch (item.inputType) {
-          case 5:
-            let values = this.data_model[item.topType_model];
-            if (!values.length) {
-              this.data_model[item.topType] = "";
-            } else {
-              let value = values[values.length - 1];
-              this.data_model[item.topType] = value;
-              delete modifyData[item.topType_model];
-            }
-            break;
-        }
-      });
 
       return modifyData;
     },
@@ -379,7 +411,7 @@ export default {
     },
     passData(isPass) {
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
-      let data_model = { ...this.data_model };
+      let data_model = this.data_model;
       for (let key in data_model) {
         if (this.customField_cache && this.customField_cache.includes(key)) {
         }
@@ -405,6 +437,8 @@ export default {
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();
+    console.log(this.data_model);
+
     console.log(this._formItems);
   },
   mounted() {}
