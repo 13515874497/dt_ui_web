@@ -5,19 +5,16 @@ import storage from "@/utils/storageUtils";
 import { repMenu, repCheckMenuToken } from "@/api";
 
 export default {
+  props:["showFlag"],
   render() {
     return (
-      <div class="test-1" style="height:100%;position:relative" >
-        {/* start    时间:2019/05/06 15：04  修改人：乌日娜   修改内容：增加左侧导航点击伸缩功能 */}
-        <div >
-          <div style='width:15px;height:100px;background-color:#e3e3e3;position:absolute;right:0;top:50%;text-align:center;line-height:100px;font-weight:700;z-index:999' onClick={this.handleClick} >{this.isCollapse?'》':'《'}</div>
-        </div>
-        {/* end */}
-        <h2 class="user_aside">
+      <div class="test-1" style="height:100%;position:relative;" >
+        <h2 class={{user_aside:!this.isCollapse,user_aside_s:this.isCollapse}}>
           <img class="user_img" src={pig} />
           <p class="user_name">{this.userName}</p>
         </h2>
-        <el-row class="tac" >
+
+        <el-row class="tac" style="margin-top:110px">
           <el-menu
             default-active={this.$router.path}
             router
@@ -32,6 +29,7 @@ export default {
           </el-menu>
         </el-row>
       </div>
+
     );
   },
   data() {
@@ -40,6 +38,12 @@ export default {
       menuList: [],
       isCollapse: false //控制导航栏伸缩
     };
+  },
+  watch:{
+    //监听父组件传过来的值
+    showFlag(n,o){
+      this.isCollapse = n;
+    }
   },
   methods: {
     readCache() {
@@ -53,6 +57,7 @@ export default {
     handleClick(){
       //控制导航栏伸缩
       this.isCollapse = !this.isCollapse
+
     },
     async getRepMenu() {
       let res = await repMenu();
@@ -139,9 +144,30 @@ export default {
 
 .user_aside {
   background-color: #2f4050;
+ // width:220px;
   // height: 80px;
-  padding: 10px;
+  padding:10px 160px 20px 6px;
   margin: 0;
+  display:inline-block;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:999;
+  //固定头像
+}
+.user_aside_s {
+  background-color: #2f4050;
+ // width:220px;
+  // height: 80px;
+  padding:10px 6px 20px 6px;
+  margin: 0;
+  display:inline-block;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:999;
+  //固定头像
+
 }
 
 //列表item
@@ -229,11 +255,16 @@ export default {
 .el-menu--horizontal > .el-submenu .el-submenu__icon-arrow {
   display: none;
 }
-
+//解决滚动条出现后导航增加10px问题
+.test-1{
+  max-width:220px;
+}
 .test-1::-webkit-scrollbar {
   /*滚动条整体样式*/
   width: 10px; /*高宽分别对应横竖滚动条的尺寸*/
   height: 1px;
+  position:relative;
+  left:-10px;
 }
 
 .test-1::-webkit-scrollbar-thumb {
