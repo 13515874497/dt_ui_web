@@ -16,8 +16,8 @@
 
       <el-main style="position:relative">
           <div >
-            <div style='width:15px;height:50px;background-color:#e3e3e3;position:absolute;left:0;top:50%;text-align:center;line-height:50px;font-weight:700;z-index:999' @click="this.handleClick" v-show='!this.isCollapse' >《</div>
-            <div style='width:15px;height:50px;background-color:#e3e3e3;position:absolute;left:0;top:50%;text-align:center;line-height:50px;font-weight:700;z-index:999' @click="this.handleClick"  v-show='this.isCollapse'>》</div>
+            <a href="####" class="divFlag"  @click="this.handleClick" v-show='!this.isCollapse' >《</a>
+            <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
           </div>
         <!--缓存路由组件-->
             <keep-alive >
@@ -140,6 +140,35 @@ export default {
 <style scoped lang="scss">
 .wrapper {
   height: 100%;
+}
+.divFlag{
+display:inline-block;
+width:15px;
+height:50px;
+background-color:#e3e3e3;
+position:absolute;
+left:0;
+top:50%;
+text-align:center;
+line-height:50px;
+font-weight:700;
+z-index:999;
+border-radius:0 8px 8px 0;
+}
+
+a.divFlag:link {
+color: #000000;
+text-decoration: none;
+}
+a.divFlag:visited {
+color: #000000;
+text-decoration: none;
+}
+a.divFlag:hover {
+color: white;
+background-color:grey;
+
+text-decoration: none;
 }
 .el-table .cell {
   white-space: nowrap;
