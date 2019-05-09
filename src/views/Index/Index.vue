@@ -20,7 +20,7 @@
             <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
           </div>
         <!--缓存路由组件 , 2019/05/08 修改人：乌日娜  修改内容  在keep-alive外套了div  解决问题：导航伸缩按钮要求固定 这个main页面有滚动条的时候会导致不固定-->
-          <div style="width:98%;height:100%;margin-left:2%;overflow:auto">
+          <div style="height:100%;overflow-y:auto;overflow-x:hidden;">
             <keep-alive >
              <router-view ></router-view>
             </keep-alive>
