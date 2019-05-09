@@ -245,6 +245,14 @@ export default {
         let custom = val.find(formItem => {
           return formItem.topType === val.currField;
         })
+        if(val.currQuery === ''){
+          console.log('1111111111111');
+          console.log(this.data_model);
+          console.log(this.data_model[custom.bindKey]);
+          
+          this.data_model[custom.bindKey] = null;
+        }
+        
         this.$set(this.$data.formItems_[index],'data',custom.data)
         this.formItems_ = [...this.formItems_] //触发下更新
         

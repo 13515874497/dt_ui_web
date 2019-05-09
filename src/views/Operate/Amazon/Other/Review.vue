@@ -58,12 +58,12 @@ export default {
     };
   },
   watch: {
-    // "form_data_model.shopId"() {
-    //   this.getSkuList();
-    // },
-    // "form_data_model.siteId"() {
-    //   this.getSkuList();
-    // }
+    "form_data_model.shopId"() {
+      this.getSkuList('');
+    },
+    "form_data_model.siteId"() {
+      this.getSkuList('');
+    }
   },
   methods: {
     queryPage(data) {
@@ -114,6 +114,7 @@ export default {
           console.log(res);
           this.sku_formItem.data = res.data
           this.customField.currField = 'sku'; //告诉子组建当前修改的字段是 'sku'
+          this.customField.currQuery = query;
         }
       }
     },
