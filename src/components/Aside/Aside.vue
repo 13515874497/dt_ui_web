@@ -8,7 +8,7 @@ export default {
   props:["showFlag"],
   render() {
     return (
-      <div class="test-1" style="height:100%;position:relative;" >
+      <div class="test-1" style="height:100%;position:relative;z-index:99" >
         <h2 class={{user_aside:!this.isCollapse,user_aside_s:this.isCollapse}}>
           <img class="user_img" src={pig} />
           <p class="user_name">{this.userName}</p>

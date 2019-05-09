@@ -73,8 +73,6 @@ import {
   readlink
 } from 'fs';
 
-
-
 Vue.component(Badge.name, Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)

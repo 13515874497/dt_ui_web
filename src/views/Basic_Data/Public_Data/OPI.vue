@@ -17,6 +17,8 @@ export default {
         {
           //类目名称
           topType: "productsName",
+          bindKey: 'productsId',
+          data_model:'_productsId',
           inputType: 5,
           ajax: findByListProducts,
         }

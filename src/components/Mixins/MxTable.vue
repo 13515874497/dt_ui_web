@@ -41,7 +41,7 @@
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
         <Form
-          ref="form_add"
+          
           :formItems="formItems"
           @passData="passData_add"
           :rule="rule"
@@ -64,7 +64,7 @@
       <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
         <Form
-          ref="form_update"
+          
           :formItems="formItems"
           :formData="update.formData"
           @passData="passData_update"
@@ -88,8 +88,6 @@
 import Query2 from "@/components/ElementUi/Query2";
 import InputQuery from "@/components/ElementUi/InputQuery";
 import SearchReset from "@/components/ElementUi/SearchReset";
-// import loading from "@/utils/loading";
-// import { findByListProduct } from "@/api";
 
 import message from "@/utils/Message";
 import pUtils from "@/utils/PageUtils";
@@ -121,6 +119,7 @@ export default {
         page_sizes: [5, 10, 15, 20, 25]
       },
       selection: [], //多选框选择的
+      form_data_model: null, //当前form表单(新增、修改)绑定的数据
       add: {
         visible: false,
         data: null,
@@ -160,19 +159,19 @@ export default {
       });
     },
     //当前打开的新增或修改的form表单
-    ref_form() {
-      if (this.add.visible && this.$refs.form_add) {
-        return this.$refs.form_add;
-      } else if (this.update.visible && this.$refs.form_update) {
-        return this.$refs.form_update;
-      }
-    },
-    //通过ref拿到当前form(新增、修改)绑定的数据
-    ref_form_model() {
-      if (this.ref_form) {
-        return this.ref_form.data_model;
-      }
-    },
+    // ref_form() {
+    //   if (this.add.visible && this.$refs.form_add) {
+    //     return this.$refs.form_add;
+    //   } else if (this.update.visible && this.$refs.form_update) {
+    //     return this.$refs.form_update;
+    //   }
+    // },
+    // //通过ref拿到当前form(新增、修改)绑定的数据
+    // ref_form_model() {
+    //   if (this.ref_form) {
+    //     return this.ref_form.data_model;
+    //   }
+    // },
   },
   components: {
     Pagination,
@@ -257,7 +256,7 @@ export default {
     },
     passData_add($event) {
       console.log($event);
-
+      this.form_data_model = $event[1];
       this.add.isPass = $event[0];
       this.add.data = $event[2];
       this.handlerFormData(this.add.data);
@@ -294,13 +293,11 @@ export default {
         return;
       }
       this.update.formData = this.multipleSelection[0];
-      console.log(this.update.formData);
-      
-      // this.update.formData.productsName = 18;
-
       this.update.visible = true;
     },
     passData_update($event) {
+      console.log($event);
+      this.form_data_model = $event[1];
       this.update.isPass = $event[0];
 
       this.update.data = $event[2];

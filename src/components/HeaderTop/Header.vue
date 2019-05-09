@@ -4,6 +4,9 @@
     <div class="main">
       <p>欢迎来到 XXX 中文管理后台</p>
       <ul class="ctrl">
+         <li>
+          <i class="el-icon-position" @click="feedback"></i>
+        </li>
         <li>
           <i class="iconfont el-iconfont-wenjianchaxun" @click="queryFiles"></i>
         </li>
@@ -70,6 +73,9 @@ export default {
       // this.$router.push('/index/queryFiles')
       this.showQueryFiles = true;
     },
+    feedback(){
+      console.log(反馈)
+    }
   },
 };
 </script>
