@@ -8,9 +8,19 @@ export default {
   props:["showFlag"],
   render() {
     return (
-      <div class="test-1" style="height:100%;position:relative;z-index:99" >
+      <div class="test-1" style="height:100%;position:relative;" >
         <h2 class={{user_aside:!this.isCollapse,user_aside_s:this.isCollapse}}>
-          <img class="user_img" src={pig} />
+          {/*2019/05/09  修改人：乌日娜  修改内容：添加头像查看信息提示框*/}
+          <a class="t_a"  href="javascript:;" style=" text-decoration: none;display:inline-block;" onMouseover={this.hoverD} onMouseout ={this.outD} ><img class="user_img" src={pig} />
+            <div v-show={this.tool_tips_show}  class="tool_tips">
+              <p class="top_p">{this.informationMy.company}</p>
+              <p class="content_p"><span class="left_span">姓名</span><span class="right_span">{this.informationMy.name}</span></p>
+              <p class="content_p"><span class="left_span">电话</span><span class="right_span">{this.informationMy.tel}</span></p>
+              <p class="content_p"><span class="left_span">部门</span><span class="right_span">{this.informationMy.department}</span></p>
+              <p class="content_p"><span class="left_span">性别</span><span class="right_span">{this.informationMy.sex}</span></p>
+              <a class="change_info" onClick={this.change_my_info}>修改个人资料</a>
+            </div>
+          </a>
           <p class="user_name">{this.userName}</p>
         </h2>
 
@@ -36,7 +46,15 @@ export default {
     return {
       userName: this.getCookie("name"),
       menuList: [],
-      isCollapse: false //控制导航栏伸缩
+      isCollapse: false, //控制导航栏伸缩
+      tool_tips_show:false,
+      informationMy:{
+          company:'温州电兔电子商务有限公司',
+          name:'张三',
+          tel:'13xxxxxxxx',
+          department:'数据分析部',
+          sex:'男'
+      }
     };
   },
   watch:{
@@ -53,6 +71,15 @@ export default {
         return;
       }
       this.menuList = menu;
+    },
+    hoverD(){
+      this.tool_tips_show = true;
+    },
+    outD(){
+      this.tool_tips_show = false;
+    },
+    change_my_info(){
+        console.log('跳转去个人信息修改页');
     },
     handleClick(){
       //控制导航栏伸缩
@@ -169,7 +196,10 @@ export default {
   //固定头像
 
 }
-
+a.t_a:hover{
+  background-color:green;
+  text-decoration: none;
+}
 //列表item
 .el-menu.el-menu--horizontal {
   border-bottom: 0px !important;
@@ -293,5 +323,60 @@ export default {
   .el-menu-vertical:not(.el-menu--collapse) {
     width: 180px;
   }
+}
+//头像提示框
+.tool_tips{
+  width:200px;
+  height:225px;
+  border:1px solid #e2e2e2;
+  background-color:white;
+  position:absolute;
+  top:50px;
+  left:55px;
+  border-radius:8px;
+}
+.top_p{
+  margin:10px;
+  font-size:14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.content_p{
+  margin:4px;
+}
+.left_span{
+  font-size:13px;
+  color:grey;
+  margin:4px 15px 4px 4px;
+}
+.right_span{
+  font-size:13px;
+  margin:4px 15px 4px 4px;
+}
+.change_info{
+  width:100%;
+  height:30px;
+  display:inline-block;
+  line-height:30px;
+  background-color:#e3e3e3;
+  text-align:center;
+  font-size:14px;
+  margin-top:10px;
+  text-decoration: none;
+  color:black;
+  border-radius:0 0 8px 8px;
+}
+a.change_info:hover{
+text-decoration: none;
+color:white;
+background-color:grey;
+}
+//信息提示框小箭头，目前没有用到
+.rotate_d{
+  width:10px;
+  height:10px;
+  background-color:white;
+  transform:translate(-5px,2px) rotate(45deg) ;
 }
 </style>
