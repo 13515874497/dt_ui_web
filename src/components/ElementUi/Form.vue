@@ -10,7 +10,7 @@
     :rules="rules"
     class="form-content scrollbar"
   >
-    <template v-for="item in _formItems">
+    <template v-for="item in formItems_">
       <el-form-item
         v-if="item.statusOptions && item.statusOptions.length == 2"
         :label="item.headName"
@@ -87,15 +87,17 @@
         :required="true"
       >
         <el-select
-          v-model="data_model[item.topType]"
+          v-model="data_model[item.bindKey ||  item.topType]"
           :placeholder="item.placeholder || '请选择'"
           :filterable="item.filterable"
+          :remote="item.remote"
+          :remoteMethod="item.remoteMethod"
         >
           <el-option
             v-for="option in item.data"
-            :key="option.key"
-            :label="option.label"
-            :value="option.key"
+            :key="option[item.key]"
+            :label="option[item.label]"
+            :value="option[item.key]"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -109,7 +111,7 @@
         <el-cascader
           expand-trigger="hover"
           :options="item.data"
-          v-model="data_model['_'+item.topType]"
+          v-model="data_model[item.data_model]"
           @change="triggerFormChange"
           :props="props_inputType5"
           :filterable="true"
@@ -134,7 +136,7 @@
 
 <script>
 import rules from "@/utils/rules.js";
-import {getTreePath} from "@/utils/Arrays";
+import { getTreePath } from "@/utils/Arrays";
 export default {
   props: {
     // 模板
@@ -175,14 +177,16 @@ export default {
     //     inputType: 5,
     //     ajax: findByListProducts
     //   },
-    //   {
-    //     //店铺列表
-    //     topType: "shopName",
-    //     inputType: 3,
-    //     ajax: repGetShopName,
-    //     key: shopId,
-    //     label: "shopName"
-    //   }
+    //     {
+    //       inputType: 3,
+    //       topType: "siteName",
+    //       bindKey: "siteId",
+    //       ajax: getSelectSiteRole,
+    //       key: "siteId",
+    //       label: "siteName",
+    //       filterable: true,
+    //       placeholder: "请选择站点"
+    //     },
     // ],
     formItems: Array,
     formData: Object, //有传这个说明是修改
@@ -194,15 +198,15 @@ export default {
     return {
       data_model: {},
       rules,
-      _formItems: null,
-      _inputType: null,
+      formItems_: null,
+      // _inputType: null,
       props_inputType5: {
         value: "treeId",
         label: "treeName",
         children: "childNode"
-      },
+      }
       //自定义的字段
-      customField_cache: []
+      // customField_cache: []
     };
   },
   computed: {},
@@ -213,7 +217,7 @@ export default {
         this.mergeRules();
       }
     },
-    formItem() {
+    formItems() {
       // this.initData_model();
     },
     formData() {
@@ -229,6 +233,22 @@ export default {
         this.triggerFormChange();
       },
       deep: true
+    },
+    customField:{
+      deep: true,
+      handler(val){
+        console.log(val);
+        //如果只能在外部提供数据(即customFiled里提供了data属性)  则需要将当前的数据赋值给该组件formItems中对应的字段
+        let index = this.formItems_.findIndex(formItem => {
+          return formItem.topType === val.currField;
+        })
+        let custom = val.find(formItem => {
+          return formItem.topType === val.currField;
+        })
+        this.$set(this.$data.formItems_[index],'data',custom.data)
+        this.formItems_ = [...this.formItems_] //触发下更新
+        
+      }
     }
   },
   methods: {
@@ -239,63 +259,36 @@ export default {
           resolve(null);
           return;
         }
-        // self._customField = [...self.customField];
+
         for (let i = 0; i < self.customField.length; i++) {
           let item = self.customField[i];
 
-          let formItem = self._formItems.find(formItem => {
+          let formItem = self.formItems_.find(formItem => {
             return formItem.topType === item.topType;
           });
           for (let key in item) {
             formItem[key] = item[key];
           }
-          // formItem.inputType = item.inputType;
+          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItem上s
           switch (item.inputType) {
             case 3:
               formItem.data = [];
-              // formItem.key = item.key;
-              // formItem.label = item.label
-              let res3 = await item.ajax();
-              if (res3.code === 200) {
-                let { key, label } = formItem;
-                formItem.data = res3.data.map(item => {
-                  console.log(key);
-
-                  return {
-                    key: "" + item[key],
-                    label: item[label]
-                  };
-                });
-                console.log(formItem);
-              }
+                let res3 = await item.ajax();
+                if (res3.code === 200) {
+                  formItem.data = res3.data;
+                }
               break;
-
             case 5:
               formItem.data = [];
               let res = await item.ajax();
-
               if (res.code === 200) {
                 formItem.data = res.data;
-                console.log(res.data);
-                
-                if (this.formData && this.formData[item.bindKey]) {
-                  console.log(this.formData[item.bindKey]);
-
-                  let path = [];
-                  path = getTreePath(18,formItem.data,this.props_inputType5.value,this.props_inputType5.children);
-                  console.log(path);
-                }
               }
-              self.data_model["_" + item.topType] = [];
-              self.customField_cache.push({
-                inputType: 5,
-                topType: item.topType,
-                bindKey: item.bindKey,
-                topType_model: "_" + item.topType
-              });
+              self.data_model[item.data_model] = [];
               break;
           }
         }
+
         //等待前方全部请求完毕
         resolve(null);
       });
@@ -322,34 +315,29 @@ export default {
     },
     initData_model() {
       let self = this;
-
       if (this.formData) {
         //修改
-       
-       
-        this.customField_cache.forEach(item=>{
-          let formItem = self._formItems.find(formItem => {
+        this.customField.forEach(item => {
+          let formItem = self.formItems_.find(formItem => {
             return formItem.topType === item.topType;
           });
-          switch(item.inputType){
+          switch (item.inputType) {
             case 5:
-            console.log(formItem);
-            console.log(item);
-            
-              // item.topType_model = getTreePath()
-               
-              formItem[item.topType_model] = getTreePath(this.formData[item.bindKey],formItem.data,this.props_inputType5.value,this.props_inputType5.children);
-              console.log(formItem);
-              
-            break;
+              this.data_model[item.data_model] = getTreePath(
+                this.formData[item.bindKey],
+                formItem.data,
+                this.props_inputType5.value,
+                this.props_inputType5.children
+              );
+              break;
           }
         });
-         for (let key in this.formData) {
+        for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
       } else {
         //新增
-        this._formItems.forEach(item => {
+        this.formItems_.forEach(item => {
           if (item.statusOptions && item.statusOptions.length) {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
           } else {
@@ -358,28 +346,12 @@ export default {
         });
       }
 
-      this.data_model_cache = { ...this.data_model }; //只对基本数据类型做缓存
+      this.data_model_cache = { ...this.data_model }; //用于对比数据 只回传发生改变的数据
     },
     //isModify 为true时，只获取修改的部分
     getFormData(data_model, isModify) {
       let modifyData = {};
       let self = this;
-      this.customField_cache.forEach(item => {
-        switch (item.inputType) {
-          case 5:
-            let values = data_model[item.topType_model];
-
-            if (!values.length) {
-              data_model[item.bindKey] = "";
-            } else {
-              let value = values[values.length - 1];
-              data_model[item.bindKey] = value;
-              delete modifyData[item.topType_model];
-            }
-            break;
-        }
-      });
-
       if (isModify) {
         for (let key in data_model) {
           if (data_model[key] !== this.data_model_cache[key]) {
@@ -389,6 +361,21 @@ export default {
       } else {
         modifyData = { ...this.data_model };
       }
+
+      this.customField.forEach(item => {
+        switch (item.inputType) {
+          case 5:
+            let values = data_model[item.data_model]; //这里用data_model是因为 当isModify为true时 由于是数组(引用类型) 缓存对比没有发生变化
+            if (values) {
+              delete modifyData[item.data_model];
+            }
+            if (values && values.length) {
+              let value = values[values.length - 1];
+              modifyData[item.bindKey] = value;
+            }
+            break;
+        }
+      });
 
       return modifyData;
     },
@@ -410,12 +397,12 @@ export default {
       return errCount === 0;
     },
     passData(isPass) {
-      // [是否验证通过,绑定的数据,修改后发生变化的数据]
       let data_model = this.data_model;
       for (let key in data_model) {
-        if (this.customField_cache && this.customField_cache.includes(key)) {
+        if (this.customField && this.customField.includes(key)) {
         }
       }
+      // [是否验证通过,绑定的数据,修改后发生变化的数据]
       this.$emit("passData", [
         isPass,
         this.getFormData(data_model),
@@ -432,14 +419,13 @@ export default {
     }
   },
   async created() {
-    this._formItems = [...this.formItems];
-
+    this.formItems_ = Object.assign(this.formItems);
+    // this.$set('formItems_',)
+    console.log(this.$data);
+    
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();
-    console.log(this.data_model);
-
-    console.log(this._formItems);
   },
   mounted() {}
 };

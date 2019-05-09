@@ -1,6 +1,12 @@
 <script>
 //review
-import { getReview, saveReview, repGetShopName,getSelectSiteRole } from "@/api";
+import {
+  getReview,
+  saveReview,
+  repGetShopName,
+  getSelectSiteRole,
+  getSkuName
+} from "@/api";
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
@@ -9,27 +15,38 @@ export default {
       customField: [
         {
           //店铺列表
-          topType: "shopName",
           inputType: 3,
+          topType: "shopName",
+          bindKey: "shopId",
           ajax: repGetShopName,
           key: "shopId",
           label: "shopName",
-          placeholder: '请选择店铺'
+          placeholder: "请选择店铺"
         },
+        //站点
         {
-          topType: 'siteName',
           inputType: 3,
+          topType: "siteName",
+          bindKey: "siteId",
           ajax: getSelectSiteRole,
-          key: 'siteId',
-          label: 'siteName',
+          key: "siteId",
+          label: "siteName",
           filterable: true,
-          placeholder: '请选择站点'
+          placeholder: "请选择站点"
         },
-        // {
-        //   topType: 'sku',
-        //   inputType: 3,
-        //   filterable: true,
-        // }
+        //sku
+        {
+          inputType: 3,
+          topType: 'sku',
+          bindKey: 'skuId',
+          remote: true,
+          key: 'skuId',
+          label: 'sku',
+          filterable: true,
+          placeholder: '请输入后选择sku',
+          remoteMethod: this.getSkuList,
+          data:[]
+        }
       ],
       rule: {
         //某些字段的验证规则
@@ -40,6 +57,14 @@ export default {
       }
     };
   },
+  watch: {
+    // "form_data_model.shopId"() {
+    //   this.getSkuList();
+    // },
+    // "form_data_model.siteId"() {
+    //   this.getSkuList();
+    // }
+  },
   methods: {
     queryPage(data) {
       return getReview(data);
@@ -49,7 +74,9 @@ export default {
     },
     //form表单中add字段的验证规则,需要用到form表单中其他字段的数据来进行验证
     rule_add(rule, val, cb) {
-      let data = { ...this.ref_form_model };
+      let data = { ...this.form_data_model };
+      console.log(data);
+
       if (val === "") {
         cb();
         return;
@@ -62,7 +89,7 @@ export default {
     },
     //同上
     rule_move(rule, val, cb) {
-      let data = { ...this.ref_form_model };
+      let data = { ...this.form_data_model };
       if (val === "") {
         cb();
         return;
@@ -73,7 +100,23 @@ export default {
         cb();
       }
     },
-
+    //获取输入获取sku列表
+    async getSkuList(query) {
+      let data = this.form_data_model;
+      if (data.shopId && data.siteId) {
+        let res = await getSkuName({
+          sId: data.shopId,
+          seId: data.siteId,
+          kuName: query
+        });
+        console.log(res);
+        if (res.code === 200) {
+          console.log(res);
+          this.sku_formItem.data = res.data
+          this.customField.currField = 'sku'; //告诉子组建当前修改的字段是 'sku'
+        }
+      }
+    },
     setRule() {
       let rule = {
         add: [
@@ -94,9 +137,9 @@ export default {
   },
   async created() {
     this.setRule();
-    // let res =await getSelectSiteRole()
-    // console.log(res);
-    
+    this.sku_formItem = this.customField.find(item=>{
+      return item.topType === 'sku';
+    });
   }
 };
 </script>

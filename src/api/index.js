@@ -278,12 +278,12 @@ export const getReceiveInfo = (data) => ajax(BASE_URL + `/fba/getReceiveInfo`,da
 export const getInventoryInfo = (data) => ajax(BASE_URL + `/fba/getInventoryInfo`,data, 'POST')
 
 
-//FBA遗弃 http://127.0.0.1:9002/api/v1/fba/getAbandonInfo post
+//FBA遗弃  post
 export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`,data, 'POST')
 
 // 运营管理=> 亚马逊=>通知单
 
-//出货通知单 http://127.0.0.1:9002/api/v1/fba/getNoticeInfo post
+//出货通知单  post
 export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`,data, 'POST')
 
 // 运营管理=> 亚马逊=>费用
@@ -298,20 +298,16 @@ export const getLWarInfo = (data) => ajax(BASE_URL + `/fba/getLWarInfo`,data, 'P
 export const getHlFee = (data) => ajax(BASE_URL + `/fba/getHlFee`,data, 'POST')
 
 
-//运营管理 => 其他
-// Feedback  http://127.0.0.1:9001/api/v1/fba/getFeedback
-export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`,data, 'POST')
+//运营管理 => 亚马逊 => 其他
 
-
-
-//  http://127.0.0.1:9002/api/v1/fba/getReview  review
+//review分页
 export const getReview = (data) => ajax(BASE_URL + `/fba/getReview`,data, 'POST')
-
-//  http://127.0.0.1:9001/api/v1/fba/saveReview 新增 post
+//review新增
 export const saveReview = (data) => ajax(BASE_URL + `/fba/saveReview`,data, 'POST')
-
-
-
+//获取sku列表
+export const getSkuName = (data) => ajax(BASE_URL + `/sku/getSkuName`,data)
+//Feedback分页
+export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`,data, 'POST')
 /**
  *
  * 人事管理 => 基础档案
