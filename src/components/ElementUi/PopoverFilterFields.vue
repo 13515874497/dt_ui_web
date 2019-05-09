@@ -64,7 +64,7 @@ export default {
 
 .fieldShow {
   position: absolute;
-  right: -9px;
+  right: 11px;
   top: 0;
   bottom: 0;
   margin: auto 0;
