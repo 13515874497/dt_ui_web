@@ -116,6 +116,12 @@ export default {
     tableTitle: Array,
     // loading:Boolean
   },
+  watch:{
+    tableTitle(val){
+      console.log(val);
+      
+    },
+  },
   methods: {
     setTheadClassName() {
       return "noRightKey";

@@ -297,7 +297,7 @@ export default {
         message.infoMessage("只能选中一条数据");
         return;
       }
-      this.update.formData = this.multipleSelection[0];
+      this.update.formData = {...this.multipleSelection[0]};
       this.update.visible = true;
     },
     passData_update($event) {

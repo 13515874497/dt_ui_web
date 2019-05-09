@@ -93,6 +93,7 @@
           :filterable="item.filterable"
           :remote="item.remote"
           :remoteMethod="item.remoteMethod"
+          :clearable="item.remote"
         >
           <el-option
             v-for="option in item.data"
@@ -432,7 +433,7 @@ export default {
     },
   },
   async created() {
-    this.formItems_ = Object.assign(this.formItems);
+    this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
     // this.$set('formItems_',)
     console.log(this.$data);
 
