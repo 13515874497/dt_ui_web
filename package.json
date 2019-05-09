@@ -25,8 +25,7 @@
     "vue": "^2.6.10",
     "vue-print-nb": "^1.0.3",
     "vue-resource": "^1.5.1",
-    "vue-router": "^3.0.1",
-    "vx-easyui": "^1.1.16"
+    "vue-router": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
