@@ -69,6 +69,7 @@
           :formItems="formItems"
           :formData="update.formData"
           @passData="passData_update"
+          @giveDataModel="getDataModel"
           :customField="customField"
         ></Form>
 
@@ -230,8 +231,6 @@ export default {
       // this.queryIds = [];
     },
     getDataModel($event){
-      console.log(1111);
-      
       this.form_data_model = $event[0];
     },
     //根据勾选的表头字段id去隐藏对应字段
@@ -323,15 +322,21 @@ export default {
         return;
       }
       let thisIds = [],
-        statusIds = [];
+        statusIds = [],
+        version = [];
       this.multipleSelection.forEach(item => {
         thisIds.push(item[this.primaryKey]);
-        statusIds.push(item.statusId);
+        (item.statusId != undefined) && statusIds.push(item.statusId);
+        version.push(item.version)
       });
       let data = {
         thisIds: thisIds.join(","),
-        statusIds: statusIds.join(",")
+        version: version.join(',')
       };
+      console.log(data);
+      if(statusIds.length){
+        data.statusIds = statusIds.join(",")
+      }
       message
         .messageBox_confirm("是否确认删除")
         .then(() => {

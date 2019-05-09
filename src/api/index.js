@@ -304,6 +304,8 @@ export const getHlFee = (data) => ajax(BASE_URL + `/fba/getHlFee`, data, 'POST')
 export const getReview = (data) => ajax(BASE_URL + `/fba/getReview`, data, 'POST')
 //review新增
 export const saveReview = (data) => ajax(BASE_URL + `/fba/saveReview`, data, 'POST')
+//review删除
+export const delReview = (data) => ajax(BASE_URL + `/fba/delReview`, data)
 //获取sku列表
 export const getSkuName = (data) => ajax(BASE_URL + `/sku/getSkuName`, data)
 //Feedback分页

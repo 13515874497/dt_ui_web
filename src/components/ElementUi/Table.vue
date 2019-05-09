@@ -158,6 +158,12 @@ export default {
     statusOptions: function(row, column, cellValue) {
       let topType = column.property;
       let options = this.options[topType];
+      console.log(row);
+      console.log(column);
+      console.log(cellValue);
+      
+      console.log(this.options);
+      
       console.log(options);
       
       let option = options.find(item => {
