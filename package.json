@@ -15,6 +15,7 @@
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.9",
+    "jquery": "^3.4.1",
     "mint-ui": "^2.2.13",
     "moment": "^2.22.2",
     "mutation": "0.0.1",
@@ -24,7 +25,8 @@
     "vue": "^2.6.10",
     "vue-print-nb": "^1.0.3",
     "vue-resource": "^1.5.1",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vx-easyui": "^1.1.16"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
