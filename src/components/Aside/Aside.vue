@@ -146,7 +146,7 @@ export default {
   background-color: #2f4050;
  // width:220px;
   // height: 80px;
-  padding:10px 160px 20px 6px;
+  padding:10px 163px 20px 6px;
   margin: 0;
   display:inline-block;
   position:fixed;
