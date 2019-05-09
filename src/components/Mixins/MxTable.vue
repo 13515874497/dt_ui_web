@@ -44,6 +44,7 @@
           
           :formItems="formItems"
           @passData="passData_add"
+          @giveDataModel="getDataModel"
           :rule="rule"
           :reset="add.reset"
           :customField="customField"
@@ -228,6 +229,11 @@ export default {
       this.tableTitle = [...this.tableTitle];
       // this.queryIds = [];
     },
+    getDataModel($event){
+      console.log(1111);
+      
+      this.form_data_model = $event[0];
+    },
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
       let list = $event[0];
@@ -256,7 +262,7 @@ export default {
     },
     passData_add($event) {
       console.log($event);
-      this.form_data_model = $event[1];
+      // this.form_data_model = $event[1];
       this.add.isPass = $event[0];
       this.add.data = $event[2];
       this.handlerFormData(this.add.data);
@@ -297,7 +303,7 @@ export default {
     },
     passData_update($event) {
       console.log($event);
-      this.form_data_model = $event[1];
+      // this.form_data_model = $event[1];
       this.update.isPass = $event[0];
 
       this.update.data = $event[2];

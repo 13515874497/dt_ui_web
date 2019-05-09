@@ -50,8 +50,6 @@ export const getTreePath = (value,tree, _id, _children) => {
     }else {
       if(children&& children.length){
         let result = getTreePath(value,children,_id,_children);
-        // console.log(result);
-        
         if(result){
           return path.concat(result);
         }
