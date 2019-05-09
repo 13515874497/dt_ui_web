@@ -86,13 +86,16 @@
         :rules="matchedRule(item)"
         :required="true"
       >
-        <el-select v-model="data_model[item.topType]" :placeholder="item.placeholder || '请选择'" :filterable="item.filterable">
+        <el-select
+          v-model="data_model[item.topType]"
+          :placeholder="item.placeholder || '请选择'"
+          :filterable="item.filterable"
+        >
           <el-option
             v-for="option in item.data"
             :key="option.key"
             :label="option.label"
             :value="option.key"
-            
           ></el-option>
         </el-select>
       </el-form-item>
@@ -103,6 +106,7 @@
         :props="item.topType"
         :rules="matchedRule(item)"
       >
+      <!-- {{JSON.stringify(item.data)}} -->
         <el-cascader
           expand-trigger="hover"
           :options="item.data"
@@ -173,7 +177,7 @@ export default {
     //   },
     //   {
     //     //店铺列表
-    //     topType: "shopName", 
+    //     topType: "shopName",
     //     inputType: 3,
     //     ajax: repGetShopName,
     //     key: shopId,
@@ -203,17 +207,17 @@ export default {
   },
   computed: {},
   watch: {
-    rule:{
+    rule: {
       deep: true,
-      handler(){
+      handler() {
         this.mergeRules();
       }
     },
     formItem() {
-      this.initData_model();
+      // this.initData_model();
     },
     formData() {
-      this.initData_model();
+      // this.initData_model();
     },
     reset() {
       this.initData_model();
@@ -235,14 +239,14 @@ export default {
           resolve(null);
           return;
         }
-        self._customField = [...self.customField];
-        for (let i = 0; i < self._customField.length; i++) {
-          let item = self._customField[i];
+        // self._customField = [...self.customField];
+        for (let i = 0; i < self.customField.length; i++) {
+          let item = self.customField[i];
 
           let formItem = self._formItems.find(formItem => {
             return formItem.topType === item.topType;
           });
-          for(let key in item){
+          for (let key in item) {
             formItem[key] = item[key];
           }
           // formItem.inputType = item.inputType;
@@ -256,26 +260,25 @@ export default {
                 let { key, label } = formItem;
                 formItem.data = res3.data.map(item => {
                   console.log(key);
-                  
+
                   return {
-                    key: ''+item[key],
+                    key: "" + item[key],
                     label: item[label]
                   };
                 });
                 console.log(formItem);
-                
               }
               break;
 
             case 5:
-              formItem.data = [];
+              // formItem.data = [];
               let res = await item.ajax();
+              
               if (res.code === 200) {
-                // res.data[0].childNode[0].childNode = null;
                 formItem.data = res.data;
               }
               self.data_model["_" + item.topType] = [];
-              // console.log(self.data_model);
+
               self.customField_cache.push({
                 inputType: 5,
                 topType: item.topType,
@@ -284,6 +287,7 @@ export default {
               break;
           }
         }
+        //等待前方全部请求完毕
         resolve(null);
       });
     },
@@ -298,10 +302,9 @@ export default {
       }
       switch (item.inputType) {
         case 1:
-        
         case 4:
           return item.required ? rules._number : rules.number;
-        break;
+          break;
         case 0:
         case 3:
         default:
@@ -310,22 +313,22 @@ export default {
     },
     initData_model() {
       let self = this;
-      if (this.formData) {
-        console.log(this.formData);
 
+      if (this.formData) {
+        //修改
         this.data_model = { ...this.formData };
-        this.data_model_cache = { ...this.formData }; //只对基本数据类型做缓存
-        return;
+      } else {
+        //新增
+        this._formItems.forEach(item => {
+          if (item.statusOptions && item.statusOptions.length) {
+            self.$set(this.data_model, item.topType, item.statusOptions[0].id);
+          } else {
+            self.$set(this.data_model, item.topType, null);
+          }
+        });
       }
 
-      this._formItems.forEach(item => {
-        if (item.statusOptions && item.statusOptions.length) {
-          self.$set(this.data_model, item.topType, item.statusOptions[0].id);
-        } else {
-          self.$set(this.data_model, item.topType, null);
-        }
-      });
-      this.data_model_cache = { ...this.data_model };
+      this.data_model_cache = { ...this.data_model }; //只对基本数据类型做缓存
     },
     //isModify 为true时，只获取修改的部分
     getFormData(data_model, isModify) {
@@ -354,18 +357,6 @@ export default {
             break;
         }
       });
-      // for (let inputType in this.customField_cache) {
-      //   let data = this.customField_cache[inputType];
-      //   if (!data.length) continue;
-      //   switch (inputType) {
-      //     case "5":
-      //       data.forEach(key => {
-      //         let value = this.data_model[key];
-      //         this.data_model;
-      //       });
-      //       break;
-      //   }
-      // }
 
       return modifyData;
     },
@@ -412,9 +403,9 @@ export default {
     this._formItems = [...this.formItems];
 
     await this.initCustomField();
-
     this.initData_model();
     this.mergeRules();
+    console.log(this._formItems);
   },
   mounted() {}
 };
@@ -427,7 +418,7 @@ export default {
   padding-right: 15px;
 }
 .form-content .el-form--label-left .el-form-item__label {
-    text-align: justify;
-    text-align-last: justify;
+  text-align: justify;
+  text-align-last: justify;
 }
 </style>

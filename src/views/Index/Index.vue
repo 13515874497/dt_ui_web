@@ -4,23 +4,27 @@
       <el-container style="height:100%" >
     <!-- <div style="height: 100%;overflow-y: auto"> -->
       <div style="height: 100%;">
-      <Aside style="overflow-y: auto;background-color: #293846"/>
+      <Aside style="overflow-y: auto;background-color: #293846"  v-bind:showFlag = "this.isCollapse"/>
       </div>
 
-    <el-container style="float: left">  
-      <el-header style="height: 90px" >          
-        <Header  />   
+    <el-container style="float: left">
+      <el-header style="height: 90px" >
+        <Header  />
       </el-header>
-      
+
       <Tags></Tags>
-      
-      <el-main >
+
+      <el-main style="position:relative">
+          <div >
+            <a href="####" class="divFlag"  @click="this.handleClick" v-show='!this.isCollapse' >《</a>
+            <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
+          </div>
         <!--缓存路由组件-->
             <keep-alive >
              <router-view ></router-view>
             </keep-alive>
       </el-main>
-      <el-footer style="height: 65px">Footer</el-footer>
+      <el-footer style="height: 20px">Footer</el-footer>
      </el-container>
     </el-container>
   </div>
@@ -41,9 +45,14 @@ export default {
       isRouterAlive:true,
       isRole: true,
       tagsList: [],
+      isCollapse:false
     };
   },
   methods: {
+    handleClick(){
+      this.isCollapse = !this.isCollapse;
+    },
+
     initWs() {
       console.log(this.$ws);
 
@@ -115,7 +124,6 @@ export default {
     Aside,
     Tags,
   },
-
   async mounted() {
     let res = await getLoginStatus();
     if (res.code === 200) {
@@ -133,6 +141,35 @@ export default {
 .wrapper {
   height: 100%;
 }
+.divFlag{
+display:inline-block;
+width:15px;
+height:50px;
+background-color:#e3e3e3;
+position:absolute;
+left:0;
+top:50%;
+text-align:center;
+line-height:50px;
+font-weight:700;
+z-index:999;
+border-radius:0 8px 8px 0;
+}
+
+a.divFlag:link {
+color: #000000;
+text-decoration: none;
+}
+a.divFlag:visited {
+color: #000000;
+text-decoration: none;
+}
+a.divFlag:hover {
+color: white;
+background-color:grey;
+
+text-decoration: none;
+}
 .el-table .cell {
   white-space: nowrap;
 }
@@ -140,7 +177,7 @@ export default {
   background-color: #b3c0d1;
   color: #333;
   text-align: center;
-  line-height: 60px;
+  line-height: 20px;
 }
 .el-header {
   background-color: #e7eaec;

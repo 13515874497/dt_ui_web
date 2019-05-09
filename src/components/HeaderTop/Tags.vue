@@ -10,8 +10,6 @@
               </li>
           </ul> 
       </div>
-        <a class="arrow arrow_left" @click="next_pic" ><</a>
-        <a class="arrow arrow_right" @click="prev_pic" >></a>
       <div class="tags-close-box">        
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary">
@@ -104,21 +102,6 @@ export default {
     handleTags(command) {
       command === "other" ? this.closeOther() : this.closeAll();
     },
-
-     next_pic() {
-        let wrap = this.$refs.ulId;
-        var newLeft;
-        newLeft = parseInt(wrap.style.left) - 40;
-         wrap.style.left = newLeft + "px";
-
-        },
-    prev_pic() {
-        let wrap = this.$refs.ulId;
-        var newLeft;
-        newLeft = parseInt(wrap.style.left) + 40;
-        wrap.style.left = newLeft + "px";
-
-      },
   },
   computed: {
     showTags() {
