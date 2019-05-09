@@ -158,7 +158,8 @@ export default {
     statusOptions: function(row, column, cellValue) {
       let topType = column.property;
       let options = this.options[topType];
-
+      console.log(options);
+      
       let option = options.find(item => {
         return cellValue == item.selectId;
       });

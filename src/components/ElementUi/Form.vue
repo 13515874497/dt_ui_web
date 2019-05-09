@@ -84,7 +84,7 @@
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
-        :required="true"
+        :required="item.required || true"
       >
         <el-select
           v-model="data_model[item.bindKey ||  item.topType]"
@@ -230,32 +230,28 @@ export default {
       async handler(val) {
         // console.log(val);
         // this.passData(await this.isVerifyPass());
+        this.$emit("giveDataModel", [val]);
         this.triggerFormChange();
       },
       deep: true
     },
-    customField:{
+    customField: {
       deep: true,
-      handler(val){
+      handler(val) {
         console.log(val);
         //如果只能在外部提供数据(即customFiled里提供了data属性)  则需要将当前的数据赋值给该组件formItems中对应的字段
         let index = this.formItems_.findIndex(formItem => {
           return formItem.topType === val.currField;
-        })
+        });
         let custom = val.find(formItem => {
           return formItem.topType === val.currField;
-        })
-        if(val.currQuery === ''){
-          console.log('1111111111111');
-          console.log(this.data_model);
-          console.log(this.data_model[custom.bindKey]);
-          
+        });
+        if (this.data_model[custom.bindKey] && val.currQuery === "") {
           this.data_model[custom.bindKey] = null;
         }
-        
-        this.$set(this.$data.formItems_[index],'data',custom.data)
-        this.formItems_ = [...this.formItems_] //触发下更新
-        
+
+        this.$set(this.$data.formItems_[index], "data", custom.data);
+        this.formItems_ = [...this.formItems_]; //触发下更新
       }
     }
   },
@@ -281,10 +277,14 @@ export default {
           switch (item.inputType) {
             case 3:
               formItem.data = [];
-                let res3 = await item.ajax();
-                if (res3.code === 200) {
+              let res3 = await item.ajax();
+              if (res3.code === 200) {
+                if(res3.data.dataList){
+                  formItem.data = res3.data.dataList
+                }else {
                   formItem.data = res3.data;
                 }
+              }
               break;
             case 5:
               formItem.data = [];
@@ -430,7 +430,7 @@ export default {
     this.formItems_ = Object.assign(this.formItems);
     // this.$set('formItems_',)
     console.log(this.$data);
-    
+
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();

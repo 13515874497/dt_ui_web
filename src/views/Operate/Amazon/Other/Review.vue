@@ -5,7 +5,8 @@ import {
   saveReview,
   repGetShopName,
   getSelectSiteRole,
-  getSkuName
+  getSkuName,
+  findByListStarLevel
 } from "@/api";
 import MxTable from "@/components/Mixins/MxTable";
 export default {
@@ -43,10 +44,20 @@ export default {
           key: 'skuId',
           label: 'sku',
           filterable: true,
-          placeholder: '请输入后选择sku',
+          placeholder: '输入选择sku,需鼠标点击',
           remoteMethod: this.getSkuList,
           data:[]
-        }
+        },
+        {
+          inputType: 3,
+          topType: "starLevelName",
+          bindKey: "starLevelId",
+          ajax: findByListStarLevel,
+          key: "starLevelId",
+          label: "starLevelName",
+          // filterable: true,
+          placeholder: "请选择星级"
+        },
       ],
       rule: {
         //某些字段的验证规则
@@ -131,7 +142,7 @@ export default {
             validator: this.rule_move, //该字段的自定义验证规则
             trigger: "change"
           }
-        ]
+        ],
       };
       this.rule = { ...this.rule, ...rule };
     }
@@ -141,6 +152,9 @@ export default {
     this.sku_formItem = this.customField.find(item=>{
       return item.topType === 'sku';
     });
+    let res = await findByListStarLevel();
+    console.log(res);
+    
   }
 };
 </script>
