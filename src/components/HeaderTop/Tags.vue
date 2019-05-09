@@ -8,9 +8,9 @@
                   </router-link>
                   <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
               </li>
-          </ul> 
+          </ul>
       </div>
-      <div class="tags-close-box">        
+      <div class="tags-close-box">
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary">
                     标签选项<i class="el-icon-arrow-down el-icon--right"></i>
@@ -20,7 +20,7 @@
                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-             <el-button type="primary"  @click="refresh" class="el-icon-refresh fresh" size="mini">刷新页面</el-button > 
+             <el-button type="primary"  @click="refresh" class="el-icon-refresh fresh" size="mini">刷新页面</el-button >
         </div>
     </div>
 </template>
@@ -28,7 +28,7 @@
 <script>
 import bus from "../../api/bus";
 export default {
-  
+
   inject: ["reload"],
   filters: {
     ellipsis(value) {
@@ -76,7 +76,6 @@ export default {
     refresh() {
       this.reload();
     },
-    
     // 设置标签
     setTags(route) {
       const isExist = this.tagsList.some(item => {
