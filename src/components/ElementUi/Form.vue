@@ -344,6 +344,9 @@ export default {
               break;
           }
         });
+        console.log(this.formData);
+        console.log(this.data_model);
+        
         for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
