@@ -5,7 +5,7 @@
       <p>欢迎来到 XXX 中文管理后台</p>
       <ul class="ctrl">
          <li>
-          <i class="el-icon-position" @click="feedback"></i>
+          <i class="el-icon-edit-outline" @click="feedback" style="font-size:25px"></i>         
         </li>
         <li>
           <i class="iconfont el-iconfont-wenjianchaxun" @click="queryFiles"></i>
@@ -74,7 +74,7 @@ export default {
       this.showQueryFiles = true;
     },
     feedback(){
-      console.log(反馈)
+      console.log('反馈')
     }
   },
 };

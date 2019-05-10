@@ -1,15 +1,17 @@
 <template>
-    <div class="tags" v-if="showTags" id="box">
-      <div style="position:relative ;height:40px">
-        <ul class="tablist" ref="ulId" style="position: absolute;left:0;width:1500px;transition: all 1s;">
+    <div class="tags" v-if="showTags">
+      <div style="position:relative ;height:40px;overflow:hidden">
+        <ul class="tablist" ref="ulId" style="position: absolute;left:0;width:1700px;transition: all 1s;">
               <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title" >
                   <router-link :to="item.path" class="tags-li-title" >
                   {{item.title | ellipsis}}
                   </router-link>
-                  <span class="tags-li-icon" @click="closeTags(index)"><i class="el-icon-close"></i></span>
+                  <span class="tags-li-icon" @click="closeTags(index)" v-show="index !==0"><i class="el-icon-close"></i></span>
               </li>
-          </ul>
+          </ul>          
       </div>
+      <button class="arrow arrow_left" @click="next_pic" v-show="isShow"><</button>
+      <button class="arrow arrow_right" @click="prev_pic" v-show="isShow" >></button>
       <div class="tags-close-box">
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary">
@@ -28,8 +30,8 @@
 <script>
 import bus from "../../api/bus";
 export default {
-
-  inject: ["reload"],
+  inject: ["reload"],//引入页面加载刷新
+  //标签字数大于4个就显示省略号
   filters: {
     ellipsis(value) {
       if (!value) return "";
@@ -42,6 +44,7 @@ export default {
   data() {
     return {
       tagsList: [],
+      isShow:false,
     };
   },
   methods: {
@@ -57,7 +60,7 @@ export default {
       if (item) {
         delItem.path === this.$route.fullPath && this.$router.push(item.path);
       } else {
-        this.$router.push("/");
+        this.$router.push("/index");
       }
     },
     // 关闭全部标签
@@ -83,13 +86,17 @@ export default {
       });
       console.log(isExist);
       if (!isExist) {
-        // if (this.tagsList.length >=7) {
-        //   this.tagsList.shift();
-        // }
-    this.tagsList.push({
-      title: route.meta.title,
-      path: route.fullPath,
-      name: route.name
+          if (this.tagsList.length >= 8) {
+          this.isShow = true;
+        }
+        if (this.tagsList.length >= 18) {
+          alert("打开标签过多，请关闭其他标签");
+          return;
+        }
+        this.tagsList.push({
+          title: route.meta.title,
+          path: route.fullPath,
+          name: route.name
     });
         console.log(route.meta.title);
         console.log(route.fullPath);
@@ -101,6 +108,23 @@ export default {
     handleTags(command) {
       command === "other" ? this.closeOther() : this.closeAll();
     },
+    //向左点击
+    next_pic() {
+      let wrap = this.$refs.ulId;
+      var newLeft;
+      newLeft = parseInt(wrap.style.left) - 40;
+      wrap.style.left = newLeft + "px";
+      console.log(newLeft)
+   
+    },
+    //向右点击
+    prev_pic() {
+      let wrap = this.$refs.ulId;
+      var newLeft;
+      newLeft = parseInt(wrap.style.left) + 40;
+      wrap.style.left = newLeft + "px";
+      console.log(newLeft)
+    }
   },
   computed: {
     showTags() {
@@ -140,35 +164,42 @@ export default {
 
 <style lang="scss" scoped>
 .arrow_left{
+  border:none;
     position: absolute;
     top: 0px;
     left: 0px;
     display: inline-block;
     /* margin-top: 6px; */
-    z-index: 999;
+    z-index: 9;
     font-size: 20px;
     height: 40px;
     line-height: 40px;
     width: 20px;
     text-align: center;
     background: antiquewhite;
+    cursor: pointer;
+      outline: none;
 }
 .arrow_right{
+   border:none;
   position: absolute;
     top: 0px;
     right: 205px;
     display: inline-block;
     /* margin-top: 6px; */
-    z-index: 999;
+    z-index: 9;
     font-size: 20px;
     height: 40px;
     line-height: 40px;
     width: 20px;
     text-align: center;
     background: antiquewhite;
+    cursor: pointer;
+      outline: none;
 }
 a {
   text-decoration: none;
+  outline: none;
 }
 .tags {
   position: relative;
