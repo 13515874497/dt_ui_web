@@ -292,6 +292,8 @@ export default {
           if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
           switch (item.inputType) {
             case 3:
+
+
               formItem.data = [];
               let res3 = await item.ajax();
               if (res3.code === 200) {
@@ -455,6 +457,8 @@ export default {
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();
+    console.log('888888888888888');
+    
   },
   mounted() {}
 };

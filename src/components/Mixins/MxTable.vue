@@ -37,11 +37,11 @@
       </div>
     </section>
     <!-- 新增 -->
-    <section>
+    <section >
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
         <Form
-          
+          key="新增"
           :formItems="formItems"
           @passData="passData_add"
           @giveDataModel="getDataModel"
@@ -61,11 +61,11 @@
     </section>
 
     <!-- 修改 -->
-    <section>
+    <section >
       <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
         <Form
-          
+          key="修改"
           :formItems="formItems"
           :formData="update.formData"
           @passData="passData_update"
