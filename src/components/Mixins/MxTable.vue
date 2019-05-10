@@ -70,6 +70,7 @@
           :formData="update.formData"
           @passData="passData_update"
           @giveDataModel="getDataModel"
+          :rule="rule"
           :customField="customField"
         ></Form>
 

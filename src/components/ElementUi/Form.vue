@@ -248,9 +248,15 @@ export default {
         let custom = val.find(formItem => {
           return formItem.topType === val.currField;
         });
-        if (this.data_model[custom.bindKey] && val.currQuery === "") {
-          this.data_model[custom.bindKey] = null;
-        }
+        //如果改变了搜索条件  则重新判断检测的id是否在搜索结果中
+        if(custom.data.findIndex(item=>{
+          return item[custom.bindKey] === this.data_model[custom.bindKey]
+        }) === -1){
+            this.data_model[custom.bindKey] = null;
+        };
+        // if (this.data_model[custom.bindKey] && val.currQuery === "") {
+        //   this.data_model[custom.bindKey] = null;
+        // }
 
         this.$set(this.$data.formItems_[index], "data", custom.data);
         this.formItems_ = [...this.formItems_]; //触发下更新
@@ -275,17 +281,17 @@ export default {
           for (let key in item) {
             formItem[key] = item[key];
           }
-          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItem上s
+          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
           switch (item.inputType) {
             case 3:
               formItem.data = [];
               let res3 = await item.ajax();
               if (res3.code === 200) {
-                if(res3.data.dataList){
-                  formItem.data = res3.data.dataList
-                }else {
-                  formItem.data = res3.data;
-                }
+                // if(res3.data.dataList){
+                  formItem.data = res3.data.dataList || res3.data
+                // }else {
+                //   formItem.data = res3.data;
+                // }
               }
               break;
             case 5:
@@ -333,9 +339,8 @@ export default {
           });
           switch (item.inputType) {
             case 3:
-              // this.data_model[item.bindKey] = formItem
             case 5:
-              this.data_model[item.data_model] = getTreePath(
+                this.data_model[item.data_model] = getTreePath(
                 this.formData[item.bindKey],
                 formItem.data,
                 this.props_inputType5.value,
@@ -427,6 +432,10 @@ export default {
       ]);
     },
     handlerValidate(key, valid, errMsg) {
+      if(this.data_model[key] === undefined){
+        console.log(key);
+        
+      }
       if (this.data_model[key] === this.data_model_cache[key]) {
         this.$refs["data_model"].clearValidate([key]);
       }
@@ -437,9 +446,6 @@ export default {
   },
   async created() {
     this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
-    // this.$set('formItems_',)
-    console.log(this.$data);
-
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();
