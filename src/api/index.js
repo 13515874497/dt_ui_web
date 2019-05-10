@@ -721,3 +721,8 @@ export const getCheckoutDate = ({
 }) => ajax(BASE_URL + '/ing/getCheckoutDate', {
   menuId
 })
+
+//公司信息页面保存
+export const getCompanyInfo = (data) => ajax(BASE_URL + '/admin/saveInfoCompany',data, 'POST')
+
+
