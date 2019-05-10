@@ -85,7 +85,6 @@
         :prop="item.bindKey ||  item.topType"
         :rules="matchedRule(item)"
         :required="item.required || true"
-       
       >
         <el-select
           v-model="data_model[item.bindKey ||  item.topType]"
@@ -249,16 +248,25 @@ export default {
           return formItem.topType === val.currField;
         });
         //如果改变了搜索条件  则重新判断检测的id是否在搜索结果中
-        if(custom.data.findIndex(item=>{
-          return item[custom.bindKey] === this.data_model[custom.bindKey]
-        }) === -1){
+        var a = custom.data.findIndex(item => {
+          return item[custom.bindKey] === this.data_model[custom.bindKey];
+        });
+
+        if (this.data_model[custom.bindKey] != null) {
+          if (
+            custom.data.findIndex(item => {
+              return item[custom.bindKey] === this.data_model[custom.bindKey];
+            }) === -1
+          ) {
             this.data_model[custom.bindKey] = null;
-        };
+          }
+        }
+
         // if (this.data_model[custom.bindKey] && val.currQuery === "") {
         //   this.data_model[custom.bindKey] = null;
         // }
-
-        this.$set(this.$data.formItems_[index], "data", custom.data);
+        this.formItems_[index].data = custom.data;
+        // this.$set(this.$data.formItems_[index], "data", custom.data);
         this.formItems_ = [...this.formItems_]; //触发下更新
       }
     }
@@ -288,7 +296,7 @@ export default {
               let res3 = await item.ajax();
               if (res3.code === 200) {
                 // if(res3.data.dataList){
-                  formItem.data = res3.data.dataList || res3.data
+                formItem.data = res3.data.dataList || res3.data;
                 // }else {
                 //   formItem.data = res3.data;
                 // }
@@ -333,14 +341,14 @@ export default {
       let self = this;
       if (this.formData) {
         //修改
-        this.customField.forEach(item => {
+        this.customField && this.customField.forEach(item => {
           let formItem = self.formItems_.find(formItem => {
             return formItem.topType === item.topType;
           });
           switch (item.inputType) {
             case 3:
             case 5:
-                this.data_model[item.data_model] = getTreePath(
+              this.data_model[item.data_model] = getTreePath(
                 this.formData[item.bindKey],
                 formItem.data,
                 this.props_inputType5.value,
@@ -351,12 +359,11 @@ export default {
         });
         console.log(this.formData);
         console.log(this.data_model);
-        
+
         for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
         console.log(this.data_model);
-        
       } else {
         //新增
         this.formItems_.forEach(item => {
@@ -384,7 +391,7 @@ export default {
         modifyData = { ...this.data_model };
       }
 
-      this.customField.forEach(item => {
+      this.customField && this.customField.forEach(item => {
         switch (item.inputType) {
           case 5:
             let values = data_model[item.data_model]; //这里用data_model是因为 当isModify为true时 由于是数组(引用类型) 缓存对比没有发生变化
@@ -412,7 +419,10 @@ export default {
       let errCount = 0;
       for (let key in promise[1]) {
         errCount++;
-        if (this.formData && this.data_model[key] === this.data_model_cache[key]) {
+        if (
+          this.formData &&
+          this.data_model[key] === this.data_model_cache[key]
+        ) {
           errCount--;
         }
       }
@@ -432,17 +442,13 @@ export default {
       ]);
     },
     handlerValidate(key, valid, errMsg) {
-      if(this.data_model[key] === undefined){
-        console.log(key);
-        
-      }
       if (this.data_model[key] === this.data_model_cache[key]) {
         this.$refs["data_model"].clearValidate([key]);
       }
     },
     async triggerFormChange() {
       this.passData(await this.isVerifyPass());
-    },
+    }
   },
   async created() {
     this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
