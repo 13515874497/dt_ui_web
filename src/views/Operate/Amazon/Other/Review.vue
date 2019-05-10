@@ -7,15 +7,14 @@ import {
   repGetShopName,
   getSelectSiteRole,
   getSkuName,
-  findByListStarLevel,
-  
+  findByListStarLevel
 } from "@/api";
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
   data() {
     return {
-      primaryKey: 'reId',
+      primaryKey: "reId",
       customField: [
         {
           //店铺列表
@@ -41,15 +40,15 @@ export default {
         //sku
         {
           inputType: 3,
-          topType: 'sku',
-          bindKey: 'skuId',
+          topType: "sku",
+          bindKey: "skuId",
           remote: true,
-          key: 'skuId',
-          label: 'sku',
+          key: "skuId",
+          label: "sku",
           filterable: true,
-          placeholder: '输入选择sku,需鼠标点击',
+          placeholder: "输入选择sku,需鼠标点击",
           remoteMethod: this.getSkuList,
-          data:[]
+          data: []
         },
         {
           inputType: 3,
@@ -60,7 +59,7 @@ export default {
           label: "starLevelName",
           // filterable: true,
           placeholder: "请选择星级"
-        },
+        }
       ],
       rule: {
         //某些字段的验证规则
@@ -73,10 +72,10 @@ export default {
   },
   watch: {
     "form_data_model.shopId"() {
-      this.getSkuList('');
+      this.getSkuList("");
     },
     "form_data_model.siteId"() {
-      this.getSkuList('');
+      this.getSkuList("");
     }
   },
   methods: {
@@ -130,9 +129,22 @@ export default {
         console.log(res);
         if (res.code === 200) {
           console.log(res);
-          this.sku_formItem.data = res.data
-          this.customField.currField = 'sku'; //告诉子组建当前修改的字段是 'sku'
-          this.customField.currQuery = query;
+          let customField = null;
+          switch (this.form_editing) {
+            case "add":
+              customField = this.add.customField;
+              break;
+            case "update":
+              customField = this.update.customField;
+              break;
+          }
+          let item =  customField.find(item => {
+            return item.topType === "sku";
+          });
+
+          item.data = res.data;
+          customField.currField = "sku"; //告诉子组件当前修改的字段是 'sku'
+          customField.currQuery = query;
         }
       }
     },
@@ -149,19 +161,18 @@ export default {
             validator: this.rule_move, //该字段的自定义验证规则
             trigger: "change"
           }
-        ],
+        ]
       };
       this.rule = { ...this.rule, ...rule };
     }
   },
   async created() {
     this.setRule();
-    this.sku_formItem = this.customField.find(item=>{
-      return item.topType === 'sku';
+    this.sku_formItem = this.customField.find(item => {
+      return item.topType === "sku";
     });
     let res = await findByListStarLevel();
     console.log(res);
-    
   }
 };
 </script>

@@ -37,7 +37,7 @@
       </div>
     </section>
     <!-- 新增 -->
-    <section >
+    <section>
       <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
         <Form
@@ -47,7 +47,7 @@
           @giveDataModel="getDataModel"
           :rule="rule"
           :reset="add.reset"
-          :customField="customField"
+          :customField="add.customField"
         ></Form>
 
         <div slot="footer" class="dialog-footer">
@@ -61,7 +61,7 @@
     </section>
 
     <!-- 修改 -->
-    <section >
+    <section>
       <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
         <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
         <Form
@@ -71,7 +71,7 @@
           @passData="passData_update"
           @giveDataModel="getDataModel"
           :rule="rule"
-          :customField="customField"
+          :customField="update.customField"
         ></Form>
 
         <div slot="footer" class="dialog-footer">
@@ -99,7 +99,7 @@ import Table from "@/components/ElementUi/Table";
 import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
 import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
-
+import {deepCopy} from '@/utils/Arrays'
 import requestAjax from "@/api/requestAjax";
 import PubSub from "pubsub-js";
 export default {
@@ -123,11 +123,13 @@ export default {
       },
       selection: [], //多选框选择的
       form_data_model: null, //当前form表单(新增、修改)绑定的数据
+      form_editing: "add",
       add: {
         visible: false,
         data: null,
         isPass: false,
-        reset: false
+        reset: false,
+        customField: []
       },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
@@ -135,9 +137,10 @@ export default {
         visible: false,
         formData: null,
         data: null,
-        isPass: false
+        isPass: false,
+        customField: []
       },
-      customField: null,
+      customField: [],
       //在form中不需要填写的
       sysLogNotForm: [
         "statusId",
@@ -160,7 +163,7 @@ export default {
       return this.tableTitle.filter(item => {
         return !this.sysLogNotForm.includes(item.topType);
       });
-    },
+    }
     //当前打开的新增或修改的form表单
     // ref_form() {
     //   if (this.add.visible && this.$refs.form_add) {
@@ -231,7 +234,7 @@ export default {
       this.tableTitle = [...this.tableTitle];
       // this.queryIds = [];
     },
-    getDataModel($event){
+    getDataModel($event) {
       this.form_data_model = $event[0];
     },
     //根据勾选的表头字段id去隐藏对应字段
@@ -245,7 +248,7 @@ export default {
           return !list.includes(item.id);
         });
       }
-       console.log(this.tableTitle_show);
+      console.log(this.tableTitle_show);
     },
     handlerFormData(data) {
       data.systemLogStatus = {};
@@ -259,6 +262,7 @@ export default {
     openDialog_add() {
       console.log("新增");
       this.add.visible = true;
+      this.form_editing = "add";
     },
     passData_add($event) {
       console.log($event);
@@ -300,6 +304,7 @@ export default {
       }
       this.update.formData = this.multipleSelection[0];
       this.update.visible = true;
+      this.form_editing = "update";
     },
     passData_update($event) {
       console.log($event);
@@ -327,16 +332,16 @@ export default {
         version = [];
       this.multipleSelection.forEach(item => {
         thisIds.push(item[this.primaryKey]);
-        (item.statusId != undefined) && statusIds.push(item.statusId);
-        version.push(item.version)
+        item.statusId != undefined && statusIds.push(item.statusId);
+        version.push(item.version);
       });
       let data = {
         thisIds: thisIds.join(","),
-        version: version.join(',')
+        version: version.join(",")
       };
       console.log(data);
-      if(statusIds.length){
-        data.statusIds = statusIds.join(",")
+      if (statusIds.length) {
+        data.statusIds = statusIds.join(",");
       }
       message
         .messageBox_confirm("是否确认删除")
@@ -407,7 +412,7 @@ export default {
           }
         }
       ];
-    },
+    }
   },
   async created() {
     this.initOperateBtn();
@@ -415,10 +420,36 @@ export default {
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
     this.tableTitle_show = [...this.tableTitle];
-  },
-  async mounted() {
+    // this.add.customField = [...this.customField];
+    // this.update.customField = [...this.customField];
     
+    console.log(this.customField);
+    
+    // console.log(this.$deepCopy(this.customField)[0] === this.customField[0]);
+let deepCopy = (p, c) => {
+  var c = c || {};
+  for (var i in p) {
+    if (typeof p[i] === 'object') {
+      c[i] = (p[i].constructor === Array) ? [] : {};
+      deepCopy(p[i], c[i]);
+    } else {
+      c[i] = p[i];
+    }
   }
+  return c;
+}
+
+
+
+
+    this.add.customField = deepCopy(this.customField);
+    this.update.customField = deepCopy(this.customField);
+    console.log(this.customField);
+
+    console.log(this.add);
+    console.log(this.update);
+  },
+  async mounted() {}
 };
 </script>
 

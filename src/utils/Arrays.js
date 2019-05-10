@@ -2,6 +2,22 @@ import {
   Alert
 } from "element-ui";
 
+//深拷贝
+export const deepCopy = (p, c) => {
+  var c = c || {};
+  for (var i in p) {
+    if (typeof p[i] === 'object') {
+      c[i] = (p[i].constructor === Array) ? [] : {};
+      deepCopy(p[i], c[i]);
+    } else {
+      c[i] = p[i];
+    }
+  }
+  return c;
+}
+
+
+
 //数组去重
 export const unique = (arr) => {
   let obj = {},
@@ -37,20 +53,20 @@ export const getDifferent = (origin, curr) => {
 }
 
 //获取树结构某个id的路径
-export const getTreePath = (value,tree, _id, _children) => {
+export const getTreePath = (value, tree, _id, _children) => {
 
-  
+
   for (let i = 0; i < tree.length; i++) {
     let path = [];
     let id = tree[i][_id];
     let children = tree[i][_children];
     path.push(id);
-    if(value === id){
+    if (value === id) {
       return path
-    }else {
-      if(children&& children.length){
-        let result = getTreePath(value,children,_id,_children);
-        if(result){
+    } else {
+      if (children && children.length) {
+        let result = getTreePath(value, children, _id, _children);
+        if (result) {
           return path.concat(result);
         }
       }
