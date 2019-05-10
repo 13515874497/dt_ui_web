@@ -193,7 +193,10 @@ export default {
     formData: Object, //有传这个说明是修改
     rule: Object, //某些特殊字段的验证规则
     reset: Boolean, // 改变时重置数据
-    customField: Array //某些特殊字段在填写时需要想后台请求数据
+    customField:{
+      type: Array,
+      default: []
+    } //某些特殊字段在填写时需要想后台请求数据
   },
   data() {
     return {
@@ -244,9 +247,11 @@ export default {
         let index = this.formItems_.findIndex(formItem => {
           return formItem.topType === val.currField;
         });
+
         let custom = val.find(formItem => {
           return formItem.topType === val.currField;
         });
+        this.formItems_[index].data = custom.data;
         //如果改变了搜索条件  则重新判断检测的id是否在搜索结果中
         var a = custom.data.findIndex(item => {
           return item[custom.bindKey] === this.data_model[custom.bindKey];
@@ -265,7 +270,7 @@ export default {
         // if (this.data_model[custom.bindKey] && val.currQuery === "") {
         //   this.data_model[custom.bindKey] = null;
         // }
-        this.formItems_[index].data = custom.data;
+
         // this.$set(this.$data.formItems_[index], "data", custom.data);
         this.formItems_ = [...this.formItems_]; //触发下更新
       }
@@ -341,7 +346,7 @@ export default {
       let self = this;
       if (this.formData) {
         //修改
-        this.customField && this.customField.forEach(item => {
+        this.customField.forEach(item => {
           let formItem = self.formItems_.find(formItem => {
             return formItem.topType === item.topType;
           });
@@ -391,7 +396,7 @@ export default {
         modifyData = { ...this.data_model };
       }
 
-      this.customField && this.customField.forEach(item => {
+      this.customField.forEach(item => {
         switch (item.inputType) {
           case 5:
             let values = data_model[item.data_model]; //这里用data_model是因为 当isModify为true时 由于是数组(引用类型) 缓存对比没有发生变化
@@ -430,10 +435,10 @@ export default {
     },
     passData(isPass) {
       let data_model = this.data_model;
-      for (let key in data_model) {
-        if (this.customField && this.customField.includes(key)) {
-        }
-      }
+      // for (let key in data_model) {
+      //   if ( this.customField.includes(key)) {
+      //   }
+      // }
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
       this.$emit("passData", [
         isPass,

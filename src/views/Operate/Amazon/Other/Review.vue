@@ -168,9 +168,6 @@ export default {
   },
   async created() {
     this.setRule();
-    this.sku_formItem = this.customField.find(item => {
-      return item.topType === "sku";
-    });
     let res = await findByListStarLevel();
     console.log(res);
   }

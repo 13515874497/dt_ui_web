@@ -99,7 +99,7 @@ import Table from "@/components/ElementUi/Table";
 import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
 import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
-import {deepCopy} from '@/utils/Arrays'
+import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import PubSub from "pubsub-js";
 export default {
@@ -422,28 +422,13 @@ export default {
     this.tableTitle_show = [...this.tableTitle];
     // this.add.customField = [...this.customField];
     // this.update.customField = [...this.customField];
-    
+
     console.log(this.customField);
-    
-    // console.log(this.$deepCopy(this.customField)[0] === this.customField[0]);
-let deepCopy = (p, c) => {
-  var c = c || {};
-  for (var i in p) {
-    if (typeof p[i] === 'object') {
-      c[i] = (p[i].constructor === Array) ? [] : {};
-      deepCopy(p[i], c[i]);
-    } else {
-      c[i] = p[i];
-    }
-  }
-  return c;
-}
 
+    // console.log(this.$deepClone(this.customField)[0] === this.customField[0]);
 
-
-
-    this.add.customField = deepCopy(this.customField);
-    this.update.customField = deepCopy(this.customField);
+    this.add.customField = deepClone(this.customField);
+    this.update.customField = deepClone(this.customField);
     console.log(this.customField);
 
     console.log(this.add);
