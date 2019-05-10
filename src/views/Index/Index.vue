@@ -7,24 +7,23 @@
       <Aside style="overflow-y: auto;background-color: #293846"  v-bind:showFlag = "this.isCollapse"/>
       </div>
 
-    <el-container style="float: left">
+    <el-container style="float: left;position:relative;">
       <el-header style="height: 90px" >
         <Header  />
       </el-header>
 
       <Tags></Tags>
 
-      <el-main style="position:relative;overflow:hidden">
-          <div >
-            <a href="####" class="divFlag"  @click="this.handleClick" v-show='!this.isCollapse' >《</a>
-            <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
-          </div>
-        <!--缓存路由组件 , 2019/05/08 修改人：乌日娜  修改内容  在keep-alive外套了div  解决问题：导航伸缩按钮要求固定 这个main页面有滚动条的时候会导致不固定-->
-          <div style="height:100%;overflow-y:auto;overflow-x:hidden;"> 
-            <keep-alive >
-             <router-view ></router-view>
-            </keep-alive>
-          </div>
+      <div >
+        <a href="####" class="divFlag"  @click="this.handleClick" v-show='!this.isCollapse' >《</a>
+        <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
+      </div>
+
+      <el-main>
+        <keep-alive >
+         <router-view ></router-view>
+        </keep-alive>
+
 
       </el-main>
       <el-footer style="height: 20px">Footer</el-footer>
