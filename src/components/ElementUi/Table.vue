@@ -132,31 +132,23 @@ export default {
     },
     //表格某一列数据全部相同则合并
     spanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(this.tableData.length);
-      
-      // let title = this.table_title[columnIndex];
-      // if(title && title.isRepeat){
-      //   if(rowIndex === 0){
-      //     return {
-      //     rowspan: this.tableData.length,
-      //     colspan: 1,
-      //   }
-      //   }else {
-      //     return [0,0]
-      //   }
+      console.log(this.tableData.length);
+      let title = this.table_title.find(item=>{
+        return item.topType === column.property
+      })
+      if(title && title.isRepeat){
+        if(rowIndex === 0){
+          return {
+          rowspan: this.tableData.length,
+          colspan: 1,
+        }
+        }else {
+          return [0,0]
+        }
         
-      // }else {
-      //   return [1,1];
-      // }
-      // if(rowIndex === 0){
-      //   if(columnIndex ==0){
-      //     return [4,1]
-      //   }else {
-      //     return [1,1]
-      //   }
-      // }else {
-      //   // return [1,1]
-      // }
+      }else {
+        return [1,1];
+      }
     },
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {

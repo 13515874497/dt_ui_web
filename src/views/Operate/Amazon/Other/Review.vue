@@ -168,7 +168,7 @@ export default {
   },
   async created() {
     this.setRule();
-    let res = await findByListStarLevel();
+    // let res = await findByListStarLevel();
     console.log(res);
   }
 };
