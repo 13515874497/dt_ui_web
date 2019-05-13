@@ -372,12 +372,19 @@ export default {
       } else {
         //新增
         this.formItems_.forEach(item => {
+          console.log(item.topType);
+          
           if (item.statusOptions && item.statusOptions.length) {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
           } else {
             self.$set(this.data_model, item.topType, null);
+            if(item.bindKey){
+              self.$set(this.data_model,item.bindKey, null);
+            }
           }
         });
+        console.log(this.data_model);
+        
       }
 
       this.data_model_cache = { ...this.data_model }; //用于对比数据 只回传发生改变的数据
