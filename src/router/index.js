@@ -130,11 +130,13 @@ import Additional_tariff from '../views/Storage/Additional_tariff'//附加税率
 import SKU from '../views/Storage/SKU'//SUK信息表
 import VAT from '../views/Storage/VAT'//VAT附加税
 
+
 import Star_level from '../views/Storage/Star_level'//星级
 
 import UserModifiesPwd from '../views/ModifiesPassword/UserModifiesPwd.vue'  //修改密码
 
 import SettlementReport from '../views/Financial/SettlementReport.vue'  //财务管理
+
 
 Vue.use(Router)
 
@@ -921,6 +923,7 @@ export default new Router({
       path: '/userModifiesPwd',
       component: UserModifiesPwd //用户修改密码
     },  
+  
      
   ],
 

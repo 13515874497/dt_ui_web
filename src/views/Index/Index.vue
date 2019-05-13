@@ -14,16 +14,17 @@
 
       <Tags></Tags>
 
-      <div >
-        <a href="####" class="divFlag"  @click="this.handleClick" v-show='!this.isCollapse' >《</a>
-        <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
-      </div>
-
-      <el-main>
-        <keep-alive >
-         <router-view ></router-view>
-        </keep-alive>
-
+      <el-main style="position:relative;overflow:hidden">
+          <div >
+            <a href="####" class="divFlag"  @click="this.handleClick" v-show='!this.isCollapse' >《</a>
+            <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
+          </div>
+        <!--缓存路由组件 , 2019/05/08 修改人：乌日娜  修改内容  在keep-alive外套了div  解决问题：导航伸缩按钮要求固定 这个main页面有滚动条的时候会导致不固定-->
+          <div style="height:100%;overflow-y:auto;overflow-x:hidden;" v-if="isRouterAlive"> 
+            <keep-alive >
+             <router-view ></router-view>
+            </keep-alive>
+          </div>
 
       </el-main>
       <el-footer style="height: 20px">Footer</el-footer>
@@ -42,15 +43,26 @@ import Vue from "vue";
 import message from "@/utils/Message";
 import bus from '@/api/bus';
 export default {
+    provide(){
+    return{
+      reload:this.reload
+    }
+  },
   data() {
     return {
-      isRouterAlive:true,
+      isRouterAlive:true, //页面刷新
       isRole: true,
       tagsList: [],
       isCollapse:false
     };
   },
   methods: {
+      reload(){
+      this.isRouterAlive = false
+      this.$nextTick(function(){
+        this.isRouterAlive = true
+      })
+    },
     handleClick(){
       this.isCollapse = !this.isCollapse;
     },

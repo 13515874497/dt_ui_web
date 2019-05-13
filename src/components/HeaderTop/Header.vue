@@ -4,9 +4,16 @@
     <div class="main">
       <p>欢迎来到 XXX 中文管理后台</p>
       <ul class="ctrl">
-         <li>
-          <i class="el-icon-position" @click="feedback"></i>
-        </li>
+        <el-dropdown>
+          <li >
+            <i class="el-icon-edit-outline" @click="feedback" style="font-size:25px"></i>      
+          </li>
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item @click.native="enterPages" style="font-size:14px;line-height:30px">反馈页面</el-dropdown-item>
+            <el-dropdown-item @click.native="queryResults"  style="font-size:14px;line-height:30px">查询反馈结果</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+       
         <li>
           <i class="iconfont el-iconfont-wenjianchaxun" @click="queryFiles"></i>
         </li>
@@ -37,20 +44,28 @@
     <el-dialog title="文件查询" :visible.sync="showQueryFiles" width="1200px">
       <QueryFiles></QueryFiles>
     </el-dialog>
+
+      <el-dialog title="问题反馈" :visible.sync="showFeedback" width="1000px">
+      <FeedbackInfor></FeedbackInfor>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { repLogout } from "@/api";
 import QueryFiles from "@/components/FileUpload/QueryFiles";
+import FeedbackInfor from "@/components/FeedBack/FeedbackInfor";
 import bus from "../../api/bus";
 export default {
   components: {
-    QueryFiles
+    QueryFiles, //文件查询
+    FeedbackInfor //问题反馈
   },
   data() {
     return {
       showQueryFiles: false,
+      seen:false,
+      showFeedback:false
     };
   },
   methods: {
@@ -74,8 +89,17 @@ export default {
       this.showQueryFiles = true;
     },
     feedback(){
-      console.log(反馈)
-    }
+      console.log('反馈')
+      //新增反馈页面、
+      this.showFeedback = true;
+    },
+    enterPages(){
+        console.log('去反馈页面')
+      },
+      queryResults(){
+        console.log('查询结果')
+      }
+    
   },
 };
 </script>
@@ -117,4 +141,5 @@ ul.ctrl {
     }
   }
 }
+
 </style>
