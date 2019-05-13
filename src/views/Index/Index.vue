@@ -7,7 +7,7 @@
       <Aside style="overflow-y: auto;background-color: #293846"  v-bind:showFlag = "this.isCollapse"/>
       </div>
 
-    <el-container style="float: left">
+    <el-container style="float: left;position:relative;">
       <el-header style="height: 90px" >
         <Header  />
       </el-header>

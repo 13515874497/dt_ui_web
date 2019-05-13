@@ -85,7 +85,6 @@
         :prop="item.bindKey ||  item.topType"
         :rules="matchedRule(item)"
         :required="item.required || true"
-       
       >
         <el-select
           v-model="data_model[item.bindKey ||  item.topType]"
@@ -194,7 +193,10 @@ export default {
     formData: Object, //有传这个说明是修改
     rule: Object, //某些特殊字段的验证规则
     reset: Boolean, // 改变时重置数据
-    customField: Array //某些特殊字段在填写时需要想后台请求数据
+    customField:{
+      type: Array,
+      default: []
+    } //某些特殊字段在填写时需要想后台请求数据
   },
   data() {
     return {
@@ -245,14 +247,31 @@ export default {
         let index = this.formItems_.findIndex(formItem => {
           return formItem.topType === val.currField;
         });
+
         let custom = val.find(formItem => {
           return formItem.topType === val.currField;
         });
-        if (this.data_model[custom.bindKey] && val.currQuery === "") {
-          this.data_model[custom.bindKey] = null;
+        this.formItems_[index].data = custom.data;
+        //如果改变了搜索条件  则重新判断检测的id是否在搜索结果中
+        var a = custom.data.findIndex(item => {
+          return item[custom.bindKey] === this.data_model[custom.bindKey];
+        });
+
+        if (this.data_model[custom.bindKey] != null) {
+          if (
+            custom.data.findIndex(item => {
+              return item[custom.bindKey] === this.data_model[custom.bindKey];
+            }) === -1
+          ) {
+            this.data_model[custom.bindKey] = null;
+          }
         }
 
-        this.$set(this.$data.formItems_[index], "data", custom.data);
+        // if (this.data_model[custom.bindKey] && val.currQuery === "") {
+        //   this.data_model[custom.bindKey] = null;
+        // }
+
+        // this.$set(this.$data.formItems_[index], "data", custom.data);
         this.formItems_ = [...this.formItems_]; //触发下更新
       }
     }
@@ -275,17 +294,17 @@ export default {
           for (let key in item) {
             formItem[key] = item[key];
           }
-          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItem上s
+          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
           switch (item.inputType) {
             case 3:
               formItem.data = [];
               let res3 = await item.ajax();
               if (res3.code === 200) {
-                if(res3.data.dataList){
-                  formItem.data = res3.data.dataList
-                }else {
-                  formItem.data = res3.data;
-                }
+                // if(res3.data.dataList){
+                formItem.data = res3.data.dataList || res3.data;
+                // }else {
+                //   formItem.data = res3.data;
+                // }
               }
               break;
             case 5:
@@ -333,7 +352,6 @@ export default {
           });
           switch (item.inputType) {
             case 3:
-              // this.data_model[item.bindKey] = formItem
             case 5:
               this.data_model[item.data_model] = getTreePath(
                 this.formData[item.bindKey],
@@ -346,12 +364,11 @@ export default {
         });
         console.log(this.formData);
         console.log(this.data_model);
-        
+
         for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
         console.log(this.data_model);
-        
       } else {
         //新增
         this.formItems_.forEach(item => {
@@ -407,7 +424,10 @@ export default {
       let errCount = 0;
       for (let key in promise[1]) {
         errCount++;
-        if (this.formData && this.data_model[key] === this.data_model_cache[key]) {
+        if (
+          this.formData &&
+          this.data_model[key] === this.data_model_cache[key]
+        ) {
           errCount--;
         }
       }
@@ -415,10 +435,10 @@ export default {
     },
     passData(isPass) {
       let data_model = this.data_model;
-      for (let key in data_model) {
-        if (this.customField && this.customField.includes(key)) {
-        }
-      }
+      // for (let key in data_model) {
+      //   if ( this.customField.includes(key)) {
+      //   }
+      // }
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
       this.$emit("passData", [
         isPass,
@@ -433,13 +453,10 @@ export default {
     },
     async triggerFormChange() {
       this.passData(await this.isVerifyPass());
-    },
+    }
   },
   async created() {
     this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
-    // this.$set('formItems_',)
-    console.log(this.$data);
-
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();

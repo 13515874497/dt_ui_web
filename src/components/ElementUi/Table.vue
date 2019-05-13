@@ -1,9 +1,8 @@
 <template>
   <el-table
     :data="tableData"
-   
     height="500"
-    :span-method="arraySpanMethod"
+    :span-method="spanMethod"
     @selection-change="handleSelectionChange"
     stripe
     border
@@ -11,12 +10,11 @@
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
     class="content-table"
-    
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column v-if="isShowNumber()" type="index" width="50" fixed></el-table-column>
-    <template v-for="title  in tableTitle">
+    <template v-for="title  in table_title">
       <!--特殊字段 -->
       <!-- 根据选项获取值的字段 -->
       <el-table-column
@@ -61,7 +59,6 @@
         </template>
       </el-table-column>
 
-
       <el-table-column
         v-else-if="title.inputType==4"
         :fixed="isFixed(title)"
@@ -78,8 +75,6 @@
         </template>
       </el-table-column>
 
-
-
       <el-table-column
         v-else
         sortable
@@ -90,16 +85,12 @@
         :render-header="renderHeader"
         :key="title.id"
       ></el-table-column>
-
-     
     </template>
-     <el-table-column label="操作">
-        <template slot-scope="scope">
-          <slot name="operate" :childData="scope">
-            
-          </slot>
-        </template>
-      </el-table-column>
+    <el-table-column label="操作">
+      <template slot-scope="scope">
+        <slot name="operate" :childData="scope"></slot>
+      </template>
+    </el-table-column>
   </el-table>
 </template>
 <script>
@@ -108,19 +99,22 @@ export default {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
-      options: {} ,//存放各种类型的状态
+      options: {} //存放各种类型的状态
     };
   },
   props: {
     tableData: Array,
-    tableTitle: Array,
+    tableTitle: Array
+
     // loading:Boolean
   },
-  watch:{
-    tableTitle(val){
+  watch: {
+    tableTitle(val) {
       console.log(val);
-      
     },
+    tableData() {
+      this.setRepeatField();
+    }
   },
   methods: {
     setTheadClassName() {
@@ -129,32 +123,51 @@ export default {
     //是否隐藏编号
     isShowNumber() {
       let flag = true;
-      this.tableTitle.forEach(item => {
+      this.table_title.forEach(item => {
         if (item.headName == "编号") {
           flag = false;
         }
       });
       return flag;
     },
-    //tabale表头上下箭头 排序
-    arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-      // if (rowIndex % 2 === 0) {
-      //   if (columnIndex === 0) {
-      //     return [1, 2]
-      //   } else if (columnIndex === 1) {
-      //     return [0, 0]
+    //表格某一列数据全部相同则合并
+    spanMethod({ row, column, rowIndex, columnIndex }) {
+      // if (columnIndex === 0) {
+      //   if (rowIndex % 2 === 0) {
+      //     return {
+      //       rowspan: 2,
+      //       colspan: 1
+      //     };
+      //   } else {
+      //     return {
+      //       rowspan: 0,
+      //       colspan: 0
+      //     };
       //   }
       // }
+      // console.log(columnIndex);
+      // console.log(this.table_title[columnIndex]);
+      let title = this.table_title[columnIndex];
+      if (title && title.isRepeat) {
+        return {
+          rowspan: this.tableData.length,
+          colspan: 1,
+        };
+      }else {
+        // return [0,0]
+      }
     },
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
       this.$emit("checkboxValue", val);
-      console.log(val)
+      console.log(val);
     },
 
     initOptions() {
       let self = this;
-      this.tableTitle.forEach(item => {
+      console.log(this.table_title);
+
+      this.table_title.forEach(item => {
         if (item.inputType == 3 && item.statusOptions.length) {
           self.options[item.topType] = item.statusOptions;
         }
@@ -167,11 +180,11 @@ export default {
       console.log(row);
       console.log(column);
       console.log(cellValue);
-      
+
       console.log(this.options);
-      
+
       console.log(options);
-      
+
       let option = options.find(item => {
         return cellValue == item.selectId;
       });
@@ -264,13 +277,42 @@ export default {
       tempSpan.style.cssText = "display:inline-block";
       this.tempDiv.appendChild(tempSpan);
       return tempSpan.offsetWidth;
+    },
+    setRepeatField() {
+      let self = this;
+      if(!self.tableData.length) return;
+      this.table_title.forEach(column => {
+        // 判断表格某一列是否数据相同
+        let isRepeat = false;
+        let key = column.topType;
+        let firstValue = self.tableData[0][key];
+        isRepeat = self.tableData.every(row => {
+          return row[key] === firstValue;
+        });
+        console.log(isRepeat);
+        
+        // if (isRepeat) {
+          column.isRepeat = isRepeat;
+        // }
+      });
+      console.log('9999999999999');
+      console.log(this.table_title);
+      
+      
     }
   },
   created() {
+    let self = this;
+    if(this.menuId == 59){
+
+    }
+   
+    this.table_title = [...this.tableTitle];
+    console.log(this.table_title);
+
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
-    
   },
 
   mounted() {
@@ -294,6 +336,6 @@ export default {
   padding: 6px 0;
 }
 .content-table {
-  width: calc(100% - 15px)
+  width: calc(100% - 15px);
 }
 </style>
