@@ -3,16 +3,19 @@
 import {
   getReview,
   saveReview,
+  delReview,
   repGetShopName,
   getSelectSiteRole,
   getSkuName,
-  findByListStarLevel
+  findByListStarLevel,
+  
 } from "@/api";
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
   data() {
     return {
+      primaryKey: 'reId',
       customField: [
         {
           //店铺列表
@@ -83,12 +86,16 @@ export default {
     ajax_add(data) {
       return saveReview(data);
     },
+    ajax_remove(data) {
+      //删除的接口
+      return delReview(data);
+    },
     //form表单中add字段的验证规则,需要用到form表单中其他字段的数据来进行验证
     rule_add(rule, val, cb) {
       let data = { ...this.form_data_model };
       console.log(data);
 
-      if (val === "") {
+      if (val === "" || val === null) {
         cb();
         return;
       }
@@ -101,7 +108,7 @@ export default {
     //同上
     rule_move(rule, val, cb) {
       let data = { ...this.form_data_model };
-      if (val === "") {
+      if (val === "" || val === null) {
         cb();
         return;
       }

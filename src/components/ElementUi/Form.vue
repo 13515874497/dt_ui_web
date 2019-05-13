@@ -82,9 +82,10 @@
       <el-form-item
         v-else-if="item.inputType == 3"
         :label="item.headName"
-        :prop="item.topType"
+        :prop="item.bindKey ||  item.topType"
         :rules="matchedRule(item)"
         :required="item.required || true"
+       
       >
         <el-select
           v-model="data_model[item.bindKey ||  item.topType]"
@@ -92,6 +93,7 @@
           :filterable="item.filterable"
           :remote="item.remote"
           :remoteMethod="item.remoteMethod"
+          :clearable="item.remote"
         >
           <el-option
             v-for="option in item.data"
@@ -312,11 +314,11 @@ export default {
       }
       switch (item.inputType) {
         case 1:
+        case 3:
         case 4:
           return item.required ? rules._number : rules.number;
           break;
         case 0:
-        case 3:
         default:
           return item.required ? rules._str : rules.str;
       }
@@ -330,6 +332,8 @@ export default {
             return formItem.topType === item.topType;
           });
           switch (item.inputType) {
+            case 3:
+              // this.data_model[item.bindKey] = formItem
             case 5:
               this.data_model[item.data_model] = getTreePath(
                 this.formData[item.bindKey],
@@ -340,9 +344,14 @@ export default {
               break;
           }
         });
+        console.log(this.formData);
+        console.log(this.data_model);
+        
         for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
+        console.log(this.data_model);
+        
       } else {
         //新增
         this.formItems_.forEach(item => {
@@ -398,7 +407,7 @@ export default {
       let errCount = 0;
       for (let key in promise[1]) {
         errCount++;
-        if (this.data_model[key] === this.data_model_cache[key]) {
+        if (this.formData && this.data_model[key] === this.data_model_cache[key]) {
           errCount--;
         }
       }
@@ -424,10 +433,10 @@ export default {
     },
     async triggerFormChange() {
       this.passData(await this.isVerifyPass());
-    }
+    },
   },
   async created() {
-    this.formItems_ = Object.assign(this.formItems);
+    this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
     // this.$set('formItems_',)
     console.log(this.$data);
 
