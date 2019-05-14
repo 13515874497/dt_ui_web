@@ -49,7 +49,7 @@
       </el-form-item>
 
       <el-form-item
-        v-else-if="item.inputType == 2"
+        v-else-if="item.inputType == 2 || item.inputType == 4"
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
@@ -63,7 +63,7 @@
         ></el-date-picker>
       </el-form-item>
 
-      <el-form-item
+      <!-- <el-form-item
         v-else-if="item.inputType == 4"
         :label="item.headName"
         :prop="item.topType"
@@ -78,7 +78,7 @@
           end-placeholder="结束日期"
           size="small"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item
         v-else-if="item.inputType == 1"

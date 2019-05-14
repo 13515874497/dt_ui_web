@@ -60,7 +60,7 @@
       </el-table-column>
 
       <el-table-column
-        v-else-if="title.inputType==4"
+        v-else-if="title.inputType==4 || title.inputType==4"
         :fixed="isFixed(title)"
         :label="title.headName"
         :prop="title.topType"
