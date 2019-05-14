@@ -99,8 +99,7 @@ export default {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
-      options: {}, //存放各种类型的状态
-      table_title: []
+      options: {} //存放各种类型的状态
     };
   },
   props: {
@@ -112,7 +111,6 @@ export default {
   watch: {
     tableTitle(val) {
       console.log(val);
-      this.table_title = [...this.tableTitle];
     },
     // tableData() {
     //   this.setRepeatField();
@@ -247,7 +245,12 @@ export default {
     },
     //创建外层的临时dom  用来存放临时的span
     createTempWarpdom() {
+      // let tempDom = document.getElementById("tempDiv-getfieldWidth");
+      // if (tempDom) {
+      //   document.body.removeChild(tempDom);
+      // }
       this.tempDiv = document.createElement("div");
+      // this.tempDiv.setAttribute("id", "tempDiv-getfieldWidth");
       this.tempDiv.style.cssText =
         "position:fixed;height:0;overfolw:hidden;font-weight:700;overflow:hidden";
       document.body.appendChild(this.tempDiv);

@@ -25,6 +25,8 @@ export default {
   watch: {
     data(val){
       if(val.length){
+        console.log('111111111111111111');
+        
         this.readCache();
       }
     }
@@ -37,6 +39,8 @@ export default {
     },
     saveCache(keys){
         this.list[this.page.id] = keys;
+        console.log(this.list);
+        
         localStorage.setItem('hideFieldList',JSON.stringify(this.list));
     },
     readCache(){
@@ -64,7 +68,7 @@ export default {
 
 .fieldShow {
   position: absolute;
-  right: -9px;
+  right: 11px;
   top: 0;
   bottom: 0;
   margin: auto 0;

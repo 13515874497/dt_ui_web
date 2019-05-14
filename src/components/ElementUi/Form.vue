@@ -4,7 +4,7 @@
     ref="data_model"
     :model="data_model"
     label-width="108px"
-    label-position="left"
+    label-position="right"
     status-icon
     @validate="handlerValidate"
     :rules="rules"
@@ -49,7 +49,7 @@
       </el-form-item>
 
       <el-form-item
-        v-else-if="item.inputType == 4"
+        v-else-if="item.inputType == 2"
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
@@ -61,11 +61,23 @@
           placeholder="选择日期"
           size="small"
         ></el-date-picker>
-        <!-- <el-input
+      </el-form-item>
+
+      <el-form-item
+        v-else-if="item.inputType == 4"
+        :label="item.headName"
+        :prop="item.topType"
+        :rules="matchedRule(item)"
+      >
+        <el-date-picker
+          value-format="timestamp"
           v-model="data_model[item.topType]"
-          :placeholder="item.placeholder"
-          :disabled="item.disabled"
-        ></el-input>-->
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          size="small"
+        ></el-date-picker>
       </el-form-item>
 
       <el-form-item
@@ -484,15 +496,22 @@ export default {
   padding-right: 15px;
 
   .el-form-item {
-  width: 350px;
-  margin-right: 16px;
-  margin-bottom: 0;
-  /deep/ .el-form-item__label {
-    text-align: justify;
-    text-align-last: justify;
+    width: 310px;
+    margin-right: 16px;
+    margin-bottom: 0;
+    // /deep/ .el-form-item__label {
+    //   text-align: justify;
+    //   text-align-last: justify;
+    // }
+    /deep/ .el-input__inner {
+      width: 200px;
+    }
+    /deep/ .el-date-editor.el-input,
+    .el-date-editor.el-input__inner {
+      width: unset;
+    }
   }
 }
-}
 
-// .form-content 
+// .form-content
 </style>

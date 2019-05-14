@@ -113,15 +113,22 @@ export default {
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
-      multipleSelection: [], //更新按钮数组收集
+      multipleSelection: [], //当前表格checkbox选中的
       data: {
         tableData: [], //表信息
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
-        page_sizes: [5, 10, 15, 20, 25]
+        page_sizes: [5, 10, 15, 20, 25],
+        shipNoticeEntry: {
+          currentPage: 0,
+          pageSize: 10,
+          packingListEntry: {
+            currentPage: 0,
+            pageSize: 10
+          }
+        }
       },
-      selection: [], //多选框选择的
       form_data_model: null, //当前form表单(新增、修改)绑定的数据
       form_editing: "add",
       add: {
@@ -200,7 +207,6 @@ export default {
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
-      // console.log( this.queryIds)
     },
     //table按钮选择 传参
     checkboxValue: function(value) {
@@ -266,7 +272,6 @@ export default {
     },
     passData_add($event) {
       console.log($event);
-      // this.form_data_model = $event[1];
       this.add.isPass = $event[0];
       this.add.data = $event[2];
       this.handlerFormData(this.add.data);
@@ -308,7 +313,7 @@ export default {
     },
     passData_update($event) {
       console.log($event);
-      // this.form_data_model = $event[1];
+
       this.update.isPass = $event[0];
 
       this.update.data = $event[2];
@@ -420,21 +425,13 @@ export default {
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
     this.tableTitle_show = [...this.tableTitle];
-    // this.add.customField = [...this.customField];
-    // this.update.customField = [...this.customField];
-
-    console.log(this.customField);
-
-    // console.log(this.$deepClone(this.customField)[0] === this.customField[0]);
-
     this.add.customField = deepClone(this.customField);
     this.update.customField = deepClone(this.customField);
-    console.log(this.customField);
-
-    console.log(this.add);
-    console.log(this.update);
   },
-  async mounted() {}
+  async mounted() {
+    console.log('3333333333');
+    
+  }
 };
 </script>
 
@@ -442,6 +439,7 @@ export default {
 <style lang="scss" scoped>
 main {
   position: relative;
+  padding-right: 7px;
 }
 #printCheck {
   width: 100%;
