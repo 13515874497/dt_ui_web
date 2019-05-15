@@ -20,9 +20,10 @@ export default {
    * @param result
    * @param pageData
    */
-  pageInfo(result, pageData) {
-    if (result.code === 200) {
-      const data = result.data
+  //普通的表格数据
+  pageInfo(res, pageData) {
+    if (res.code === 200) {
+      const data = res.data
       data.dataList.forEach((item, index) => {
         if (item.systemLogStatus) {
           for (let key in item.systemLogStatus) {
@@ -35,8 +36,37 @@ export default {
       pageData.currentPage = data.current_page
       pageData.total_size = data.total_size
     }
-
-
+  },
+  //有子表的表格  需要将父数据拷贝一份给子数据
+  handlerTableData(res,pageData){
+    if(res.code === 200){
+      const data = res.data;
+      let tableData = [];
+      console.log('33333333333333333333333333333333333333333333333333');
+      console.log(data);
+      
+      data.dataList.forEach(parent=>{
+        let childrens = parent.noticeEntryList || [];
+        console.log(childrens);
+        
+        delete parent.noticeEntryList;
+        childrens = childrens.map((children,index)=>{
+          let data = {...parent,...children}
+          data._versionParent = parent.version;
+          //如果是第一个元素 那么得出需要合并的个数 
+          if(index === 0){
+            data._mergeNum = childrens.length;
+          }
+          return data
+        });
+        tableData = tableData.concat(childrens)
+        console.log(childrens);
+      });
+      console.log(tableData);
+      
+      pageData.tableData = tableData;
+      pageData.currentPage = data.current_page
+      pageData.total_size = data.total_size
+    }
   }
-
 }

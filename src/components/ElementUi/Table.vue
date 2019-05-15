@@ -105,15 +105,14 @@ export default {
   },
   props: {
     tableData: Array,
-    tableTitle: Array
-
-    // loading:Boolean
+    tableTitle: Array,
+    mode: Number //在table中表示  需要合并父表的数据
   },
   watch: {
     tableTitle(val) {
       console.log(val);
       this.table_title = [...this.tableTitle];
-    },
+    }
     // tableData() {
     //   this.setRepeatField();
     // }
@@ -134,23 +133,22 @@ export default {
     },
     //表格某一列数据全部相同则合并
     spanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(this.tableData.length);
-      // let title = this.table_title.find(item=>{
-      //   return item.topType === column.property
-      // })
-      // if(title && title.isRepeat){
-      //   if(rowIndex === 0){
-      //     return {
-      //     rowspan: this.tableData.length,
-      //     colspan: 1,
-      //   }
-      //   }else {
-      //     return [0,0]
-      //   }
-        
-      // }else {
-      //   return [1,1];
-      // }
+      //如果是多个表的数据合并起来的数据   那么就合并父表的数据
+      if (this.mode === 2) {
+        let title = this.table_title.find(item => {
+          return item.topType === column.property;
+        });
+        if (title && title.subField === null) {
+          if (row._mergeNum) {
+            return {
+              rowspan: row._mergeNum,
+              colspan: 1
+            };
+          }else {
+            return [0,0]
+          }
+        }
+      }
     },
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
@@ -188,8 +186,6 @@ export default {
     setHeaderMinWidth(column) {
       //挂在到页面上从而获取宽度
       let TextWidth = this.getTempDomWidth(column.label);
-      // console.log(TextWidth);
-
       let minWidth = TextWidth + 20;
       //如果有排序的图标则加24  排序的箭头宽度 26
       if (column.sortable) {
@@ -259,32 +255,13 @@ export default {
       tempSpan.style.cssText = "display:inline-block";
       this.tempDiv.appendChild(tempSpan);
       return tempSpan.offsetWidth;
-    },
-    // setRepeatField() {
-    //   let self = this;
-    //   if(!self.tableData.length) return;
-    //   this.table_title.forEach(column => {
-    //     // 判断表格某一列是否数据相同
-    //     let isRepeat = false;
-    //     let key = column.topType;
-    //     let firstValue = self.tableData[0][key];
-    //     isRepeat = self.tableData.every(row => {
-    //       return row[key] === firstValue;
-    //     });
-    //     console.log(isRepeat);
-        
-    //     // if (isRepeat) {
-    //       column.isRepeat = isRepeat;
-    //     // }
-    //   });
-    // }
+    }
   },
   created() {
     let self = this;
-    if(this.menuId == 59){
-
+    if (this.menuId == 59) {
     }
-   
+
     this.table_title = [...this.tableTitle];
     console.log(this.table_title);
 
@@ -296,10 +273,10 @@ export default {
   mounted() {
     this.removeRightKeyMenu();
   },
-  activated () {
+  activated() {
     this.createTempWarpdom();
   },
-  deactivated(){
+  deactivated() {
     document.body.removeChild(this.tempDiv);
   }
 };

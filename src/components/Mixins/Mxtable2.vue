@@ -21,46 +21,15 @@
       </el-row>
     </section>
     <!--table表格-->
-    <section v-if="data.tableData.length">
-      <template v-for="item in data.tableData">
-        <div style="border:1px solid #000">
-          <el-table :data="[item]" class="table1">
-            <el-table-column prop="siteName" label="站点名称" width="180"></el-table-column>
-            <el-table-column prop="shopName" label="店铺名称" width="180"></el-table-column>
-          </el-table>
-          <!-- {{item.noticeEntryData.data}} -->
-          <template
-            v-for="(two,index) in (item.noticeEntryData && item.noticeEntryData.data.dataList || [])"
-          >
-            <!-- {{two}} -->
-            <el-table :data="[two]" class="table2" :show-header="index<1">
-              <el-table-column prop="neNwKg" label="净重kg" width="180"></el-table-column>
-              <el-table-column prop="neVolumeM3" label="体积m3" width="180"></el-table-column>
-              <el-table-column prop="packages" label="箱号" width="180"></el-table-column>
-              <el-table-column prop="packingStatus" label="0未装完：1装箱完" width="180"></el-table-column>
-              <el-table-column prop="quantity" label="应发数量" width="180"></el-table-column>
-              <el-table-column type="expand">
-                <el-table :data="two.pEData && two.pEData.data.dataList || []" class="table3">
-                  <el-table-column prop="packagesBeg" label="packagesBeg" width="180"></el-table-column>
-                  <el-table-column prop="packagesEnd" label="packagesEnd" width="180"></el-table-column>
-                  <el-table-column prop="volumeM3" label="volumeM3" width="180"></el-table-column>
-                </el-table>
-              </el-table-column>
-            </el-table>
-
-            <!-- {{two}} -->
-          </template>
-        </div>
-      </template>
-
-      <!-- <Table
+    <section>
+      <Table
         :tableData="data.tableData"
         :tableTitle="tableTitle_show"
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
         v-loading="loading"
-      />-->
-
+        :mode="2"
+      />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
@@ -137,9 +106,7 @@ import PubSub from "pubsub-js";
 export default {
   data() {
     return {
-      test_tableTitle: ["noticeEntryData"],
-      // test_tableTitle2:['']
-
+      mode: 2,
       page: {
         name: this.$route.params.name
       },
@@ -158,10 +125,6 @@ export default {
         shipNoticeEntry: {
           currentPage: 0,
           pageSize: 10,
-          packingListEntry: {
-            currentPage: 0,
-            pageSize: 10
-          }
         }
       },
       form_data_model: null, //当前form表单(新增、修改)绑定的数据
@@ -266,9 +229,11 @@ export default {
       console.log(res);
       this.loading = false;
       if (res.code === 200) {
-        //赋值 然后显示
-        pUtils.pageInfo(res, data);
+        //对表格数据进行处理
+        pUtils.handlerTableData(res, data);
       }
+      console.log(this.data.tableData);
+      
     },
     reset() {
       //触发下表头变更 让子组件初始化
@@ -463,7 +428,8 @@ export default {
     this.add.customField = deepClone(this.customField);
     this.update.customField = deepClone(this.customField);
   },
-  async mounted() {}
+  async mounted() {
+  }
 };
 </script>
 
@@ -510,19 +476,4 @@ main {
 //   transform: perspective(100px) rotateY(30deg);
 
 // }
-.table1 {
-  /deep/ th {
-    color: cadetblue;
-  }
-}
-.table2 {
-  /deep/ th {
-    color: cornflowerblue;
-  }
-}
-.table3 {
-  /deep/ th {
-    color: burlywood;
-  }
-}
 </style>
