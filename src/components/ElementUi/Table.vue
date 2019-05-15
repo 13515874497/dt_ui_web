@@ -1,99 +1,103 @@
 <template>
-  <el-table
-    :data="tableData"
-    height="500"
-    :span-method="spanMethod"
-    @selection-change="handleSelectionChange"
-    stripe
-    border
-    @header-dragend="handleHeaderDragend"
-    @header-contextmenu="headerClick"
-    :header-row-class-name="setTheadClassName"
-    class="content-table"
-  >
-    <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
-    <el-table-column type="selection" width="55"></el-table-column>
-    <el-table-column v-if="isShowNumber()" type="index" width="50" fixed></el-table-column>
-    <template v-for="title  in table_title">
-      <!--特殊字段 -->
-      <!-- 根据选项获取值的字段 -->
-      <el-table-column
-        v-if="title.inputType==3"
-        :label="title.headName"
-        :fixed="isFixed(title)"
-        :formatter="statusOptions"
-        :prop="title.topType"
-        :render-header="renderHeader"
-        :show-overflow-tooltip="true"
-        :key="title.id"
-      ></el-table-column>
+	<el-table
+		:data="tableData"
+		height="500"
+		:span-method="spanMethod"
+		@selection-change="handleSelectionChange"
+		stripe
+		border
+		@header-dragend="handleHeaderDragend"
+		@header-contextmenu="headerClick"
+		:header-row-class-name="setTheadClassName"
+		class="content-table"
+		row-key="orderDescriptionId"
+	>
+		<!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
+		<el-table-column type="selection" width="55" ></el-table-column>
+		<el-table-column v-if="isShowNumber()" type="index" width="50" fixed></el-table-column>
+		<template   >
+			<div v-for="(title, index) in table_title" :key="index">
+				<!--特殊字段 -->
+				<!-- 根据选项获取值的字段 -->
+				<el-table-column
+					v-if="title.inputType==3"
+					:label="title.headName"
+					:fixed="isFixed(title)"
+					:formatter="statusOptions"
+					:prop="title.topType"
+					:render-header="renderHeader"
+					:show-overflow-tooltip="true"
+					:key="index"
+				></el-table-column>
 
-      <el-table-column
-        v-else-if="title.topType==='userExpirationDate'"
-        :label="title.headName"
-        :fixed="isFixed(title)"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-      >
-        <template slot-scope="scope">
-          <span
-            v-if="scope.row.userExpirationDate!==0"
-          >{{ scope.row.userExpirationDate | date-format}}</span>
-          <span v-if="scope.row.userExpirationDate===0">始终有效</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-else-if="title.topType==='pwdValidityPeriod'"
-        :label="title.headName"
-        :fixed="isFixed(title)"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-      >
-        <template slot-scope="scope">
-          <span
-            v-if="scope.row.pwdValidityPeriod!==0"
-          >{{ scope.row.pwdValidityPeriod | date-format}}</span>
-          <span v-if="scope.row.pwdValidityPeriod===0">始终有效</span>
-        </template>
-      </el-table-column>
+				<el-table-column
+					v-else-if="title.topType==='userExpirationDate'"
+					:label="title.headName"
+					:fixed="isFixed(title)"
+					:show-overflow-tooltip="true"
+					:render-header="renderHeader"
+					:key="index"
+				>
+					<template slot-scope="scope">
+						<span
+							v-if="scope.row.userExpirationDate!==0"
+						>{{ scope.row.userExpirationDate | date-format}}</span>
+						<span v-if="scope.row.userExpirationDate===0">始终有效</span>
+					</template>
+				</el-table-column>
+				<el-table-column
+					v-else-if="title.topType==='pwdValidityPeriod'"
+					:label="title.headName"
+					:fixed="isFixed(title)"
+					:show-overflow-tooltip="true"
+					:render-header="renderHeader"
+					:key="index"
+				>
+					<template slot-scope="scope">
+						<span
+							v-if="scope.row.pwdValidityPeriod!==0"
+						>{{ scope.row.pwdValidityPeriod | date-format}}</span>
+						<span v-if="scope.row.pwdValidityPeriod===0">始终有效</span>
+					</template>
+				</el-table-column>
 
-      <el-table-column
-        v-else-if="title.inputType==4"
-        :fixed="isFixed(title)"
-        :label="title.headName"
-        :prop="title.topType"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-        sortable
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
-          <span>{{ scope.row[title.topType] | date-format}}</span>
-        </template>
-      </el-table-column>
+				<el-table-column
+					v-else-if="title.inputType==4"
+					:fixed="isFixed(title)"
+					:label="title.headName"
+					:prop="title.topType"
+					:show-overflow-tooltip="true"
+					:render-header="renderHeader"
+					:key="index"
+					sortable
+				>
+					<template slot-scope="scope">
+						<i class="el-icon-time" v-show="scope.row[title.topType]"></i>
+						<span>{{ scope.row[title.topType] | date-format}}</span>
+					</template>
+				</el-table-column>
 
-      <el-table-column
-        v-else
-        sortable
-        :fixed="isFixed(title)"
-        :label="title.headName"
-        :prop="title.topType"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-      ></el-table-column>
-    </template>
-    <el-table-column label="操作">
-      <template slot-scope="scope">
-        <slot name="operate" :childData="scope"></slot>
-      </template>
-    </el-table-column>
-  </el-table>
+				<el-table-column
+					v-else
+					sortable
+					:fixed="isFixed(title)"
+					:label="title.headName"
+					:prop="title.topType"
+					:show-overflow-tooltip="true"
+					:render-header="renderHeader"
+					:key="index"
+				></el-table-column>
+			</div>
+		</template>
+		<el-table-column label="操作" >
+			<template slot-scope="scope">
+				<slot name="operate" :childData="scope"></slot>
+			</template>
+		</el-table-column>
+	</el-table>
 </template>
 <script>
+	import Sortable from 'sortablejs'
 export default {
   data() {
     return {
@@ -111,14 +115,45 @@ export default {
   },
   watch: {
     tableTitle(val) {
-      console.log(val);
+      // console.log(val);
       this.table_title = [...this.tableTitle];
     },
-    // tableData() {
-    //   this.setRepeatField();
-    // }
+    tableData(val) {
+      // this.setRepeatField();
+			// console.log(val);
+    }
   },
   methods: {
+		columnDrop() {
+      const wrapperTr = document.querySelector('.el-table__header-wrapper tr')
+			console.log(wrapperTr);
+      this.sortable = Sortable.create(wrapperTr, {
+        animation: 180,
+        delay: 0,
+        onEnd: evt => {
+					console.log(evt.oldDraggableIndex);
+					console.log(evt.newDraggableIndex);
+					console.log(this.table_title);
+					console.log(this.tableTitle);
+					const oldIndex = evt.oldDraggableIndex-2;
+					const newIndex = evt.newDraggableIndex-2;
+					console.log(oldIndex);
+					console.log(newIndex);
+          const oldItem = this.table_title[oldIndex]
+					console.log(oldItem);
+					this.table_title.splice(oldIndex,1);
+					this.table_title.splice(newIndex, 0 ,oldItem);
+					// // console.log(this.tableTitle);
+					// this.table_title = this.tableTitle;
+					console.log(this.table_title);
+					// // console.log(aaa);
+					// 
+					console.log(this.tableData)
+					
+        }
+      })
+			console.log(this.sortable);
+    },
     setTheadClassName() {
       return "noRightKey";
     },
@@ -260,24 +295,24 @@ export default {
       this.tempDiv.appendChild(tempSpan);
       return tempSpan.offsetWidth;
     },
-    // setRepeatField() {
-    //   let self = this;
-    //   if(!self.tableData.length) return;
-    //   this.table_title.forEach(column => {
-    //     // 判断表格某一列是否数据相同
-    //     let isRepeat = false;
-    //     let key = column.topType;
-    //     let firstValue = self.tableData[0][key];
-    //     isRepeat = self.tableData.every(row => {
-    //       return row[key] === firstValue;
-    //     });
-    //     console.log(isRepeat);
+     setRepeatField() {
+       let self = this;
+       if(!self.tableData.length) return;
+       this.table_title.forEach(column => {
+         // 判断表格某一列是否数据相同
+         let isRepeat = false;
+         let key = column.topType;
+         let firstValue = self.tableData[0][key];
+         isRepeat = self.tableData.every(row => {
+           return row[key] === firstValue;
+         });
+         console.log(isRepeat);
         
-    //     // if (isRepeat) {
-    //       column.isRepeat = isRepeat;
-    //     // }
-    //   });
-    // }
+         // if (isRepeat) {
+           column.isRepeat = isRepeat;
+         // }
+       });
+     }
   },
   created() {
     let self = this;
@@ -295,6 +330,7 @@ export default {
 
   mounted() {
     this.removeRightKeyMenu();
+		this.columnDrop();
   },
   activated () {
     this.createTempWarpdom();
