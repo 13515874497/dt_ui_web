@@ -20,6 +20,7 @@
     "moment": "^2.22.2",
     "mutation": "0.0.1",
     "pubsub-js": "^1.7.0",
+    "sortablejs": "^1.9.0",
     "state": "^0.2.0",
     "storejs": "^1.0.25",
     "vue": "^2.6.10",
