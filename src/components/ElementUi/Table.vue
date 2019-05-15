@@ -61,21 +61,22 @@
 					</template>
 				</el-table-column>
 
-				<el-table-column
-					v-else-if="title.inputType==4"
-					:fixed="isFixed(title)"
-					:label="title.headName"
-					:prop="title.topType"
-					:show-overflow-tooltip="true"
-					:render-header="renderHeader"
-					:key="index"
-					sortable
-				>
-					<template slot-scope="scope">
-						<i class="el-icon-time" v-show="scope.row[title.topType]"></i>
-						<span>{{ scope.row[title.topType] | date-format}}</span>
-					</template>
-				</el-table-column>
+      <el-table-column
+        v-else-if="title.inputType==4 || title.inputType==4"
+        :fixed="isFixed(title)"
+        :label="title.headName"
+        :prop="title.topType"
+        :show-overflow-tooltip="true"
+        :render-header="renderHeader"
+        :key="index"
+        sortable
+      >
+        <template slot-scope="scope">
+          <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
+          <span>{{ scope.row[title.topType] | date-format}}</span>
+        </template>
+      </el-table-column>
+
 
 				<el-table-column
 					v-else

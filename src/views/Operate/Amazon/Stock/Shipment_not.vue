@@ -1,9 +1,9 @@
 <script>
 //出货通知单
 import { getNotice} from "@/api";
-import MxTable from "@/components/Mixins/MxTable";
+import MxTable2 from "@/components/Mixins/MxTable2";
 export default {
-  mixins: [MxTable],
+  mixins: [MxTable2],
   data() {
     return {
 
