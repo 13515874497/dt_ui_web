@@ -1,20 +1,23 @@
 <template>
     <div class="tags" v-if="showTags">
-      <div style="position:relative ;height:40px;overflow:hidden">
-        <ul class="tablist" ref="ulId" style="position: absolute;left:0;width:1700px;transition: all 1s;">
+      <div style="position:relative ;height:50px;overflow:hidden">
+        <ul class="tablist" ref="ulId" style="position: absolute;left:0;width:1700px;transition: all 1s; margin-bottom:0">
               <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title" >
                   <router-link :to="item.path" class="tags-li-title" >
                   {{item.title | ellipsis}}
                   </router-link>
                   <span class="tags-li-icon" @click="closeTags(index)" v-show="index !==0"><i class="el-icon-close"></i></span>
+                 
+                    <el-button  @click="refresh" class=" el-icon-refresh fresh" size="mini" >刷新</el-button>
+                    <el-button @click="collect" class=" el-icon-star-off collect" size="mini">收藏</el-button>  
               </li>
-          </ul>          
+        </ul>          
       </div>
-      <button class="arrow arrow_left" @click="next_pic" v-show="isShow"><</button>
-      <button class="arrow arrow_right" @click="prev_pic" v-show="isShow" >></button>
+      <!-- <button class="arrow arrow_left" @click="next_pic" v-show="isShow"><</button>
+      <button class="arrow arrow_right" @click="prev_pic" v-show="isShow" >></button> -->
       <div class="tags-close-box">
             <el-dropdown @command="handleTags">
-                <el-button size="mini" type="primary">
+                <el-button size="mini" type="primary" class="btnmi">
                     标签选项<i class="el-icon-arrow-down el-icon--right"></i>
                 </el-button>
                 <el-dropdown-menu size="small" slot="dropdown">
@@ -22,7 +25,7 @@
                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-             <el-button type="primary"  @click="refresh" class="el-icon-refresh fresh" size="mini">刷新页面</el-button >
+            
         </div>
     </div>
 </template>
@@ -67,6 +70,7 @@ export default {
     closeAll() {
       this.tagsList = [];
       this.$router.push("/index");
+      this.isShow = false
     },
     // 关闭其他标签
     closeOther() {
@@ -79,6 +83,10 @@ export default {
     refresh() {
       this.reload();
     },
+    //收藏页面
+    collect(){
+      console.log('收藏')
+    },
     // 设置标签
     setTags(route) {
       const isExist = this.tagsList.some(item => {
@@ -86,9 +94,9 @@ export default {
       });
       console.log(isExist);
       if (!isExist) {
-          if (this.tagsList.length >= 8) {
-          this.isShow = true;
-        }
+        //   if (this.tagsList.length >= 15) {
+        //   this.isShow = true;
+        // }
         if (this.tagsList.length >= 18) {
           alert("打开标签过多，请关闭其他标签");
           return;
@@ -109,22 +117,23 @@ export default {
       command === "other" ? this.closeOther() : this.closeAll();
     },
     //向左点击
-    next_pic() {
-      let wrap = this.$refs.ulId;
-      var newLeft;
-      newLeft = parseInt(wrap.style.left) - 40;
-      wrap.style.left = newLeft + "px";
-      console.log(newLeft)
+    // next_pic() {
+    //   let wrap = this.$refs.ulId;
+    //   var newLeft;
+    //   newLeft = parseInt(wrap.style.left) - 40;
+    //   wrap.style.left = newLeft + "px";
+    //   console.log(newLeft)
    
-    },
-    //向右点击
-    prev_pic() {
-      let wrap = this.$refs.ulId;
-      var newLeft;
-      newLeft = parseInt(wrap.style.left) + 40;
-      wrap.style.left = newLeft + "px";
-      console.log(newLeft)
-    }
+    // },
+    // //向右点击
+    // prev_pic() {
+    //   let wrap = this.$refs.ulId;
+    //   var newLeft;
+    //   newLeft = parseInt(wrap.style.left) + 40;
+    //   wrap.style.left = newLeft + "px";
+    //   console.log(newLeft)
+    // },
+
   },
   computed: {
     showTags() {
@@ -184,7 +193,7 @@ export default {
    border:none;
   position: absolute;
     top: 0px;
-    right: 205px;
+    right: 110px;
     display: inline-block;
     /* margin-top: 6px; */
     z-index: 9;
@@ -203,10 +212,10 @@ a {
 }
 .tags {
   position: relative;
-  height: 40px;
+  height: 50px;
   width: 100%;
   background: #fff;
-  padding-right: 205px;
+  padding-right:110px;
   box-shadow: 0 5px 10px #ddd;
   // overflow: hidden;
 }
@@ -225,7 +234,7 @@ a {
   margin: 7px 5px 2px 3px;
   border-radius: 3px;
   font-size: 12px;
-  overflow: hidden;
+  // overflow: hidden;
   cursor: pointer;
   height: 28px;
   line-height: 28px;
@@ -237,6 +246,7 @@ a {
   -webkit-transition: all 0.3s ease-in;
   -moz-transition: all 0.3s ease-in;
   transition: all 0.3s ease-in;
+  position: relative;
 }
 
 .tags-li:not(.active):hover {
@@ -262,9 +272,22 @@ a {
   color: #fff;
 }
 .fresh {
-  position: absolute;
-  right: 5px;
-  top: 7px;
+position:absolute;
+top:23px;
+left:-20px;
+border:none;
+outline: none;
+height:10px;
+background: none;
+}
+.collect{
+  position:absolute;
+  left:12px;
+  top:23px;
+  border:none;
+outline: none;
+height:10px;
+background: none;
 }
 .tags-close-box {
   position: absolute;
@@ -273,8 +296,8 @@ a {
   box-sizing: border-box;
   padding-top: 1px;
   text-align: center;
-  width: 205px;
-  height: 40px;
+  width: 108px;
+  height: 50px;
   background: #fff;
   box-shadow: -3px 0 15px 3px rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -283,5 +306,19 @@ a {
   position: absolute;
   top: 7px;
   left: 7px;
+}
+
+.tags-li .fresh,
+.tags-li .collect{
+  display: none;
+}
+.tags-li:hover .fresh{
+   display:block;    
+}
+.tags-li:hover .collect{
+   display:block;    
+}
+.btnmi{
+  padding:10px 15px;
 }
 </style>
