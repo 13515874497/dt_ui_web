@@ -13,6 +13,7 @@
     row-key="companyId"
     :show-summary="showSummary"
     :summary-method="getSummaries"
+    :highlight-current-row="editable"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
@@ -112,7 +113,11 @@ export default {
   props: {
     tableData: Array,
     tableTitle: Array,
-    mode: Number //在table中表示  需要合并父表的数据
+    mode: Number, //在table中表示  需要合并父表的数据
+    editable: {
+      type: Boolean,
+      default: false
+    }
   },
   computed:{
     showSummary(){

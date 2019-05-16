@@ -29,7 +29,6 @@
         v-if="tableTitle.length"
         v-loading="loading"
         :mode="2"
-        
       />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
@@ -40,7 +39,7 @@
     </section>
     <!-- 新增 -->
     <section>
-      <addInterface :dialogVisible="add.visible"></addInterface>
+      <addInterface :visible="add.visible" @close="close_add" :formItems="formItems" :formData="add.checkedData"></addInterface>
     </section>
 
     <!-- 修改 -->
@@ -83,7 +82,7 @@ import OperateBtn from "@/components/ElementUi/OperateBtn";
 import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
-import addInterface from './Add-Interface';
+import addInterface from "./Add-Interface";
 export default {
   data() {
     return {
@@ -96,16 +95,18 @@ export default {
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
-      multipleSelection: [], //当前表格checkbox选中的
+      multipleSelection: [], //当前表格checkbox选中的[childList,parent]
+      origin_tableData: [], // 未处理的表格数据
       data: {
         tableData: [], //表信息
+
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
         shipNoticeEntry: {
           currentPage: 0,
-          pageSize: 10,
+          pageSize: 10
         }
       },
       form_data_model: null, //当前form表单(新增、修改)绑定的数据
@@ -115,7 +116,8 @@ export default {
         data: null,
         isPass: false,
         reset: false,
-        customField: []
+        customField: [], //form表单自定义的字段
+        checkedData: [true,[],[]] //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
       },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
@@ -150,20 +152,6 @@ export default {
         return !this.sysLogNotForm.includes(item.topType);
       });
     }
-    //当前打开的新增或修改的form表单
-    // ref_form() {
-    //   if (this.add.visible && this.$refs.form_add) {
-    //     return this.$refs.form_add;
-    //   } else if (this.update.visible && this.$refs.form_update) {
-    //     return this.$refs.form_update;
-    //   }
-    // },
-    // //通过ref拿到当前form(新增、修改)绑定的数据
-    // ref_form_model() {
-    //   if (this.ref_form) {
-    //     return this.ref_form.data_model;
-    //   }
-    // },
   },
   components: {
     Pagination,
@@ -189,9 +177,40 @@ export default {
       this.queryIds = val;
     },
     //table按钮选择 传参
-    checkboxValue: function(value) {
-      this.multipleSelection = value;
-      console.log(this.multipleSelection);
+    checkboxValue: function(val) {
+      this.multipleSelection = val;
+    },
+    //对选中的数据进行校验
+    checkVerifyHandler() {
+      let self = this;
+      let val = this.multipleSelection;
+      let result = [];
+      if (!val.length) {
+        result = [true,[], []];
+      } else {
+        let id = val[0][this.primaryKey]; //选中的父id必须相同
+
+        if (id == undefined) {
+          message.errorMessage("未提供主键或主键错误");
+          result[0] = false;
+        } else {
+          let isOneParent = val.every(item => {
+            //判断选中的条目是否是同一个父对象
+            return item[self.primaryKey] === id;
+          });
+
+          result[0] = isOneParent;
+          if (!isOneParent) {
+            message.errorMessage("不能多选非关联的数据");
+          } else {
+            result[1] = this.origin_tableData.find(item => {
+              return item[self.primaryKey] === id;
+            });
+            result[2] = val;
+          }
+        }
+      }
+      return result;
     },
     //点击查询获得table的值
     async search() {
@@ -212,10 +231,11 @@ export default {
       this.loading = false;
       if (res.code === 200) {
         //对表格数据进行处理
+        this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
         pUtils.handlerTableData(res, data);
+        console.log(this.origin_tableData);
       }
       console.log(this.data.tableData);
-      
     },
     reset() {
       //触发下表头变更 让子组件初始化
@@ -249,7 +269,13 @@ export default {
     },
     openDialog_add() {
       console.log("新增");
+
+      console.log(this.checkVerifyHandler());
+      let result = this.checkVerifyHandler();
+      if (!result[0]) return;
+
       this.add.visible = true;
+      this.add.checkedData = result;
       this.form_editing = "add";
     },
     passData_add($event) {
@@ -358,6 +384,9 @@ export default {
         message.errorMessage(res.msg);
       }
     },
+    close_add($event) {
+      this.add.visible = !$event[0];
+    },
     //reset值发生改变即重置表单
     resetForm_add() {
       this.add.reset = !this.add.reset;
@@ -410,8 +439,7 @@ export default {
     this.add.customField = deepClone(this.customField);
     this.update.customField = deepClone(this.customField);
   },
-  async mounted() {
-  }
+  async mounted() {}
 };
 </script>
 
