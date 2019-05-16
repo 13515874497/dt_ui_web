@@ -1,10 +1,15 @@
 <template>
   <main>
     <!--表格上方查询条件-->
+	<!-- 	<el-tooltip class="item" effect="dark" content="最多保存两个方案" placement="top-start">
+		  <el-button type="primary" style="margin:0 35px 10px 5px;">保存查询方案</el-button>
+    </el-tooltip>
+		<el-button type="primary" style="margin:0 5px 10px 5px;">方案一</el-button> -->
+		
     <section id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="20">
         <el-col :span="4">
-          <Query2 :tableTitle="tableTitle" @getValue="getValue"></Query2>
+          <Query2 :tableTitle="tableTitle" :tValList="tValList" @getValue="getValue"></Query2>
         </el-col>
         <el-col :span="16">
           <inputQuery
@@ -14,7 +19,7 @@
             :querySuggestionsConfig="data"
             :querySuggestionsMethod="queryPage"
           ></inputQuery>
-        </el-col>
+        </el-col> 
         <el-col :span="4">
           <SearchReset @search="search" @reset="reset"></SearchReset>
         </el-col>
@@ -28,13 +33,12 @@
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
         v-loading="loading"
-        :mode="2"
       />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
-        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
+        <!-- <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/> -->
       </div>
     </section>
     <!-- 新增 -->
@@ -106,26 +110,31 @@ import PubSub from "pubsub-js";
 export default {
   data() {
     return {
-      mode: 2,
       page: {
         name: this.$route.params.name
       },
+			listS:'',
       loading: false,
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
-      multipleSelection: [], //当前表格checkbox选中的
+			tValList:[],
+      multipleSelection: [], //更新按钮数组收集
       data: {
         tableData: [], //表信息
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
-        shipNoticeEntry: {
-          currentPage: 0,
-          pageSize: 10,
-        }
+        // shipNoticeEntry: {
+        //   currentPage: 0,
+        //   pageSize: 10,
+        //   packingListEntry: {
+        //     currentPage: 0,
+        //     pageSize: 10
+        //   }
+        // }
       },
       form_data_model: null, //当前form表单(新增、修改)绑定的数据
       form_editing: "add",
@@ -200,11 +209,15 @@ export default {
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
+				console.log(this.data);
       }
     },
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
+
+      console.log( this.queryIds)
+
     },
     //table按钮选择 传参
     checkboxValue: function(value) {
@@ -213,6 +226,7 @@ export default {
     },
     //点击查询获得table的值
     async search() {
+			console.log(this.data);
       this.pagination(this.data);
     },
     queryPage(data) {
@@ -229,11 +243,9 @@ export default {
       console.log(res);
       this.loading = false;
       if (res.code === 200) {
-        //对表格数据进行处理
-        pUtils.handlerTableData(res, data);
+        //赋值 然后显示
+        pUtils.pageInfo(res, data);
       }
-      console.log(this.data.tableData);
-      
     },
     reset() {
       //触发下表头变更 让子组件初始化
@@ -246,7 +258,7 @@ export default {
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
       let list = $event[0];
-      console.log(list);
+      console.log($event);
       if (!list) {
         return;
       } else {
@@ -255,6 +267,7 @@ export default {
         });
       }
       console.log(this.tableTitle_show);
+	
     },
     handlerFormData(data) {
       data.systemLogStatus = {};
@@ -424,9 +437,15 @@ export default {
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
+		this.tValList = [1002,1004];
+		
     this.tableTitle_show = [...this.tableTitle];
+    this.add.customField = [...this.customField];
+    this.update.customField = [...this.customField];
+
     this.add.customField = deepClone(this.customField);
     this.update.customField = deepClone(this.customField);
+
   },
   async mounted() {
   }

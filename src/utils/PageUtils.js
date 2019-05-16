@@ -42,13 +42,10 @@ export default {
     if(res.code === 200){
       const data = res.data;
       let tableData = [];
-      console.log('33333333333333333333333333333333333333333333333333');
-      console.log(data);
       
       data.dataList.forEach(parent=>{
         let childrens = parent.noticeEntryList || [];
-        console.log(childrens);
-        
+
         delete parent.noticeEntryList;
         childrens = childrens.map((children,index)=>{
           let data = {...parent,...children}
@@ -60,10 +57,7 @@ export default {
           return data
         });
         tableData = tableData.concat(childrens)
-        console.log(childrens);
       });
-      console.log(tableData);
-      
       pageData.tableData = tableData;
       pageData.currentPage = data.current_page
       pageData.total_size = data.total_size

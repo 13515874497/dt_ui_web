@@ -28,6 +28,8 @@
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
         v-loading="loading"
+        :mode="2"
+        
       />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
@@ -38,26 +40,7 @@
     </section>
     <!-- 新增 -->
     <section>
-      <el-dialog :title="'新增 '+page.name" :visible.sync="add.visible">
-        <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form
-          key="新增"
-          :formItems="formItems"
-          @passData="passData_add"
-          @giveDataModel="getDataModel"
-          :rule="rule"
-          :reset="add.reset"
-          :customField="add.customField"
-        ></Form>
-
-        <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="send_add(true)">保 存</el-button>
-          <el-button @click="send_add(false)">保存并复制</el-button>
-          <el-button @click="send_add(false,true)">保存并继续</el-button>
-          <el-button @click="resetForm_add">重 置</el-button>
-          <el-button @click="add.visible = false">取 消</el-button>
-        </div>
-      </el-dialog>
+      <addInterface :dialogVisible="add.visible"></addInterface>
     </section>
 
     <!-- 修改 -->
@@ -91,7 +74,6 @@
 import Query2 from "@/components/ElementUi/Query2";
 import InputQuery from "@/components/ElementUi/InputQuery";
 import SearchReset from "@/components/ElementUi/SearchReset";
-
 import message from "@/utils/Message";
 import pUtils from "@/utils/PageUtils";
 import Pagination from "@/components/ElementUi/Pagination";
@@ -101,10 +83,11 @@ import OperateBtn from "@/components/ElementUi/OperateBtn";
 import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
-import PubSub from "pubsub-js";
+import addInterface from './Add-Interface';
 export default {
   data() {
     return {
+      mode: 2,
       page: {
         name: this.$route.params.name
       },
@@ -120,14 +103,10 @@ export default {
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
-        // shipNoticeEntry: {
-        //   currentPage: 0,
-        //   pageSize: 10,
-        //   packingListEntry: {
-        //     currentPage: 0,
-        //     pageSize: 10
-        //   }
-        // }
+        shipNoticeEntry: {
+          currentPage: 0,
+          pageSize: 10,
+        }
       },
       form_data_model: null, //当前form表单(新增、修改)绑定的数据
       form_editing: "add",
@@ -194,7 +173,8 @@ export default {
     Query2,
     InputQuery,
     SearchReset,
-    PopoverFilterFields
+    PopoverFilterFields,
+    addInterface
   },
   methods: {
     setQuery($event) {
@@ -231,9 +211,11 @@ export default {
       console.log(res);
       this.loading = false;
       if (res.code === 200) {
-        //赋值 然后显示
-        pUtils.pageInfo(res, data);
+        //对表格数据进行处理
+        pUtils.handlerTableData(res, data);
       }
+      console.log(this.data.tableData);
+      
     },
     reset() {
       //触发下表头变更 让子组件初始化
