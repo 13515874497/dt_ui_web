@@ -14,7 +14,7 @@
 
       <Tags></Tags>
 
-      <el-main style="position:relative;overflow:hidden">
+      <el-main style="position:relative;overflow-y:scroll;padding-right:0">
           <div >
             <a href="####" class="divFlag"  @click="this.handleClick" v-show='!this.isCollapse' >《</a>
             <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>

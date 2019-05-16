@@ -284,7 +284,11 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, d
 // 运营管理=> 亚马逊=>通知单
 
 //出货通知单  post
-export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`, data, 'POST')
+// export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`, data, 'POST')
+export const getNotice = (data) => ajax(BASE_URL + `/no/getNotice`, data, 'POST')
+
+
+
 
 // 运营管理=> 亚马逊=>费用
 

@@ -4,11 +4,12 @@
     ref="data_model"
     :model="data_model"
     label-width="108px"
-    label-position="left"
+    label-position="right"
     status-icon
     @validate="handlerValidate"
     :rules="rules"
     class="form-content scrollbar"
+    :inline="true"
   >
     <template v-for="item in formItems_">
       <el-form-item
@@ -22,7 +23,7 @@
           v-model="data_model[item.topType]"
           active-color="#409eff"
           inactive-color="#13ce66"
-          :active-text="JSON.stringify(item.statusOptions[0].name)"
+          :active-text="item.statusOptions[0].name"
           :inactive-text="item.statusOptions[1].name"
           :active-value="item.statusOptions[0].id"
           :inactive-value="item.statusOptions[1].id"
@@ -48,7 +49,7 @@
       </el-form-item>
 
       <el-form-item
-        v-else-if="item.inputType == 4"
+        v-else-if="item.inputType == 2"
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
@@ -58,12 +59,25 @@
           v-model="data_model[item.topType]"
           type="date"
           placeholder="选择日期"
+          size="small"
         ></el-date-picker>
-        <!-- <el-input
+      </el-form-item>
+
+      <el-form-item
+        v-else-if="item.inputType == 4"
+        :label="item.headName"
+        :prop="item.topType"
+        :rules="matchedRule(item)"
+      >
+        <el-date-picker
+          value-format="timestamp"
           v-model="data_model[item.topType]"
-          :placeholder="item.placeholder"
-          :disabled="item.disabled"
-        ></el-input>-->
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          size="small"
+        ></el-date-picker>
       </el-form-item>
 
       <el-form-item
@@ -76,6 +90,7 @@
           v-model="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
+          size="small"
         ></el-input>
       </el-form-item>
 
@@ -93,6 +108,7 @@
           :remote="item.remote"
           :remoteMethod="item.remoteMethod"
           :clearable="item.remote"
+          size="small"
         >
           <el-option
             v-for="option in item.data"
@@ -116,6 +132,7 @@
           @change="triggerFormChange"
           :props="props_inputType5"
           :filterable="true"
+          size="small"
         ></el-cascader>
       </el-form-item>
 
@@ -129,6 +146,7 @@
           v-model.trim="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
+          size="small"
         ></el-input>
       </el-form-item>
     </template>
@@ -193,7 +211,7 @@ export default {
     formData: Object, //有传这个说明是修改
     rule: Object, //某些特殊字段的验证规则
     reset: Boolean, // 改变时重置数据
-    customField:{
+    customField: {
       type: Array,
       default: []
     } //某些特殊字段在填写时需要想后台请求数据
@@ -372,12 +390,18 @@ export default {
       } else {
         //新增
         this.formItems_.forEach(item => {
+          console.log(item.topType);
+
           if (item.statusOptions && item.statusOptions.length) {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
           } else {
             self.$set(this.data_model, item.topType, null);
+            if (item.bindKey) {
+              self.$set(this.data_model, item.bindKey, null);
+            }
           }
         });
+        console.log(this.data_model);
       }
 
       this.data_model_cache = { ...this.data_model }; //用于对比数据 只回传发生改变的数据
@@ -470,9 +494,24 @@ export default {
   max-height: 500px;
   overflow-y: scroll;
   padding-right: 15px;
+
+  .el-form-item {
+    width: 310px;
+    margin-right: 16px;
+    margin-bottom: 0;
+    // /deep/ .el-form-item__label {
+    //   text-align: justify;
+    //   text-align-last: justify;
+    // }
+    /deep/ .el-input__inner {
+      width: 200px;
+    }
+    /deep/ .el-date-editor.el-input,
+    .el-date-editor.el-input__inner {
+      width: unset;
+    }
+  }
 }
-.form-content .el-form--label-left .el-form-item__label {
-  text-align: justify;
-  text-align-last: justify;
-}
+
+// .form-content
 </style>
