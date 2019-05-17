@@ -24,7 +24,7 @@
             @keyup.enter.native="Login"
           ></el-input>
           <div style="margin-top: 60px">
-            <el-button type="primary" class="loading" @click="Login" :disabled="isLanding">登陆</el-button>
+            <el-button type="primary" class="login-btn" @click="Login" :disabled="isLanding">登陆</el-button>
             <div style="text-align: center; height:100px;line-height:100px">
               <el-checkbox v-model="rememberMe" style="">
                 自动登陆
@@ -181,8 +181,9 @@ export default {
   margin-top:50px;
 }
 
-.loading {
-  width: 340px !important;
-  border-radius: 25px !important;
+.login-btn {
+  // width: 340px !important;
+  border-radius: 25px;
+  width: 100%;
 }
 </style>

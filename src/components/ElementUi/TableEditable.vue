@@ -10,10 +10,8 @@
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
     class="content-table"
-    row-key="companyId"
     :show-summary="showSummary"
     :summary-method="getSummaries"
-    :highlight-current-row="editable"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
@@ -31,6 +29,7 @@
           :render-header="renderHeader"
           :show-overflow-tooltip="true"
           :key="index"
+					:column-key="index.toString()"
         ></el-table-column>
 
         <el-table-column
@@ -40,6 +39,7 @@
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
           :key="index"
+					:column-key="index.toString()"
         >
           <template slot-scope="scope">
             <span
@@ -55,6 +55,7 @@
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
           :key="index"
+					:column-key="index.toString()"
         >
           <template slot-scope="scope">
             <span
@@ -65,7 +66,7 @@
         </el-table-column>
 
         <el-table-column
-          v-else-if="title.inputType==4 || title.inputType==4"
+          v-else-if="title.inputType==2 || title.inputType==4"
           :fixed="isFixed(title)"
           :label="title.headName"
           :prop="title.topType"
@@ -73,6 +74,7 @@
           :render-header="renderHeader"
           :key="index"
           sortable
+					:column-key="index.toString()"
         >
           <template slot-scope="scope">
             <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
@@ -89,10 +91,11 @@
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
           :key="index"
+					:column-key="index.toString()"
         ></el-table-column>
       </div>
     </template>
-    <el-table-column label="操作">
+    <el-table-column label="操作" v-if="showOperate">
       <template slot-scope="scope">
         <slot name="operate" :childData="scope"></slot>
       </template>
@@ -114,58 +117,76 @@ export default {
     tableData: Array,
     tableTitle: Array,
     mode: Number, //在table中表示  需要合并父表的数据
-    editable: {
+    showOperate: {
       type: Boolean,
       default: false
     }
   },
-  computed:{
-    showSummary(){
-      return this.table_title.some(item=>{
-        return item.whetherCal
+  computed: {
+    showSummary() {
+      return this.table_title.some(item => {
+        return item.whetherCal;
       });
     }
   },
   watch: {
     tableTitle(val) {
       // console.log(val);
-      this.table_title = [...this.tableTitle];
+      // this.table_title = [...this.tableTitle];
+			this.table_title = val
+			console.log(this.table_title);
+    },
+    tableData(val) {
+      // this.setRepeatField();
+			// console.log(val);
     }
     // tableData() {
     //   this.setRepeatField();
     // }
   },
   methods: {
-    columnDrop() {
-      const wrapperTr = document.querySelector(".el-table__header-wrapper tr");
-      console.log(wrapperTr);
+		columnDrop() {
+			
+			var wrapperTr = this.$el.querySelector('.el-table__header-wrapper tr');
+			console.log(wrapperTr);
+			var oldIndex,newIndex,oldItem,newItem;
       this.sortable = Sortable.create(wrapperTr, {
         animation: 180,
         delay: 0,
-        onEnd: evt => {
-          console.log(evt);
-
-          console.log(evt.oldDraggableIndex);
-          console.log(evt.newDraggableIndex);
-          console.log(this.table_title);
-          console.log(this.tableTitle);
-          const oldIndex = evt.oldDraggableIndex - 2;
-          const newIndex = evt.newDraggableIndex - 2;
-          console.log(oldIndex);
-          console.log(newIndex);
-          const oldItem = this.table_title[oldIndex];
-          console.log(oldItem);
-          this.table_title.splice(oldIndex, 1);
-          this.table_title.splice(newIndex, 0, oldItem);
-          // // console.log(this.tableTitle);
-          // this.table_title = this.tableTitle;
-          console.log(this.table_title);
-          // // console.log(aaa);
-          //
-          console.log(this.tableData);
-        }
-      });
-      console.log(this.sortable);
+				onUpdate:evt=>{
+					
+					var $li = wrapperTr.children[evt.newIndex],
+					$oldLi = wrapperTr.children[evt.oldIndex]
+					
+					wrapperTr.removeChild($li)  
+					if(evt.newIndex > evt.oldIndex) {
+					
+					  wrapperTr.insertBefore($li,$oldLi)
+					
+					} else {
+					  wrapperTr.insertBefore($li,$oldLi.nextSibling)
+					
+					}
+					oldIndex = evt.oldIndex-2;
+					newIndex = evt.newIndex-2;
+					var item = this.table_title.splice(oldIndex,1);
+					this.table_title.splice(newIndex, 0 ,item[0]);
+					
+					// 下面是更改index的测试版 不对 
+					// oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
+					// oldIndex = this.table_title.indexOf($oldLi);
+					// console.log(oldIndex);
+					// newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
+					// console.log(newIndex);
+					// var item = this.table_title.splice(oldIndex.index,1);
+					// this.table_title.splice(newIndex.index, 0 ,item[0]);
+					
+				},
+				onEnd:evt=>{
+					
+				}
+				
+      })
     },
     setTheadClassName() {
       return "noRightKey";
@@ -201,6 +222,7 @@ export default {
     },
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
+			console.log(this.table_title);
       this.$emit("checkboxValue", val);
       console.log(val);
     },
@@ -228,10 +250,10 @@ export default {
         return option.name;
       }
     },
-    renderHeader(h, { column, $index }) {
-      this.setHeaderMinWidth(column);
-      return column.label;
-    },
+		renderHeader(h, { column, $index }) {
+		  this.setHeaderMinWidth(column);
+		  return column.label;
+		},
     setHeaderMinWidth(column) {
       //挂在到页面上从而获取宽度
       let TextWidth = this.getTempDomWidth(column.label);
@@ -310,32 +332,32 @@ export default {
       const self = this;
       const { columns, data } = param;
       const sums = [];
-      columns.forEach((column,index)=>{
-        if(index === 0){
-          sums[index] = '合计'
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
           return;
         }
-        if(!column.property){
-          sums[index] = '';
+        if (!column.property) {
+          sums[index] = "";
           return;
         }
-        let title = self.table_title.find(item=>{
-          return item.topType === column.property
+        let title = self.table_title.find(item => {
+          return item.topType === column.property;
         });
-        if(title && title.whetherCal){
+        if (title && title.whetherCal) {
           // sums[index]
           const values = data.map(item => {
-            return Number(item[title.topType] || 0)
-          })
-          if(!values.length){
-            sums[index] = '';
+            return Number(item[title.topType] || 0);
+          });
+          if (!values.length) {
+            sums[index] = "";
             return;
           }
-          sums[index] = values.reduce((prev,curr)=>{
+          sums[index] = values.reduce((prev, curr) => {
             return prev + curr;
-          })
-        }else {
-          sums[index] = '';
+          });
+        } else {
+          sums[index] = "";
         }
       });
       return sums;
@@ -352,6 +374,7 @@ export default {
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
+		console.log(this.tableTitle);
   },
 
   mounted() {
@@ -383,5 +406,10 @@ export default {
 }
 .content-table {
   width: calc(100% - 15px);
+  /deep/ .el-table .cell {
+    white-space: nowrap;
+  }
 }
+
+
 </style>

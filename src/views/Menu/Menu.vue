@@ -14,6 +14,8 @@
         :default-expand-all="false"
         :expand-on-click-node="false"
         :props="defaultProps"
+        draggable
+        :allow-drop="allowDrop"
       >
         <span class="custom-tree-node" slot-scope="{ node, data }">
           <span>{{ node.label}}</span>
@@ -195,6 +197,7 @@ import Pagination from "@/components/ElementUi/Pagination"; // 分页组件
 import AddDelUpBtn from "@/components/ElementUi/AddDelUpBtn"; //增删改组件
 import requestAjax from "@/api/requestAjax";
 import Table from "@/components/ElementUi/Table";
+import Form from "@/components/ElementUi/Form";
 import { Message } from "element-ui";
 import { DBFieldRepeat } from "@/utils/verify";
 let id = 1000; //假菜单ID
@@ -414,8 +417,8 @@ export default {
   components: {
     Pagination,
     AddDelUpBtn,
-    Table
-    // Form
+    Table,
+    Form
   },
   watch: {
     "introList_filter.input": function(val) {
@@ -437,18 +440,20 @@ export default {
       this.centerDialogVisible = true;
       this.dataMenu = data;
     },
-
     //设置菜单名称
     addMenu() {
-      const newChild = { menuId: ++id, name: this.inputMenu, childMenus: [] };
+      const newChild = { menuId: ++id, mName: this.inputMenu, childMenus: [] };
       if (!this.dataMenu.childMenus) {
         this.$set(this.dataMenu, "childMenus", []);
       }
       this.dataMenu.childMenus.push(newChild);
+
+			console.log(this.dataMenu);
       //拿到对象
-      const menu = { parentId: this.dataMenu.menuId, name: this.inputMenu };
+      const menu = { parentId: this.dataMenu.menuId, mName: this.inputMenu };
       //插入数组
       this.addNewMenu.push(menu);
+			console.log(this.addNewMenu);
       this.centerDialogVisible = false;
     },
     //重置按钮(
@@ -513,6 +518,7 @@ export default {
     },
     //菜单列表 => 编辑
     update(data) {
+			console.log(data);
       this.editingMenu.data = { ...data };
       this.editingMenu.isShow = true;
       this.activeName = "first";
@@ -532,7 +538,7 @@ export default {
       if (res.code === 200) {
         storage.saveData(this.userName + "menu", res.data);
         this.menuList = res.data;
-        this.mresetMenuList = res.data;
+        this.resetMenuList = res.data;
       }
     },
     //菜单列表 => 编辑 => 菜单信息 | 字段信息

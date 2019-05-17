@@ -224,7 +224,7 @@ export default {
   line-height: 40px;
 }
 </style>
-<style media="print">
+<style media="print" scoped>
 @page {
   size: auto A4 landscape;
   margin: 5mm 8mm;

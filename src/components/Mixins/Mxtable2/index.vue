@@ -39,7 +39,7 @@
     </section>
     <!-- 新增 -->
     <section>
-      <addInterface :visible="add.visible" @close="close_add" :formItems="formItems" :formData="add.checkedData"></addInterface>
+      <addInterface :visible="add.visible" @close="close_add" :titles="formItems" :data="add.checkedData"></addInterface>
     </section>
 
     <!-- 修改 -->
@@ -117,7 +117,7 @@ export default {
         isPass: false,
         reset: false,
         customField: [], //form表单自定义的字段
-        checkedData: [true,[],[]] //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
+        checkedData: [true,null,[]] //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
       },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
@@ -186,10 +186,9 @@ export default {
       let val = this.multipleSelection;
       let result = [];
       if (!val.length) {
-        result = [true,[], []];
+        result = [true,null,[]];
       } else {
         let id = val[0][this.primaryKey]; //选中的父id必须相同
-
         if (id == undefined) {
           message.errorMessage("未提供主键或主键错误");
           result[0] = false;
@@ -198,7 +197,6 @@ export default {
             //判断选中的条目是否是同一个父对象
             return item[self.primaryKey] === id;
           });
-
           result[0] = isOneParent;
           if (!isOneParent) {
             message.errorMessage("不能多选非关联的数据");

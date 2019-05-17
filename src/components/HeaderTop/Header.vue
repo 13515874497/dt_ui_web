@@ -41,7 +41,7 @@
       </ul>
     </div>
 
-    <el-dialog title="文件查询" :visible.sync="showQueryFiles" width="1200px" style="z-index:99">
+    <el-dialog title="文件查询" :visible.sync="showQueryFiles" width="1200px">
       <QueryFiles></QueryFiles>
     </el-dialog>
 

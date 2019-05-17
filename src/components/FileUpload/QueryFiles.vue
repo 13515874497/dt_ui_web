@@ -41,7 +41,7 @@
 
     </div>
 
-    <Table :tableData="existedFiles.tableData" :tableTitle="tableTitle">
+    <Table :tableData="existedFiles.tableData" :tableTitle="tableTitle" :showOperate="true">
       <template v-slot:operate="scope">
         <el-button
           @click="download(scope)"

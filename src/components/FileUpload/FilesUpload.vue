@@ -83,7 +83,7 @@
                 color="#ffffff"
                 closable
               >{{item.fileName}}</el-tag>
-              
+
               <el-progress
                 :percentage="uploadStatus[index].progress.percentage"
                 :status="uploadStatus[index].progress.status"
@@ -143,6 +143,7 @@
         <Table
           :tableData="existedFiles.tableData"
           :tableTitle="tableTitle"
+          :showOperate="true"
           v-if="tableTitle.length"
         >
           <template v-slot:operate="scope">
