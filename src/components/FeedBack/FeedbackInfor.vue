@@ -5,33 +5,23 @@
                 <el-input v-model="ruleForm.name"></el-input>
             </el-form-item>
             <el-form-item label="反馈菜单" prop="menu">
-                <el-cascader
-                  :options="options"
-                  v-model="ruleForm.selectedOptions" 
-                  :show-all-levels="true" 
-                ></el-cascader>
-            </el-form-item>
+                <el-input v-model="ruleForm.menu"></el-input>
+            </el-form-item> 
 
-            <el-form-item label="图片" >
-              <div class="imgsBox" v-for="(item, index) in imgList">               　
-                 <!-- <img width="100%" :src="ruleForm.dialogImageUrl" alt=""> -->
-                 <a href="javascript:;" class="img" >
-                   <img :src=item  alt="" style="width:100%;height:100%">
-                   <a class="closeIcon" @click="delImg(index)">×</a>
-                 </a>
-              </div>
-            
-            </el-form-item>
-
-            <el-form-item label="点击上传" >
+            <el-form-item label="图片">
                  <el-upload
-                    action=""
-                    class="avatar-uploader"
-                    :before-upload="beforeAvatarUpload"
-                    accept="image/*"
-                    >
-                    <i class="el-icon-plus avatar-uploader-icon"></i>
+                    action
+                    list-type="picture-card"
+                    :on-preview="handlePictureCardPreview"
+                    :on-remove="handleRemove"
+                    :limit="3">
+                    <i class="el-icon-plus"></i>
                 </el-upload>
+
+                
+                   <img width="100%" :src="dialogImageUrl" alt="">
+                  
+
             </el-form-item>
 
             <el-form-item label="描述" prop="desc">
@@ -46,18 +36,17 @@
 </template>
 <script>
 import axios from "axios";
-import { BASE_URL,repMenu } from "@/api";
-import message from "@/utils/Message";
+import { BASE_URL } from "@/api";
 export default {
   data() {
     return {
       ruleForm: {
         name: "",
-        desc: "",
-        selectedOptions: [],
+        menu: "",
+        desc: ""
       },
-      imgList: [], 
-      options: [],
+      dialogImageUrl: "",
+      dialogVisible: false
     };
   },
   methods: {
@@ -74,7 +63,15 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-    //图片上传
+
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+
     beforeAvatarUpload(file) {
       let param = new FormData(); // 创建form对象
       param.append("files", file, file.name); // 通过append向form对象添加数据
@@ -87,94 +84,11 @@ export default {
       axios.post(BASE_URL + "/upload/images", param, config).then(res => {
         console.log(res);
         if (res.status == 200) {
-          // this.ruleForm.dialogImageUrl= res.data.data[0].url;
-          if (this.imgList.length > 2) {
-            message.errorMessage("上传图片不能超过3张!");
-            return;
-          }
-          console.log("xiaoyu");
-          this.imgList.push(res.data.data[0].url);
+          this.dialogImageUrl = res.data.data[0].url;
         }
       });
     },
-    //图片删除
-    delImg(index) {
-      this.imgList.splice(index, 1);
-    },
-    async getRepMenu() {
-    let res = await repMenu();
-    console.log(res)
-    let batchdata = res.data
-		//valueBatch
-		let dataValueBatch = batchdata  => batchdata .map(({menuId, mName, childMenus}) => (childMenus ? {
-					value    : menuId,
-					label    : mName,
-					children : dataValueBatch(childMenus),
-			} : {
-					value : menuId,
-					label : mName,
-			}));
-      this.options = dataValueBatch(batchdata);
-    },
-  },
-  mounted(){
-    this.getRepMenu()
   }
 };
 </script>
-<style lang="scss" scoped>
-a {
-  text-decoration: none;
-  outline: none;
-}
-.imgsBox {
-  width: 148px;
-  height: 148px;
-  border: burlywood;
-}
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
-.avatar-uploader-icon {
-  font-size: 28px;
-  color: #8c939d;
-  width: 150px;
-  height: 150px;
-  line-height: 150px;
-  text-align: center;
-  border: 1px dashed #8c939d;
-}
-.imgsBox {
-  width: 150px;
-  height: 150px;
-  display: block;
-  float: left;
-  margin-right: 10px;
-}
-.img {
-  position: relative;
-  width: 94px;
-  height: 94px;
-  line-height: 94px;
-}
-.img .closeIcon {
-  display: none;
-}
-.imgsBox:hover .img .closeIcon {
-  display: block;
-  position: absolute;
-  right: -2px;
-  top: -70px;
-  line-height: 1;
-  font-size: 22px;
-  color: #aaa;
-}
-</style>
 

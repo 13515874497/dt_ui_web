@@ -109,7 +109,7 @@ export const repIndex = () => ajax(BASE_URL + `/index`)
 //登陆状态
 export const getLoginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
-export const repLogout = () => ajax(BASE_URL + `/login/logout`)
+export const repLogout = () => ajax(BASE_URL + `api/login/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {

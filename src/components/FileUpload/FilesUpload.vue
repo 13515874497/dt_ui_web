@@ -83,7 +83,7 @@
                 color="#ffffff"
                 closable
               >{{item.fileName}}</el-tag>
-              
+
               <el-progress
                 :percentage="uploadStatus[index].progress.percentage"
                 :status="uploadStatus[index].progress.status"

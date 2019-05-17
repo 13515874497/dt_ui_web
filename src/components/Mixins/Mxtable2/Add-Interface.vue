@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import TableEditable from "@/components/ElementUi/Table_Editable";
+import TableEditable from "@/components/ElementUi/TableEditable";
 export default {
   props: {
     visible: Boolean,
@@ -31,7 +31,7 @@ export default {
   },
   components: {
     TableEditable
-  },
+  }, 
   data() {
     return {
       page: {
