@@ -1,10 +1,10 @@
 <template>
   <main>
     <!--表格上方查询条件-->
-	<!-- 	<el-tooltip class="item" effect="dark" content="最多保存两个方案" placement="top-start">
+		<el-tooltip class="item" effect="dark" content="最多保存两个方案" placement="top-start">
 		  <el-button type="primary" style="margin:0 35px 10px 5px;">保存查询方案</el-button>
     </el-tooltip>
-		<el-button type="primary" style="margin:0 5px 10px 5px;">方案一</el-button> -->
+		<el-button type="primary" style="margin:0 5px 10px 5px;">方案一</el-button>
 		
     <section id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="20">
@@ -16,6 +16,7 @@
             @changeQuery="setQuery"
             :tableTitle="tableTitle"
             :selectedIds="queryIds"
+						:inputData="inputData"
             :querySuggestionsConfig="data"
             :querySuggestionsMethod="queryPage"
           ></inputQuery>
@@ -28,6 +29,7 @@
     <!--table表格-->
     <section>
       <Table
+				@changeTitle="changeTitle" 
         :tableData="data.tableData"
         :tableTitle="tableTitle_show"
         v-on:checkboxValue="checkboxValue"
@@ -38,7 +40,7 @@
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
-        <!-- <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/> -->
+        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
       </div>
     </section>
     <!-- 新增 -->
@@ -120,6 +122,7 @@ export default {
       tableTitle: [], //表头信息
       tableTitle_show: [],
 			tValList:[],
+			inputData:"",
       multipleSelection: [], //更新按钮数组收集
       data: {
         tableData: [], //表信息
@@ -205,13 +208,20 @@ export default {
   },
   methods: {
     setQuery($event) {
+			console.log($event);
       let query = $event[0];
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
 				console.log(this.data);
       }
+			
     },
+		changeTitle(e){
+			this.tableTitle = e;
+			console.log(this.tableTitle)
+		
+		},
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
@@ -438,7 +448,22 @@ export default {
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
 		this.tValList = [1002,1004];
-		
+		this.inputData = {
+			newOrderDescription:"",
+			oldOrderDescription:"",
+			orderDescriptionName:"", 
+			siteName:"ababc",
+			systemLogStatus:{
+				auditDate:"",
+				createDate :"",
+				createUser:"aaabbbb",  
+				modifyDate:"",
+				modifyUser:"",
+				status:"",
+				auditUser:"sssss",
+				remark:"mmmmmm",
+				},
+			};
     this.tableTitle_show = [...this.tableTitle];
     this.add.customField = [...this.customField];
     this.update.customField = [...this.customField];

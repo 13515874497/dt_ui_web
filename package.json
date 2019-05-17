@@ -24,9 +24,11 @@
     "state": "^0.2.0",
     "storejs": "^1.0.25",
     "vue": "^2.6.10",
+    "vue-draggable": "^2.0.2",
     "vue-print-nb": "^1.0.3",
     "vue-resource": "^1.5.1",
-    "vue-router": "^3.0.1"
+    "vue-router": "^3.0.1",
+    "vuedraggable": "^2.20.0"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

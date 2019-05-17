@@ -112,8 +112,9 @@ export default {
     tableTitle: Array, //所有可筛选的内容 根据input_type生成不同类型
     selectedIds: Array, //用户要筛选的条件
     querySuggestionsMethod: Function, //查询搜索建议的方法
-    querySuggestionsConfig: Object //模糊查询的配置对象
-  },
+    querySuggestionsConfig: Object, //模糊查询的配置对象
+		inputData : Object
+	},
   data() {
     return {
       data: [],
@@ -188,6 +189,7 @@ export default {
       data.currentPage = 1;
       return data;
     }
+		
   },
   methods: {
     //根据父组件传递的数据生成对应的查询列表数据
@@ -199,10 +201,12 @@ export default {
         self.initValue(item);
       });
       this.data = data;
+			console.log(this.data)
     },
 
     //初始化数据
     initValue(tableTitle) {
+			console.log(tableTitle);
       if (tableTitle) {
         let key = tableTitle.topType;
         this.$set(this.data_model, key, "");
@@ -282,7 +286,13 @@ export default {
   created() {
     this.updateTableTitle();
     this.setSysLogInclude(+this.$route.params.id)
-  }
+		// this.data_model = this.inputData;
+		console.log(this.data_model);
+		this.changeQuery();
+  },
+	mounted () {
+		
+	}
   
 };
 </script>

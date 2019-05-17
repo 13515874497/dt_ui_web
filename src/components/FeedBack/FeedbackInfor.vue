@@ -22,7 +22,7 @@
             
             </el-form-item>
 
-            <el-form-item label="点击上传" >
+            <el-form-item label="点击图片">
                  <el-upload
                     action
                     class="avatar-uploader"
@@ -31,6 +31,7 @@
                     >
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
+
             </el-form-item>
 
             <el-form-item label="描述" prop="reason">
@@ -205,4 +206,6 @@ a {
   color: #aaa;
 }
 </style>
+
+
 

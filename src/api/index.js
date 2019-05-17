@@ -7,6 +7,8 @@ import {
 } from 'assert';
 
 export const BASE_URL = '/api/api/v1'
+// export const WS_URL = 'ws://192.168.208.109:3333/ws'
+export const WS_URL = 'ws://192.168.1.231:3333/ws'
 //用户修改密码
 export const register = ({
   pwd
@@ -107,7 +109,7 @@ export const repIndex = () => ajax(BASE_URL + `/index`)
 //登陆状态
 export const getLoginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
-export const repLogout = () => ajax(BASE_URL + `/login/logout`)
+export const repLogout = () => ajax(BASE_URL + `api/login/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {
@@ -466,7 +468,7 @@ export const findByListUnit = (data) => ajax(BASE_URL + '/unit/findByListUnit', 
 export const findByListSku = (data) => ajax(BASE_URL + '/sku/findByListSku', data, 'POST');
 
 //VAT附加税分页
-export const findByListSur = (data) => ajax(BASE_URL + '/sur/findByListSur', data, 'POST');
+export const findByListSur = (data) => ajax(BASE_URL + '/vat/findByListVat', data, 'POST');
 
 //仓库tree
 export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')
