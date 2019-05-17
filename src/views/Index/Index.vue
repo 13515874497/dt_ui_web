@@ -184,9 +184,6 @@ background-color:grey;
 
 text-decoration: none;
 }
-.el-table .cell {
-  white-space: nowrap;
-}
 .el-footer {
   background-color: #b3c0d1;
   color: #333;

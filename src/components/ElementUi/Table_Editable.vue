@@ -13,7 +13,6 @@
     row-key="companyId"
     :show-summary="showSummary"
     :summary-method="getSummaries"
-    :highlight-current-row="editable"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
@@ -92,7 +91,7 @@
         ></el-table-column>
       </div>
     </template>
-    <el-table-column label="操作">
+    <el-table-column label="操作" v-if="showOperate">
       <template slot-scope="scope">
         <slot name="operate" :childData="scope"></slot>
       </template>
@@ -114,15 +113,15 @@ export default {
     tableData: Array,
     tableTitle: Array,
     mode: Number, //在table中表示  需要合并父表的数据
-    editable: {
+    showOperate: {
       type: Boolean,
       default: false
     }
   },
-  computed:{
-    showSummary(){
-      return this.table_title.some(item=>{
-        return item.whetherCal
+  computed: {
+    showSummary() {
+      return this.table_title.some(item => {
+        return item.whetherCal;
       });
     }
   },
@@ -310,32 +309,32 @@ export default {
       const self = this;
       const { columns, data } = param;
       const sums = [];
-      columns.forEach((column,index)=>{
-        if(index === 0){
-          sums[index] = '合计'
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "合计";
           return;
         }
-        if(!column.property){
-          sums[index] = '';
+        if (!column.property) {
+          sums[index] = "";
           return;
         }
-        let title = self.table_title.find(item=>{
-          return item.topType === column.property
+        let title = self.table_title.find(item => {
+          return item.topType === column.property;
         });
-        if(title && title.whetherCal){
+        if (title && title.whetherCal) {
           // sums[index]
           const values = data.map(item => {
-            return Number(item[title.topType] || 0)
-          })
-          if(!values.length){
-            sums[index] = '';
+            return Number(item[title.topType] || 0);
+          });
+          if (!values.length) {
+            sums[index] = "";
             return;
           }
-          sums[index] = values.reduce((prev,curr)=>{
+          sums[index] = values.reduce((prev, curr) => {
             return prev + curr;
-          })
-        }else {
-          sums[index] = '';
+          });
+        } else {
+          sums[index] = "";
         }
       });
       return sums;
@@ -383,5 +382,8 @@ export default {
 }
 .content-table {
   width: calc(100% - 15px);
+  /deep/ .el-table .cell {
+    white-space: nowrap;
+  }
 }
 </style>

@@ -143,6 +143,7 @@
         <Table
           :tableData="existedFiles.tableData"
           :tableTitle="tableTitle"
+          :showOperate="true"
           v-if="tableTitle.length"
         >
           <template v-slot:operate="scope">
