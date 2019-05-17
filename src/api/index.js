@@ -6,9 +6,7 @@ import {
   rejects
 } from 'assert';
 
-const BASE_URL = '/api/api/v1'
-export const BASEURL = '/api/api/v1'
-
+export const BASE_URL = '/api/api/v1'
 //用户修改密码
 export const register = ({
   pwd
@@ -26,13 +24,13 @@ export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`, 'get')
 
 
 //获取在线人数
-export const getOnlineNumber = () => ajax('api/login/uCount')
+export const getOnlineNumber = () => ajax(BASE_URL + '/login/uCount')
 // 获取用户登陆信息
 export const repLoginUser = ({
   userName,
   pwd,
   rememberMe
-}) => ajax(`api/login/ajaxLogin`, {
+}) => ajax(BASE_URL + `/login/ajaxLogin`, {
   userName,
   pwd,
   rememberMe
@@ -109,7 +107,7 @@ export const repIndex = () => ajax(BASE_URL + `/index`)
 //登陆状态
 export const getLoginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
-export const repLogout = () => ajax(`api/login/logout`)
+export const repLogout = () => ajax(BASE_URL + `/login/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {
@@ -687,9 +685,9 @@ export const repDelHeadMenu = ({
   thIds
 }, 'POST')
 //设置角色拥有的店铺
-export const saveShopRole = (data) => ajax(BASEURL + '/sr/saveShopRole', data, 'post', ['保存成功', true])
+export const saveShopRole = (data) => ajax(BASE_URL + '/sr/saveShopRole', data, 'post', ['保存成功', true])
 //角色配置站点
-export const setAreaRole = (data) => ajax(BASEURL + '/admin/setAreaRole', data, 'post', ['保存成功', true])
+export const setAreaRole = (data) => ajax(BASE_URL + '/admin/setAreaRole', data, 'post', ['保存成功', true])
 
 //查询用户记录  查询已上传的文件信息
 export const repGetUserUploadInfo = (data) => ajax(BASE_URL + '/upload/getInfo', data, 'POST')

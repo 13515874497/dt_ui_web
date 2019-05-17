@@ -1,10 +1,15 @@
 <template>
   <main>
     <!--表格上方查询条件-->
+	<!-- 	<el-tooltip class="item" effect="dark" content="最多保存两个方案" placement="top-start">
+		  <el-button type="primary" style="margin:0 35px 10px 5px;">保存查询方案</el-button>
+    </el-tooltip>
+		<el-button type="primary" style="margin:0 5px 10px 5px;">方案一</el-button> -->
+		
     <section id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="20">
         <el-col :span="4">
-          <Query2 :tableTitle="tableTitle" @getValue="getValue"></Query2>
+          <Query2 :tableTitle="tableTitle" :tValList="tValList" @getValue="getValue"></Query2>
         </el-col>
         <el-col :span="16">
           <inputQuery
@@ -14,58 +19,26 @@
             :querySuggestionsConfig="data"
             :querySuggestionsMethod="queryPage"
           ></inputQuery>
-        </el-col>
+        </el-col> 
         <el-col :span="4">
           <SearchReset @search="search" @reset="reset"></SearchReset>
         </el-col>
       </el-row>
     </section>
     <!--table表格-->
-    <section v-if="data.tableData.length">
-      <template v-for="item in data.tableData">
-        <div style="border:1px solid #000">
-          <el-table :data="[item]" class="table1">
-            <el-table-column prop="siteName" label="站点名称" width="180"></el-table-column>
-            <el-table-column prop="shopName" label="店铺名称" width="180"></el-table-column>
-          </el-table>
-          <!-- {{item.noticeEntryData.data}} -->
-          <template
-            v-for="(two,index) in (item.noticeEntryData && item.noticeEntryData.data.dataList || [])"
-          >
-            <!-- {{two}} -->
-            <el-table :data="[two]" class="table2" :show-header="index<1">
-              <el-table-column prop="neNwKg" label="净重kg" width="180"></el-table-column>
-              <el-table-column prop="neVolumeM3" label="体积m3" width="180"></el-table-column>
-              <el-table-column prop="packages" label="箱号" width="180"></el-table-column>
-              <el-table-column prop="packingStatus" label="0未装完：1装箱完" width="180"></el-table-column>
-              <el-table-column prop="quantity" label="应发数量" width="180"></el-table-column>
-              <el-table-column type="expand">
-                <el-table :data="two.pEData && two.pEData.data.dataList || []" class="table3">
-                  <el-table-column prop="packagesBeg" label="packagesBeg" width="180"></el-table-column>
-                  <el-table-column prop="packagesEnd" label="packagesEnd" width="180"></el-table-column>
-                  <el-table-column prop="volumeM3" label="volumeM3" width="180"></el-table-column>
-                </el-table>
-              </el-table-column>
-            </el-table>
-
-            <!-- {{two}} -->
-          </template>
-        </div>
-      </template>
-
-      <!-- <Table
+    <section>
+      <Table
         :tableData="data.tableData"
         :tableTitle="tableTitle_show"
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
         v-loading="loading"
-      />-->
-
+      />
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
-        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
+        <!-- <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/> -->
       </div>
     </section>
     <!-- 新增 -->
@@ -137,32 +110,31 @@ import PubSub from "pubsub-js";
 export default {
   data() {
     return {
-      test_tableTitle: ["noticeEntryData"],
-      // test_tableTitle2:['']
-
       page: {
         name: this.$route.params.name
       },
+			listS:'',
       loading: false,
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
-      multipleSelection: [], //当前表格checkbox选中的
+			tValList:[],
+      multipleSelection: [], //更新按钮数组收集
       data: {
         tableData: [], //表信息
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
-        shipNoticeEntry: {
-          currentPage: 0,
-          pageSize: 10,
-          packingListEntry: {
-            currentPage: 0,
-            pageSize: 10
-          }
-        }
+        // shipNoticeEntry: {
+        //   currentPage: 0,
+        //   pageSize: 10,
+        //   packingListEntry: {
+        //     currentPage: 0,
+        //     pageSize: 10
+        //   }
+        // }
       },
       form_data_model: null, //当前form表单(新增、修改)绑定的数据
       form_editing: "add",
@@ -237,11 +209,15 @@ export default {
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
+				console.log(this.data);
       }
     },
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
+
+      console.log( this.queryIds)
+
     },
     //table按钮选择 传参
     checkboxValue: function(value) {
@@ -250,6 +226,7 @@ export default {
     },
     //点击查询获得table的值
     async search() {
+			console.log(this.data);
       this.pagination(this.data);
     },
     queryPage(data) {
@@ -281,7 +258,7 @@ export default {
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
       let list = $event[0];
-      console.log(list);
+      console.log($event);
       if (!list) {
         return;
       } else {
@@ -290,6 +267,7 @@ export default {
         });
       }
       console.log(this.tableTitle_show);
+	
     },
     handlerFormData(data) {
       data.systemLogStatus = {};
@@ -459,11 +437,18 @@ export default {
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
+		this.tValList = [1002,1004];
+		
     this.tableTitle_show = [...this.tableTitle];
+    this.add.customField = [...this.customField];
+    this.update.customField = [...this.customField];
+
     this.add.customField = deepClone(this.customField);
     this.update.customField = deepClone(this.customField);
+
   },
-  async mounted() {}
+  async mounted() {
+  }
 };
 </script>
 
@@ -510,19 +495,4 @@ main {
 //   transform: perspective(100px) rotateY(30deg);
 
 // }
-.table1 {
-  /deep/ th {
-    color: cadetblue;
-  }
-}
-.table2 {
-  /deep/ th {
-    color: cornflowerblue;
-  }
-}
-.table3 {
-  /deep/ th {
-    color: burlywood;
-  }
-}
 </style>

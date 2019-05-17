@@ -49,7 +49,7 @@
       </el-form-item>
 
       <el-form-item
-        v-else-if="item.inputType == 2"
+        v-else-if="item.inputType == 2 || item.inputType == 4"
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
@@ -63,7 +63,7 @@
         ></el-date-picker>
       </el-form-item>
 
-      <el-form-item
+      <!-- <el-form-item
         v-else-if="item.inputType == 4"
         :label="item.headName"
         :prop="item.topType"
@@ -78,7 +78,7 @@
           end-placeholder="结束日期"
           size="small"
         ></el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item
         v-else-if="item.inputType == 1"
@@ -207,14 +207,17 @@ export default {
     //       placeholder: "请选择站点"
     //     },
     // ],
-    formItems: Array,
+    formItems: {
+      type: Array,
+      required: true
+    },
     formData: Object, //有传这个说明是修改
-    rule: Object, //某些特殊字段的验证规则
+    rule: Object, //某些特殊字段的自定义验证规则
     reset: Boolean, // 改变时重置数据
     customField: {
       type: Array,
-      default: []
-    } //某些特殊字段在填写时需要想后台请求数据
+      default: ()=>[],
+    } //某些特殊字段在填写时需要向后台请求数据
   },
   data() {
     return {

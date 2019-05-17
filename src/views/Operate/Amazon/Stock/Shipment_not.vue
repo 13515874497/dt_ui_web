@@ -6,13 +6,14 @@ export default {
   mixins: [MxTable2],
   data() {
     return {
-
+      primaryKey: 'awId'
     };
   },
   methods: {
     queryPage(data) {
       return getNotice(data); //查询页面的接口
     },
+    // noticeEntryData:['quantity','packages','']
   }
 };
 </script>

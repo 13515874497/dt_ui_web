@@ -10,81 +10,87 @@
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
     class="content-table"
+    row-key="companyId"
+    :show-summary="showSummary"
+    :summary-method="getSummaries"
+    :highlight-current-row="editable"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
     <el-table-column v-if="isShowNumber()" type="index" width="50" fixed></el-table-column>
-    <template v-for="title  in table_title">
-      <!--特殊字段 -->
-      <!-- 根据选项获取值的字段 -->
-      <el-table-column
-        v-if="title.inputType==3"
-        :label="title.headName"
-        :fixed="isFixed(title)"
-        :formatter="statusOptions"
-        :prop="title.topType"
-        :render-header="renderHeader"
-        :show-overflow-tooltip="true"
-        :key="title.id"
-      ></el-table-column>
+    <template>
+      <div v-for="(title, index) in table_title" :key="index">
+        <!--特殊字段 -->
+        <!-- 根据选项获取值的字段 -->
+        <el-table-column
+          v-if="title.inputType==3"
+          :label="title.headName"
+          :fixed="isFixed(title)"
+          :formatter="statusOptions"
+          :prop="title.topType"
+          :render-header="renderHeader"
+          :show-overflow-tooltip="true"
+          :key="index"
+        ></el-table-column>
 
-      <el-table-column
-        v-else-if="title.topType==='userExpirationDate'"
-        :label="title.headName"
-        :fixed="isFixed(title)"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-      >
-        <template slot-scope="scope">
-          <span
-            v-if="scope.row.userExpirationDate!==0"
-          >{{ scope.row.userExpirationDate | date-format}}</span>
-          <span v-if="scope.row.userExpirationDate===0">始终有效</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-        v-else-if="title.topType==='pwdValidityPeriod'"
-        :label="title.headName"
-        :fixed="isFixed(title)"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-      >
-        <template slot-scope="scope">
-          <span
-            v-if="scope.row.pwdValidityPeriod!==0"
-          >{{ scope.row.pwdValidityPeriod | date-format}}</span>
-          <span v-if="scope.row.pwdValidityPeriod===0">始终有效</span>
-        </template>
-      </el-table-column>
+        <el-table-column
+          v-else-if="title.topType==='userExpirationDate'"
+          :label="title.headName"
+          :fixed="isFixed(title)"
+          :show-overflow-tooltip="true"
+          :render-header="renderHeader"
+          :key="index"
+        >
+          <template slot-scope="scope">
+            <span
+              v-if="scope.row.userExpirationDate!==0"
+            >{{ scope.row.userExpirationDate | date-format}}</span>
+            <span v-if="scope.row.userExpirationDate===0">始终有效</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          v-else-if="title.topType==='pwdValidityPeriod'"
+          :label="title.headName"
+          :fixed="isFixed(title)"
+          :show-overflow-tooltip="true"
+          :render-header="renderHeader"
+          :key="index"
+        >
+          <template slot-scope="scope">
+            <span
+              v-if="scope.row.pwdValidityPeriod!==0"
+            >{{ scope.row.pwdValidityPeriod | date-format}}</span>
+            <span v-if="scope.row.pwdValidityPeriod===0">始终有效</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column
-        v-else-if="title.inputType==4"
-        :fixed="isFixed(title)"
-        :label="title.headName"
-        :prop="title.topType"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-        sortable
-      >
-        <template slot-scope="scope">
-          <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
-          <span>{{ scope.row[title.topType] | date-format}}</span>
-        </template>
-      </el-table-column>
+        <el-table-column
+          v-else-if="title.inputType==4 || title.inputType==4"
+          :fixed="isFixed(title)"
+          :label="title.headName"
+          :prop="title.topType"
+          :show-overflow-tooltip="true"
+          :render-header="renderHeader"
+          :key="index"
+          sortable
+        >
+          <template slot-scope="scope">
+            <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
+            <span>{{ scope.row[title.topType] | date-format}}</span>
+          </template>
+        </el-table-column>
 
-      <el-table-column
-        v-else
-        sortable
-        :fixed="isFixed(title)"
-        :label="title.headName"
-        :prop="title.topType"
-        :show-overflow-tooltip="true"
-        :render-header="renderHeader"
-        :key="title.id"
-      ></el-table-column>
+        <el-table-column
+          v-else
+          sortable
+          :fixed="isFixed(title)"
+          :label="title.headName"
+          :prop="title.topType"
+          :show-overflow-tooltip="true"
+          :render-header="renderHeader"
+          :key="index"
+        ></el-table-column>
+      </div>
     </template>
     <el-table-column label="操作">
       <template slot-scope="scope">
@@ -94,29 +100,73 @@
   </el-table>
 </template>
 <script>
+import Sortable from "sortablejs";
 export default {
   data() {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
-      options: {} //存放各种类型的状态
+      options: {}, //存放各种类型的状态
+      table_title: []
     };
   },
   props: {
     tableData: Array,
-    tableTitle: Array
-
-    // loading:Boolean
+    tableTitle: Array,
+    mode: Number, //在table中表示  需要合并父表的数据
+    editable: {
+      type: Boolean,
+      default: false
+    }
+  },
+  computed:{
+    showSummary(){
+      return this.table_title.some(item=>{
+        return item.whetherCal
+      });
+    }
   },
   watch: {
     tableTitle(val) {
-      console.log(val);
-    },
+      // console.log(val);
+      this.table_title = [...this.tableTitle];
+    }
     // tableData() {
     //   this.setRepeatField();
     // }
   },
   methods: {
+    columnDrop() {
+      const wrapperTr = document.querySelector(".el-table__header-wrapper tr");
+      console.log(wrapperTr);
+      this.sortable = Sortable.create(wrapperTr, {
+        animation: 180,
+        delay: 0,
+        onEnd: evt => {
+          console.log(evt);
+
+          console.log(evt.oldDraggableIndex);
+          console.log(evt.newDraggableIndex);
+          console.log(this.table_title);
+          console.log(this.tableTitle);
+          const oldIndex = evt.oldDraggableIndex - 2;
+          const newIndex = evt.newDraggableIndex - 2;
+          console.log(oldIndex);
+          console.log(newIndex);
+          const oldItem = this.table_title[oldIndex];
+          console.log(oldItem);
+          this.table_title.splice(oldIndex, 1);
+          this.table_title.splice(newIndex, 0, oldItem);
+          // // console.log(this.tableTitle);
+          // this.table_title = this.tableTitle;
+          console.log(this.table_title);
+          // // console.log(aaa);
+          //
+          console.log(this.tableData);
+        }
+      });
+      console.log(this.sortable);
+    },
     setTheadClassName() {
       return "noRightKey";
     },
@@ -132,23 +182,22 @@ export default {
     },
     //表格某一列数据全部相同则合并
     spanMethod({ row, column, rowIndex, columnIndex }) {
-      // console.log(this.tableData.length);
-      // let title = this.table_title.find(item=>{
-      //   return item.topType === column.property
-      // })
-      // if(title && title.isRepeat){
-      //   if(rowIndex === 0){
-      //     return {
-      //     rowspan: this.tableData.length,
-      //     colspan: 1,
-      //   }
-      //   }else {
-      //     return [0,0]
-      //   }
-        
-      // }else {
-      //   return [1,1];
-      // }
+      //如果是多个表的数据合并起来的数据   那么就合并父表的数据
+      if (this.mode === 2) {
+        let title = this.table_title.find(item => {
+          return item.topType === column.property;
+        });
+        if (title && title.subField === null) {
+          if (row._mergeNum) {
+            return {
+              rowspan: row._mergeNum,
+              colspan: 1
+            };
+          } else {
+            return [0, 0];
+          }
+        }
+      }
     },
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
@@ -186,8 +235,6 @@ export default {
     setHeaderMinWidth(column) {
       //挂在到页面上从而获取宽度
       let TextWidth = this.getTempDomWidth(column.label);
-      // console.log(TextWidth);
-
       let minWidth = TextWidth + 20;
       //如果有排序的图标则加24  排序的箭头宽度 26
       if (column.sortable) {
@@ -245,12 +292,7 @@ export default {
     },
     //创建外层的临时dom  用来存放临时的span
     createTempWarpdom() {
-      // let tempDom = document.getElementById("tempDiv-getfieldWidth");
-      // if (tempDom) {
-      //   document.body.removeChild(tempDom);
-      // }
       this.tempDiv = document.createElement("div");
-      // this.tempDiv.setAttribute("id", "tempDiv-getfieldWidth");
       this.tempDiv.style.cssText =
         "position:fixed;height:0;overfolw:hidden;font-weight:700;overflow:hidden";
       document.body.appendChild(this.tempDiv);
@@ -263,31 +305,47 @@ export default {
       this.tempDiv.appendChild(tempSpan);
       return tempSpan.offsetWidth;
     },
-    // setRepeatField() {
-    //   let self = this;
-    //   if(!self.tableData.length) return;
-    //   this.table_title.forEach(column => {
-    //     // 判断表格某一列是否数据相同
-    //     let isRepeat = false;
-    //     let key = column.topType;
-    //     let firstValue = self.tableData[0][key];
-    //     isRepeat = self.tableData.every(row => {
-    //       return row[key] === firstValue;
-    //     });
-    //     console.log(isRepeat);
-        
-    //     // if (isRepeat) {
-    //       column.isRepeat = isRepeat;
-    //     // }
-    //   });
-    // }
+    //表格下方合计
+    getSummaries(param) {
+      const self = this;
+      const { columns, data } = param;
+      const sums = [];
+      columns.forEach((column,index)=>{
+        if(index === 0){
+          sums[index] = '合计'
+          return;
+        }
+        if(!column.property){
+          sums[index] = '';
+          return;
+        }
+        let title = self.table_title.find(item=>{
+          return item.topType === column.property
+        });
+        if(title && title.whetherCal){
+          // sums[index]
+          const values = data.map(item => {
+            return Number(item[title.topType] || 0)
+          })
+          if(!values.length){
+            sums[index] = '';
+            return;
+          }
+          sums[index] = values.reduce((prev,curr)=>{
+            return prev + curr;
+          })
+        }else {
+          sums[index] = '';
+        }
+      });
+      return sums;
+    }
   },
   created() {
     let self = this;
-    if(this.menuId == 59){
-
+    if (this.menuId == 59) {
     }
-   
+
     this.table_title = [...this.tableTitle];
     console.log(this.table_title);
 
@@ -298,11 +356,12 @@ export default {
 
   mounted() {
     this.removeRightKeyMenu();
+    this.columnDrop();
   },
-  activated () {
+  activated() {
     this.createTempWarpdom();
   },
-  deactivated(){
+  deactivated() {
     document.body.removeChild(this.tempDiv);
   }
 };
