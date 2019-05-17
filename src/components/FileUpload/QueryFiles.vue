@@ -64,7 +64,7 @@ import {
   repGetUserUploadInfo, //获取已上传的文件信息
   selectReg,
   repGetShopName,
-  BASEURL,
+  BASE_URL,
   //   repAddUploadInfoMysql,
   repDelUploadInfo
 } from "@/api";
@@ -283,7 +283,7 @@ export default {
       let path = row.filePath + row.uuidName;
       axios
         .post(
-          BASEURL + "/upload/downloadCommonFile",
+          BASE_URL + "/upload/downloadCommonFile",
           { filePath: path },
           config
         )

@@ -46,7 +46,7 @@
 </template>
 <script>
 import axios from "axios";
-import { BASEURL,repMenu } from "@/api";
+import { BASE_URL,repMenu } from "@/api";
 import message from "@/utils/Message";
 export default {
   data() {
@@ -84,7 +84,7 @@ export default {
           "Content-Type": "multipart/form-data"
         }
       };
-      axios.post(BASEURL + "/upload/images", param, config).then(res => {
+      axios.post(BASE_URL + "/upload/images", param, config).then(res => {
         console.log(res);
         if (res.status == 200) {
           // this.ruleForm.dialogImageUrl= res.data.data[0].url;
