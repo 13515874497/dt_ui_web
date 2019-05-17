@@ -729,4 +729,13 @@ export const getCheckoutDate = ({
 //公司信息页面保存
 export const getCompanyInfo = (data) => ajax(BASE_URL + '/admin/saveInfoCompany',data, 'POST')
 
-
+//用户反馈弹框信息保存http://127.0.0.1:9001/api/v1/fee/startFee
+export const startFee = ({
+  imageUrl,
+  reason,
+  mName,
+}) => ajax(BASE_URL+ '/fee/startFee',{
+  imageUrl,
+  reason,
+  mName,
+},'POST')
