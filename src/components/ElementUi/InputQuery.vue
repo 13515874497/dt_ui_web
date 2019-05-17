@@ -113,7 +113,10 @@ export default {
     selectedIds: Array, //用户要筛选的条件
     querySuggestionsMethod: Function, //查询搜索建议的方法
     querySuggestionsConfig: Object, //模糊查询的配置对象
-		inputData : Object
+		inputData : {
+      type: Object,
+      default:() => ({})
+    }
 	},
   data() {
     return {

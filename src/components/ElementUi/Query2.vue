@@ -21,7 +21,10 @@
     },
     props: {
 		tableTitle: Array,
-		tValList:Array
+		tValList:{
+      type: Array,
+      default: () => []
+    }
     },
 		created() {
 			this.tVal = this.tValList;
