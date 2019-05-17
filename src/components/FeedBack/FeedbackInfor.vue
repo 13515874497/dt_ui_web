@@ -45,22 +45,18 @@
 </template>
 <script>
 import axios from "axios";
-<<<<<<< HEAD
-import { BASEURL, repMenu, startFee } from "@/api";
-=======
-import { BASE_URL,repMenu } from "@/api";
->>>>>>> aecfee70eeb2ee118e36493c705742ef20f889b4
+import { BASE_URL, repMenu, startFee } from "@/api";
 import message from "@/utils/Message";
- const thslabels=''
 export default {
   data() {
     return {
       ruleForm: {
         reason: "",
         selectedOptions: [],
-        imgList: []
+        imgList: [],
+        mName: ""
       },
-      options: []
+      options: [],
     };
   },
   methods: {
@@ -123,30 +119,30 @@ export default {
           let params = {
             imageUrl: this.ruleForm.imgList.join(","),
             reason: this.ruleForm.reason,
-            mName: JSON.stringify(this.ruleForm.selectedOptions)
+            mName: this.ruleForm.mName.join("/")
           };
           startFee(params).then(res => {
             console.log(res);
-            // if (res.code !== 200) {
-            //   message.errorMessage("保存失败");
-            //   return;
-            // }
-            // message.successMessage("保存成功");
-            // this.ruleForm.reason = "";
-            // this.ruleForm.imgList = "";
-            // this.ruleForm.selectedOptions = [];
+            if (res.code !== 200) {
+              message.errorMessage("保存失败");
+              return;
+            }
+            message.successMessage("保存成功");
+            this.ruleForm.reason = "";
+            this.ruleForm.imgList = "";
+            this.ruleForm.mName = "";
           });
         }
       });
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+      this.ruleForm.mName = "";
     },
     //获取级联选择器中输入框的值
-    handleMenu(e,ruleForm,thslabels) {   
-      thslabels = this.ruleForm.selectedOptions   //获取value值
-      // thslabels = this.$refs["cascaderMenu"].currentLabels;   //获取label值
-      console.log(thslabels);
+    handleMenu() {
+      this.ruleForm.mName = this.$refs["cascaderMenu"].currentLabels; //获取label值
+      console.log(this.ruleForm.mName);
     }
   },
   mounted() {
