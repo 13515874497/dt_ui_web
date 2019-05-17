@@ -9,7 +9,6 @@
             <i class="el-icon-edit-outline" @click="feedback" style="font-size:25px"></i>      
           </li>
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item @click.native="enterPages" style="font-size:14px;line-height:30px">反馈页面</el-dropdown-item>
             <el-dropdown-item @click.native="queryResults"  style="font-size:14px;line-height:30px">查询反馈结果</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -41,7 +40,7 @@
       </ul>
     </div>
 
-    <el-dialog title="文件查询" :visible.sync="showQueryFiles" width="1200px" style="z-index:99">
+    <el-dialog title="文件查询" :visible.sync="showQueryFiles" width="1200px">
       <QueryFiles></QueryFiles>
     </el-dialog>
 
@@ -92,12 +91,9 @@ export default {
       //新增反馈页面、
       this.showFeedback = true;
     },
-    enterPages(){
-        console.log('去反馈页面')
-        this.$router.push('/index/userfeedback')
-      },
       queryResults(){
         console.log('查询结果')
+        this.$router.push('/index/userfeedback')
       }
     
   },
