@@ -7,6 +7,8 @@ import {
 } from 'assert';
 
 export const BASE_URL = '/api/api/v1'
+// export const WS_URL = 'ws://192.168.208.109:3333/ws'
+export const WS_URL = 'ws://192.168.1.231:3333/ws'
 //用户修改密码
 export const register = ({
   pwd

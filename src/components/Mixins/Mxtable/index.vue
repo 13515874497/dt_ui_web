@@ -38,7 +38,7 @@
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
-        <!-- <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/> -->
+        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
       </div>
     </section>
     <!-- 新增 -->
