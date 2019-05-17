@@ -468,7 +468,7 @@ export const findByListUnit = (data) => ajax(BASE_URL + '/unit/findByListUnit', 
 export const findByListSku = (data) => ajax(BASE_URL + '/sku/findByListSku', data, 'POST');
 
 //VAT附加税分页
-export const findByListSur = (data) => ajax(BASE_URL + '/sur/findByListSur', data, 'POST');
+export const findByListSur = (data) => ajax(BASE_URL + '/vat/findByListVat', data, 'POST');
 
 //仓库tree
 export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')
