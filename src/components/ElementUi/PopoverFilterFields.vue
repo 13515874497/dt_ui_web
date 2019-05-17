@@ -34,14 +34,14 @@ export default {
   methods: {
     check(node, checked) {
     let keys = checked.checkedKeys;
+		console.log(keys);
     this.saveCache(keys);
     this.$emit('hideField',[this.list[this.page.id]])
     },
     saveCache(keys){
         this.list[this.page.id] = keys;
-        console.log(this.list);
-        
         localStorage.setItem('hideFieldList',JSON.stringify(this.list));
+				console.log(this.list)
     },
     readCache(){
         let list = localStorage.getItem('hideFieldList');
@@ -51,6 +51,7 @@ export default {
             list = JSON.parse(list);
         }
         this.list = list;
+				console.log(list);
         let checked = this.list[this.page.id]
         if(checked){
             this.$emit('hideField',[checked]);

@@ -82,6 +82,7 @@ export default {
     // 设置标签
     setTags(route) {
       const isExist = this.tagsList.some(item => {
+				console.log(item);
         return item.path === route.fullPath;
       });
       console.log(isExist);
@@ -95,12 +96,14 @@ export default {
         }
         this.tagsList.push({
           title: route.meta.title,
+					// title:this.$route.params.name,
           path: route.fullPath,
           name: route.name
     });
         console.log(route.meta.title);
         console.log(route.fullPath);
         console.log(route.matched[1]);
+				console.log(this.$route.params.name)
       }
       bus.$emit("tags", this.tagsList);
     },
