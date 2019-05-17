@@ -15,9 +15,12 @@ import TableEditable from "@/components/ElementUi/Table_Editable";
 export default {
   props: {
     visible: Boolean,
-    formItems: {
+    titles: { //接收一个表头列表  里面含有2张表组成  如果是主表  那么显示为form表单 子表则显示为表格
       type: Array,
       required: true
+    },
+    data: { //接收表头锁对于的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据，子数据]
+      type: Array
     }
   },
   components: {

@@ -26,13 +26,13 @@ export const icons = () => ajax(BASE_URL + `/icon/getIconInfo`, 'get')
 
 
 //获取在线人数
-export const getOnlineNumber = () => ajax('api/login/uCount')
+export const getOnlineNumber = () => ajax(BASEURL + '/login/uCount')
 // 获取用户登陆信息
 export const repLoginUser = ({
   userName,
   pwd,
   rememberMe
-}) => ajax(`api/login/ajaxLogin`, {
+}) => ajax(BASEURL + `/login/ajaxLogin`, {
   userName,
   pwd,
   rememberMe
@@ -109,7 +109,7 @@ export const repIndex = () => ajax(BASE_URL + `/index`)
 //登陆状态
 export const getLoginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
-export const repLogout = () => ajax(`api/login/logout`)
+export const repLogout = () => ajax(BASE_URL + `/login/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {
