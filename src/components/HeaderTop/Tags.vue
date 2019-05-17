@@ -97,18 +97,19 @@ export default {
         //   if (this.tagsList.length >= 15) {
         //   this.isShow = true;
         // }
-        if (this.tagsList.length >= 18) {
+        if (this.tagsList.length >= 5) {
           alert("打开标签过多，请关闭其他标签");
           return;
         }
         this.tagsList.push({
-          title: route.meta.title,
+          title: this.$route.params.name,
           path: route.fullPath,
           name: route.name
     });
         console.log(route.meta.title);
         console.log(route.fullPath);
         console.log(route.matched[1]);
+        console.log(this.$route.params.name)
       }
       bus.$emit("tags", this.tagsList);
     },
@@ -143,7 +144,7 @@ export default {
   watch: {
     $route(newValue, oldValue) {
       this.setTags(newValue);
-      //   console.log(this.setTags(newValue));
+        console.log(this.setTags(newValue));
     }
   },
   created() {

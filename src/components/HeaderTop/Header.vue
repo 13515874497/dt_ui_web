@@ -64,7 +64,6 @@ export default {
   data() {
     return {
       showQueryFiles: false,
-      seen:false,
       showFeedback:false
     };
   },
@@ -95,6 +94,7 @@ export default {
     },
     enterPages(){
         console.log('去反馈页面')
+        this.$router.push('/index/userfeedback')
       },
       queryResults(){
         console.log('查询结果')

@@ -1,19 +1,18 @@
 <template>
     <div class="fbBox">
         <el-form :model="ruleForm"  ref="ruleForm" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="反馈编号" prop="name">
-                <el-input v-model="ruleForm.name"></el-input>
-            </el-form-item>
             <el-form-item label="反馈菜单" prop="menu">
                 <el-cascader
                   :options="options"
                   v-model="ruleForm.selectedOptions" 
-                  :show-all-levels="true" 
+                  :show-all-levels="true"
+                  @change="handleMenu" 
+                  ref="cascaderMenu"    
                 ></el-cascader>
             </el-form-item>
 
             <el-form-item label="图片" >
-              <div class="imgsBox" v-for="(item, index) in imgList">               　
+              <div class="imgsBox" v-for="(item, index) in ruleForm.imgList">               　
                  <!-- <img width="100%" :src="ruleForm.dialogImageUrl" alt=""> -->
                  <a href="javascript:;" class="img" >
                    <img :src=item  alt="" style="width:100%;height:100%">
@@ -25,7 +24,7 @@
 
             <el-form-item label="点击上传" >
                  <el-upload
-                    action=""
+                    action
                     class="avatar-uploader"
                     :before-upload="beforeAvatarUpload"
                     accept="image/*"
@@ -34,46 +33,33 @@
                 </el-upload>
             </el-form-item>
 
-            <el-form-item label="描述" prop="desc">
-                <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+            <el-form-item label="描述" prop="reason">
+                <el-input type="textarea" v-model="ruleForm.reason"></el-input>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm('ruleForm')">确定</el-button>
-                <el-button @click="resetForm('ruleForm')">重置</el-button>
+                <el-button @click="resetForm('ruleForm')">取消</el-button>
             </el-form-item>
         </el-form>
     </div>
 </template>
 <script>
 import axios from "axios";
-import { BASEURL,repMenu } from "@/api";
+import { BASEURL, repMenu, startFee } from "@/api";
 import message from "@/utils/Message";
+ const thslabels=''
 export default {
   data() {
     return {
       ruleForm: {
-        name: "",
-        desc: "",
+        reason: "",
         selectedOptions: [],
+        imgList: []
       },
-      imgList: [], 
-      options: [],
+      options: []
     };
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          alert("submit!");
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
     //图片上传
     beforeAvatarUpload(file) {
       let param = new FormData(); // 创建form对象
@@ -88,37 +74,79 @@ export default {
         console.log(res);
         if (res.status == 200) {
           // this.ruleForm.dialogImageUrl= res.data.data[0].url;
-          if (this.imgList.length > 2) {
+          if (this.ruleForm.imgList.length > 2) {
             message.errorMessage("上传图片不能超过3张!");
             return;
           }
           console.log("xiaoyu");
-          this.imgList.push(res.data.data[0].url);
+          this.ruleForm.imgList.push(res.data.data[0].url);
         }
       });
     },
     //图片删除
     delImg(index) {
-      this.imgList.splice(index, 1);
+      this.ruleForm.imgList.splice(index, 1);
     },
+    //获取菜单
     async getRepMenu() {
-    let res = await repMenu();
-    console.log(res)
-    let batchdata = res.data
-		//valueBatch
-		let dataValueBatch = batchdata  => batchdata .map(({menuId, mName, childMenus}) => (childMenus ? {
-					value    : menuId,
-					label    : mName,
-					children : dataValueBatch(childMenus),
-			} : {
-					value : menuId,
-					label : mName,
-			}));
+      let res = await repMenu();
+      console.log(res);
+      let batchdata = res.data;
+      //valueBatch
+      let dataValueBatch = batchdata =>
+        batchdata.map(
+          ({ menuId, mName, childMenus }) =>
+            childMenus
+              ? {
+                  value: menuId,
+                  label: mName,
+                  children: dataValueBatch(childMenus)
+                }
+              : {
+                  value: menuId,
+                  label: mName
+                }
+        );
       this.options = dataValueBatch(batchdata);
+      // this.ruleForm.selectedOptions=[304,129,130]
+      // console.log(this.ruleForm.selectedOptions)
     },
+    //
+    submitForm(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          console.log(this.ruleForm);
+          let params = {
+            imageUrl: this.ruleForm.imgList.join(","),
+            reason: this.ruleForm.reason,
+            mName: JSON.stringify(this.ruleForm.selectedOptions)
+          };
+          startFee(params).then(res => {
+            console.log(res);
+            // if (res.code !== 200) {
+            //   message.errorMessage("保存失败");
+            //   return;
+            // }
+            // message.successMessage("保存成功");
+            // this.ruleForm.reason = "";
+            // this.ruleForm.imgList = "";
+            // this.ruleForm.selectedOptions = [];
+          });
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+    //获取级联选择器中输入框的值
+    handleMenu(e,ruleForm,thslabels) {   
+      thslabels = this.ruleForm.selectedOptions   //获取value值
+      // thslabels = this.$refs["cascaderMenu"].currentLabels;   //获取label值
+      console.log(thslabels);
+    }
   },
-  mounted(){
-    this.getRepMenu()
+  mounted() {
+    this.getRepMenu();
   }
 };
 </script>
