@@ -138,6 +138,7 @@ import UserModifiesPwd from '../views/ModifiesPassword/UserModifiesPwd.vue'  //�
 import SettlementReport from '../views/Financial/SettlementReport.vue'  //财务管理
 
 import UserFeedBack from '../views/UserFeed/UserFeedBack.vue'  //用户反馈
+
 Vue.use(Router)
 
 
@@ -928,9 +929,7 @@ export default new Router({
     {
       path: '/userModifiesPwd',
       component: UserModifiesPwd //用户修改密码
-    },  
-  
-     
+    },      
   ],
 
 })
