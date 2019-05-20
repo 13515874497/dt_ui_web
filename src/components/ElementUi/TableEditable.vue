@@ -94,11 +94,11 @@
           :column-key="index.toString()"
         >
           <template slot-scope="scope">
-            {{JSON.stringify(scope.row)}}
-            {{title.topType}}
+            {{JSON.stringify(scope.row,null,2)}}
+            {{scope.row[title.topType]}}
             <el-input
               size="small"
-              v-model="scope.row.name"
+              v-model="scope.row[title.topType]"
               placeholder="请输入内容"
             ></el-input>
             <span>{{scope.row.name}}</span>
