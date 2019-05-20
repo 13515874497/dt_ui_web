@@ -21,11 +21,18 @@
     },
     props: {
 		tableTitle: Array,
-		tValList:Array
+		tValList:{
+      type: Array,
+      default: () => []
+    }
     },
 		created() {
 			this.tVal = this.tValList;
-			this.getValue (this.tVal);
+      this.getValue (this.tVal);
+      console.log(this.tVal);
+      console.log(this.tValList);
+      
+      
 		},
     watch: {
       // tableTitle(){

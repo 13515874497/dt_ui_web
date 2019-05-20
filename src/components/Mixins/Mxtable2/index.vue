@@ -39,7 +39,13 @@
     </section>
     <!-- 新增 -->
     <section>
-      <addInterface :visible="add.visible" @close="close_add" :titles="formItems" :data="add.checkedData"></addInterface>
+      <el-dialog :title="`新增 ${page.name}`" :visible.sync="add.visible" width="90%">
+        <Mx2Interface :titles="formItems" :data="add.checkedData" :customField="customField"></Mx2Interface>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="add.visible = false">取 消</el-button>
+          <el-button type="primary" @click="add.visible = false">确 定</el-button>
+        </span>
+      </el-dialog>
     </section>
 
     <!-- 修改 -->
@@ -82,7 +88,7 @@ import OperateBtn from "@/components/ElementUi/OperateBtn";
 import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
-import addInterface from "./Add-Interface";
+import Mx2Interface from "./Mx2-Interface";
 export default {
   data() {
     return {
@@ -117,7 +123,7 @@ export default {
         isPass: false,
         reset: false,
         customField: [], //form表单自定义的字段
-        checkedData: [true,null,[]] //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
+        checkedData: [true, null, []] //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
       },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
@@ -162,7 +168,7 @@ export default {
     InputQuery,
     SearchReset,
     PopoverFilterFields,
-    addInterface
+    Mx2Interface
   },
   methods: {
     setQuery($event) {
@@ -186,7 +192,7 @@ export default {
       let val = this.multipleSelection;
       let result = [];
       if (!val.length) {
-        result = [true,null,[]];
+        result = [true, null, []];
       } else {
         let id = val[0][this.primaryKey]; //选中的父id必须相同
         if (id == undefined) {
@@ -220,20 +226,17 @@ export default {
     },
     //封装分页请求
     async pagination(data) {
-      console.log(data);
       let _data = { ...data };
       delete _data.tableData;
       this.loading = true;
       const res = await this.queryPage(_data);
-      console.log(res);
+
       this.loading = false;
       if (res.code === 200) {
         //对表格数据进行处理
         this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
         pUtils.handlerTableData(res, data);
-        console.log(this.origin_tableData);
       }
-      console.log(this.data.tableData);
     },
     reset() {
       //触发下表头变更 让子组件初始化
@@ -246,7 +249,6 @@ export default {
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
       let list = $event[0];
-      console.log(list);
       if (!list) {
         return;
       } else {
@@ -254,7 +256,6 @@ export default {
           return !list.includes(item.id);
         });
       }
-      console.log(this.tableTitle_show);
     },
     handlerFormData(data) {
       data.systemLogStatus = {};
@@ -382,9 +383,9 @@ export default {
         message.errorMessage(res.msg);
       }
     },
-    close_add($event) {
-      this.add.visible = !$event[0];
-    },
+    // close_add($event) {
+    //   this.add.visible = !$event[0];
+    // },
     //reset值发生改变即重置表单
     resetForm_add() {
       this.add.reset = !this.add.reset;

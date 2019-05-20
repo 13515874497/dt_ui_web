@@ -4,11 +4,9 @@ import {
   getReview,
   saveReview,
   delReview,
-  repGetShopName,
-  getSelectSiteRole,
   getSkuName,
-  findByListStarLevel
 } from "@/api";
+import {shopName,siteName,starLevelName} from '@/components/ElementUi/Form/customField'
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
@@ -16,27 +14,8 @@ export default {
     return {
       primaryKey: "reId",
       customField: [
-        {
-          //店铺列表
-          inputType: 3,
-          topType: "shopName",
-          bindKey: "shopId",
-          ajax: repGetShopName,
-          key: "shopId",
-          label: "shopName",
-          placeholder: "请选择店铺"
-        },
-        //站点
-        {
-          inputType: 3,
-          topType: "siteName",
-          bindKey: "siteId",
-          ajax: getSelectSiteRole,
-          key: "siteId",
-          label: "siteName",
-          filterable: true,
-          placeholder: "请选择站点"
-        },
+        shopName,
+        siteName,
         //sku
         {
           inputType: 3,
@@ -50,23 +29,8 @@ export default {
           remoteMethod: this.getSkuList,
           data: []
         },
-        {
-          inputType: 3,
-          topType: "starLevelName",
-          bindKey: "starLevelId",
-          ajax: findByListStarLevel,
-          key: "starLevelId",
-          label: "starLevelName",
-          // filterable: true,
-          placeholder: "请选择星级"
-        }
       ],
       rule: {
-        //某些字段的验证规则
-        // add: [{
-        //   validator: lessThan2, //该字段的自定义验证规则
-        //   trigger: "change"
-        // }]
       }
     };
   },

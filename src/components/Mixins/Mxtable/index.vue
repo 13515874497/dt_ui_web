@@ -208,12 +208,10 @@ export default {
   },
   methods: {
     setQuery($event) {
-			console.log($event);
       let query = $event[0];
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
-				console.log(this.data);
       }
 			
     },
