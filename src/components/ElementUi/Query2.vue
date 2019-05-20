@@ -1,6 +1,6 @@
 <template>
   <div class="check1">
-    <el-select v-model="tVal" clearable multiple filterable placeholder="用户信息选择" @change="getValue" value="">
+    <el-select v-model="tVal" size="small" clearable multiple filterable placeholder="用户信息选择" @change="getValue" value="" >
       <el-option
         v-for="(item,index) in tableTitle"
         :key="index"
@@ -43,7 +43,7 @@
       //获得第一个input框里的id 通过id去判断显示哪个输入框
       getValue (sel) {
         this.$emit('getValue', sel)
-			console.log(this.tVal);
+		console.log(this.tVal);
       }
     }
 

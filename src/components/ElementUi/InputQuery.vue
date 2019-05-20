@@ -1,6 +1,6 @@
 <template>
   <div class="check2">
-    <el-form :model="data_model" ref="data_model" :inline="true" class="demo-form-inline">
+    <el-form :model="data_model" ref="data_model" :inline="true" class="demo-form-inline" size="small">
       <template v-for="(tableTitle,index) in data">
         <!-- 0: str,1: int, 2:date 3: status 4.deadline(起止时间段) 5.boolean-->
         <!-- 带有搜索建议的输入框    字符型-->
@@ -124,6 +124,7 @@ export default {
       data_model: {
         systemLogStatus: {}
       },
+			ttt:{createUser:"aaabbbb"},
       curr_query_field: "", //当前查询搜索建议的字段
       rules: {
         str: [{ required: false, message: "请输入字符", trigger: "change" }],
@@ -212,7 +213,7 @@ export default {
 			
       if (tableTitle) {
         let key = tableTitle.topType;
-        this.$set(this.data_model, key, "");
+        this.$set(this.data_model, key, '');
         if (tableTitle.inputType == 4) {
           switch (key) {
             //用户有效期
@@ -228,6 +229,7 @@ export default {
           if (this.sysLogInclude.includes(key) && !this.sysLogInclude.includes(key+'s')) {
             this.sysLogInclude.push(key + "s")
           }
+					// console.log(this.inputData);
           tableTitle._isShow = true;
         }
       }
@@ -285,9 +287,11 @@ export default {
   created() {
     this.updateTableTitle();
     this.setSysLogInclude(+this.$route.params.id)
-		// this.data_model = this.inputData;
+		if(this.inputData){
+			this.data_model = this.inputData;
+		}
+		
 		console.log(this.data_model);
-		this.changeQuery();
   },
 	mounted () {
 		
