@@ -238,6 +238,7 @@ export default {
      //获取已上传的文件列表
     async getExistedFiles() {
       this.pagination(this.existedFiles);
+      console.log(this.existedFiles)
     },
     //根据分页参数请求数据
     async pagination(data) {

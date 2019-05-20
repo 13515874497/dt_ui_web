@@ -752,11 +752,10 @@ export const startFee = ({
 },'POST')
 
 //查看反馈信息http://127.0.0.1:9001/api/v1/fee/selProcess?pageSize=0&currentPage=10
-// export const selProcess = ({
-//   currentPage,
-//   pageSize
-// }) => ajax(BASE_URL + '/fee/selProcess', {
-//   currentPage,
-//   pageSize
-// // })
-export const selProcess = (data) => ajax(BASE_URL + '/fee/selProcess', data);
+export const selProcess = ({
+  currentPage,
+  pageSize
+}) => ajax(BASE_URL + '/fee/selProcess', {
+  currentPage,
+  pageSize
+})
