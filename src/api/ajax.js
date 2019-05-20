@@ -29,11 +29,9 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
       }
       // 发送get请求
       promise = axios.get(url)
-      console.log(url)
     } else {
       // 发送post请求
       promise = axios.post(url, data)
-      console.log(url)
     }
     // axios.interceptors.request.use(config => {
     //   return config
@@ -93,15 +91,11 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
     promise.then(function (response) {
       // 成功了调用resolve()
       let res = response.data;
-      console.log(response);
 
 
       if (!(response.config.url && response.config.url.endsWith('/index/status'))) {
         switch (res.code) {
           case -2:
-            console.log(response.request.responseURL);
-            console.log(response);
-
             // if(response.request.responseURL&&response.request.responseURL.endsWith('/index/status')) break; //如果是验证状态的接口 直接退出
             // if(response.config.url && response.config.url.endsWith('/index/status')) break;
             // if(response.request.responseURL.indexOf('/index/status')>-1)break;

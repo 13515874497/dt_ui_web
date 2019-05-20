@@ -213,7 +213,7 @@ export default {
     reset: Boolean, // 改变时重置数据
     customField: {
       type: Array,
-      default: []
+      default: ()=>[]
     } //某些特殊字段在填写时需要想后台请求数据
   },
   data() {
@@ -390,8 +390,6 @@ export default {
       } else {
         //新增
         this.formItems_.forEach(item => {
-          console.log(item.topType);
-
           if (item.statusOptions && item.statusOptions.length) {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
           } else {
@@ -401,7 +399,6 @@ export default {
             }
           }
         });
-        console.log(this.data_model);
       }
 
       this.data_model_cache = { ...this.data_model }; //用于对比数据 只回传发生改变的数据

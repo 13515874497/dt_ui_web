@@ -131,14 +131,11 @@ export default {
   },
   watch: {
     tableTitle(val) {
-      // console.log(val);
       // this.table_title = [...this.tableTitle];
 			this.table_title = val
-			console.log(this.table_title);
     },
     tableData(val) {
       // this.setRepeatField();
-			// console.log(val);
     }
     // tableData() {
     //   this.setRepeatField();
@@ -148,7 +145,6 @@ export default {
 		columnDrop() {
 			
 			var wrapperTr = this.$el.querySelector('.el-table__header-wrapper tr');
-			console.log(wrapperTr);
 			var oldIndex,newIndex,oldItem,newItem;
       this.sortable = Sortable.create(wrapperTr, {
         animation: 180,
@@ -175,9 +171,7 @@ export default {
 					// 下面是更改index的测试版 不对 
 					// oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
 					// oldIndex = this.table_title.indexOf($oldLi);
-					// console.log(oldIndex);
 					// newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
-					// console.log(newIndex);
 					// var item = this.table_title.splice(oldIndex.index,1);
 					// this.table_title.splice(newIndex.index, 0 ,item[0]);
 					
@@ -222,21 +216,17 @@ export default {
     },
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
-			console.log(this.table_title);
       this.$emit("checkboxValue", val);
-      console.log(val);
     },
 
     initOptions() {
       let self = this;
-      console.log(this.table_title);
 
       this.table_title.forEach(item => {
         if (item.inputType == 3 && item.statusOptions.length) {
           self.options[item.topType] = item.statusOptions;
         }
       });
-      console.log(this.options);
     },
     statusOptions: function(row, column, cellValue) {
       let topType = column.property;
@@ -306,7 +296,6 @@ export default {
     //删除浏览器默认的右键弹出菜单
     removeRightKeyMenu() {
       let thead = document.querySelector(".noRightKey");
-      console.log(thead);
       thead.addEventListener("contextmenu", e => {
         window.event.returnValue = false;
         return false;
@@ -369,12 +358,10 @@ export default {
     }
 
     this.table_title = [...this.tableTitle];
-    console.log(this.table_title);
 
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
-		console.log(this.tableTitle);
   },
 
   mounted() {
