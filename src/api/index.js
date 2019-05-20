@@ -2,6 +2,7 @@
 包含N个接口请求函数的模块
  */
 import ajax from './ajax'
+
 // import {
 //   rejects
 // } from 'assert';
@@ -9,6 +10,7 @@ import ajax from './ajax'
 export const BASE_URL = '/api/api/v1'
 export const WS_URL = 'ws://192.168.208.109:3333/ws'
 // export const WS_URL = 'ws://192.168.1.231:3333/ws'
+
 //用户修改密码
 export const register = ({
   pwd
@@ -64,6 +66,7 @@ export const repHead = (menu_id) => {
       menu_id
     }).then((res) => {
       if (res.code == 200) {
+				// console.log(res)
         res.data.sort(function (a, b) {
           return a.index - b.index
         });
@@ -109,6 +112,7 @@ export const repIndex = () => ajax(BASE_URL + `/index`)
 //登陆状态
 export const getLoginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
+
 export const repLogout = () => ajax(BASE_URL + `api/login/logout`)
 
 //查询哪些用户有哪些菜单
@@ -759,3 +763,14 @@ export const selProcess = ({
   currentPage,
   pageSize
 })
+
+//表格方案保存
+export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',data, 'POST')
+
+//获取表格方案
+export const getUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
+
+//删除表格方案
+export const delUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
+
+
