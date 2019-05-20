@@ -94,6 +94,8 @@
           :column-key="index.toString()"
         >
           <template slot-scope="scope">
+            {{JSON.stringify(scope.row)}}
+            {{title.topType}}
             <el-input
               size="small"
               v-model="scope.row.name"

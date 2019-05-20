@@ -283,9 +283,10 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, d
 
 // 运营管理=> 亚马逊=>通知单
 
-//出货通知单  post
-// export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`, data, 'POST')
+//出货通知单分页
 export const getNotice = (data) => ajax(BASE_URL + `/no/getNotice`, data, 'POST')
+//根据skuId获取 数据/api/v1/product/getProductAdnSku?skuId=1
+export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data)
 
 
 

@@ -1,6 +1,6 @@
 <script>
 //出货通知单
-import { getNotice} from "@/api";
+import { getNotice ,getProductAdnSku} from "@/api";
 import {shopName,siteName,platformTypeName,transportTypeName} from '@/components/ElementUi/Form/customField'
 import MxTable2 from "@/components/Mixins/MxTable2";
 export default {
@@ -20,6 +20,13 @@ export default {
     queryPage(data) {
       return getNotice(data); //查询页面的接口
     }
+  },
+  async created(){
+    let res = getProductAdnSku({
+      skuId: 1
+    })
+    console.log(res);
+    
   }
 };
 </script>
