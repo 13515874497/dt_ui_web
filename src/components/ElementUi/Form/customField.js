@@ -7,7 +7,11 @@ import {
   findByListPlatform,
   findByListType
 } from '@/api/api'
-// Cascader 级联选择
+
+/**
+ *
+ * Cascader 级联选择
+ */
 // topType： 当前要自定义的字段  bindKey：选择后实际要传给后台的字段 data_model: 由于级联选择绑定的是一个数组，二后台只需要最后一个 这个为临时用来绑定的变量
 //类目名称
 export const productsName = {
@@ -24,7 +28,10 @@ export const transportTypeName = {
   inputType: 5,
   ajax: findByListType,
 }
-// select下拉框
+/**
+ *
+ * select下拉框
+ */
 //topType： 当前要自定义的字段  bindKey：选择后实际要传给后台的字段 ajax：select渲染的数据 key：option绑定的key  label：option绑定的label filterable：可以输入筛选
 //店铺列表
 export const shopName = {
