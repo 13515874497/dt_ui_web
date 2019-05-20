@@ -40,7 +40,7 @@
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
         <!--分页-->
-        <!-- <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/> -->
+        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
       </div>
     </section>
     <!-- 新增 -->
@@ -208,12 +208,10 @@ export default {
   },
   methods: {
     setQuery($event) {
-			console.log($event);
       let query = $event[0];
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
-				console.log(this.data);
       }
 			
     },

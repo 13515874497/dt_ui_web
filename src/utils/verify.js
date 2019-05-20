@@ -5,7 +5,6 @@ import {
 
 
 export const isNumber = (rule, value, cb) => {
-  console.log(value);
   let re = /^[0-9]+.?[0-9]*$/; //判断字符串是否为数字 //判断正整数 /^[1-9]+[0-9]*]*$/ 
 
   if (!re.test(value)) {
@@ -148,8 +147,6 @@ export const DBFieldRepeat = (rule, val, cb) => {
 }
 //长度需要小于2
 export const lessThan2 = (rule, val, cb) => {
-  console.log(val);
-  
   if (val !=null &&val.length > 2) {
     cb(new Error('长度必须小于2'));
   } else {

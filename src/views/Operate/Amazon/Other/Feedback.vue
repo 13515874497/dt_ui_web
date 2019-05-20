@@ -1,33 +1,15 @@
 <script>
 //feedback
-import { getFeedback, repGetShopName, getSelectSiteRole } from "@/api";
+import { getFeedback} from "@/api";
+import {shopName,siteName} from '@/components/ElementUi/Form/customField'
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
   data() {
     return {
       customField: [
-        {
-          //店铺列表
-          inputType: 3,
-          topType: "shopName",
-          bindKey: "shopId",
-          ajax: repGetShopName,
-          key: "shopId",
-          label: "shopName",
-          placeholder: "请选择店铺"
-        },
-        //站点
-        {
-          inputType: 3,
-          topType: "siteName",
-          bindKey: "siteId",
-          ajax: getSelectSiteRole,
-          key: "siteId",
-          label: "siteName",
-          filterable: true,
-          placeholder: "请选择站点"
-        }
+        shopName,
+        siteName
       ]
     };
   },

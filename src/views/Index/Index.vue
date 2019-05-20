@@ -20,8 +20,8 @@
             <a href="####" class="divFlag"  @click="this.handleClick"  v-show='this.isCollapse'>》</a>
           </div>
         <!--缓存路由组件 , 2019/05/08 修改人：乌日娜  修改内容  在keep-alive外套了div  解决问题：导航伸缩按钮要求固定 这个main页面有滚动条的时候会导致不固定-->
-          <div style="height:100%;overflow-y:auto;overflow-x:hidden;" v-if="isRouterAlive"> 
-            <keep-alive >
+          <div style="height:100%;overflow-y:auto;overflow-x:hidden;" > 
+            <keep-alive v-if="isRouterAlive">
              <router-view ></router-view>
             </keep-alive>
           </div>
@@ -37,7 +37,7 @@
 import Header from "@/components/HeaderTop/Header";
 import Aside from "@/components/Aside/Aside";
 import Tags from '@/components/HeaderTop/Tags'
-import { repIndex, getLoginStatus } from "@/api";
+import { repIndex, getLoginStatus,WS_URL } from "@/api";
 import Vue from "vue";
 // import PubSub from "pubsub-js";
 import message from "@/utils/Message";
@@ -125,8 +125,9 @@ export default {
           console.log("socket关闭");
         };
       }
+
       // this.socket = new WebSocket(`ws://192.168.208.109:9001/webSocket/${uid}`);
-      Vue.prototype.$ws = new WebSocket(`ws://192.168.208.109:3333/ws`);
+      Vue.prototype.$ws = new WebSocket(WS_URL);
       // Vue.prototype.$wsBindEvents = bindEvents;
       Vue.prototype.$initWs = this.initWs;
       bindEvents(this.$ws);
@@ -183,9 +184,6 @@ color: white;
 background-color:grey;
 
 text-decoration: none;
-}
-.el-table .cell {
-  white-space: nowrap;
 }
 .el-footer {
   background-color: #b3c0d1;

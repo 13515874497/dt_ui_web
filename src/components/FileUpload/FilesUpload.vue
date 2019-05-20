@@ -143,6 +143,7 @@
         <Table
           :tableData="existedFiles.tableData"
           :tableTitle="tableTitle"
+          :showOperate="true"
           v-if="tableTitle.length"
         >
           <template v-slot:operate="scope">
@@ -171,7 +172,7 @@ import {
   repGetUserUploadInfo, //获取已上传的文件信息
   selectReg,
   repGetShopName,
-  BASEURL,
+  BASE_URL,
   repAddUploadInfoMysql,
   repDelUploadInfo,
   getCheckoutDate
@@ -627,7 +628,7 @@ export default {
         contentType: false,
         processData: false
       };
-      axios.post(BASEURL + "/upload/file", this.param, config).then(res => {
+      axios.post(BASE_URL + "/upload/file", this.param, config).then(res => {
         console.log(res);
         let data = res.data.data;
         if (res.data.code == 200) {
@@ -885,7 +886,7 @@ export default {
       // let self = this;
       axios
         .post(
-          BASEURL + "/upload/downloadCommonFile",
+          BASE_URL + "/upload/downloadCommonFile",
           { filePath: path },
           config
         )

@@ -7,6 +7,7 @@ import {
   delProduct,
   findByListProducts
 } from "@/api";
+import {productsName} from '@/components/ElementUi/Form/customField'
 import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
@@ -14,14 +15,7 @@ export default {
     return {
       primaryKey: "productId",
       customField: [
-        {
-          //类目名称
-          topType: "productsName",
-          bindKey: 'productsId',
-          data_model:'_productsId',
-          inputType: 5,
-          ajax: findByListProducts,
-        }
+        productsName
       ]
     };
   },

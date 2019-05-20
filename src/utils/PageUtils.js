@@ -35,8 +35,31 @@ export default {
       pageData.currentPage = data.current_page
       pageData.total_size = data.total_size
     }
+  },
+  handlerTableData(res,pageData){
+    if(res.code === 200){
+      const data = res.data;
+      let tableData = [];
+      
+      data.dataList.forEach(parent=>{
+        let childrens = parent.noticeEntryList || [];
 
-
+        delete parent.noticeEntryList;
+        childrens = childrens.map((children,index)=>{
+          let data = {...parent,...children}
+          data._versionParent = parent.version;
+          //如果是第一个元素 那么得出需要合并的个数 
+          if(index === 0){
+            data._mergeNum = childrens.length;
+          }
+          return data
+        });
+        tableData = tableData.concat(childrens)
+      });
+      pageData.tableData = tableData;
+      pageData.currentPage = data.current_page
+      pageData.total_size = data.total_size
+    }
   }
 
 }

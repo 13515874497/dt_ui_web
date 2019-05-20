@@ -45,7 +45,7 @@
 
 <script>
 import axios from "axios";
-import {getCompanyInfo  ,BASEURL} from "@/api";
+import {getCompanyInfo  ,BASE_URL} from "@/api";
 import message from "@/utils/Message";
 
   export default {
@@ -77,7 +77,7 @@ import message from "@/utils/Message";
                    "Content-Type": "multipart/form-data"
                  },
           }
-         axios.post(BASEURL +"/upload/images",this.param, config).then(res => {
+         axios.post(BASE_URL +"/upload/images",this.param, config).then(res => {
               console.log(res);
              if(res.status == 200){
                 this.imageUrl = res.data.data[0].url;

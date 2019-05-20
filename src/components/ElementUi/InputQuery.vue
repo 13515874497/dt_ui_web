@@ -113,7 +113,10 @@ export default {
     selectedIds: Array, //用户要筛选的条件
     querySuggestionsMethod: Function, //查询搜索建议的方法
     querySuggestionsConfig: Object, //模糊查询的配置对象
-		inputData : Object
+		inputData : {
+      type: Object,
+      default:() => ({})
+    }
 	},
   data() {
     return {
@@ -201,12 +204,12 @@ export default {
         self.initValue(item);
       });
       this.data = data;
-			console.log(this.data)
+		
     },
 
     //初始化数据
     initValue(tableTitle) {
-			console.log(tableTitle);
+			
       if (tableTitle) {
         let key = tableTitle.topType;
         this.$set(this.data_model, key, "");
@@ -237,18 +240,14 @@ export default {
       query[field] = queryString;
 
       let res = await this.querySuggestionsMethod(query);
-      console.log(res);
-      
       let data = res.data.dataList.map(item => {
         return item[field] || (item.systemLogStatus && item.systemLogStatus[field]);
       });
       data = unique(data);
-      console.log(data);
       
       data = data.map(item => {
         return { value: item };
       });
-      console.log(data);
       
       cb(data);
     },

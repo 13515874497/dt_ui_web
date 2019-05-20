@@ -69,7 +69,7 @@ import {
   getLoginStatus
 } from "@/api";
 import moment from 'moment'
-import form from './components/ElementUi/Form.vue'
+import form from './components/ElementUi/Form'
 import {
   readlink
 } from 'fs';
