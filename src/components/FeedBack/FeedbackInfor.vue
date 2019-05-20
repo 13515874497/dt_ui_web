@@ -142,6 +142,7 @@ export default {
     },
     //获取级联选择器中输入框的值
     handleMenu() {
+      //定义一个变量来接收获取到的值，不然传到后台的就是他的id而不是名字
       this.ruleForm.mName = this.$refs["cascaderMenu"].currentLabels; //获取label值
       console.log(this.ruleForm.mName);
     }
