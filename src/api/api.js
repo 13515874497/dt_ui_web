@@ -7,8 +7,8 @@ import ajax from './ajax'
 // } from 'assert';
 
 export const BASE_URL = '/api/api/v1'
-// export const WS_URL = 'ws://192.168.208.109:3333/ws'
-export const WS_URL = 'ws://192.168.1.231:3333/ws'
+export const WS_URL = 'ws://192.168.208.109:3333/ws'
+// export const WS_URL = 'ws://192.168.1.231:3333/ws'
 //用户修改密码
 export const register = ({
   pwd
@@ -398,7 +398,7 @@ export const findByListDelivery = (data) => ajax(BASE_URL + '/deli/findByListDel
 export const findByListStarLevel = ({
   currentPage = 1,
   total_size = 0,
-  pageSize = 10,
+  pageSize = 100,
   page_sizes = '5,10,15,20,25',
 }={}) => ajax(BASE_URL + '/star/findByListStarLevel', {
   currentPage,
@@ -411,7 +411,18 @@ export const findByListStarLevel = ({
 export const findByListBrush = (data) => ajax(BASE_URL + '/brush/findByListBrush', data);
 
 //平台类型分页
-export const findByListPlatform = (data) => ajax(BASE_URL + '/plat/findByListPlatform', data);
+
+export const findByListPlatform = ({
+  currentPage = 1,
+  total_size = 0,
+  pageSize = 100,
+  page_sizes = '5,10,15,20,25',
+}={}) => ajax(BASE_URL + '/plat/findByListPlatform', {
+  currentPage,
+  total_size,
+  pageSize,
+  page_sizes,
+});
 
 
 
@@ -739,3 +750,13 @@ export const startFee = ({
   reason,
   mName,
 },'POST')
+
+//查看反馈信息http://127.0.0.1:9001/api/v1/fee/selProcess?pageSize=0&currentPage=10
+// export const selProcess = ({
+//   currentPage,
+//   pageSize
+// }) => ajax(BASE_URL + '/fee/selProcess', {
+//   currentPage,
+//   pageSize
+// // })
+export const selProcess = (data) => ajax(BASE_URL + '/fee/selProcess', data);

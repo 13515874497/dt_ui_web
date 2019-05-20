@@ -1,7 +1,7 @@
 <script>
 //出货通知单
 import { getNotice} from "@/api";
-import {shopName,siteName} from '@/components/ElementUi/Form/customField'
+import {shopName,siteName,platformTypeName,transportTypeName} from '@/components/ElementUi/Form/customField'
 import MxTable2 from "@/components/Mixins/MxTable2";
 export default {
   mixins: [MxTable2],
@@ -10,7 +10,9 @@ export default {
       primaryKey: "awId",
       customField: [
         shopName,
-        siteName
+        siteName,
+        platformTypeName,
+        transportTypeName
       ],
     };
   },

@@ -1,5 +1,14 @@
+
+import {
+  findByListProducts,
+  repGetShopName,
+  getSelectSiteRole,
+  findByListStarLevel,
+  findByListPlatform,
+  findByListType
+} from '@/api/api'
 // Cascader 级联选择
-import {findByListProducts,BASE_URL,repGetShopName,getSelectSiteRole} from '@/api/api'
+// topType： 当前要自定义的字段  bindKey：选择后实际要传给后台的字段 data_model: 由于级联选择绑定的是一个数组，二后台只需要最后一个 这个为临时用来绑定的变量
 //类目名称
 export const productsName = {
   topType: "productsName",
@@ -8,9 +17,17 @@ export const productsName = {
   inputType: 5,
   ajax: findByListProducts,
 }
+export const transportTypeName = {
+  topType: "transportTypeName",
+  bindKey: 'transportTypeId',
+  data_model: '_transportTypeId',
+  inputType: 5,
+  ajax: findByListType,
+}
 // select下拉框
+//topType： 当前要自定义的字段  bindKey：选择后实际要传给后台的字段 ajax：select渲染的数据 key：option绑定的key  label：option绑定的label filterable：可以输入筛选
 //店铺列表
-export const shopName ={
+export const shopName = {
   topType: "shopName",
   inputType: 3,
   bindKey: "shopId",
@@ -30,4 +47,25 @@ export const siteName = {
   filterable: true,
   placeholder: "请选择站点"
 }
-
+//星级
+export const starLevelName = {
+  inputType: 3,
+  topType: "starLevelName",
+  bindKey: "starLevelId",
+  ajax: findByListStarLevel,
+  key: "starLevelId",
+  label: "starLevelName",
+  // filterable: true,
+  placeholder: "请选择星级"
+}
+//平台类型
+export const platformTypeName = {
+  inputType: 3,
+  topType: "platformTypeName",
+  bindKey: "platformTypeId",
+  ajax: findByListPlatform,
+  key: "platformTypeId",
+  label: "platformTypeName",
+  filterable: true,
+  placeholder: "请选择平台类型"
+}
