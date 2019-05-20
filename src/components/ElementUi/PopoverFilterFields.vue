@@ -1,6 +1,6 @@
 <template>
   <el-popover popper-class="field-popper" placement="left" title="打√为不显示" width="200" trigger="hover">
-    <el-tree class="scrollbar" ref="tree" node-key="id" :data="data" :props="props" show-checkbox @check="check"></el-tree>
+    <el-tree class="scrollbar" ref="tree" node-key="id" :data="data" :hiddenFieldsList="hiddenFieldsList" :props="props" show-checkbox @check="check"></el-tree>
     <div slot="reference" class="fieldShow el-button el-button--primary is-plain"></div>
   </el-popover>
 </template>
@@ -8,7 +8,8 @@
 <script>
 export default {
   props: {
-    data: Array
+    data: Array,
+		hiddenFieldsList:Array
   },
   data() {
     return {
@@ -40,17 +41,21 @@ export default {
     },
     saveCache(keys){
         this.list[this.page.id] = keys;
-        localStorage.setItem('hideFieldList',JSON.stringify(this.list));
+        // localStorage.setItem('hideFieldList',JSON.stringify(this.list));
+				this.hiddenFieldsList = this.list;
 				console.log(this.list)
     },
     readCache(){
-        let list = localStorage.getItem('hideFieldList');
+        // let list = localStorage.getItem('hideFieldList');
+				let list = this.hiddenFieldsList;
+				
         if(!list){
             list = {};
         }else {
-            list = JSON.parse(list);
+            // list = JSON.parse(list);
+						this.list = list;
         }
-        this.list = list;
+        // this.list = list;
 				console.log(list);
         let checked = this.list[this.page.id]
         if(checked){
@@ -59,6 +64,18 @@ export default {
         }
     }
   },
+	created() {
+		if(!this.hiddenFieldsList){
+				this.hiddenFieldsList = [];
+		}else{
+			this.list = this.hiddenFieldsList;
+		}
+		let checked = this.list[this.page.id]
+		if(checked){
+				this.$emit('hideField',[checked]);
+				 this.$refs.tree.setCheckedKeys(checked);
+		}
+	},
   // mounted(){
   //     this.readCache();
   // }
