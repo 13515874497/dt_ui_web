@@ -38,10 +38,10 @@
 				<div class="dis_fex" style="margin-top: 20px;">
 					<el-button type="primary" style="" size="mini" @click="saveSolution">新增查询方案</el-button>
 					<!-- <el-button type="primary" style="" size="mini" @click="changeSolution">修改当前方案</el-button> -->
-					<!-- <div style="display: inline-block;position: relative;" v-for="(item, index) in programmeDataList">
+					<div style="display: inline-block;position: relative;" v-for="(item, index) in programmeDataList">
 						<el-button type="primary" style="padding-right: 25px;margin-right: 5px;" size="mini" @click="chaxun(index)"  :key="index">方案{{item.programName}}</el-button>
 						 <span style="position: absolute;right: 8px;top: 8px;background-color:white ;color: #AAAAAA;border-radius: 8px;" class="el-icon-circle-close" @click="deleteProgramme(item)"></span>
-					</div> -->
+					</div>
 					<!-- <el-select v-model="programmeDataList" placeholder="请选择活动区域">
 						<el-option label="item.programName" value="item.programName" ></el-option>
 						
