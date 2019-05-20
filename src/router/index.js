@@ -139,6 +139,8 @@ import SettlementReport from '../views/Financial/SettlementReport.vue'  //财务
 
 import UserFeedBack from '../views/UserFeed/UserFeedBack.vue'  //用户反馈
 
+import Audit from '../views/Audit/Audit.vue'  //用户反馈
+
 Vue.use(Router)
 
 
@@ -915,6 +917,11 @@ export default new Router({
           component: UserFeedBack ,
           // meta: { title: '用户反馈' },
           name:'UserFeedBack',   
+        }, 
+        {
+          path: '/index/audit',  //用户反馈
+          component: Audit,
+          name:'Audit',   
         }, 
       ]
     },

@@ -1,5 +1,5 @@
 <template>
-    <div class="fanBoxs">
+     <div class="auBoxs">
         <!-- 表格 -->
         <el-table
             border
@@ -16,17 +16,17 @@
             label="序号">
             </el-table-column>
             <el-table-column
-            property="uuidNumber"
+            property="feedback.uuidNumber"
             label="反馈编号"
             width="120">
             </el-table-column>
             <el-table-column
-            property="mName"
+            property="feedback.mName"
             label="反馈菜单"
             width="120">
             </el-table-column>
             <el-table-column
-            property="imageUrl"
+            property="feedback.imageUrl"
             label="图片"
             width="240">
             <template slot-scope="scope" >
@@ -35,39 +35,40 @@
             </el-table-column>
               
             <el-table-column
-            property="reason"
+            property="feedback.reason"
             label="描述"
             width="120">
             </el-table-column>
             <el-table-column
-            property="applyUser"
+            property="feedback.applyUser"
             label="反馈人"
             width="120">
             </el-table-column>
             <el-table-column
-            property="applyTime"
+            property="feedback.applyTime"
             label="反馈时间"
             width="120"
             :formatter="formatTime">
             </el-table-column>
              <el-table-column
-            property="applyStatus"
+            property="feedback.applyStatus"
             label="反馈状态"
             width="120">
             </el-table-column>
              <el-table-column
-            property="fbOpinion"
+            property=""
             label="受理意见"
             width="120">
             </el-table-column>
              <el-table-column
-            property="adPerson"
+            property="auditor"
             label="受理人"
             width="120">
             </el-table-column>
             <el-table-column
-            property="adTime"
+            property="createTime"
             label="受理时间"
+            :formatter="formatTime"
             >
             </el-table-column>
         </el-table>
@@ -86,50 +87,34 @@
     </div>
 </template>
 <script>
-import Table from "@/components/ElementUi/Table";
-import axios from "axios";
-import message from "@/utils/Message";
-import { selProcess } from "@/api";
+import { selThisAudit } from "@/api";
 import moment from 'moment'
 export default {
-  components: {
-    Table
-  },
-  data() {
-    return {
-      tableData: [], //表信息
-      page: {
-        pageNo:1, //当前页
-        pageSize: 10 ,//每页条数,  默认10条
-        totalCount:0 //总条数
-      }
-    };
-  },
-  methods: {
+   data(){
+       return{
+        tableData: [], //表信息
+        page: {
+            pageNo:1, //当前页
+            pageSize: 10 ,//每页条数,  默认10条
+            totalCount:0 //总条数
+        }
+       }
+   } ,
+   methods:{
     initList() {
       let params = {
-        currentPage : this.page.pageNo,
-        pageSize: this.page.pageSize
+         currentPage : this.page.pageNo,
+         pageSize: this.page.pageSize
       };
       // console.log(params)
 
-      selProcess(params).then(res => {
+      selThisAudit(params).then(res => {
         console.log(res);
-        
-        this.tableData = res.data.dataList;
-        this.page.totalCount =res.data.totalCount
-
-        for(var i=0;i<this.tableData.length;i++){
-          if(this.tableData[i].imageUrl){
-              console.log(this.tableData[i].imageUrl.split(','))
-             this.tableData[i].imageUrl = this.tableData[i].imageUrl.split(',')
-          }else if(this.tableData[i].imageUrl == null){
-            this.tableData[i].imageUrl = [];
-          }
-        }
+        this.tableData = res.data.dataList
+         this.page.totalCount =res.data.totalCount
       });
     },
-    //翻页
+     //翻页
     sizeChange(val) {
       // console.log(val);
       this.page.pageSize = val;
@@ -149,15 +134,15 @@ export default {
     //时间格式处理
     formatTime(row, column) {
       var date = row[column.property];
+      console.log(date)
       if (date == undefined) {
         return "";
       }
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
     }
-  },
-  created() {
-    
-    this.initList();
-  }
-};
+   },
+   created(){
+       this.initList()
+   }
+}
 </script>

@@ -759,3 +759,12 @@ export const selProcess = ({
   currentPage,
   pageSize
 })
+
+//管理页面信息http://127.0.0.1:9001/api/v1/fee/selThisAudit?pageSize=10&currentPage=1
+export const selThisAudit = ({
+  currentPage,
+  pageSize
+}) => ajax(BASE_URL + '/fee/selThisAudit', {
+  currentPage,
+  pageSize
+})
