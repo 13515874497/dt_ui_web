@@ -489,9 +489,6 @@ export default {
       ]);
     },
     handlerValidate(key, valid, errMsg) {
-      console.log(this.data_model);
-      console.log(this.data_model_cache);
-      
       if (this.data_model[key] === this.data_model_cache[key]) {
         this.$refs["data_model"].clearValidate([key]);
       }
@@ -502,8 +499,8 @@ export default {
   },
   async created() {
     this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
-    await this.initCustomField();
     this.initData_model();
+    await this.initCustomField();
     this.mergeRules();
   },
   mounted() {}

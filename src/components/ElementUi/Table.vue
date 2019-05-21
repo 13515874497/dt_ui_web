@@ -13,7 +13,6 @@
     :show-summary="showSummary"
     :summary-method="getSummaries"
     :highlight-current-row="editable"
-    @current-change="currentChange"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
@@ -418,11 +417,6 @@ export default {
       });
       return sums;
     },
-    //表格单行选中
-    currentChange(val, val1) {
-      console.log(val);
-      console.log(val1);
-    }
   },
   created() {
     let self = this;
