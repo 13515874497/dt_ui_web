@@ -20,7 +20,8 @@ export default {
       page: {
           id: this.$route.params.id
       },
-      list: null
+      list: null,
+			hideListData:[]
     };
   },
   watch: {
@@ -40,20 +41,22 @@ export default {
     saveCache(keys){
         this.list[this.page.id] = keys;
         // localStorage.setItem('hideFieldList',JSON.stringify(this.list));
+				// this.hideListData = this.list;
 				this.hiddenFieldsList = this.list;
 				console.log(this.list)
     },
     readCache(){
         // let list = localStorage.getItem('hideFieldList');
+				// let list = this.hideListData;
 				let list = this.hiddenFieldsList;
 				
-        if(!list){
-            list = {};
-        }else {
-            // list = JSON.parse(list);
-						this.list = list;
-        }
-        // this.list = list;
+      //   if(!list){
+      //       list = {};
+      //   }else {
+      //       list = JSON.parse(list);
+						// this.list = list;
+      //   }
+        this.list = list;
 				console.log(list);
         let checked = this.list[this.page.id]
         if(checked){

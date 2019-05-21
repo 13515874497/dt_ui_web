@@ -20,9 +20,10 @@ export default {
    * @param result
    * @param pageData
    */
-  pageInfo(result, pageData) {
-    if (result.code === 200) {
-      const data = result.data
+  //普通的表格数据
+  pageInfo(res, pageData) {
+    if (res.code === 200) {
+      const data = res.data
       data.dataList.forEach((item, index) => {
         if (item.systemLogStatus) {
           for (let key in item.systemLogStatus) {
@@ -61,5 +62,4 @@ export default {
       pageData.total_size = data.total_size
     }
   }
-
 }
