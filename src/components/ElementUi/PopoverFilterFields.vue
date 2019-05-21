@@ -26,8 +26,6 @@ export default {
   watch: {
     data(val){
       if(val.length){
-        console.log('111111111111111111');
-        
         this.readCache();
       }
     }

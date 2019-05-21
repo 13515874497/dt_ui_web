@@ -2,17 +2,21 @@
 <script>
 //币别
 import { findByListCurrency } from "@/api";
-import MxTable  from '@/components/Mixins/MxTable'
+import MxTable from "@/components/Mixins/MxTable";
 export default {
   mixins: [MxTable],
+  data() {
+    return {
+      showQuery: false
+    };
+  },
   methods: {
-     queryPage(data) {
+    queryPage(data) {
       return findByListCurrency(data);
-    },
+    }
   }
-}
+};
 </script>
 
 <style>
-
 </style>

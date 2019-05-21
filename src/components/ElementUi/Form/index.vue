@@ -78,7 +78,7 @@
           end-placeholder="结束日期"
           size="small"
         ></el-date-picker>
-      </el-form-item> -->
+      </el-form-item>-->
 
       <el-form-item
         v-else-if="item.inputType == 1"
@@ -86,12 +86,20 @@
         :prop="item.topType"
         :rules="matchedRule(item)"
       >
-        <el-input
+        <!-- <el-input
           v-model="data_model[item.topType]"
           :placeholder="item.placeholder"
           :disabled="item.disabled"
           size="small"
-        ></el-input>
+        ></el-input>-->
+        <el-input-number
+          v-model="data_model[item.topType]"
+          :precision="2"
+          :step="1"
+          :disabled="item.disabled"
+          size="small"
+          controls-position="right"
+        ></el-input-number>
       </el-form-item>
 
       <el-form-item
@@ -213,7 +221,7 @@ export default {
     reset: Boolean, // 改变时重置数据
     customField: {
       type: Array,
-      default: ()=>[]
+      default: () => []
     } //某些特殊字段在填写时需要想后台请求数据
   },
   data() {
@@ -393,7 +401,16 @@ export default {
           if (item.statusOptions && item.statusOptions.length) {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
           } else {
-            self.$set(this.data_model, item.topType, null);
+            switch (item.inputType) {
+              case 1:
+                break;
+
+                self.$set(this.data_model, item.topType, 0.00);
+              default:
+                
+                self.$set(this.data_model, item.topType, null);
+                break;
+            }
             if (item.bindKey) {
               self.$set(this.data_model, item.bindKey, null);
             }
@@ -489,17 +506,20 @@ export default {
 <style lang="scss" scoped>
 .form-content {
   max-height: 500px;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-right: 15px;
 
   .el-form-item {
     width: 310px;
     margin-right: 16px;
-    margin-bottom: 0;
+    margin-bottom: 13px;
     // /deep/ .el-form-item__label {
     //   text-align: justify;
     //   text-align-last: justify;
     // }
+    /deep/ .el-input-number {
+      width: 200px;
+    }
     /deep/ .el-input__inner {
       width: 200px;
     }

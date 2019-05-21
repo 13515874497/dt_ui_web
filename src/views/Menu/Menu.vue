@@ -843,7 +843,7 @@ export default {
 }
 .tree-content {
   max-height: 450px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .field-row {
   margin-bottom: 15px;
