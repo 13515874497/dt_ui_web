@@ -489,6 +489,9 @@ export default {
       ]);
     },
     handlerValidate(key, valid, errMsg) {
+      console.log(this.data_model);
+      console.log(this.data_model_cache);
+      
       if (this.data_model[key] === this.data_model_cache[key]) {
         this.$refs["data_model"].clearValidate([key]);
       }

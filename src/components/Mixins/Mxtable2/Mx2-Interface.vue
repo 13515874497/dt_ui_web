@@ -13,11 +13,11 @@
       <el-radio-group v-model="radio" size="mini">
         <el-radio-button :label="page.name"></el-radio-button>
       </el-radio-group>
-      <TableEditable
+      <Table
         :editable="true"
         :tableTitle="tableTitle_children"
         :tableData="tableData_children"
-      ></TableEditable>
+      ></Table>
     </section>
     <section></section>
   </div>
@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import TableEditable from "@/components/ElementUi/TableEditable";
+import Table from "@/components/ElementUi/Table";
 export default {
   props: {
     visible: Boolean,
@@ -55,7 +55,7 @@ export default {
     }
   },
   components: {
-    TableEditable
+    Table
   },
   data() {
     return {
