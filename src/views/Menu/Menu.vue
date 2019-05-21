@@ -713,7 +713,8 @@ export default {
           id: item.id,
           topOrder: item.topOrder,
           index: index,
-          menuId: item.menuId
+          menuId: item.menuId,
+          version: item.version
         };
       });
       console.log(data);

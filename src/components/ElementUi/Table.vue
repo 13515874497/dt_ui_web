@@ -21,36 +21,10 @@
       <div v-for="(title, index) in table_title" :key="index">
         <!--特殊字段 -->
         <!-- 根据选项获取值的字段 -->
-        <el-table-column
-          v-if="title.inputType==1"
-          sortable
-          :fixed="isFixed(title)"
-          :label="title.headName"
-          :prop="title.topType"
-          :show-overflow-tooltip="true"
-          :render-header="renderHeader"
-          :key="Math.random()"
-          :column-key="index.toString()"
-        >
-          <template slot-scope="scope">
-            <span class="editting" v-if="editable">
-              <!-- <el-input size="small" v-model="scope.row[title.topType]"></el-input>
-              -->
-              <el-input-number
-                v-model="scope.row[title.topType]"
-                :precision="2"
-                :step="1"
-                :disabled="title.disabled"
-                size="small"
-                controls-position="right"
-              ></el-input-number>
-            </span>
-            <span class="editted">{{scope.row[title.topType]}}</span>
-          </template>
-        </el-table-column>
+     
 
         <el-table-column
-          v-else-if="title.inputType==3"
+          v-if="title.inputType==3"
           :label="title.headName"
           :fixed="isFixed(title)"
           :formatter="statusOptions"

@@ -80,18 +80,12 @@
         ></el-date-picker>
       </el-form-item>-->
 
-      <el-form-item
+      <!-- <el-form-item
         v-else-if="item.inputType == 1"
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
       >
-        <!-- <el-input
-          v-model="data_model[item.topType]"
-          :placeholder="item.placeholder"
-          :disabled="item.disabled"
-          size="small"
-        ></el-input>-->
         <el-input-number
           v-model="data_model[item.topType]"
           :precision="2"
@@ -100,7 +94,7 @@
           size="small"
           controls-position="right"
         ></el-input-number>
-      </el-form-item>
+      </el-form-item> -->
 
       <el-form-item
         v-else-if="item.inputType == 3"
@@ -145,7 +139,7 @@
       </el-form-item>
 
       <el-form-item
-        v-else-if="item.inputType == 0 || !item.inputType"
+        v-else-if="item.inputType == 0 ||  item.inputType == 1 || !item.inputType"
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
@@ -215,18 +209,14 @@ export default {
     //       placeholder: "请选择站点"
     //     },
     // ],
-    formItems: {
-      type: Array,
-      required: true
-    },
+    formItems: Array,
     formData: Object, //有传这个说明是修改
-    rule: Object, //某些特殊字段的自定义验证规则
+    rule: Object, //某些特殊字段的验证规则
     reset: Boolean, // 改变时重置数据
     customField: {
       type: Array,
       default: () => []
     } //某些特殊字段在填写时需要想后台请求数据
-
   },
   data() {
     return {
@@ -499,8 +489,8 @@ export default {
   },
   async created() {
     this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
-    this.initData_model();
     await this.initCustomField();
+    this.initData_model();
     this.mergeRules();
   },
   mounted() {}
