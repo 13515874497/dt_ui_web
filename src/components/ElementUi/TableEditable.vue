@@ -12,6 +12,8 @@
     class="content-table"
     :show-summary="showSummary"
     :summary-method="getSummaries"
+    :highlight-current-row="editable"
+    @current-change="currentChange"
   >
     <!--inputType   0: str,1: int, 2:date 3: status(option值选项) 4.deadline(起止时间段) -->
     <el-table-column type="selection" width="55"></el-table-column>
@@ -21,14 +23,42 @@
         <!--特殊字段 -->
         <!-- 根据选项获取值的字段 -->
         <el-table-column
-          v-if="title.inputType==3"
+          v-if="title.inputType==1"
+          sortable
+          :fixed="isFixed(title)"
+          :label="title.headName"
+          :prop="title.topType"
+          :show-overflow-tooltip="true"
+          :render-header="renderHeader"
+          :key="Math.random()"
+          :column-key="index.toString()"
+        >
+          <template slot-scope="scope">
+            <span class="editting" v-if="editable">
+              <!-- <el-input size="small" v-model="scope.row[title.topType]"></el-input>
+              -->
+              <el-input-number
+                v-model="scope.row[title.topType]"
+                :precision="2"
+                :step="1"
+                :disabled="title.disabled"
+                size="small"
+                controls-position="right"
+              ></el-input-number>
+            </span>
+            <span class="editted">{{scope.row[title.topType]}}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
+          v-else-if="title.inputType==3"
           :label="title.headName"
           :fixed="isFixed(title)"
           :formatter="statusOptions"
           :prop="title.topType"
           :render-header="renderHeader"
           :show-overflow-tooltip="true"
-          :key="index"
+          :key="Math.random()"
           :column-key="index.toString()"
         ></el-table-column>
 
@@ -38,7 +68,7 @@
           :fixed="isFixed(title)"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
+          :key="Math.random()"
           :column-key="index.toString()"
         >
           <template slot-scope="scope">
@@ -54,7 +84,7 @@
           :fixed="isFixed(title)"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
+          :key="Math.random()"
           :column-key="index.toString()"
         >
           <template slot-scope="scope">
@@ -72,7 +102,7 @@
           :prop="title.topType"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
+          :key="Math.random()"
           sortable
           :column-key="index.toString()"
         >
@@ -90,18 +120,14 @@
           :prop="title.topType"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
+          :key="Math.random()"
           :column-key="index.toString()"
         >
           <template slot-scope="scope">
-            {{JSON.stringify(scope.row,null,2)}}
-            {{scope.row[title.topType]}}
-            <el-input
-              size="small"
-              v-model="scope.row[title.topType]"
-              placeholder="请输入内容"
-            ></el-input>
-            <span>{{scope.row.name}}</span>
+            <span class="editting" v-if="editable">
+              <el-input size="small" v-model="scope.row[title.topType]"></el-input>
+            </span>
+            <span class="editted">{{scope.row[title.topType]}}</span>
           </template>
         </el-table-column>
       </div>
@@ -115,13 +141,15 @@
 </template>
 <script>
 import Sortable from "sortablejs";
+import { deepClone } from "@/utils/Arrays";
 export default {
   data() {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
       options: {}, //存放各种类型的状态
-      table_title: []
+      table_title: [],
+      table_data: []
     };
   },
   props: {
@@ -130,6 +158,11 @@ export default {
     mode: Number, //在table中表示  需要合并父表的数据  (1普通的表格  2多表合并的表格（需要合并父数据）)
     showOperate: {
       //是否在最右侧显示操作字段
+      type: Boolean,
+      default: false
+    },
+    editable: {
+      //是否可编辑
       type: Boolean,
       default: false
     }
@@ -142,12 +175,18 @@ export default {
     }
   },
   watch: {
-    tableTitle(val) {
-      // this.table_title = [...this.tableTitle];
-      this.table_title = val;
+    tableTitle: {
+      handler(val) {
+        this.table_title = val;
+      },
+      immediate: true
     },
-    tableData(val) {
+    tableData: {
       // this.setRepeatField();
+      handler(val) {
+        this.table_data = deepClone(val);
+      },
+      immediate: true
     }
     // tableData() {
     //   this.setRepeatField();
@@ -174,11 +213,15 @@ export default {
           newIndex = evt.newIndex - 2;
           var item = this.table_title.splice(oldIndex, 1);
           this.table_title.splice(newIndex, 0, item[0]);
-
+          console.log(this.table_title);
+          console.log(this.tableTitle);
+          this.$emit("changeTitle", this.table_title);
           // 下面是更改index的测试版 不对
           // oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
           // oldIndex = this.table_title.indexOf($oldLi);
+          // console.log(oldIndex);
           // newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
+          // console.log(newIndex);
           // var item = this.table_title.splice(oldIndex.index,1);
           // this.table_title.splice(newIndex.index, 0 ,item[0]);
         },
@@ -374,6 +417,11 @@ export default {
         }
       });
       return sums;
+    },
+    //表格单行选中
+    currentChange(val, val1) {
+      console.log(val);
+      console.log(val1);
     }
   },
   created() {
@@ -381,7 +429,7 @@ export default {
     if (this.menuId == 59) {
     }
 
-    this.table_title = [...this.tableTitle];
+    // this.table_title = [...this.tableTitle];
 
     this.readFixedCache();
     this.initOptions();
@@ -420,5 +468,30 @@ export default {
   /deep/ .el-table .cell {
     white-space: nowrap;
   }
+}
+
+.editting {
+  display: none;
+}
+.editted {
+  padding: 0 16px;
+  display: block;
+  font-size: 13px;
+  line-height: 32px;
+}
+.current-row {
+  .editting {
+    display: block;
+  }
+  .editted {
+    display: none;
+  }
+}
+.el-input-number {
+  width: 100%;
+}
+.el-input-number.is-controls-right .el-input__inner {
+  text-align-last: left;
+  padding:  0 16px;
 }
 </style>

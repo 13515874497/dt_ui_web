@@ -37,7 +37,7 @@
 				</div>
 				<div class="dis_fex" style="margin-top: 20px;">
 					<el-button type="primary" style="" size="mini" @click="saveSolution">新增查询方案</el-button>
-					<!-- <el-button type="primary" style="" size="mini" @click="changeSolution">修改当前方案</el-button> -->
+					<el-button type="primary" style="" size="mini" @click="changeSolution">修改当前方案</el-button>
 					<div style="display: inline-block;position: relative;" v-for="(item, index) in programmeDataList">
 						<el-button type="primary" style="padding-right: 25px;margin-right: 5px;" size="mini" @click="chaxun(index)"  :key="index">方案{{item.programName}}</el-button>
 						 <span style="position: absolute;right: 8px;top: 8px;background-color:white ;color: #AAAAAA;border-radius: 8px;" class="el-icon-circle-close" @click="deleteProgramme(item)"></span>
@@ -121,13 +121,14 @@ import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import PubSub from "pubsub-js";
 import { MessageBox } from 'element-ui';
-import { getConfMapUser, getUserConfig , delUserConfig} from '@/api'
+import { getConfMapUser, getUserConfig , delUserConfig, upUserConfig} from '@/api'
 export default {
   data() {
     return {
       page: {
         name: this.$route.params.name
       },
+			tableTitleUp:[],//要上传的拖拽后的新数据
 			nowId:'',//修改方案时存入当前要修改的方案configid
 			programme:"",//方案名称
 			hiddenFieldsList:[],//隐藏字段数组
@@ -238,7 +239,9 @@ export default {
 			
     },
 		changeTitle(e){
+			this.tableTitleUp = e;
 			this.tableTitle = e;
+			console.log(e);
 			console.log(this.tableTitle)
 		
 		},
@@ -256,23 +259,43 @@ export default {
 			this.nowId = this.programmeDataList[index].configId;
 			console.log(this.programmeDataList[index])
 		},
-		// changeSolution(){
-		// 	let programmeList = {
-		// 		hiddenFieldsList : this.hiddenFieldsList,
-		// 		queryTwoList : this.query2List,
-		// 		inputQueryData : this.inputQueryData,
-		// 		programName : this.programme,
-		// 		mid : parseInt(this.$route.params.id),
-		// 		id:this.nowId
-		// 	}
-		// 	
-		// 	console.log(programmeList)
-		// 	
-		// 	getConfMapUser(programmeList).then(res=>{
-		// 		console.log(res);
-		// 		
-		// 	})
-		// },
+		changeSolution(){
+			
+			MessageBox.prompt('请输入方案名称', '提示', {
+			    confirmButtonText: '确定',
+			    cancelButtonText: '取消'
+			  }).then(({ value }) => {
+						var reg =  /^\s*$/g;
+						if(reg.test(value) || value == null || value == ""){
+							message.errorMessage('方案名称不能为空')
+							return;
+						}else{
+							this.programme = value.replace(/\s+/g,"");
+						
+							let programmeList = {
+								hiddenFieldsList : this.hiddenFieldsList,
+								queryTwoList : this.query2List,
+								inputQueryData : this.inputQueryData,
+								programName : this.programme,
+								mid : parseInt(this.$route.params.id),
+								dropTable:this.tableTitleUp,
+								id:this.nowId
+							}
+							console.log(programmeList)
+							
+							upUserConfig(programmeList).then(res=>{
+								console.log(res);
+								if(res.code == 200){
+									message.successMessage('方案修改成功')
+								}else{
+									message.errorMessage(res.msg)
+								}
+							})
+							
+						}
+						
+			  })	
+		},
 		saveSolution(){
 			MessageBox.prompt('请输入方案名称', '提示', {
           confirmButtonText: '确定',
@@ -290,9 +313,9 @@ export default {
 								queryTwoList : this.query2List,
 								inputQueryData : this.inputQueryData,
 								programName : this.programme,
+								dropTable:this.tableTitleUp,
 								mid : parseInt(this.$route.params.id)
 							}
-							
 							console.log(programmeList)
 							
 							getConfMapUser(programmeList).then(res=>{
@@ -357,7 +380,7 @@ export default {
     hideField($event) {
       let list = $event[0];
 			this.hiddenFieldsList = list;
-      console.log(this.hiddenFieldsList);
+      // console.log(this.hiddenFieldsList);
       if (!list) {
         return;
       } else {
@@ -577,7 +600,7 @@ main {
 }
 .form-content {
   max-height: 500px;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding-right: 15px;
 }
 .dis_fex{

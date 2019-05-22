@@ -23,6 +23,6 @@ export default {
 //右侧隐藏字段样式只能写在全局
 .field-popper .el-tree{
   height: 500px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 </style>

@@ -713,7 +713,8 @@ export default {
           id: item.id,
           topOrder: item.topOrder,
           index: index,
-          menuId: item.menuId
+          menuId: item.menuId,
+          version: item.version
         };
       });
       console.log(data);
@@ -843,7 +844,7 @@ export default {
 }
 .tree-content {
   max-height: 450px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .field-row {
   margin-bottom: 15px;

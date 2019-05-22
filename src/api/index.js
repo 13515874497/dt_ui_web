@@ -562,9 +562,7 @@ export const findByListRegion = (data) => ajax(BASE_URL + '/reg/findByListRegion
 //站点分页 repGetSiteInfo
 export const findByListSite = (data) => ajax(BASE_URL + '/site/findByListSite', data, 'POST')
 //通过洲的arId获取站点
-export const repGetShopIdSiteInfo = (arId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {
-  arId
-})
+export const repGetShopIdSiteInfo = (data) => ajax(BASE_URL + `/site/getByShopIdListSite`, data)
 
 //币别分页 repGetCurrencyInfo
 export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
@@ -780,6 +778,8 @@ export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',
 export const getUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
 
 //删除表格方案
-export const delUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
+export const delUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 
+//修改表格方案
+export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 

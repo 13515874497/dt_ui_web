@@ -36,6 +36,7 @@ import {
   Badge,
   Button,
   Input,
+  InputNumber,
   Container,
   Header,
   Aside,
@@ -98,6 +99,7 @@ import {
 Vue.component(Badge.name, Badge)
 Vue.component(Button.name, Button)
 Vue.component(Input.name, Input)
+Vue.component(InputNumber.name, InputNumber)
 Vue.component(Container.name, Container)
 Vue.component(Header.name, Header)
 Vue.component(Aside.name, Aside)

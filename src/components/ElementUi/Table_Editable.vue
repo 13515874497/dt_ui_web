@@ -10,6 +10,7 @@
     @header-contextmenu="headerClick"
     :header-row-class-name="setTheadClassName"
     class="content-table"
+    row-key="companyId"
     :show-summary="showSummary"
     :summary-method="getSummaries"
     :highlight-current-row="editable"
@@ -21,7 +22,6 @@
       <div v-for="(title, index) in table_title" :key="index">
         <!--特殊字段 -->
         <!-- 根据选项获取值的字段 -->
-
         <el-table-column
           v-if="title.inputType==3"
           :label="title.headName"
@@ -30,31 +30,8 @@
           :prop="title.topType"
           :render-header="renderHeader"
           :show-overflow-tooltip="true"
-          :key="Math.random()"
-          :column-key="index.toString()"
-        >
-          <template slot-scope="scope">
-            <span class="editting" v-if="editable">
-              <el-select
-                v-model="scope.row[title.bindKey ||  title.topType]"
-                :placeholder="title.placeholder || '请选择'"
-                :filterable="title.filterable"
-                :remote="title.remote"
-                :remoteMethod="title.remoteMethod($event,title)"
-                :clearable="title.remote"
-                size="small"
-              >
-                <el-option
-                  v-for="option in title.data"
-                  :key="option[title.key]"
-                  :label="option[title.label]"
-                  :value="option[title.key]"
-                ></el-option>
-              </el-select>
-            </span>
-            <span class="editted">{{scope.row[title.topType]}}</span>
-          </template>
-        </el-table-column>
+          :key="index"
+        ></el-table-column>
 
         <el-table-column
           v-else-if="title.topType==='userExpirationDate'"
@@ -62,8 +39,7 @@
           :fixed="isFixed(title)"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="Math.random()"
-          :column-key="index.toString()"
+          :key="index"
         >
           <template slot-scope="scope">
             <span
@@ -78,8 +54,7 @@
           :fixed="isFixed(title)"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="Math.random()"
-          :column-key="index.toString()"
+          :key="index"
         >
           <template slot-scope="scope">
             <span
@@ -90,15 +65,14 @@
         </el-table-column>
 
         <el-table-column
-          v-else-if="title.inputType==2 || title.inputType==4"
+          v-else-if="title.inputType==4 || title.inputType==4"
           :fixed="isFixed(title)"
           :label="title.headName"
           :prop="title.topType"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="Math.random()"
+          :key="index"
           sortable
-          :column-key="index.toString()"
         >
           <template slot-scope="scope">
             <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
@@ -114,19 +88,11 @@
           :prop="title.topType"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="Math.random()"
-          :column-key="index.toString()"
-        >
-          <template slot-scope="scope">
-            <span class="editting" v-if="editable">
-              <el-input size="small" v-model="scope.row[title.topType]"></el-input>
-            </span>
-            <span class="editted">{{scope.row[title.topType]}}</span>
-          </template>
-        </el-table-column>
+          :key="index"
+        ></el-table-column>
       </div>
     </template>
-    <el-table-column label="操作" v-if="showOperate">
+    <el-table-column label="操作">
       <template slot-scope="scope">
         <slot name="operate" :childData="scope"></slot>
       </template>
@@ -135,56 +101,35 @@
 </template>
 <script>
 import Sortable from "sortablejs";
-import { deepClone } from "@/utils/Arrays";
 export default {
   data() {
     return {
       menuId: this.$route.params.id,
       fixedCache: {},
       options: {}, //存放各种类型的状态
-      table_title: [],
-      table_data: []
+      table_title: []
     };
   },
   props: {
     tableData: Array,
     tableTitle: Array,
-    mode: Number, //在table中表示  需要合并父表的数据  (1普通的表格  2多表合并的表格（需要合并父数据）)
-    showOperate: {
-      //是否在最右侧显示操作字段
-      type: Boolean,
-      default: false
-    },
+    mode: Number, //在table中表示  需要合并父表的数据
     editable: {
-      //是否可编辑
       type: Boolean,
       default: false
-    },
-    customField_table: {
-      type: Array,
-      default: () => []
     }
   },
-  computed: {
-    showSummary() {
-      return this.table_title.some(item => {
-        return item.whetherCal;
+  computed:{
+    showSummary(){
+      return this.table_title.some(item=>{
+        return item.whetherCal
       });
     }
   },
   watch: {
-    tableTitle: {
-      handler(val) {
-        this.table_title = val;
-      },
-      immediate: true
-    },
-    tableData: {
-      // this.setRepeatField();
-      handler(val) {
-        this.table_data = deepClone(val);
-      },
-      immediate: true
+    tableTitle(val) {
+      // console.log(val);
+      this.table_title = [...this.tableTitle];
     }
     // tableData() {
     //   this.setRepeatField();
@@ -192,39 +137,35 @@ export default {
   },
   methods: {
     columnDrop() {
-      var wrapperTr = this.$el.querySelector(".el-table__header-wrapper tr");
-      var oldIndex, newIndex, oldItem, newItem;
+      const wrapperTr = document.querySelector(".el-table__header-wrapper tr");
+      console.log(wrapperTr);
       this.sortable = Sortable.create(wrapperTr, {
         animation: 180,
         delay: 0,
-        onUpdate: evt => {
-          var $li = wrapperTr.children[evt.newIndex],
-            $oldLi = wrapperTr.children[evt.oldIndex];
+        onEnd: evt => {
+          console.log(evt);
 
-          wrapperTr.removeChild($li);
-          if (evt.newIndex > evt.oldIndex) {
-            wrapperTr.insertBefore($li, $oldLi);
-          } else {
-            wrapperTr.insertBefore($li, $oldLi.nextSibling);
-          }
-          oldIndex = evt.oldIndex - 2;
-          newIndex = evt.newIndex - 2;
-          var item = this.table_title.splice(oldIndex, 1);
-          this.table_title.splice(newIndex, 0, item[0]);
+          console.log(evt.oldDraggableIndex);
+          console.log(evt.newDraggableIndex);
           console.log(this.table_title);
           console.log(this.tableTitle);
-          this.$emit("changeTitle", this.table_title);
-          // 下面是更改index的测试版 不对
-          // oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
-          // oldIndex = this.table_title.indexOf($oldLi);
-          // console.log(oldIndex);
-          // newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
-          // console.log(newIndex);
-          // var item = this.table_title.splice(oldIndex.index,1);
-          // this.table_title.splice(newIndex.index, 0 ,item[0]);
-        },
-        onEnd: evt => {}
+          const oldIndex = evt.oldDraggableIndex - 2;
+          const newIndex = evt.newDraggableIndex - 2;
+          console.log(oldIndex);
+          console.log(newIndex);
+          const oldItem = this.table_title[oldIndex];
+          console.log(oldItem);
+          this.table_title.splice(oldIndex, 1);
+          this.table_title.splice(newIndex, 0, oldItem);
+          // // console.log(this.tableTitle);
+          // this.table_title = this.tableTitle;
+          console.log(this.table_title);
+          // // console.log(aaa);
+          //
+          console.log(this.tableData);
+        }
       });
+      console.log(this.sortable);
     },
     setTheadClassName() {
       return "noRightKey";
@@ -261,23 +202,23 @@ export default {
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
       this.$emit("checkboxValue", val);
+      console.log(val);
     },
 
     initOptions() {
       let self = this;
+      console.log(this.table_title);
 
       this.table_title.forEach(item => {
         if (item.inputType == 3 && item.statusOptions.length) {
           self.options[item.topType] = item.statusOptions;
         }
       });
+      console.log(this.options);
     },
     statusOptions: function(row, column, cellValue) {
       let topType = column.property;
       let options = this.options[topType];
-      if (!options) {
-        return null;
-      }
       let option = options.find(item => {
         return cellValue == item.selectId;
       });
@@ -343,6 +284,7 @@ export default {
     //删除浏览器默认的右键弹出菜单
     removeRightKeyMenu() {
       let thead = document.querySelector(".noRightKey");
+      console.log(thead);
       thead.addEventListener("contextmenu", e => {
         window.event.returnValue = false;
         return false;
@@ -368,109 +310,48 @@ export default {
       const self = this;
       const { columns, data } = param;
       const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = "合计";
+      columns.forEach((column,index)=>{
+        if(index === 0){
+          sums[index] = '合计'
           return;
         }
-        if (!column.property) {
-          sums[index] = "";
+        if(!column.property){
+          sums[index] = '';
           return;
         }
-        let title = self.table_title.find(item => {
-          return item.topType === column.property;
+        let title = self.table_title.find(item=>{
+          return item.topType === column.property
         });
-        if (title && title.whetherCal) {
-          let values = [];
-          //如果是合并的表格  合并的数据只计算一次
-          if (self.mode === 2 && !title.subField) {
-            let _mergeNum = 1;
-            values = data.map(item => {
-              if (item._mergeNum) {
-                _mergeNum = item._mergeNum;
-              }
-              if (--_mergeNum < 1) {
-                return Number(item[title.topType] || 0);
-              } else {
-                return 0;
-              }
-            });
-          } else {
-            values = data.map(item => {
-              return Number(item[title.topType] || 0);
-            });
-          }
-
-          if (!values.length) {
-            sums[index] = "";
+        if(title && title.whetherCal){
+          // sums[index]
+          const values = data.map(item => {
+            return Number(item[title.topType] || 0)
+          })
+          if(!values.length){
+            sums[index] = '';
             return;
           }
-          sums[index] = values
-            .reduce((prev, curr) => {
-              return prev + curr;
-            })
-            .toFixed(3);
-        } else {
-          sums[index] = "";
+          sums[index] = values.reduce((prev,curr)=>{
+            return prev + curr;
+          })
+        }else {
+          sums[index] = '';
         }
       });
       return sums;
-    },
-    //初始化自定义的字段 //里所有的select数据都放到title上  也就是表格里的每条数据select都是相同的
-    initCustomField() {
-      let self = this;
-      return new Promise(async (resolve, reject) => {
-        if (!self.customField_table) {
-          resolve(null);
-          return;
-        }
-
-        for (let i = 0; i < self.customField_table.length; i++) {
-          let item = self.customField_table[i];
-
-          let title = self.titles_.find(title => {
-            return title.topType === item.topType;
-          });
-          for (let key in item) {
-            title[key] = item[key];
-          }
-          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的titles_上
-          switch (item.inputType) {
-            case 3:
-              title.data = [];
-              let res3 = await item.ajax();
-              if (res3.code === 200) {
-                // if(res3.data.dataList){
-                title.data = res3.data.dataList || res3.data;
-                // }else {
-                //   title.data = res3.data;
-                // }
-              }
-              break;
-            case 5:
-              title.data = [];
-              let res = await item.ajax();
-              if (res.code === 200) {
-                title.data = res.data;
-              }
-              self.data_model[item.data_model] = [];
-              break;
-          }
-        }
-
-        //等待前方全部请求完毕
-        resolve(null);
-      });
-    },
+    }
   },
-  async created() {
+  created() {
     let self = this;
-    // this.table_title = [...this.tableTitle];
+    if (this.menuId == 59) {
+    }
+
+    this.table_title = [...this.tableTitle];
+    console.log(this.table_title);
 
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
-    await this.initCustomField();
   },
 
   mounted() {
@@ -502,33 +383,5 @@ export default {
 }
 .content-table {
   width: calc(100% - 15px);
-  /deep/ .el-table .cell {
-    white-space: nowrap;
-  }
-}
-
-.editting {
-  display: none;
-}
-.editted {
-  padding: 0 16px;
-  display: block;
-  font-size: 13px;
-  line-height: 32px;
-}
-.current-row {
-  .editting {
-    display: block;
-  }
-  .editted {
-    display: none;
-  }
-}
-.el-input-number {
-  width: 100%;
-}
-.el-input-number.is-controls-right .el-input__inner {
-  text-align-last: left;
-  padding: 0 16px;
 }
 </style>

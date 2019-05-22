@@ -83,7 +83,7 @@
                 color="#ffffff"
                 closable
               >{{item.fileName}}</el-tag>
-
+              
               <el-progress
                 :percentage="uploadStatus[index].progress.percentage"
                 :status="uploadStatus[index].progress.status"
@@ -283,6 +283,7 @@ export default {
       let Timea = `${y}-${m}`
 
       console.log(Timea);
+
 
       return {
         closingDate: Timea, //时间月份
@@ -485,7 +486,7 @@ export default {
       });
       this.select_area.label = option.name;
       this.select_area.shortName = option.shortName;
-      this.select_area.arId = option.arId;
+      this.select_area.arIds = option.arIds;
     },
     changeSelect_site(val) {
       let option = this.select_site.render.find(item => {
@@ -503,7 +504,7 @@ export default {
             id: item.areaId,
             name: item.areaName,
             shortName: item.areaShortNameEng,
-            arId: item.arId
+            arIds: item.arIds
           };
         });
       }
@@ -511,7 +512,11 @@ export default {
     //获取站点
     async getSelect_site() {
       if (this.isContinent) return;
-      let res = await repGetShopIdSiteInfo(this.select_area.arId);
+      console.log(this.select_area);
+      
+      let res = await repGetShopIdSiteInfo({
+        arIds: this.select_area.arIds
+      });
       if (res.code === 200) {
         this.select_site.render = res.data.map(item => {
           return {

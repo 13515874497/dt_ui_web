@@ -31,7 +31,6 @@
                     >
                     <i class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
-
             </el-form-item>
 
             <el-form-item label="描述" prop="reason">
@@ -210,6 +209,4 @@ a {
   color: #aaa;
 }
 </style>
-
-
 
