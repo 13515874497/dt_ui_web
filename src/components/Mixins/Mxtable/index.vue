@@ -131,7 +131,8 @@ export default {
 			tableTitleUp:[],//要上传的拖拽后的新数据
 			nowId:'',//修改方案时存入当前要修改的方案configid
 			programme:"",//方案名称
-			hiddenFieldsList:[],//隐藏字段数组
+			hiddenFieldsList:{},//隐藏字段对象 传给子组件使用
+			hiddenFieldsListA:[],//隐藏字段数组  接收后台返回数组
 			query2List:[],//query2input选中数据数组
 			inputQueryData:{},//inputQuery页input填写数据对象
 			hiddenFieldsListData:[],
@@ -142,7 +143,7 @@ export default {
       tableTitle: [], //表头信息
       tableTitle_show: [],
 			tValList:[],//自动填充query2组件input数据数组
-			inputData:"",
+			inputData:{},//传给子组件用的搜索框内容对象
       multipleSelection: [], //更新按钮数组收集
       data: {
         tableData: [], //表信息
@@ -228,74 +229,83 @@ export default {
   },
   methods: {
     setQuery($event) {
-			console.log($event);
       let query = $event[0];
+			// 2019/05/22  下午16:00  新增搜索框内容对象 用来上传  start
 			this.inputQueryData = query;
+			// 2019/05/22  下午16:00  新增搜索框内容对象 用来上传  end
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
-				console.log(this.data);
       }
 			
     },
+		// 2019/05/22  下午16:00  表格拖拽时获取拖拽后数组 目前有问题没有解决 上传用的都是原数组  start
 		changeTitle(e){
-			this.tableTitleUp = e;
-			this.tableTitle = e;
+			this.tableTitleUp = this.tableTitle;
+			// this.tableTitle = e;
 			console.log(e);
 			console.log(this.tableTitle)
 		
 		},
+		// 2019/05/22  下午16:00  表格拖拽时获取拖拽后数组 目前有问题没有解决 上传用的都是原数组  end
+		// 2019/05/22  下午16:00  新增删除当前方案功能  删除接口未接通 start
 		async deleteProgramme(item){
-			console.log(item);
-			let paramsB = {mid:item.mid,id:item.configId}
+			// console.log(item);
+			// let paramsB = {mid:item.mid,id:item.configId}
 			// let res = await delUserConfig(paramsB);
 			// console.log(res);
 		},
+		// 2019/05/22  下午16:00  新增删除当前方案功能 删除接口未接通 end
+		// 2019/05/22  下午16:00  新增查询方案功能  查询未完成 start
 		chaxun(index){
-			
+			// 
 			this.tValList = this.programmeDataList[index].queryTwoList;
 			this.inputData = this.programmeDataList[index].inputQueryData;
-			this.hiddenFieldsList = this.programmeDataList[index].hiddenFieldsList;
-			this.nowId = this.programmeDataList[index].configId;
+			this.hiddenFieldsList[this.$route.params.id] = this.programmeDataList[index].hiddenFieldsList;
+			// this.nowId = this.programmeDataList[index].configId;
 			console.log(this.programmeDataList[index])
 		},
+		// 2019/05/22  下午16:00  新增修改当前方案功能 查询未完成end
+		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
 		changeSolution(){
 			
-			MessageBox.prompt('请输入方案名称', '提示', {
-			    confirmButtonText: '确定',
-			    cancelButtonText: '取消'
-			  }).then(({ value }) => {
-						var reg =  /^\s*$/g;
-						if(reg.test(value) || value == null || value == ""){
-							message.errorMessage('方案名称不能为空')
-							return;
-						}else{
-							this.programme = value.replace(/\s+/g,"");
-						
-							let programmeList = {
-								hiddenFieldsList : this.hiddenFieldsList,
-								queryTwoList : this.query2List,
-								inputQueryData : this.inputQueryData,
-								programName : this.programme,
-								mid : parseInt(this.$route.params.id),
-								dropTable:this.tableTitleUp,
-								id:this.nowId
-							}
-							console.log(programmeList)
-							
-							upUserConfig(programmeList).then(res=>{
-								console.log(res);
-								if(res.code == 200){
-									message.successMessage('方案修改成功')
-								}else{
-									message.errorMessage(res.msg)
-								}
-							})
-							
-						}
-						
-			  })	
+			// MessageBox.prompt('请输入方案名称', '提示', {
+			//     confirmButtonText: '确定',
+			//     cancelButtonText: '取消'
+			//   }).then(({ value }) => {
+			// 			var reg =  /^\s*$/g;
+			// 			if(reg.test(value) || value == null || value == ""){
+			// 				message.errorMessage('方案名称不能为空')
+			// 				return;
+			// 			}else{
+			// 				this.programme = value.replace(/\s+/g,"");
+			// 			
+			// 				let programmeList = {
+			// 					// hiddenFieldsList : this.hiddenFieldsListA,
+			// 					// queryTwoList : this.query2List,
+			// 					// inputQueryData : this.inputQueryData,
+			// 					// programName : this.programme,
+			// 					// mid : parseInt(this.$route.params.id),
+			// 					// dropTable:this.tableTitleUp,
+			// 					// id:this.nowId
+			// 				}
+			// 				console.log(programmeList)
+			// 				
+			// 				upUserConfig(programmeList).then(res=>{
+			// 					console.log(res);
+			// 					if(res.code == 200){
+			// 						message.successMessage('方案修改成功')
+			// 					}else{
+			// 						message.errorMessage(res.msg)
+			// 					}
+			// 				})
+			// 				
+			// 			}
+			// 			
+			//   })	
 		},
+		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
+		// 2019/05/22  下午16:00  新增保存方案功能 start
 		saveSolution(){
 			MessageBox.prompt('请输入方案名称', '提示', {
           confirmButtonText: '确定',
@@ -309,11 +319,11 @@ export default {
 							this.programme = value.replace(/\s+/g,"");
 						
 							let programmeList = {
-								hiddenFieldsList : this.hiddenFieldsList,
+								hiddenFieldsList : this.hiddenFieldsListA,
 								queryTwoList : this.query2List,
 								inputQueryData : this.inputQueryData,
 								programName : this.programme,
-								dropTable:this.tableTitleUp,
+								dropTable:this.tableTitle,
 								mid : parseInt(this.$route.params.id)
 							}
 							console.log(programmeList)
@@ -333,11 +343,13 @@ export default {
 				
 				
 		},
+		// 2019/05/22  下午16:00  新增保存方案功能 end
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
+			// 2019/05/22  下午16:00  获取下拉框query2组件内的值 用来上传 start
 			this.query2List = val;
-      console.log( this.queryIds)
+			// 2019/05/22  下午16:00  获取下拉框query2组件内的值 用来上传 end
 
     },
     //table按钮选择 传参
@@ -379,8 +391,9 @@ export default {
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
       let list = $event[0];
-			this.hiddenFieldsList = list;
-      // console.log(this.hiddenFieldsList);
+			// 2019/05/22  下午16:00  新增一个数组用来接收隐藏字段选择后得到的数组 用来保存方案时上传 start
+			this.hiddenFieldsListA = list;
+			// 2019/05/22  下午16:00  新增一个数组用来接收隐藏字段选择后得到的数组 用来保存方案时上传 end
       if (!list) {
         return;
       } else {
@@ -388,8 +401,6 @@ export default {
           return !list.includes(item.id);
         });
       }
-      console.log(this.tableTitle_show);
-	
     },
     handlerFormData(data) {
       data.systemLogStatus = {};
@@ -555,17 +566,24 @@ export default {
     }
   },
   async created() {
+		 // 2019/05/22  下午16:00  添加内容创建时去请求方案的数据 用来填充赋值 start
 		let paramsA = {mid:parseInt(this.$route.params.id)};
 		getUserConfig(paramsA).then(res=>{
 			console.log(res);
-			if(res.data){
+			if(res.data.length>0){
+				console.log('222');
 				this.programmeDataList = res.data;
-				this.tValList = this.programmeDataList[0].queryTwoList;
-				this.inputData = this.programmeDataList[0].inputQueryData;
-				this.hiddenFieldsList = this.programmeDataList[0].hiddenFieldsList;
-				this.nowId = this.programmeDataList[0].configId;
+				let pIndex = this.programmeDataList.length - 1;
+				console.log(pIndex);
+				this.tValList = this.programmeDataList[pIndex].queryTwoList;
+				this.inputData = this.programmeDataList[pIndex].inputQueryData;
+				this.hiddenFieldsList[this.$route.params.id] =  this.programmeDataList[pIndex].hiddenFieldsList ;
+				// this.nowId = this.programmeDataList[0].configId;
+			
 			}
 		})
+		 // 2019/05/22  下午16:00  添加内容创建时去请求方案的数据 用来填充赋值 end
+		
     this.initOperateBtn();
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
@@ -600,7 +618,7 @@ main {
 }
 .form-content {
   max-height: 500px;
-  overflow-y: auto;
+  overflow-y: scroll;
   padding-right: 15px;
 }
 .dis_fex{
