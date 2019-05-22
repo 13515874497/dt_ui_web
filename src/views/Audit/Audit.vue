@@ -1,5 +1,5 @@
 <template>
-    <div class="fanBoxs">
+     <div class="auBoxs">
         <!-- 表格 -->
         <el-table
             border
@@ -16,51 +16,53 @@
             label="序号">
             </el-table-column>
             <el-table-column
-            property="uuidNumber"
+            property="feedback.uuidNumber"
             label="反馈编号"
             width="120">
             </el-table-column>
             <el-table-column
-            property="mName"
+            property="feedback.mName"
             label="反馈菜单"
             width="120">
             </el-table-column>
             <el-table-column
             label="图片"
             width="240">
+            <!-- <template slot-scope="scope" >
+        　　　　<img v-for="item in scope.row.feedback.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px"/>
+        　　</template> -->
             <template slot-scope="scope" >
-              <viewer :images="scope.row.imageUrl"> 
-                <img v-for="item in scope.row.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px" />
+              <viewer :images="scope.row.feedback.imageUrl"> 
+                <img v-for="item in scope.row.feedback.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px" />
               </viewer>
             </template>
-            <!-- <template slot-scope="scope" >
-        　　　　<img v-for="item in scope.row.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px"/>
-        　　</template> -->
             </el-table-column>
               
             <el-table-column
-            property="reason"
+            property="feedback.reason"
             label="描述"
             width="120">
             </el-table-column>
             <el-table-column
-            property="applyUser"
+            property="feedback.applyUser"
             label="反馈人"
             width="120">
             </el-table-column>
             <el-table-column
-            property="applyTime"
             label="反馈时间"
             width="120"
-            :formatter="formatTime">
+            >
+            <template slot-scope="scope">
+              <span>{{ scope.row.feedback.applyTime | dateformat('YYYY-MM-DD HH:mm:ss') }}</span>
+            </template>
             </el-table-column>
              <el-table-column
-            property="applyStatus"
+            property="feedback.applyStatus"
             label="反馈状态"
             width="120">
             </el-table-column>
              <el-table-column
-            property="fbOpinion"
+            property=""
             label="受理意见"
             width="120">
             </el-table-column>
@@ -70,9 +72,11 @@
             width="120">
             </el-table-column>
             <el-table-column
-            property=""
             label="受理时间"
             >
+             <!-- <template slot-scope="scope">
+              <span>{{ scope.row.createTime | dateformat('YYYY-MM-DD HH:mm:ss') }}</span>
+            </template> -->
             </el-table-column>
         </el-table>
        <!-- 分页 -->
@@ -90,15 +94,15 @@
     </div>
 </template>
 <script>
-import Table from "@/components/ElementUi/Table";
-import axios from "axios";
-import message from "@/utils/Message";
-import { selProcess } from "@/api";
+import { selThisAudit } from "@/api";
 import moment from "moment";
+import Vue from 'vue'
+
+// 时间格式转换
+Vue.filter("dateformat", function(dataStr, pattern = "YYYY-MM-DD HH:mm:ss") {
+  return moment(dataStr).format(pattern);
+});
 export default {
-  components: {
-    Table
-  },
   data() {
     return {
       tableData: [], //表信息
@@ -106,8 +110,7 @@ export default {
         pageNo: 1, //当前页
         pageSize: 10, //每页条数,  默认10条
         totalCount: 0 //总条数
-      },
-       dialogVisible: false
+      }
     };
   },
   methods: {
@@ -118,19 +121,19 @@ export default {
       };
       // console.log(params)
 
-      selProcess(params).then(res => {
+      selThisAudit(params).then(res => {
         console.log(res);
-
         this.tableData = res.data.dataList;
         this.page.totalCount = res.data.totalCount;
 
-        for (var i = 0; i < this.tableData.length; i++) {
-          if (this.tableData[i].imageUrl) {
-            console.log(this.tableData[i].imageUrl.split(","));
-            this.tableData[i].imageUrl = this.tableData[i].imageUrl.split(",");
-          } else if (this.tableData[i].imageUrl == null) {
-            this.tableData[i].imageUrl = [];
+        for(var i = 0; i< this.tableData.length;i++){
+          if(this.tableData[i].feedback.imageUrl){
+            //  console.log(this.tableData[i].feedback.imageUrl.split(','))
+            this.tableData[i].feedback.imageUrl = this.tableData[i].feedback.imageUrl.split(',')           
+          }else if(this.tableData[i].feedback.imageUrl == null){
+            this.tableData[i].feedback.imageUrl = []
           }
+         
         }
       });
     },
@@ -151,25 +154,9 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
-    //时间格式处理
-    formatTime(row, column) {
-      var date = row[column.property];
-      if (date == undefined) {
-        return "";
-      }
-      return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    },
-    aa(index) {
-    console.log(index)
-     this.dialogVisible = true
-    }    
   },
   created() {
     this.initList();
   }
 };
 </script>
-<style lang="scss" scoped>
-
-</style>
-

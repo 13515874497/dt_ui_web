@@ -754,7 +754,7 @@ export const startFee = ({
   mName,
 },'POST')
 
-//查看反馈信息http://127.0.0.1:9001/api/v1/fee/selProcess?pageSize=0&currentPage=10
+//查看反馈信息http://127.0.0.1:9001/api/v1/fee/selProcess?pageSize=10&currentPage=1
 export const selProcess = ({
   currentPage,
   pageSize
@@ -763,6 +763,14 @@ export const selProcess = ({
   pageSize
 })
 
+//管理页面信息http://127.0.0.1:9001/api/v1/fee/selThisAudit?pageSize=10&currentPage=1
+export const selThisAudit = ({
+  currentPage,
+  pageSize
+}) => ajax(BASE_URL + '/fee/selThisAudit', {
+  currentPage,
+  pageSize
+})
 //表格方案保存
 export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',data, 'POST')
 

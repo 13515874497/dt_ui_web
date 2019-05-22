@@ -23,6 +23,7 @@
     "sortablejs": "^1.9.0",
     "state": "^0.2.0",
     "storejs": "^1.0.25",
+    "v-viewer": "^1.4.0",
     "vue": "^2.6.10",
     "vue-draggable": "^2.0.2",
     "vue-print-nb": "^1.0.3",

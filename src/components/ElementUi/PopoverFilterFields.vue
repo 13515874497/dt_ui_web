@@ -1,6 +1,6 @@
 <template>
   <el-popover popper-class="field-popper" placement="left" title="打√为不显示" width="200" trigger="hover">
-    <el-tree class="scrollbar" ref="tree" node-key="id" :data="data" :hiddenFieldsList="hiddenFieldsList" :props="props" show-checkbox @check="check"></el-tree>
+    <el-tree class="scrollbar" ref="tree" node-key="id" :data="data" :props="props" show-checkbox @check="check"></el-tree>
     <div slot="reference" class="fieldShow el-button el-button--primary is-plain"></div>
   </el-popover>
 </template>
@@ -9,7 +9,12 @@
 export default {
   props: {
     data: Array,
-		hiddenFieldsList:Array
+		// 2019/05/22  下午16:00  添加内容 接受父组件传值 后台返回的隐藏字段数组 填充隐藏字段  start
+		hiddenFieldsList:{
+			type:Object,
+			default:{}
+		},
+		// 2019/05/22  下午16:00  添加内容 接受父组件传值 后台返回的隐藏字段数组 填充隐藏字段  end
   },
   data() {
     return {
@@ -21,7 +26,9 @@ export default {
           id: this.$route.params.id
       },
       list: null,
-			hideListData:[]
+			// 2019/05/22  下午16:00  添加内容 新增用来接收接收父组件传值的对象 用来使用  start
+			hiddenFieldsListData:{},
+				// 2019/05/22  下午16:00  添加内容 新增用来接收接收父组件传值的对象 用来使用  end
     };
   },
   watch: {
@@ -40,46 +47,34 @@ export default {
     },
     saveCache(keys){
         this.list[this.page.id] = keys;
-        // localStorage.setItem('hideFieldList',JSON.stringify(this.list));
-				// this.hideListData = this.list;
-				this.hiddenFieldsList = this.list;
-				console.log(this.list)
+        localStorage.setItem('hideFieldList',JSON.stringify(this.list));
+			
     },
     readCache(){
-        // let list = localStorage.getItem('hideFieldList');
-				// let list = this.hideListData;
-				let list = this.hiddenFieldsList;
+
+			 let list = localStorage.getItem('hideFieldList');
 				
-      //   if(!list){
-      //       list = {};
-      //   }else {
-      //       list = JSON.parse(list);
-						// this.list = list;
-      //   }
-        this.list = list;
-				console.log(list);
-        let checked = this.list[this.page.id]
-        if(checked){
-            this.$emit('hideField',[checked]);
-             this.$refs.tree.setCheckedKeys(checked);
-        }
+			 if(!list){
+				 	// 2019/05/22  下午16:00  添加内容 判断能否读取之前存的值 如果没有 就使用后台获取到的隐藏字段数组  start
+					 list = this.hiddenFieldsListData	;
+					 // 2019/05/22  下午16:00  添加内容 判断能否读取之前存的值 如果没有 就使用后台获取到的隐藏字段数组  end
+			 }else {
+					 list = JSON.parse(list);
+					
+			 }
+			 this.list = list;
+			 let checked = this.list[this.page.id]
+			 if(checked){
+					 this.$emit('hideField',[checked]);
+						this.$refs.tree.setCheckedKeys(checked);
+			 }
     }
   },
+	// 2019/05/22  下午16:00  添加内容 新增创建钩子 用父组件传来的隐藏字段对象给当前自定义的对象赋值使用  start
 	created() {
-		if(!this.hiddenFieldsList){
-				this.hiddenFieldsList = [];
-		}else{
-			this.list = this.hiddenFieldsList;
-		}
-		let checked = this.list[this.page.id]
-		if(checked){
-				this.$emit('hideField',[checked]);
-				 this.$refs.tree.setCheckedKeys(checked);
-		}
-	},
-  // mounted(){
-  //     this.readCache();
-  // }
+			this.hiddenFieldsListData= this.hiddenFieldsList;
+	}
+	// 2019/05/22  下午16:00  添加内容 新增创建钩子 用父组件传来的隐藏字段对象给当前自定义的对象赋值使用  end
 };
 </script>
 

@@ -113,10 +113,12 @@ export default {
     selectedIds: Array, //用户要筛选的条件
     querySuggestionsMethod: Function, //查询搜索建议的方法
     querySuggestionsConfig: Object, //模糊查询的配置对象
-		inputData : {
-      type: Object,
-      default:() => ({})
-    }
+		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  start
+		inputData :{
+		  type: Object,
+		  default: {}
+		},
+		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  end
 	},
   data() {
     return {
@@ -124,7 +126,6 @@ export default {
       data_model: {
         systemLogStatus: {}
       },
-			ttt:{createUser:"aaabbbb"},
       curr_query_field: "", //当前查询搜索建议的字段
       rules: {
         str: [{ required: false, message: "请输入字符", trigger: "change" }],
@@ -229,10 +230,13 @@ export default {
           if (this.sysLogInclude.includes(key) && !this.sysLogInclude.includes(key+'s')) {
             this.sysLogInclude.push(key + "s")
           }
-					// console.log(this.inputData);
           tableTitle._isShow = true;
         }
+				
       }
+			// 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  start
+			this.changeQuery();
+			// 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  end
     },
     //查询 搜索建议下拉列表
     async getQuerySuggestions(queryString, cb) {
@@ -287,11 +291,10 @@ export default {
   created() {
     this.updateTableTitle();
     this.setSysLogInclude(+this.$route.params.id)
-		if(this.inputData){
-			this.data_model = this.inputData;
-		}
+		// 2019/05/22  下午16:00  添加内容 填充搜索框内容  start
+		this.data_model = this.inputData;
+		// 2019/05/22  下午16:00  添加内容 填充搜索框内容  end
 		
-		console.log(this.data_model);
   },
 	mounted () {
 		
