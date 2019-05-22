@@ -1,7 +1,7 @@
 <template>
      <div class="auBoxs">
         <!-- 表格 -->
-        <el-table
+      <el-table
             border
             stripe
             ref="singleTable"
@@ -10,75 +10,100 @@
             @current-change="handleCurrentChange"
             style="width: 100%"
             height="500">
-            <el-table-column
+
+          <el-table-column
             type="index"
             width="50"
             label="序号">
-            </el-table-column>
-            <el-table-column
-            property="feedback.uuidNumber"
+          </el-table-column>
+
+          <el-table-column
+            property="uuidName"
             label="反馈编号"
             width="120">
-            </el-table-column>
-            <el-table-column
+          </el-table-column>
+          
+          <el-table-column
             property="feedback.mName"
             label="反馈菜单"
             width="120">
-            </el-table-column>
-            <el-table-column
+          </el-table-column>
+
+          <el-table-column
             label="图片"
             width="240">
-            <!-- <template slot-scope="scope" >
-        　　　　<img v-for="item in scope.row.feedback.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px"/>
-        　　</template> -->
+          
             <template slot-scope="scope" >
               <viewer :images="scope.row.feedback.imageUrl"> 
                 <img v-for="item in scope.row.feedback.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px" />
               </viewer>
             </template>
-            </el-table-column>
+          </el-table-column>
               
-            <el-table-column
+          <el-table-column
             property="feedback.reason"
             label="描述"
             width="120">
-            </el-table-column>
-            <el-table-column
+          </el-table-column>
+          <el-table-column
             property="feedback.applyUser"
             label="反馈人"
             width="120">
-            </el-table-column>
-            <el-table-column
+          </el-table-column>
+          <el-table-column
             label="反馈时间"
             width="120"
             >
             <template slot-scope="scope">
               <span>{{ scope.row.feedback.applyTime | dateformat('YYYY-MM-DD HH:mm:ss') }}</span>
             </template>
-            </el-table-column>
-             <el-table-column
+          </el-table-column>
+          <el-table-column
             property="feedback.applyStatus"
             label="反馈状态"
-            width="120">
-            </el-table-column>
-             <el-table-column
+            width="100">
+          </el-table-column>
+          <!-- <el-table-column
             property=""
             label="受理意见"
             width="120">
-            </el-table-column>
-             <el-table-column
+          </el-table-column>
+          <el-table-column
             property="auditor"
             label="受理人"
-            width="120">
-            </el-table-column>
-            <el-table-column
+            width="80">
+          </el-table-column>
+          <el-table-column
             label="受理时间"
+            property=""
+            width="120"
             >
-             <!-- <template slot-scope="scope">
-              <span>{{ scope.row.createTime | dateformat('YYYY-MM-DD HH:mm:ss') }}</span>
-            </template> -->
-            </el-table-column>
-        </el-table>
+          </el-table-column> -->
+
+          <el-table-column label="操作">
+            <template slot-scope="scope">
+              <el-button type="primary" size="mini" @click="agree(scope.row.tid,1)" >通过</el-button>   
+              <el-button size="mini" type="danger" @click="refuse(scope.row.tid,0)">拒绝</el-button>
+            </template>
+          </el-table-column>
+      </el-table>
+      <!-- 弹框 -->
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%">
+        
+          <el-input
+            type="textarea"
+            :rows="2"
+            placeholder="请输入意见"
+            v-model="textarea">
+          </el-input>       
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="cancel">取 消</el-button>
+          <el-button type="primary" @click="Submission()">确 定</el-button>
+        </span>
+      </el-dialog>
        <!-- 分页 -->
       <div class="page">
         <el-pagination
@@ -94,10 +119,10 @@
     </div>
 </template>
 <script>
-import { selThisAudit } from "@/api";
+import { selThisAudit, review } from "@/api";
 import moment from "moment";
-import Vue from 'vue'
-
+import Vue from "vue";
+import message from "@/utils/Message";
 // 时间格式转换
 Vue.filter("dateformat", function(dataStr, pattern = "YYYY-MM-DD HH:mm:ss") {
   return moment(dataStr).format(pattern);
@@ -110,14 +135,18 @@ export default {
         pageNo: 1, //当前页
         pageSize: 10, //每页条数,  默认10条
         totalCount: 0 //总条数
-      }
+      },
+      dialogVisible: false,
+      textarea: "",
+      submissionId: "", //判断通过还是拒绝
+      submissionTid: "" //每行的tid
     };
   },
   methods: {
     initList() {
       let params = {
         currentPage: this.page.pageNo,
-        pageSize: this.page.pageSize
+        pageSize: this.page.pageSize,
       };
       // console.log(params)
 
@@ -126,14 +155,15 @@ export default {
         this.tableData = res.data.dataList;
         this.page.totalCount = res.data.totalCount;
 
-        for(var i = 0; i< this.tableData.length;i++){
-          if(this.tableData[i].feedback.imageUrl){
+        for (var i = 0; i < this.tableData.length; i++) {
+          if (this.tableData[i].feedback.imageUrl) {
             //  console.log(this.tableData[i].feedback.imageUrl.split(','))
-            this.tableData[i].feedback.imageUrl = this.tableData[i].feedback.imageUrl.split(',')           
-          }else if(this.tableData[i].feedback.imageUrl == null){
-            this.tableData[i].feedback.imageUrl = []
+            this.tableData[i].feedback.imageUrl = this.tableData[
+              i
+            ].feedback.imageUrl.split(",");
+          } else if (this.tableData[i].feedback.imageUrl == null) {
+            this.tableData[i].feedback.imageUrl = [];
           }
-         
         }
       });
     },
@@ -154,6 +184,47 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
+    //同意弹框
+    agree(s, i) {
+      this.submissionTid = s;
+      this.dialogVisible = true;
+      this.submissionId = i;
+    },
+    //拒绝弹框
+    refuse(s, i) {
+      this.submissionTid = s;
+      this.dialogVisible = true;
+      this.submissionId = i;
+    },
+    //取消按钮
+    cancel() {
+      this.textarea = "";
+      this.dialogVisible = false;
+    },
+    //确定按钮
+    Submission() {
+      if (!this.textarea) {
+        message.errorMessage("受理意见不能为空");
+        return;
+      }
+      let params = {
+        tid: this.submissionTid,
+        auditor: {
+          result: this.submissionId >= 1 ? "审核通过" : "审核拒绝",
+          auditNote: this.textarea
+        }
+      };
+      review(params).then(res => {
+        console.log(res);
+        if (res.code == 200) {
+          message.Message("审核成功");
+        }
+      });
+      this.textarea = "";
+      this.dialogVisible = false;
+      this.submissionId = "";
+      this.submissionTid = "";
+    }
   },
   created() {
     this.initList();
