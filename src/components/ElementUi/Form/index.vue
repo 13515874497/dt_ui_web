@@ -261,7 +261,7 @@ export default {
       deep: true,
       handler(val) {
         console.log(val);
-        //如果只能在外部提供数据(即customFiled里提供了data属性)  则需要将当前的数据赋值给该组件formItems中对应的字段
+        //如果只能在外部提供数据(即customField里提供了data属性)  则需要将当前的数据赋值给该组件formItems中对应的字段
         let index = this.formItems_.findIndex(formItem => {
           return formItem.topType === val.currField;
         });

@@ -29,7 +29,7 @@
           :render-header="renderHeader"
           :show-overflow-tooltip="true"
           :key="index"
-					:column-key="index.toString()"
+          :column-key="index.toString()"
         ></el-table-column>
 
         <el-table-column
@@ -39,7 +39,7 @@
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
           :key="index"
-					:column-key="index.toString()"
+          :column-key="index.toString()"
         >
           <template slot-scope="scope">
             <span
@@ -55,7 +55,7 @@
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
           :key="index"
-					:column-key="index.toString()"
+          :column-key="index.toString()"
         >
           <template slot-scope="scope">
             <span
@@ -74,7 +74,7 @@
           :render-header="renderHeader"
           :key="index"
           sortable
-					:column-key="index.toString()"
+          :column-key="index.toString()"
         >
           <template slot-scope="scope">
             <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
@@ -91,8 +91,19 @@
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
           :key="index"
-					:column-key="index.toString()"
-        ></el-table-column>
+          :column-key="index.toString()"
+        >
+          <template slot-scope="scope">
+            {{JSON.stringify(scope.row,null,2)}}
+            {{scope.row[title.topType]}}
+            <el-input
+              size="small"
+              v-model="scope.row[title.topType]"
+              placeholder="请输入内容"
+            ></el-input>
+            <span>{{scope.row.name}}</span>
+          </template>
+        </el-table-column>
       </div>
     </template>
     <el-table-column label="操作" v-if="showOperate">
@@ -116,8 +127,9 @@ export default {
   props: {
     tableData: Array,
     tableTitle: Array,
-    mode: Number, //在table中表示  需要合并父表的数据
+    mode: Number, //在table中表示  需要合并父表的数据  (1普通的表格  2多表合并的表格（需要合并父数据）)
     showOperate: {
+      //是否在最右侧显示操作字段
       type: Boolean,
       default: false
     }
@@ -131,62 +143,47 @@ export default {
   },
   watch: {
     tableTitle(val) {
-      // console.log(val);
       // this.table_title = [...this.tableTitle];
-			this.table_title = val
-			console.log(this.table_title);
+      this.table_title = val;
     },
     tableData(val) {
       // this.setRepeatField();
-			// console.log(val);
     }
     // tableData() {
     //   this.setRepeatField();
     // }
   },
   methods: {
-		columnDrop() {
-			
-			var wrapperTr = this.$el.querySelector('.el-table__header-wrapper tr');
-			console.log(wrapperTr);
-			var oldIndex,newIndex,oldItem,newItem;
+    columnDrop() {
+      var wrapperTr = this.$el.querySelector(".el-table__header-wrapper tr");
+      var oldIndex, newIndex, oldItem, newItem;
       this.sortable = Sortable.create(wrapperTr, {
         animation: 180,
         delay: 0,
-				onUpdate:evt=>{
-					
-					var $li = wrapperTr.children[evt.newIndex],
-					$oldLi = wrapperTr.children[evt.oldIndex]
-					
-					wrapperTr.removeChild($li)  
-					if(evt.newIndex > evt.oldIndex) {
-					
-					  wrapperTr.insertBefore($li,$oldLi)
-					
-					} else {
-					  wrapperTr.insertBefore($li,$oldLi.nextSibling)
-					
-					}
-					oldIndex = evt.oldIndex-2;
-					newIndex = evt.newIndex-2;
-					var item = this.table_title.splice(oldIndex,1);
-					this.table_title.splice(newIndex, 0 ,item[0]);
-					
-					// 下面是更改index的测试版 不对 
-					// oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
-					// oldIndex = this.table_title.indexOf($oldLi);
-					// console.log(oldIndex);
-					// newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
-					// console.log(newIndex);
-					// var item = this.table_title.splice(oldIndex.index,1);
-					// this.table_title.splice(newIndex.index, 0 ,item[0]);
-					
-				},
-				onEnd:evt=>{
-					
-				}
-				
-      })
+        onUpdate: evt => {
+          var $li = wrapperTr.children[evt.newIndex],
+            $oldLi = wrapperTr.children[evt.oldIndex];
+
+          wrapperTr.removeChild($li);
+          if (evt.newIndex > evt.oldIndex) {
+            wrapperTr.insertBefore($li, $oldLi);
+          } else {
+            wrapperTr.insertBefore($li, $oldLi.nextSibling);
+          }
+          oldIndex = evt.oldIndex - 2;
+          newIndex = evt.newIndex - 2;
+          var item = this.table_title.splice(oldIndex, 1);
+          this.table_title.splice(newIndex, 0, item[0]);
+
+          // 下面是更改index的测试版 不对
+          // oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
+          // oldIndex = this.table_title.indexOf($oldLi);
+          // newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
+          // var item = this.table_title.splice(oldIndex.index,1);
+          // this.table_title.splice(newIndex.index, 0 ,item[0]);
+        },
+        onEnd: evt => {}
+      });
     },
     setTheadClassName() {
       return "noRightKey";
@@ -222,25 +219,24 @@ export default {
     },
     //点击选项 checkbox 按钮 获得val赋值给 传给页面
     handleSelectionChange(val) {
-			console.log(this.table_title);
       this.$emit("checkboxValue", val);
-      console.log(val);
     },
 
     initOptions() {
       let self = this;
-      console.log(this.table_title);
 
       this.table_title.forEach(item => {
         if (item.inputType == 3 && item.statusOptions.length) {
           self.options[item.topType] = item.statusOptions;
         }
       });
-      console.log(this.options);
     },
     statusOptions: function(row, column, cellValue) {
       let topType = column.property;
       let options = this.options[topType];
+      if (!options) {
+        return null;
+      }
       let option = options.find(item => {
         return cellValue == item.selectId;
       });
@@ -250,10 +246,10 @@ export default {
         return option.name;
       }
     },
-		renderHeader(h, { column, $index }) {
-		  this.setHeaderMinWidth(column);
-		  return column.label;
-		},
+    renderHeader(h, { column, $index }) {
+      this.setHeaderMinWidth(column);
+      return column.label;
+    },
     setHeaderMinWidth(column) {
       //挂在到页面上从而获取宽度
       let TextWidth = this.getTempDomWidth(column.label);
@@ -306,7 +302,6 @@ export default {
     //删除浏览器默认的右键弹出菜单
     removeRightKeyMenu() {
       let thead = document.querySelector(".noRightKey");
-      console.log(thead);
       thead.addEventListener("contextmenu", e => {
         window.event.returnValue = false;
         return false;
@@ -345,17 +340,35 @@ export default {
           return item.topType === column.property;
         });
         if (title && title.whetherCal) {
-          // sums[index]
-          const values = data.map(item => {
-            return Number(item[title.topType] || 0);
-          });
+          let values = [];
+          //如果是合并的表格  合并的数据只计算一次
+          if (self.mode === 2 && !title.subField) {
+            let _mergeNum = 1;
+            values = data.map(item => {
+              if (item._mergeNum) {
+                _mergeNum = item._mergeNum;
+              }
+              if (--_mergeNum < 1) {
+                return Number(item[title.topType] || 0);
+              } else {
+                return 0;
+              }
+            });
+          } else {
+            values = data.map(item => {
+              return Number(item[title.topType] || 0);
+            });
+          }
+
           if (!values.length) {
             sums[index] = "";
             return;
           }
-          sums[index] = values.reduce((prev, curr) => {
-            return prev + curr;
-          });
+          sums[index] = values
+            .reduce((prev, curr) => {
+              return prev + curr;
+            })
+            .toFixed(3);
         } else {
           sums[index] = "";
         }
@@ -369,12 +382,10 @@ export default {
     }
 
     this.table_title = [...this.tableTitle];
-    console.log(this.table_title);
 
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
-		console.log(this.tableTitle);
   },
 
   mounted() {
@@ -410,6 +421,4 @@ export default {
     white-space: nowrap;
   }
 }
-
-
 </style>

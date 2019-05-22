@@ -1,13 +1,7 @@
 <template>
   <main>
-    <!--表格上方查询条件-->
-		<el-tooltip class="item" effect="dark" content="最多保存两个方案" placement="top-start">
-		  <el-button type="primary" style="margin:0 35px 10px 5px;">保存查询方案</el-button>
-    </el-tooltip>
-		<el-button type="primary" style="margin:0 5px 10px 5px;">方案一</el-button>
-		
     <section id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
-      <el-row :gutter="20">
+      <el-row :gutter="24">
         <el-col :span="4">
           <Query2 :tableTitle="tableTitle" :tValList="tValList" @getValue="getValue"></Query2>
         </el-col>
@@ -36,12 +30,29 @@
         v-if="tableTitle.length"
         v-loading="loading"
       />
-      <div v-if="tableTitle.length" class="control">
-        <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
-        <OperateBtn :operateList="operateList"></OperateBtn>
-        <!--分页-->
-        <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
-      </div>
+			<div>
+				<div v-if="tableTitle.length" class="control dis_fex" style="margin-right: 10px;">
+					<!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
+					<OperateBtn :operateList="operateList"></OperateBtn>
+				</div>
+				<div class="dis_fex" style="margin-top: 20px;">
+					<el-button type="primary" style="" size="mini" @click="saveSolution">新增查询方案</el-button>
+					<!-- <el-button type="primary" style="" size="mini" @click="changeSolution">修改当前方案</el-button> -->
+					<div style="display: inline-block;position: relative;" v-for="(item, index) in programmeDataList">
+						<el-button type="primary" style="padding-right: 25px;margin-right: 5px;" size="mini" @click="chaxun(index)"  :key="index">方案{{item.programName}}</el-button>
+						 <span style="position: absolute;right: 8px;top: 8px;background-color:white ;color: #AAAAAA;border-radius: 8px;" class="el-icon-circle-close" @click="deleteProgramme(item)"></span>
+					</div>
+					<!-- <el-select v-model="programmeDataList" placeholder="请选择活动区域">
+						<el-option label="item.programName" value="item.programName" ></el-option>
+						
+					</el-select> -->
+					
+				</div>
+				<div v-if="tableTitle.length" class="control dis_fex">
+					<!--分页-->
+					<Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
+				</div>
+			</div>
     </section>
     <!-- 新增 -->
     <section>
@@ -89,7 +100,7 @@
     </section>
     <!-- 表格字段筛选 -->
     <section>
-      <PopoverFilterFields :data="tableTitle" @hideField="hideField"></PopoverFilterFields>
+      <PopoverFilterFields :data="tableTitle" :hiddenFieldsList="hiddenFieldsList" @hideField="hideField"></PopoverFilterFields>
       <!-- <div class="el-button fieldShow el-button--primary is-plain"></div> -->
     </section>
   </main>
@@ -109,19 +120,27 @@ import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import PubSub from "pubsub-js";
+import { MessageBox } from 'element-ui';
+import { getConfMapUser, getUserConfig , delUserConfig} from '@/api'
 export default {
   data() {
     return {
       page: {
         name: this.$route.params.name
       },
-			listS:'',
-      loading: false,
+			nowId:'',//修改方案时存入当前要修改的方案configid
+			programme:"",//方案名称
+			hiddenFieldsList:[],//隐藏字段数组
+			query2List:[],//query2input选中数据数组
+			inputQueryData:{},//inputQuery页input填写数据对象
+			hiddenFieldsListData:[],
+			programmeDataList:[],//所有方案总和
+			loading: false,
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
-			tValList:[],
+			tValList:[],//自动填充query2组件input数据数组
 			inputData:"",
       multipleSelection: [], //更新按钮数组收集
       data: {
@@ -208,10 +227,13 @@ export default {
   },
   methods: {
     setQuery($event) {
+			console.log($event);
       let query = $event[0];
+			this.inputQueryData = query;
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
+				console.log(this.data);
       }
 			
     },
@@ -220,10 +242,78 @@ export default {
 			console.log(this.tableTitle)
 		
 		},
+		async deleteProgramme(item){
+			console.log(item);
+			let paramsB = {mid:item.mid,id:item.configId}
+			// let res = await delUserConfig(paramsB);
+			// console.log(res);
+		},
+		chaxun(index){
+			
+			this.tValList = this.programmeDataList[index].queryTwoList;
+			this.inputData = this.programmeDataList[index].inputQueryData;
+			this.hiddenFieldsList = this.programmeDataList[index].hiddenFieldsList;
+			this.nowId = this.programmeDataList[index].configId;
+			console.log(this.programmeDataList[index])
+		},
+		// changeSolution(){
+		// 	let programmeList = {
+		// 		hiddenFieldsList : this.hiddenFieldsList,
+		// 		queryTwoList : this.query2List,
+		// 		inputQueryData : this.inputQueryData,
+		// 		programName : this.programme,
+		// 		mid : parseInt(this.$route.params.id),
+		// 		id:this.nowId
+		// 	}
+		// 	
+		// 	console.log(programmeList)
+		// 	
+		// 	getConfMapUser(programmeList).then(res=>{
+		// 		console.log(res);
+		// 		
+		// 	})
+		// },
+		saveSolution(){
+			MessageBox.prompt('请输入方案名称', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(({ value }) => {
+						var reg =  /^\s*$/g;
+						if(reg.test(value) || value == null || value == ""){
+							message.errorMessage('方案名称不能为空')
+							return;
+						}else{
+							this.programme = value.replace(/\s+/g,"");
+						
+							let programmeList = {
+								hiddenFieldsList : this.hiddenFieldsList,
+								queryTwoList : this.query2List,
+								inputQueryData : this.inputQueryData,
+								programName : this.programme,
+								mid : parseInt(this.$route.params.id)
+							}
+							
+							console.log(programmeList)
+							
+							getConfMapUser(programmeList).then(res=>{
+								console.log(res);
+								if(res.code == 200){
+									message.successMessage('方案名称保存成功')
+								}else{
+									message.errorMessage(res.msg)
+								}
+							})
+							
+						}
+						
+        })
+				
+				
+		},
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
-
+			this.query2List = val;
       console.log( this.queryIds)
 
     },
@@ -266,7 +356,8 @@ export default {
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
       let list = $event[0];
-      console.log($event);
+			this.hiddenFieldsList = list;
+      console.log(this.hiddenFieldsList);
       if (!list) {
         return;
       } else {
@@ -441,27 +532,21 @@ export default {
     }
   },
   async created() {
+		let paramsA = {mid:parseInt(this.$route.params.id)};
+		getUserConfig(paramsA).then(res=>{
+			console.log(res);
+			if(res.data){
+				this.programmeDataList = res.data;
+				this.tValList = this.programmeDataList[0].queryTwoList;
+				this.inputData = this.programmeDataList[0].inputQueryData;
+				this.hiddenFieldsList = this.programmeDataList[0].hiddenFieldsList;
+				this.nowId = this.programmeDataList[0].configId;
+			}
+		})
     this.initOperateBtn();
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
-		this.tValList = [1002,1004];
-		this.inputData = {
-			newOrderDescription:"",
-			oldOrderDescription:"",
-			orderDescriptionName:"", 
-			siteName:"ababc",
-			systemLogStatus:{
-				auditDate:"",
-				createDate :"",
-				createUser:"aaabbbb",  
-				modifyDate:"",
-				modifyUser:"",
-				status:"",
-				auditUser:"sssss",
-				remark:"mmmmmm",
-				},
-			};
     this.tableTitle_show = [...this.tableTitle];
     this.add.customField = [...this.customField];
     this.update.customField = [...this.customField];
@@ -494,6 +579,9 @@ main {
   max-height: 500px;
   overflow-y: scroll;
   padding-right: 15px;
+}
+.dis_fex{
+	display: inline-block;
 }
 // .fieldShow {
 //   position: absolute;

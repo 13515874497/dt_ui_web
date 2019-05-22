@@ -26,12 +26,16 @@
             width="120">
             </el-table-column>
             <el-table-column
-            property="imageUrl"
             label="图片"
             width="240">
             <template slot-scope="scope" >
+              <viewer :images="scope.row.imageUrl"> 
+                <img v-for="item in scope.row.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px" />
+              </viewer>
+            </template>
+            <!-- <template slot-scope="scope" >
         　　　　<img v-for="item in scope.row.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px"/>
-        　　</template>
+        　　</template> -->
             </el-table-column>
               
             <el-table-column
@@ -61,12 +65,12 @@
             width="120">
             </el-table-column>
              <el-table-column
-            property="adPerson"
+            property="auditor"
             label="受理人"
             width="120">
             </el-table-column>
             <el-table-column
-            property="adTime"
+            property=""
             label="受理时间"
             >
             </el-table-column>
@@ -90,7 +94,7 @@ import Table from "@/components/ElementUi/Table";
 import axios from "axios";
 import message from "@/utils/Message";
 import { selProcess } from "@/api";
-import moment from 'moment'
+import moment from "moment";
 export default {
   components: {
     Table
@@ -99,31 +103,32 @@ export default {
     return {
       tableData: [], //表信息
       page: {
-        pageNo:1, //当前页
-        pageSize: 10 ,//每页条数,  默认10条
-        totalCount:0 //总条数
-      }
+        pageNo: 1, //当前页
+        pageSize: 10, //每页条数,  默认10条
+        totalCount: 0 //总条数
+      },
+       dialogVisible: false
     };
   },
   methods: {
     initList() {
       let params = {
-        currentPage : this.page.pageNo,
+        currentPage: this.page.pageNo,
         pageSize: this.page.pageSize
       };
       // console.log(params)
 
       selProcess(params).then(res => {
         console.log(res);
-        
-        this.tableData = res.data.dataList;
-        this.page.totalCount =res.data.totalCount
 
-        for(var i=0;i<this.tableData.length;i++){
-          if(this.tableData[i].imageUrl){
-              console.log(this.tableData[i].imageUrl.split(','))
-             this.tableData[i].imageUrl = this.tableData[i].imageUrl.split(',')
-          }else if(this.tableData[i].imageUrl == null){
+        this.tableData = res.data.dataList;
+        this.page.totalCount = res.data.totalCount;
+
+        for (var i = 0; i < this.tableData.length; i++) {
+          if (this.tableData[i].imageUrl) {
+            console.log(this.tableData[i].imageUrl.split(","));
+            this.tableData[i].imageUrl = this.tableData[i].imageUrl.split(",");
+          } else if (this.tableData[i].imageUrl == null) {
             this.tableData[i].imageUrl = [];
           }
         }
@@ -153,11 +158,18 @@ export default {
         return "";
       }
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    }
+    },
+    aa(index) {
+    console.log(index)
+     this.dialogVisible = true
+    }    
   },
   created() {
-    
     this.initList();
   }
 };
 </script>
+<style lang="scss" scoped>
+
+</style>
+

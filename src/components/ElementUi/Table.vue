@@ -28,8 +28,9 @@
           :prop="title.topType"
           :render-header="renderHeader"
           :show-overflow-tooltip="true"
-          :key="index"
-          :column-key="index.toString()"
+          :key="Math.random()"
+					:column-key="index.toString()"
+
         ></el-table-column>
 
         <el-table-column
@@ -38,8 +39,8 @@
           :fixed="isFixed(title)"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
-          :column-key="index.toString()"
+          :key="Math.random()"
+					:column-key="index.toString()"
         >
           <template slot-scope="scope">
             <span
@@ -54,8 +55,8 @@
           :fixed="isFixed(title)"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
-          :column-key="index.toString()"
+          :key="Math.random()"
+					:column-key="index.toString()"
         >
           <template slot-scope="scope">
             <span
@@ -72,7 +73,7 @@
           :prop="title.topType"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
+          :key="Math.random()"
           sortable
           :column-key="index.toString()"
         >
@@ -90,8 +91,8 @@
           :prop="title.topType"
           :show-overflow-tooltip="true"
           :render-header="renderHeader"
-          :key="index"
-          :column-key="index.toString()"
+          :key="Math.random()"
+					:column-key="index.toString()"
         ></el-table-column>
       </div>
     </template>
@@ -149,30 +150,42 @@ export default {
       this.sortable = Sortable.create(wrapperTr, {
         animation: 180,
         delay: 0,
-        onUpdate: evt => {
-          var $li = wrapperTr.children[evt.newIndex],
-            $oldLi = wrapperTr.children[evt.oldIndex];
-
-          wrapperTr.removeChild($li);
-          if (evt.newIndex > evt.oldIndex) {
-            wrapperTr.insertBefore($li, $oldLi);
-          } else {
-            wrapperTr.insertBefore($li, $oldLi.nextSibling);
-          }
-          oldIndex = evt.oldIndex - 2;
-          newIndex = evt.newIndex - 2;
-          var item = this.table_title.splice(oldIndex, 1);
-          this.table_title.splice(newIndex, 0, item[0]);
-
-          // 下面是更改index的测试版 不对
-          // oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
-          // oldIndex = this.table_title.indexOf($oldLi);
-          // newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
-          // var item = this.table_title.splice(oldIndex.index,1);
-          // this.table_title.splice(newIndex.index, 0 ,item[0]);
-        },
-        onEnd: evt => {}
-      });
+				onUpdate:evt=>{
+					
+					var $li = wrapperTr.children[evt.newIndex],
+					$oldLi = wrapperTr.children[evt.oldIndex]
+					
+					wrapperTr.removeChild($li)  
+					if(evt.newIndex > evt.oldIndex) {
+					
+					  wrapperTr.insertBefore($li,$oldLi)
+					
+					} else {
+					  wrapperTr.insertBefore($li,$oldLi.nextSibling)
+					
+					}
+					oldIndex = evt.oldIndex-2;
+					newIndex = evt.newIndex-2;
+					var item = this.table_title.splice(oldIndex,1);
+					this.table_title.splice(newIndex, 0 ,item[0]);
+					console.log(this.table_title);
+					console.log(this.tableTitle);
+					this.$emit("changeTitle", this.table_title);
+					// 下面是更改index的测试版 不对 
+					// oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
+					// oldIndex = this.table_title.indexOf($oldLi);
+					// console.log(oldIndex);
+					// newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
+					// console.log(newIndex);
+					// var item = this.table_title.splice(oldIndex.index,1);
+					// this.table_title.splice(newIndex.index, 0 ,item[0]);
+					
+				},
+				onEnd:evt=>{
+					
+				}
+				
+      })
     },
     setTheadClassName() {
       return "noRightKey";

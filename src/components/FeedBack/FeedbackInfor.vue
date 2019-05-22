@@ -115,6 +115,9 @@ export default {
     //
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
+        if(this.ruleForm ){
+          return
+        }
         if (valid) {
           console.log(this.ruleForm);
           let params = {

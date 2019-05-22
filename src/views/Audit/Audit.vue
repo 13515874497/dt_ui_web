@@ -26,12 +26,16 @@
             width="120">
             </el-table-column>
             <el-table-column
-            property="feedback.imageUrl"
             label="图片"
             width="240">
+            <!-- <template slot-scope="scope" >
+        　　　　<img v-for="item in scope.row.feedback.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px"/>
+        　　</template> -->
             <template slot-scope="scope" >
-        　　　　<img v-for="item in scope.row.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px"/>
-        　　</template>
+              <viewer :images="scope.row.feedback.imageUrl"> 
+                <img v-for="item in scope.row.feedback.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px" />
+              </viewer>
+            </template>
             </el-table-column>
               
             <el-table-column
@@ -45,10 +49,12 @@
             width="120">
             </el-table-column>
             <el-table-column
-            property="feedback.applyTime"
             label="反馈时间"
             width="120"
-            :formatter="formatTime">
+            >
+            <template slot-scope="scope">
+              <span>{{ scope.row.feedback.applyTime | dateformat('YYYY-MM-DD HH:mm:ss') }}</span>
+            </template>
             </el-table-column>
              <el-table-column
             property="feedback.applyStatus"
@@ -66,10 +72,11 @@
             width="120">
             </el-table-column>
             <el-table-column
-            property="createTime"
             label="受理时间"
-            :formatter="formatTime"
             >
+             <!-- <template slot-scope="scope">
+              <span>{{ scope.row.createTime | dateformat('YYYY-MM-DD HH:mm:ss') }}</span>
+            </template> -->
             </el-table-column>
         </el-table>
        <!-- 分页 -->
@@ -88,33 +95,49 @@
 </template>
 <script>
 import { selThisAudit } from "@/api";
-import moment from 'moment'
+import moment from "moment";
+import Vue from 'vue'
+
+// 时间格式转换
+Vue.filter("dateformat", function(dataStr, pattern = "YYYY-MM-DD HH:mm:ss") {
+  return moment(dataStr).format(pattern);
+});
 export default {
-   data(){
-       return{
-        tableData: [], //表信息
-        page: {
-            pageNo:1, //当前页
-            pageSize: 10 ,//每页条数,  默认10条
-            totalCount:0 //总条数
-        }
-       }
-   } ,
-   methods:{
+  data() {
+    return {
+      tableData: [], //表信息
+      page: {
+        pageNo: 1, //当前页
+        pageSize: 10, //每页条数,  默认10条
+        totalCount: 0 //总条数
+      }
+    };
+  },
+  methods: {
     initList() {
       let params = {
-         currentPage : this.page.pageNo,
-         pageSize: this.page.pageSize
+        currentPage: this.page.pageNo,
+        pageSize: this.page.pageSize
       };
       // console.log(params)
 
       selThisAudit(params).then(res => {
         console.log(res);
-        this.tableData = res.data.dataList
-         this.page.totalCount =res.data.totalCount
+        this.tableData = res.data.dataList;
+        this.page.totalCount = res.data.totalCount;
+
+        for(var i = 0; i< this.tableData.length;i++){
+          if(this.tableData[i].feedback.imageUrl){
+            //  console.log(this.tableData[i].feedback.imageUrl.split(','))
+            this.tableData[i].feedback.imageUrl = this.tableData[i].feedback.imageUrl.split(',')           
+          }else if(this.tableData[i].feedback.imageUrl == null){
+            this.tableData[i].feedback.imageUrl = []
+          }
+         
+        }
       });
     },
-     //翻页
+    //翻页
     sizeChange(val) {
       // console.log(val);
       this.page.pageSize = val;
@@ -131,18 +154,9 @@ export default {
     handleCurrentChange(val) {
       this.currentRow = val;
     },
-    //时间格式处理
-    formatTime(row, column) {
-      var date = row[column.property];
-      console.log(date)
-      if (date == undefined) {
-        return "";
-      }
-      return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    }
-   },
-   created(){
-       this.initList()
-   }
-}
+  },
+  created() {
+    this.initList();
+  }
+};
 </script>

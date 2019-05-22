@@ -4,7 +4,7 @@
     <div class="main">
       <p>欢迎来到 XXX 中文管理后台</p>
       <ul class="ctrl">
-          <i class="el-icon-edit-outline" @click="hh" style="font-size:25px"></i>
+          <i class="el-icon-edit" @click="hh" style="font-size:25px"></i>
         <el-dropdown>
           <li >
             <i class="el-icon-edit-outline" @click="feedback" style="font-size:25px"></i>      
