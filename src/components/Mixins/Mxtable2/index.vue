@@ -40,7 +40,14 @@
     <!-- 新增 -->
     <section>
       <el-dialog :title="`新增 ${page.name}`" :visible.sync="add.visible" width="90%">
-        <Mx2Interface :titles="formItems" :data="add.checkedData" :customField="customField" @giveDataModel="getDataModel"></Mx2Interface>
+        <Mx2Interface
+          :titles="formItems"
+          :data="add.checkedData"
+          :customField="customField"
+          :customField_table="customField_table"
+          @giveForm="getForm"
+          @giveTable="getTable"
+        ></Mx2Interface>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
           <el-button type="primary" @click="add.visible = false">确 定</el-button>
@@ -57,7 +64,8 @@
           :formItems="formItems"
           :formData="update.formData"
           @passData="passData_update"
-          @giveDataModel="getDataModel"
+          @giveForm="getForm"
+          @giveTable="getTable"
           :rule="rule"
           :customField="update.customField"
         ></Form>
@@ -115,8 +123,10 @@ export default {
           pageSize: 10
         }
       },
-      form_data_model: null, //当前form表单(新增、修改)绑定的数据
+      form: null, //当前form表单(新增、修改)绑定的数据
+      form_data_model: null,
       form_editing: "add",
+      table: null,//当前可编辑的table
       add: {
         visible: false,
         data: null,
@@ -243,9 +253,12 @@ export default {
       this.tableTitle = [...this.tableTitle];
       // this.queryIds = [];
     },
-    getDataModel($event) {
-      this.form_data_model = $event[0];
-      console.log(this.form_data_model);
+    getForm($event) {
+      this.form = $event[0];
+      this.form_data_model = this.form.data_model;
+    },
+    getTable($event){
+      this.table = $event[0];
     },
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {

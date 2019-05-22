@@ -4,7 +4,7 @@
       <Form
         :formItems="formItems_parent"
         @passData="passData"
-        @giveDataModel="getDataModel"
+        @giveForm="getForm"
         :rule="rule"
         :customField="customField"
       ></Form>
@@ -69,7 +69,8 @@ export default {
         name: this.$route.params.name
       },
       dialogVisible: false, //是否显示该组件
-      form_data_model: null,
+      form: null,
+      form_data_model:null,
       formItems_parent: [],
       formData_parent: null,
       tableTitle_children: [],
@@ -133,9 +134,10 @@ export default {
       console.log($event);
     },
     //form表单中的数据
-    getDataModel($event){
-      this.form_data_model = $event[0];
-      this.$emit("giveDataModel", [this.form_data_model]);
+    getForm($event){
+      this.form = $event[0];
+      this.form_data_model = this.form.data_model;
+      this.$emit("giveForm", [this.form]);
     }
   },
   created() {

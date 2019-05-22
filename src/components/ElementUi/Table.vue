@@ -1,6 +1,6 @@
 <template>
   <el-table
-    :data="tableData"
+    :data="tableData || table_data"
     height="500"
     :span-method="spanMethod"
     @selection-change="handleSelectionChange"
@@ -40,12 +40,12 @@
                 :placeholder="title.placeholder || '请选择'"
                 :filterable="title.filterable"
                 :remote="title.remote"
-                :remoteMethod="title.remoteMethod($event,title)"
+                :remoteMethod="(val)=>{title.remoteMethod(val,scope.row)}"
                 :clearable="title.remote"
                 size="small"
               >
                 <el-option
-                  v-for="option in title.data"
+                  v-for="option in scope.row[title.topType+'_data_']"
                   :key="option[title.key]"
                   :label="option[title.label]"
                   :value="option[title.key]"
@@ -143,7 +143,7 @@ export default {
       fixedCache: {},
       options: {}, //存放各种类型的状态
       table_title: [],
-      table_data: []
+      table_data: null
     };
   },
   props: {
@@ -182,9 +182,22 @@ export default {
     tableData: {
       // this.setRepeatField();
       handler(val) {
-        this.table_data = deepClone(val);
+        if (this.editable) {
+          this.table_data = deepClone(val);
+        }
       },
       immediate: true
+    },
+    table_data: {
+      deep: true,
+      handler(){
+        console.log('1111111111111111111111111111111111111111');
+        if(this.editable){
+          console.log('1111111111111111111111111111111111111111');
+          
+          this.$emit('giveTable',[this]);
+        }
+      }
     }
     // tableData() {
     //   this.setRepeatField();
@@ -419,49 +432,97 @@ export default {
     //初始化自定义的字段 //里所有的select数据都放到title上  也就是表格里的每条数据select都是相同的
     initCustomField() {
       let self = this;
+      console.log("1111111111111");
+
       return new Promise(async (resolve, reject) => {
+        console.log(self.customField_table);
+
         if (!self.customField_table) {
           resolve(null);
           return;
         }
 
         for (let i = 0; i < self.customField_table.length; i++) {
-          let item = self.customField_table[i];
-
-          let title = self.titles_.find(title => {
-            return title.topType === item.topType;
+          let cusItem = self.customField_table[i];
+          let title = self.table_title.find(title => {
+            return title.topType === cusItem.topType;
           });
-          for (let key in item) {
-            title[key] = item[key];
+          for (let key in cusItem) {
+            title[key] = cusItem[key];
           }
-          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的titles_上
-          switch (item.inputType) {
-            case 3:
-              title.data = [];
-              let res3 = await item.ajax();
-              if (res3.code === 200) {
-                // if(res3.data.dataList){
-                title.data = res3.data.dataList || res3.data;
-                // }else {
-                //   title.data = res3.data;
-                // }
-              }
-              break;
-            case 5:
-              title.data = [];
-              let res = await item.ajax();
-              if (res.code === 200) {
-                title.data = res.data;
-              }
-              self.data_model[item.data_model] = [];
-              break;
+          console.log('111111111111111');
+          console.log(title);
+          
+          if (cusItem.remote) continue;
+          for (let i = 0; i < self.table_data.length; i++) {
+            let row = self.table_data[i];
+            let tempKey = cusItem.topType + "_data_";
+            row[tempKey] = [];
+            switch (cusItem.inputType) {
+              case 3:
+                let res3 = await cusItem.ajax();
+                if (res3.code === 200) {
+                  // if(res3.data.dataList){
+                  row[tempKey] = res3.data.dataList || res3.data;
+                  // }else {
+                  //   title.data = res3.data;
+                  // }
+                }
+                break;
+              // case 5:
+              //   let res = await cusItem.ajax();
+              //   if (res.code === 200) {
+              //      row[tempKey]  = res.data;
+              //   }
+              //   self.data_model[cusItem.data_model] = [];
+              //   break;
+            }
           }
+
+          // for(let i = 0; i< self.table_data; i++){
+          //   let tableItem = self.table_data[i];
+          //   for(let key in cusItem){
+          //     tableItem[key+'_'] = cusItem[key];
+          //   }
+          // }
+          // let title = self.table_title.find(title => {
+          //   return title.topType === item.topType;
+          // });
+          // for (let key in item) {
+          //   title[key] = item[key];
+          // }
+          // console.log('9999999999999999999');
+
+          // console.log(title);
+
+          // if (item.remote) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的titles_上
+          // switch (item.inputType) {
+          //   case 3:
+          //     title.data = [];
+          //     let res3 = await item.ajax();
+          //     if (res3.code === 200) {
+          //       // if(res3.data.dataList){
+          //       title.data = res3.data.dataList || res3.data;
+          //       // }else {
+          //       //   title.data = res3.data;
+          //       // }
+          //     }
+          //     break;
+          //   case 5:
+          //     title.data = [];
+          //     let res = await item.ajax();
+          //     if (res.code === 200) {
+          //       title.data = res.data;
+          //     }
+          //     self.data_model[item.data_model] = [];
+          //     break;
+          // }
         }
 
         //等待前方全部请求完毕
         resolve(null);
       });
-    },
+    }
   },
   async created() {
     let self = this;

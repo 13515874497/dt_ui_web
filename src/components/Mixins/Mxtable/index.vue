@@ -62,10 +62,10 @@
           key="新增"
           :formItems="formItems"
           @passData="passData_add"
-          @giveDataModel="getDataModel"
+          @giveForm="getForm"
           :rule="rule"
           :reset="add.reset"
-          :customField="add.customField"
+          :customField="customField"
         ></Form>
 
         <div slot="footer" class="dialog-footer">
@@ -87,9 +87,9 @@
           :formItems="formItems"
           :formData="update.formData"
           @passData="passData_update"
-          @giveDataModel="getDataModel"
+          @giveForm="getForm"
           :rule="rule"
-          :customField="update.customField"
+          :customField="customField"
         ></Form>
 
         <div slot="footer" class="dialog-footer">
@@ -159,7 +159,8 @@ export default {
         //   }
         // }
       },
-      form_data_model: null, //当前form表单(新增、修改)绑定的数据
+      form:null, //当前打开的form表单
+      form_data_model:null,
       form_editing: "add",
       add: {
         visible: false,
@@ -373,8 +374,9 @@ export default {
       this.tableTitle = [...this.tableTitle];
       // this.queryIds = [];
     },
-    getDataModel($event) {
-      this.form_data_model = $event[0];
+    getForm($event) {
+      this.form = $event[0];
+      this.form_data_model = this.form.data_model;
     },
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
@@ -571,11 +573,12 @@ export default {
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
     this.tableTitle_show = [...this.tableTitle];
-    this.add.customField = [...this.customField];
-    this.update.customField = [...this.customField];
 
-    this.add.customField = deepClone(this.customField);
-    this.update.customField = deepClone(this.customField);
+    // this.add.customField = [...this.customField];
+    // this.update.customField = [...this.customField];
+
+    // this.add.customField = deepClone(this.customField);
+    // this.update.customField = deepClone(this.customField);
 
   },
   async mounted() {

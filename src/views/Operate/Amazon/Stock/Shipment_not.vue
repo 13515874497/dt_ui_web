@@ -40,10 +40,12 @@ export default {
     queryPage(data) {
       return getNotice(data); //查询页面的接口
     },
-    async getSkuList(query,title){
-      console.log(query,title);
+    async getSkuList(query){
+      console.log(query);
       
       let data = this.form_data_model;
+      console.log(data);
+      
       if (data.shopId && data.siteId) {
         let res = await getSkuName({
           sId: data.shopId,
@@ -53,22 +55,37 @@ export default {
         console.log(res);
         if (res.code === 200) {
           console.log(res);
-          // let customField = null;
-          // switch (this.form_editing) {
-          //   case "add":
-          //     customField = this.add.customField;
-          //     break;
-          //   case "update":
-          //     customField = this.update.customField;
-          //     break;
-          // }
-          // let item =  customField.find(item => {
-          //   return item.topType === "sku";
-          // });
+        }
+      }
+    },
+    //获取输入获取sku列表
+    async getSkuList(query,row) {
+      console.log('12312312');
+      // console.log(this.form);
+      console.log(row);
+      
+      let data_model = this.form.data_model;
+      // console.log(data_model);
+      
+      // let formItems_ = this.form.formItems_;
+      // let formItem = formItems_.find(formItem=>{
+      //   return formItem.topType === 'sku'
+      // });
 
-          // item.data = res.data;
-          // customField.currField = "sku"; //告诉子组件当前修改的字段是 'sku'
-          // customField.currQuery = query;
+
+      if (data_model.shopId && data_model.siteId){
+        let res = await getSkuName({
+          sId: data_model.shopId,
+          seId: data_model.siteId,
+          kuName: query
+        });
+        if (res.code === 200) {
+          row.sku_data_ = res.data;
+          console.log(this.table);
+          
+          this.table.table_data = [...this.table.table_data];
+          // formItem.data = res.data
+          // this.form.formItems_ = [...this.form.formItems_]
         }
       }
     },

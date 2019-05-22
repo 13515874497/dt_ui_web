@@ -11,7 +11,7 @@
     class="form-content scrollbar"
     :inline="true"
   >
-    <template v-for="item in formItems_">
+    <template v-for="(item,index) in formItems_">
       <el-form-item
         v-if="item.statusOptions && item.statusOptions.length == 2"
         :label="item.headName"
@@ -94,7 +94,7 @@
           size="small"
           controls-position="right"
         ></el-input-number>
-      </el-form-item> -->
+      </el-form-item>-->
 
       <el-form-item
         v-else-if="item.inputType == 3"
@@ -108,7 +108,7 @@
           :placeholder="item.placeholder || '请选择'"
           :filterable="item.filterable"
           :remote="item.remote"
-          :remoteMethod="item.remoteMethod($event,item)"
+          :remoteMethod="item.remoteMethod"
           :clearable="item.remote"
           size="small"
         >
@@ -244,6 +244,7 @@ export default {
     formItems() {
       // this.initData_model();
     },
+    
     formData() {
       this.initData_model();
     },
@@ -252,48 +253,10 @@ export default {
     },
     data_model: {
       async handler(val) {
-        // console.log(val);
-        // this.passData(await this.isVerifyPass());
-        this.$emit("giveDataModel", [val]);
+        this.$emit("giveForm", [this]);
         this.triggerFormChange();
       },
       deep: true
-    },
-    customField: {
-      deep: true,
-      handler(val) {
-        console.log(val);
-        //如果只能在外部提供数据(即customField里提供了data属性)  则需要将当前的数据赋值给该组件formItems中对应的字段
-        let index = this.formItems_.findIndex(formItem => {
-          return formItem.topType === val.currField;
-        });
-
-        let custom = val.find(formItem => {
-          return formItem.topType === val.currField;
-        });
-        this.formItems_[index].data = custom.data;
-        //如果改变了搜索条件  则重新判断检测的id是否在搜索结果中
-        var a = custom.data.findIndex(item => {
-          return item[custom.bindKey] === this.data_model[custom.bindKey];
-        });
-
-        if (this.data_model[custom.bindKey] != null) {
-          if (
-            custom.data.findIndex(item => {
-              return item[custom.bindKey] === this.data_model[custom.bindKey];
-            }) === -1
-          ) {
-            this.data_model[custom.bindKey] = null;
-          }
-        }
-
-        // if (this.data_model[custom.bindKey] && val.currQuery === "") {
-        //   this.data_model[custom.bindKey] = null;
-        // }
-
-        // this.$set(this.$data.formItems_[index], "data", custom.data);
-        this.formItems_ = [...this.formItems_]; //触发下更新
-      }
     }
   },
   methods: {
@@ -314,7 +277,7 @@ export default {
           for (let key in item) {
             formItem[key] = item[key];
           }
-          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
+          if (item.remote) continue; //如果请求需要参数 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
           switch (item.inputType) {
             case 3:
               formItem.data = [];
@@ -372,6 +335,7 @@ export default {
           });
           switch (item.inputType) {
             case 3:
+              break;
             case 5:
               this.data_model[item.data_model] = getTreePath(
                 this.formData[item.bindKey],
@@ -396,12 +360,7 @@ export default {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
           } else {
             switch (item.inputType) {
-              case 1:
-                break;
-
-                self.$set(this.data_model, item.topType, 0.00);
               default:
-                
                 self.$set(this.data_model, item.topType, null);
                 break;
             }
