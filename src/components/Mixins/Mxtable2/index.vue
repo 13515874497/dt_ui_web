@@ -40,7 +40,7 @@
     <!-- 新增 -->
     <section>
       <el-dialog :title="`新增 ${page.name}`" :visible.sync="add.visible" width="90%">
-        <Mx2Interface :titles="formItems" :data="add.checkedData" :customField="customField"></Mx2Interface>
+        <Mx2Interface :titles="formItems" :data="add.checkedData" :customField="customField" @giveDataModel="getDataModel"></Mx2Interface>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
           <el-button type="primary" @click="add.visible = false">确 定</el-button>
@@ -245,6 +245,7 @@ export default {
     },
     getDataModel($event) {
       this.form_data_model = $event[0];
+      console.log(this.form_data_model);
     },
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {

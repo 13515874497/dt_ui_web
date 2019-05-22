@@ -21,7 +21,6 @@
       <div v-for="(title, index) in table_title" :key="index">
         <!--特殊字段 -->
         <!-- 根据选项获取值的字段 -->
-     
 
         <el-table-column
           v-if="title.inputType==3"
@@ -33,7 +32,29 @@
           :show-overflow-tooltip="true"
           :key="Math.random()"
           :column-key="index.toString()"
-        ></el-table-column>
+        >
+          <template slot-scope="scope">
+            <span class="editting" v-if="editable">
+              <el-select
+                v-model="scope.row[title.bindKey ||  title.topType]"
+                :placeholder="title.placeholder || '请选择'"
+                :filterable="title.filterable"
+                :remote="title.remote"
+                :remoteMethod="title.remoteMethod($event,title)"
+                :clearable="title.remote"
+                size="small"
+              >
+                <el-option
+                  v-for="option in title.data"
+                  :key="option[title.key]"
+                  :label="option[title.label]"
+                  :value="option[title.key]"
+                ></el-option>
+              </el-select>
+            </span>
+            <span class="editted">{{scope.row[title.topType]}}</span>
+          </template>
+        </el-table-column>
 
         <el-table-column
           v-else-if="title.topType==='userExpirationDate'"
@@ -138,6 +159,10 @@ export default {
       //是否可编辑
       type: Boolean,
       default: false
+    },
+    customField_table: {
+      type: Array,
+      default: () => []
     }
   },
   computed: {
@@ -391,17 +416,61 @@ export default {
       });
       return sums;
     },
-  },
-  created() {
-    let self = this;
-    if (this.menuId == 59) {
-    }
+    //初始化自定义的字段 //里所有的select数据都放到title上  也就是表格里的每条数据select都是相同的
+    initCustomField() {
+      let self = this;
+      return new Promise(async (resolve, reject) => {
+        if (!self.customField_table) {
+          resolve(null);
+          return;
+        }
 
+        for (let i = 0; i < self.customField_table.length; i++) {
+          let item = self.customField_table[i];
+
+          let title = self.titles_.find(title => {
+            return title.topType === item.topType;
+          });
+          for (let key in item) {
+            title[key] = item[key];
+          }
+          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的titles_上
+          switch (item.inputType) {
+            case 3:
+              title.data = [];
+              let res3 = await item.ajax();
+              if (res3.code === 200) {
+                // if(res3.data.dataList){
+                title.data = res3.data.dataList || res3.data;
+                // }else {
+                //   title.data = res3.data;
+                // }
+              }
+              break;
+            case 5:
+              title.data = [];
+              let res = await item.ajax();
+              if (res.code === 200) {
+                title.data = res.data;
+              }
+              self.data_model[item.data_model] = [];
+              break;
+          }
+        }
+
+        //等待前方全部请求完毕
+        resolve(null);
+      });
+    },
+  },
+  async created() {
+    let self = this;
     // this.table_title = [...this.tableTitle];
 
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
+    await this.initCustomField();
   },
 
   mounted() {
@@ -460,6 +529,6 @@ export default {
 }
 .el-input-number.is-controls-right .el-input__inner {
   text-align-last: left;
-  padding:  0 16px;
+  padding: 0 16px;
 }
 </style>

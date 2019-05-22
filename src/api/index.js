@@ -562,9 +562,7 @@ export const findByListRegion = (data) => ajax(BASE_URL + '/reg/findByListRegion
 //站点分页 repGetSiteInfo
 export const findByListSite = (data) => ajax(BASE_URL + '/site/findByListSite', data, 'POST')
 //通过洲的arId获取站点
-export const repGetShopIdSiteInfo = (arId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {
-  arId
-})
+export const repGetShopIdSiteInfo = (data) => ajax(BASE_URL + `/site/getByShopIdListSite`, data)
 
 //币别分页 repGetCurrencyInfo
 export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
