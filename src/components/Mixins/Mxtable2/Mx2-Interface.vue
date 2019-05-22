@@ -17,6 +17,7 @@
         :editable="true"
         :tableTitle="tableTitle_children"
         :tableData="tableData_children"
+        :customField_table="customField_table"
       ></Table>
     </section>
     <section></section>
@@ -50,6 +51,10 @@ export default {
       default: () => ({})
     },
     customField: {
+      type: Array,
+      default: () => []
+    },
+    customField_table: {
       type: Array,
       default: () => []
     }
@@ -130,6 +135,7 @@ export default {
     //form表单中的数据
     getDataModel($event){
       this.form_data_model = $event[0];
+      this.$emit("giveDataModel", [this.form_data_model]);
     }
   },
   created() {

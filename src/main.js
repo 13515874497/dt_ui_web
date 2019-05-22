@@ -10,7 +10,28 @@ import loading from './utils/loading'
 import './assets/icon/iconfont.css' //
 import './assets/icon/iconfont_zbr.css'
 import router from './router'
-
+// 点击图片放大预览
+import Viewer from 'v-viewer'
+import 'viewerjs/dist/viewer.css'
+Vue.use(Viewer)
+Viewer.setDefaults({
+  Options: {
+    'inline': true,
+    'button': true,
+    'navbar': true,
+    'title': true,
+    'toolbar': true,
+    'tooltip': true,
+    'movable': true,
+    'zoomable': true,
+    'rotatable': true,
+    'scalable': true,
+    'transition': true,
+    'fullscreen': true,
+    'keyboard': true,
+    'url': 'data-source'
+  }
+})
 import {
   Badge,
   Button,
@@ -167,7 +188,7 @@ Vue.prototype.removeCookie = (key) => {
 
 
 router.beforeEach((to, from, next) => {
-  
+
   getLoginStatus().then((res) => {
     switch (to.path) {
       case '/login':

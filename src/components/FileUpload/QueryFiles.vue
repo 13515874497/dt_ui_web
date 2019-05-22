@@ -207,7 +207,7 @@ export default {
             id: item.areaId,
             name: item.areaName,
             shortName: item.areaShortNameEng,
-            arId: item.arId
+            arIds: item.arIds
           };
         });
       }
@@ -215,7 +215,9 @@ export default {
     //获取站点
     async getSelect_site() {
       // if (this.isContinent) return;
-      let res = await repGetShopIdSiteInfo(this.select_area.arId);
+      let res = await repGetShopIdSiteInfo({
+        arIds: this.select_area.arIds
+      });
       if (res.code === 200) {
         this.select_site.render = res.data.map(item => {
           return {
@@ -232,7 +234,7 @@ export default {
       });
       // this.select_area.label = option.name;
       // this.select_area.shortName = option.shortName;
-      this.select_area.arId = option.arId;
+      this.select_area.arIds = option.arIds;
     },
  
      //获取已上传的文件列表

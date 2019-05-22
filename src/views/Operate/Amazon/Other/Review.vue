@@ -82,7 +82,10 @@ export default {
       }
     },
     //获取输入获取sku列表
-    async getSkuList(query) {
+    async getSkuList(query,formItem) {
+      console.log(query);
+      console.log(formItem);
+      
       let data = this.form_data_model;
       if (data.shopId && data.siteId) {
         let res = await getSkuName({

@@ -108,7 +108,7 @@
           :placeholder="item.placeholder || '请选择'"
           :filterable="item.filterable"
           :remote="item.remote"
-          :remoteMethod="item.remoteMethod"
+          :remoteMethod="item.remoteMethod($event,item)"
           :clearable="item.remote"
           size="small"
         >
