@@ -778,7 +778,7 @@ export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',
 export const getUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
 
 //删除表格方案
-export const delUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
+export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',data, 'POST')
 
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
