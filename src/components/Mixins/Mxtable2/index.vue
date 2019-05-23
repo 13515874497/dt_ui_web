@@ -123,17 +123,19 @@ export default {
           pageSize: 10
         }
       },
-      form: null, //当前form表单(新增、修改)绑定的数据
-      form_data_model: null,
+      // form: null, //当前form表单(新增、修改)绑定的数据
+      // form_data_model: null,
       form_editing: "add",
-      table: null,//当前可编辑的table
+      // table: null,//当前可编辑的table
       add: {
         visible: false,
         data: null,
         isPass: false,
         reset: false,
         customField: [], //form表单自定义的字段
-        checkedData: [true, null, []] //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
+        checkedData: [true, null, []], //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
+        form: null,
+        table: null
       },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
@@ -142,7 +144,9 @@ export default {
         formData: null,
         data: null,
         isPass: false,
-        customField: []
+        customField: [],
+        form: null,
+        table: null
       },
       customField: [],
       //在form中不需要填写的
@@ -167,6 +171,27 @@ export default {
       return this.tableTitle.filter(item => {
         return !this.sysLogNotForm.includes(item.topType);
       });
+    },
+    form() {
+      switch (this.form_editing) {
+        case "add":
+          return this.add.form;
+          break;
+        case "update":
+          return this.update.form;
+      }
+    },
+    form_data_model() {
+      return (this.form && this.form.data_model) || {};
+    },
+    table() {
+      switch (this.form_editing) {
+        case "add":
+          return this.add.table;
+          break;
+        case "update":
+          return this.update.table;
+      }
     }
   },
   components: {
@@ -254,11 +279,24 @@ export default {
       // this.queryIds = [];
     },
     getForm($event) {
-      this.form = $event[0];
-      this.form_data_model = this.form.data_model;
+      switch (this.form_editing) {
+        case "add":
+          this.add.form = $event[0];
+          break;
+        case "update":
+          this.update.form = $event[0];
+          break;
+      }
     },
-    getTable($event){
-      this.table = $event[0];
+    getTable($event) {
+      switch (this.form_editing) {
+        case "add":
+          this.add.table = $event[0];
+          break;
+        case "update":
+          this.update.table = $event[0];
+          break;
+      }
     },
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {

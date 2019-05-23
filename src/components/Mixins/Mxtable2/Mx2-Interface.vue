@@ -15,10 +15,13 @@
       </el-radio-group>
       <Table
         :editable="true"
+        :height="300"
         :tableTitle="tableTitle_children"
         :tableData="tableData_children"
         :customField_table="customField_table"
+        @giveTable="getTable"
       ></Table>
+      <OperateBtn :operateList="operateList"></OperateBtn>
     </section>
     <section></section>
   </div>
@@ -34,6 +37,7 @@
 
 <script>
 import Table from "@/components/ElementUi/Table";
+import OperateBtn from "@/components/ElementUi/OperateBtn";
 export default {
   props: {
     visible: Boolean,
@@ -43,7 +47,7 @@ export default {
       required: true
     },
     data: {
-      //[true,{},[]]接收表头锁对于的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
+      //[true,{},[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
       type: Array
     },
     rule: { 
@@ -60,7 +64,8 @@ export default {
     }
   },
   components: {
-    Table
+    Table,
+    OperateBtn
   },
   data() {
     return {
@@ -106,6 +111,20 @@ export default {
     }
   },
   methods: {
+     initOperateBtn() {
+      let self = this;
+      this.operateList = [
+        //对已上传的文件进行操作的按钮列表
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "新增",
+          fn() {
+            self.addRow();
+          }
+        }
+      ];
+    },
     close() {
       this.$emit("close", [true]);
     },
@@ -134,13 +153,24 @@ export default {
       console.log($event);
     },
     //form表单中的数据
+    //获取表单组件对象
     getForm($event){
       this.form = $event[0];
       this.form_data_model = this.form.data_model;
       this.$emit("giveForm", [this.form]);
+    },
+    //获取表格组件对象
+    getTable($event){
+      this.table = $event[0];
+      this.$emit('giveTable',[this.table]);
+    },
+    //点击新增给表格加一行空数据
+    addRow(){
+
     }
   },
   created() {
+    this.initOperateBtn();
     console.log(this.page);
   }
 };

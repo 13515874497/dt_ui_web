@@ -83,6 +83,8 @@ export default {
     },
     //获取输入获取sku列表
     async getSkuList(query) {
+      console.log(this.form);
+      
       let data_model = this.form.data_model;
       console.log(data_model);
       
@@ -101,38 +103,6 @@ export default {
           this.form.formItems_ = [...this.form.formItems_]
         }
       }
-
-
-
-
-      // let data = this.form_data_model;
-      // if (data.shopId && data.siteId) {
-      //   let res = await getSkuName({
-      //     sId: data.shopId,
-      //     seId: data.siteId,
-      //     kuName: query
-      //   });
-      //   console.log(res);
-      //   if (res.code === 200) {
-      //     console.log(res);
-      //     let customField = null;
-      //     switch (this.form_editing) {
-      //       case "add":
-      //         customField = this.add.customField;
-      //         break;
-      //       case "update":
-      //         customField = this.update.customField;
-      //         break;
-      //     }
-      //     let item =  customField.find(item => {
-      //       return item.topType === "sku";
-      //     });
-
-      //     item.data = res.data;
-      //     customField.currField = "sku"; //告诉子组件当前修改的字段是 'sku'
-      //     customField.currQuery = query;
-      //   }
-      // }
     },
     setRule() {
       let rule = {

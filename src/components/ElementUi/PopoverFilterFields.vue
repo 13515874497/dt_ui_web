@@ -12,7 +12,7 @@ export default {
 		// 2019/05/22  下午16:00  添加内容 接受父组件传值 后台返回的隐藏字段数组 填充隐藏字段  start
 		hiddenFieldsList:{
 			type:Object,
-			default:{}
+			default:()=>({})
 		},
 		// 2019/05/22  下午16:00  添加内容 接受父组件传值 后台返回的隐藏字段数组 填充隐藏字段  end
   },

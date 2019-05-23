@@ -10,11 +10,11 @@
             @changeQuery="setQuery"
             :tableTitle="tableTitle"
             :selectedIds="queryIds"
-						:inputData="inputData"
+            :inputData="inputData"
             :querySuggestionsConfig="data"
             :querySuggestionsMethod="queryPage"
           ></inputQuery>
-        </el-col> 
+        </el-col>
         <el-col :span="4">
           <SearchReset @search="search" @reset="reset"></SearchReset>
         </el-col>
@@ -23,36 +23,48 @@
     <!--table表格-->
     <section>
       <Table
-				@changeTitle="changeTitle" 
+        @changeTitle="changeTitle"
         :tableData="data.tableData"
         :tableTitle="tableTitle_show"
         v-on:checkboxValue="checkboxValue"
         v-if="tableTitle.length"
         v-loading="loading"
       />
-			<div>
-				<div v-if="tableTitle.length" class="control dis_fex" style="margin-right: 10px;">
-					<!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
-					<OperateBtn :operateList="operateList"></OperateBtn>
-				</div>
-				<div class="dis_fex" style="margin-top: 20px;">
-					<el-button type="primary" style="" size="mini" @click="saveSolution">新增查询方案</el-button>
-					<el-button type="primary" style="" size="mini" @click="changeSolution">修改当前方案</el-button>
-					<div style="display: inline-block;position: relative;" v-for="(item, index) in programmeDataList">
-						<el-button type="primary" style="padding-right: 25px;margin-right: 5px;" size="mini" @click="chaxun(index)"  :key="index">方案{{item.programName}}</el-button>
-						 <span style="position: absolute;right: 8px;top: 8px;background-color:white ;color: #AAAAAA;border-radius: 8px;" class="el-icon-circle-close" @click="deleteProgramme(item)"></span>
-					</div>
-					<!-- <el-select v-model="programmeDataList" placeholder="请选择活动区域">
+      <div>
+        <div v-if="tableTitle.length" class="control dis_fex" style="margin-right: 10px;">
+          <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
+          <OperateBtn :operateList="operateList"></OperateBtn>
+        </div>
+        <div class="dis_fex" style="margin-top: 20px;">
+          <el-button type="primary" style size="mini" @click="saveSolution">新增查询方案</el-button>
+          <el-button type="primary" style size="mini" @click="changeSolution">修改当前方案</el-button>
+          <div
+            style="display: inline-block;position: relative;"
+            v-for="(item, index) in programmeDataList"
+          >
+            <el-button
+              type="primary"
+              style="padding-right: 25px;margin-right: 5px;"
+              size="mini"
+              @click="chaxun(index)"
+              :key="index"
+            >方案{{item.programName}}</el-button>
+            <span
+              style="position: absolute;right: 8px;top: 8px;background-color:white ;color: #AAAAAA;border-radius: 8px;"
+              class="el-icon-circle-close"
+              @click="deleteProgramme(item)"
+            ></span>
+          </div>
+          <!-- <el-select v-model="programmeDataList" placeholder="请选择活动区域">
 						<el-option label="item.programName" value="item.programName" ></el-option>
 						
-					</el-select> -->
-					
-				</div>
-				<div v-if="tableTitle.length" class="control dis_fex">
-					<!--分页-->
-					<Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
-				</div>
-			</div>
+          </el-select>-->
+        </div>
+        <div v-if="tableTitle.length" class="control dis_fex">
+          <!--分页-->
+          <Pagination :data="data" v-on:pageData="pagination" :disabled="loading"/>
+        </div>
+      </div>
     </section>
     <!-- 新增 -->
     <section>
@@ -100,7 +112,11 @@
     </section>
     <!-- 表格字段筛选 -->
     <section>
-      <PopoverFilterFields :data="tableTitle" :hiddenFieldsList="hiddenFieldsList" @hideField="hideField"></PopoverFilterFields>
+      <PopoverFilterFields
+        :data="tableTitle"
+        :hiddenFieldsList="hiddenFieldsList"
+        @hideField="hideField"
+      ></PopoverFilterFields>
       <!-- <div class="el-button fieldShow el-button--primary is-plain"></div> -->
     </section>
   </main>
@@ -120,37 +136,42 @@ import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import PubSub from "pubsub-js";
-import { MessageBox } from 'element-ui';
-import { getConfMapUser, getUserConfig , delUserConfig, upUserConfig} from '@/api'
+import { MessageBox } from "element-ui";
+import {
+  getConfMapUser,
+  getUserConfig,
+  delUserConfig,
+  upUserConfig
+} from "@/api";
 export default {
   data() {
     return {
       page: {
         name: this.$route.params.name
       },
-			tableTitleUp:[],//要上传的拖拽后的新数据
-			nowId:'',//修改方案时存入当前要修改的方案configid
-			programme:"",//方案名称
-			hiddenFieldsList:{},//隐藏字段对象 传给子组件使用
-			hiddenFieldsListA:[],//隐藏字段数组  接收后台返回数组
-			query2List:[],//query2input选中数据数组
-			inputQueryData:{},//inputQuery页input填写数据对象
-			hiddenFieldsListData:[],
-			programmeDataList:[],//所有方案总和
-			loading: false,
+      tableTitleUp: [], //要上传的拖拽后的新数据
+      nowId: "", //修改方案时存入当前要修改的方案configid
+      programme: "", //方案名称
+      hiddenFieldsList: {}, //隐藏字段对象 传给子组件使用
+      hiddenFieldsListA: [], //隐藏字段数组  接收后台返回数组
+      query2List: [], //query2input选中数据数组
+      inputQueryData: {}, //inputQuery页input填写数据对象
+      hiddenFieldsListData: [],
+      programmeDataList: [], //所有方案总和
+      loading: false,
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
-			tValList:[],//自动填充query2组件input数据数组
-			inputData:{},//传给子组件用的搜索框内容对象
+      tValList: [], //自动填充query2组件input数据数组
+      inputData: {}, //传给子组件用的搜索框内容对象
       multipleSelection: [], //更新按钮数组收集
       data: {
         tableData: [], //表信息
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
-        page_sizes: [5, 10, 15, 20, 25],
+        page_sizes: [5, 10, 15, 20, 25]
         // shipNoticeEntry: {
         //   currentPage: 0,
         //   pageSize: 10,
@@ -160,15 +181,16 @@ export default {
         //   }
         // }
       },
-      form:null, //当前打开的form表单
-      form_data_model:null,
+      // form: null, //当前打开的form表单
+      // form_data_model: null,
       form_editing: "add",
       add: {
         visible: false,
         data: null,
         isPass: false,
         reset: false,
-        customField: []
+        customField: [],
+        form: null
       },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
@@ -177,7 +199,8 @@ export default {
         formData: null,
         data: null,
         isPass: false,
-        customField: []
+        customField: [],
+        form: null
       },
       customField: [],
       //在form中不需要填写的
@@ -202,6 +225,18 @@ export default {
       return this.tableTitle.filter(item => {
         return !this.sysLogNotForm.includes(item.topType);
       });
+    },
+    form() {
+      switch (this.form_editing) {
+        case "add":
+          return this.add.form;
+          break;
+        case "update":
+          return this.update.form;
+      }
+    },
+    form_data_model(){
+      return this.form && this.form.data_model || {};
     }
     //当前打开的新增或修改的form表单
     // ref_form() {
@@ -231,127 +266,121 @@ export default {
   methods: {
     setQuery($event) {
       let query = $event[0];
-			// 2019/05/22  下午16:00  新增搜索框内容对象 用来上传  start
-			this.inputQueryData = query;
-			// 2019/05/22  下午16:00  新增搜索框内容对象 用来上传  end
+      // 2019/05/22  下午16:00  新增搜索框内容对象 用来上传  start
+      this.inputQueryData = query;
+      // 2019/05/22  下午16:00  新增搜索框内容对象 用来上传  end
       for (let key in query) {
         let value = query[key];
         this.data[key] = value;
       }
-			
     },
-		// 2019/05/22  下午16:00  表格拖拽时获取拖拽后数组 目前有问题没有解决 上传用的都是原数组  start
-		changeTitle(e){
-			this.tableTitleUp = this.tableTitle;
-			// this.tableTitle = e;
-			console.log(e);
-			console.log(this.tableTitle)
-		
-		},
-		// 2019/05/22  下午16:00  表格拖拽时获取拖拽后数组 目前有问题没有解决 上传用的都是原数组  end
-		// 2019/05/22  下午16:00  新增删除当前方案功能  删除接口未接通 start
-		async deleteProgramme(item){
-			// console.log(item);
-			// let paramsB = {mid:item.mid,id:item.configId}
-			// let res = await delUserConfig(paramsB);
-			// console.log(res);
-		},
-		// 2019/05/22  下午16:00  新增删除当前方案功能 删除接口未接通 end
-		// 2019/05/22  下午16:00  新增查询方案功能  查询未完成 start
-		chaxun(index){
-			// 
-			this.tValList = this.programmeDataList[index].queryTwoList;
-			this.inputData = this.programmeDataList[index].inputQueryData;
-			this.hiddenFieldsList[this.$route.params.id] = this.programmeDataList[index].hiddenFieldsList;
-			// this.nowId = this.programmeDataList[index].configId;
-			console.log(this.programmeDataList[index])
-		},
-		// 2019/05/22  下午16:00  新增修改当前方案功能 查询未完成end
-		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
-		changeSolution(){
-			
-			// MessageBox.prompt('请输入方案名称', '提示', {
-			//     confirmButtonText: '确定',
-			//     cancelButtonText: '取消'
-			//   }).then(({ value }) => {
-			// 			var reg =  /^\s*$/g;
-			// 			if(reg.test(value) || value == null || value == ""){
-			// 				message.errorMessage('方案名称不能为空')
-			// 				return;
-			// 			}else{
-			// 				this.programme = value.replace(/\s+/g,"");
-			// 			
-			// 				let programmeList = {
-			// 					// hiddenFieldsList : this.hiddenFieldsListA,
-			// 					// queryTwoList : this.query2List,
-			// 					// inputQueryData : this.inputQueryData,
-			// 					// programName : this.programme,
-			// 					// mid : parseInt(this.$route.params.id),
-			// 					// dropTable:this.tableTitleUp,
-			// 					// id:this.nowId
-			// 				}
-			// 				console.log(programmeList)
-			// 				
-			// 				upUserConfig(programmeList).then(res=>{
-			// 					console.log(res);
-			// 					if(res.code == 200){
-			// 						message.successMessage('方案修改成功')
-			// 					}else{
-			// 						message.errorMessage(res.msg)
-			// 					}
-			// 				})
-			// 				
-			// 			}
-			// 			
-			//   })	
-		},
-		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
-		// 2019/05/22  下午16:00  新增保存方案功能 start
-		saveSolution(){
-			MessageBox.prompt('请输入方案名称', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消'
-        }).then(({ value }) => {
-						var reg =  /^\s*$/g;
-						if(reg.test(value) || value == null || value == ""){
-							message.errorMessage('方案名称不能为空')
-							return;
-						}else{
-							this.programme = value.replace(/\s+/g,"");
-						
-							let programmeList = {
-								hiddenFieldsList : this.hiddenFieldsListA,
-								queryTwoList : this.query2List,
-								inputQueryData : this.inputQueryData,
-								programName : this.programme,
-								dropTable:this.tableTitle,
-								mid : parseInt(this.$route.params.id)
-							}
-							console.log(programmeList)
-							
-							getConfMapUser(programmeList).then(res=>{
-								console.log(res);
-								if(res.code == 200){
-									message.successMessage('方案名称保存成功')
-								}else{
-									message.errorMessage(res.msg)
-								}
-							})
-							
-						}
-						
-        })
-				
-				
-		},
-		// 2019/05/22  下午16:00  新增保存方案功能 end
+    // 2019/05/22  下午16:00  表格拖拽时获取拖拽后数组 目前有问题没有解决 上传用的都是原数组  start
+    changeTitle(e) {
+      this.tableTitleUp = this.tableTitle;
+      // this.tableTitle = e;
+      console.log(e);
+      console.log(this.tableTitle);
+    },
+    // 2019/05/22  下午16:00  表格拖拽时获取拖拽后数组 目前有问题没有解决 上传用的都是原数组  end
+    // 2019/05/22  下午16:00  新增删除当前方案功能  删除接口未接通 start
+    async deleteProgramme(item) {
+      // console.log(item);
+      // let paramsB = {mid:item.mid,id:item.configId}
+      // let res = await delUserConfig(paramsB);
+      // console.log(res);
+    },
+    // 2019/05/22  下午16:00  新增删除当前方案功能 删除接口未接通 end
+    // 2019/05/22  下午16:00  新增查询方案功能  查询未完成 start
+    chaxun(index) {
+      //
+      this.tValList = this.programmeDataList[index].queryTwoList;
+      this.inputData = this.programmeDataList[index].inputQueryData;
+      this.hiddenFieldsList[this.$route.params.id] = this.programmeDataList[
+        index
+      ].hiddenFieldsList;
+      // this.nowId = this.programmeDataList[index].configId;
+      console.log(this.programmeDataList[index]);
+    },
+    // 2019/05/22  下午16:00  新增修改当前方案功能 查询未完成end
+    // 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
+    changeSolution() {
+      // MessageBox.prompt('请输入方案名称', '提示', {
+      //     confirmButtonText: '确定',
+      //     cancelButtonText: '取消'
+      //   }).then(({ value }) => {
+      // 			var reg =  /^\s*$/g;
+      // 			if(reg.test(value) || value == null || value == ""){
+      // 				message.errorMessage('方案名称不能为空')
+      // 				return;
+      // 			}else{
+      // 				this.programme = value.replace(/\s+/g,"");
+      //
+      // 				let programmeList = {
+      // 					// hiddenFieldsList : this.hiddenFieldsListA,
+      // 					// queryTwoList : this.query2List,
+      // 					// inputQueryData : this.inputQueryData,
+      // 					// programName : this.programme,
+      // 					// mid : parseInt(this.$route.params.id),
+      // 					// dropTable:this.tableTitleUp,
+      // 					// id:this.nowId
+      // 				}
+      // 				console.log(programmeList)
+      //
+      // 				upUserConfig(programmeList).then(res=>{
+      // 					console.log(res);
+      // 					if(res.code == 200){
+      // 						message.successMessage('方案修改成功')
+      // 					}else{
+      // 						message.errorMessage(res.msg)
+      // 					}
+      // 				})
+      //
+      // 			}
+      //
+      //   })
+    },
+    // 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
+    // 2019/05/22  下午16:00  新增保存方案功能 start
+    saveSolution() {
+      MessageBox.prompt("请输入方案名称", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消"
+      }).then(({ value }) => {
+        var reg = /^\s*$/g;
+        if (reg.test(value) || value == null || value == "") {
+          message.errorMessage("方案名称不能为空");
+          return;
+        } else {
+          this.programme = value.replace(/\s+/g, "");
+
+          let programmeList = {
+            hiddenFieldsList: this.hiddenFieldsListA,
+            queryTwoList: this.query2List,
+            inputQueryData: this.inputQueryData,
+            programName: this.programme,
+            dropTable: this.tableTitle,
+            mid: parseInt(this.$route.params.id)
+          };
+          console.log(programmeList);
+
+          getConfMapUser(programmeList).then(res => {
+            console.log(res);
+            if (res.code == 200) {
+              message.successMessage("方案名称保存成功");
+            } else {
+              message.errorMessage(res.msg);
+            }
+          });
+        }
+      });
+    },
+    // 2019/05/22  下午16:00  新增保存方案功能 end
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
-			// 2019/05/22  下午16:00  获取下拉框query2组件内的值 用来上传 start
-			this.query2List = val;
-			// 2019/05/22  下午16:00  获取下拉框query2组件内的值 用来上传 end
-
+      // 2019/05/22  下午16:00  获取下拉框query2组件内的值 用来上传 start
+      this.query2List = val;
+      // 2019/05/22  下午16:00  获取下拉框query2组件内的值 用来上传 end
     },
     //table按钮选择 传参
     checkboxValue: function(value) {
@@ -360,7 +389,7 @@ export default {
     },
     //点击查询获得table的值
     async search() {
-			console.log(this.data);
+      console.log(this.data);
       this.pagination(this.data);
     },
     queryPage(data) {
@@ -387,15 +416,24 @@ export default {
       // this.queryIds = [];
     },
     getForm($event) {
-      this.form = $event[0];
-      this.form_data_model = this.form.data_model;
+      switch (this.form_editing) {
+        case "add":
+          this.add.form = $event[0];
+          break;
+        case "update":
+          this.update.form = $event[0];
+          break;
+      }
+      console.log(this.add.form);
+      
+      // this.form_data_model = this.form.data_model;
     },
     //根据勾选的表头字段id去隐藏对应字段
     hideField($event) {
       let list = $event[0];
-			// 2019/05/22  下午16:00  新增一个数组用来接收隐藏字段选择后得到的数组 用来保存方案时上传 start
-			this.hiddenFieldsListA = list;
-			// 2019/05/22  下午16:00  新增一个数组用来接收隐藏字段选择后得到的数组 用来保存方案时上传 end
+      // 2019/05/22  下午16:00  新增一个数组用来接收隐藏字段选择后得到的数组 用来保存方案时上传 start
+      this.hiddenFieldsListA = list;
+      // 2019/05/22  下午16:00  新增一个数组用来接收隐藏字段选择后得到的数组 用来保存方案时上传 end
       if (!list) {
         return;
       } else {
@@ -415,8 +453,8 @@ export default {
     },
     openDialog_add() {
       console.log("新增");
-      this.add.visible = true;
       this.form_editing = "add";
+      this.add.visible = true;
     },
     passData_add($event) {
       console.log($event);
@@ -455,9 +493,9 @@ export default {
         message.infoMessage("只能选中一条数据");
         return;
       }
+      this.form_editing = "update";
       this.update.formData = this.multipleSelection[0];
       this.update.visible = true;
-      this.form_editing = "update";
     },
     passData_update($event) {
       console.log($event);
@@ -568,24 +606,25 @@ export default {
     }
   },
   async created() {
-		 // 2019/05/22  下午16:00  添加内容创建时去请求方案的数据 用来填充赋值 start
-		let paramsA = {mid:parseInt(this.$route.params.id)};
-		getUserConfig(paramsA).then(res=>{
-			console.log(res);
-			if(res.data.length>0){
-				console.log('222');
-				this.programmeDataList = res.data;
-				let pIndex = this.programmeDataList.length - 1;
-				console.log(pIndex);
-				this.tValList = this.programmeDataList[pIndex].queryTwoList;
-				this.inputData = this.programmeDataList[pIndex].inputQueryData;
-				this.hiddenFieldsList[this.$route.params.id] =  this.programmeDataList[pIndex].hiddenFieldsList ;
-				// this.nowId = this.programmeDataList[0].configId;
-			
-			}
-		})
-		 // 2019/05/22  下午16:00  添加内容创建时去请求方案的数据 用来填充赋值 end
-		
+    // 2019/05/22  下午16:00  添加内容创建时去请求方案的数据 用来填充赋值 start
+    let paramsA = { mid: parseInt(this.$route.params.id) };
+    getUserConfig(paramsA).then(res => {
+      console.log(res);
+      if (res.data.length > 0) {
+        console.log("222");
+        this.programmeDataList = res.data;
+        let pIndex = this.programmeDataList.length - 1;
+        console.log(pIndex);
+        this.tValList = this.programmeDataList[pIndex].queryTwoList;
+        this.inputData = this.programmeDataList[pIndex].inputQueryData;
+        this.hiddenFieldsList[this.$route.params.id] = this.programmeDataList[
+          pIndex
+        ].hiddenFieldsList;
+        // this.nowId = this.programmeDataList[0].configId;
+      }
+    });
+    // 2019/05/22  下午16:00  添加内容创建时去请求方案的数据 用来填充赋值 end
+
     this.initOperateBtn();
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
@@ -597,10 +636,8 @@ export default {
 
     // this.add.customField = deepClone(this.customField);
     // this.update.customField = deepClone(this.customField);
-
   },
-  async mounted() {
-  }
+  async mounted() {}
 };
 </script>
 
@@ -624,8 +661,8 @@ main {
   overflow-y: scroll;
   padding-right: 15px;
 }
-.dis_fex{
-	display: inline-block;
+.dis_fex {
+  display: inline-block;
 }
 // .fieldShow {
 //   position: absolute;

@@ -116,7 +116,7 @@ export default {
 		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  start
 		inputData :{
 		  type: Object,
-		  default: {}
+		  default: ()=>({})
 		},
 		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  end
 	},
@@ -280,7 +280,6 @@ export default {
         }
       }
       this.$emit("changeQuery", [data_model]);
-      console.log(data_model);
     },
     setSysLogInclude(id){
       if(this.sysLogNotInclude.includes(id)){
@@ -292,9 +291,11 @@ export default {
     this.updateTableTitle();
     this.setSysLogInclude(+this.$route.params.id)
 		// 2019/05/22  下午16:00  添加内容 填充搜索框内容  start
-		this.data_model = this.inputData;
+		// this.data_model = this.inputData;
 		// 2019/05/22  下午16:00  添加内容 填充搜索框内容  end
-		
+		if(this.inputData.systemLogStatus){
+      this.data_model = this.inputData;
+    }
   },
 	mounted () {
 		

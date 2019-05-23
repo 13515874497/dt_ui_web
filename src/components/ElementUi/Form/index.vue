@@ -38,12 +38,12 @@
         :required="true"
         error="必填项"
       >
-        <el-select v-model="data_model[item.topType]" placeholder="请选择">
+        <el-select v-model="data_model[item.topType]" placeholder="请选择" >
           <el-option
             v-for="option in item.statusOptions"
             :key="option.id"
             :label="option.name"
-            :value="option.id"
+            :value="option"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -111,12 +111,13 @@
           :remoteMethod="item.remoteMethod"
           :clearable="item.remote"
           size="small"
+          @change="(val)=>{changeSelect(val,item)}"
         >
           <el-option
             v-for="option in item.data"
             :key="option[item.key]"
             :label="option[item.label]"
-            :value="option[item.key]"
+            :value="option[item.bindKey]"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -253,7 +254,7 @@ export default {
     },
     data_model: {
       async handler(val) {
-        this.$emit("giveForm", [this]);
+        
         this.triggerFormChange();
       },
       deep: true
@@ -283,11 +284,7 @@ export default {
               formItem.data = [];
               let res3 = await item.ajax();
               if (res3.code === 200) {
-                // if(res3.data.dataList){
                 formItem.data = res3.data.dataList || res3.data;
-                // }else {
-                //   formItem.data = res3.data;
-                // }
               }
               break;
             case 5:
@@ -346,13 +343,9 @@ export default {
               break;
           }
         });
-        console.log(this.formData);
-        console.log(this.data_model);
-
         for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
-        console.log(this.data_model);
       } else {
         //新增
         this.formItems_.forEach(item => {
@@ -444,6 +437,12 @@ export default {
     },
     async triggerFormChange() {
       this.passData(await this.isVerifyPass());
+    },
+    changeSelect(val,formItem){
+      let option = formItem.data.find(option=>{
+        return option[formItem.bindKey] === val;
+      })
+      this.data_model[formItem.topType] = option[formItem.label];
     }
   },
   async created() {
@@ -451,6 +450,7 @@ export default {
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();
+    this.$emit("giveForm", [this]);
   },
   mounted() {}
 };
