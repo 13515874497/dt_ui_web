@@ -184,6 +184,7 @@ export default {
     tableTitle: {
       handler(val) {
         this.table_title = val;
+				console.log(this.table_title)
       },
       immediate: true
     },
@@ -519,7 +520,7 @@ export default {
   async created() {
     let self = this;
     // this.table_title = [...this.tableTitle];
-
+console.log(this.table_title)
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();

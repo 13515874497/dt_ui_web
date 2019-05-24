@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main >
     <section id="printCheck" class="clearfix" v-if="showQuery && tableTitle.length">
       <el-row :gutter="24">
         <el-col :span="4">
@@ -38,7 +38,8 @@
 				</div>
 				<div class="dis_fex" style="margin-top: 20px;" v-if="showQuery">
 					<el-button type="primary" style="" size="mini" @click="saveSolution">新增查询方案</el-button>
-					<el-button type="primary" style="" size="mini" @click="changeSolution">修改当前方案</el-button>
+					<el-button type="primary" style="" size="mini" @click="changeSolution" v-if="programmeDataList.length>0">修改当前方案</el-button>
+					<el-button type="primary" style="" size="mini" @click="delAllSolution" v-if="programmeDataList.length>0">删除全部方案</el-button>
 					<div style="display: inline-block;position: relative;" v-for="(item, index) in programmeDataList">
 						<el-button type="primary" style="padding-right: 25px;margin-right: 5px;" size="mini" @click="chaxun(index)"  :key="index">方案{{item.programName}}</el-button>
 						 <span style="position: absolute;right: 8px;top: 8px;background-color:white ;color: #AAAAAA;border-radius: 8px;" class="el-icon-circle-close" @click="deleteProgramme(item)"></span>
@@ -132,6 +133,7 @@ import {
   upUserConfig
 } from "@/api";
 export default {
+	inject: ["reload"],
   data() {
     return {
       page: {
@@ -148,6 +150,7 @@ export default {
       programmeDataList: [], //所有方案总和
       loading: false,
       queryIds: [],
+			configIdList:[],//全部删除时使用的id集合
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
@@ -279,19 +282,33 @@ export default {
 			this.hiddenFieldsList[this.$route.params.id] = data[index].hiddenFieldsList;
 			this.nowId = data[index].configId;
 			this.tableTitle = data[index].dropTable;
+			console.log(this.tValList);
+			console.log(this.inputData);
 		},
 		// 2019/05/23  下午17:00  方案赋值使用的数据提公  end
 		// 2019/05/22  下午16:00  新增删除当前方案功能  删除接口未接通 start
 		async deleteProgramme(item){
 			let paramsB = {mid:item.mid,configIds:[item.configId]}
 			let res = await delUserConfig(paramsB);
+			if(res.code == 200){
+				this.reload();
+			}
 		},
 		// 2019/05/22  下午16:00  新增删除当前方案功能 删除接口未接通 end
+		// 2019/05/24  下午13:00  全部删除 start
+		async delAllSolution(){
+			let paramsB = {mid:parseInt(this.$route.params.id),configIds:this.configIdList}
+			let res = await delUserConfig(paramsB);
+			if(res.code == 200){
+				this.reload();
+			}
+		},
+		// 2019/05/24  下午13:00  全部删除 end
 		// 2019/05/22  下午16:00  新增查询方案功能  查询未完成 start
 		chaxun(index){
 			// 
 			this.programData(index,this.programmeDataList);
-			console.log(this.programmeDataList[index])
+			console.log(this.programmeDataList)
 		},
 		// 2019/05/22  下午16:00  新增修改当前方案功能 查询未完成end
 		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
@@ -323,13 +340,7 @@ export default {
 								console.log(res);
 								if(res.code == 200){
 									message.successMessage('方案修改成功');
-									let paramsA = {mid:parseInt(this.$route.params.id)};
-									getUserConfig(paramsA).then(res=>{
-										if(res.data.length>0){
-											this.programmeDataList = res.data;
-											this.programData(0,this.programmeDataList);
-										}
-									})
+									this.reload();
 								}else{
 									message.errorMessage(res.msg)
 								}
@@ -342,6 +353,7 @@ export default {
 		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
 		// 2019/05/22  下午16:00  新增保存方案功能 start
 		saveSolution(){
+			console.log(this.tableTitleUp)
 			MessageBox.prompt('请输入方案名称', '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消'
@@ -367,13 +379,7 @@ export default {
 								console.log(res);
 								if(res.code == 200){
 									message.successMessage('方案名称保存成功');
-									let paramsA = {mid:parseInt(this.$route.params.id)};
-									getUserConfig(paramsA).then(res=>{
-										if(res.data.length>0){
-											this.programmeDataList = res.data;
-											this.programData(0,this.programmeDataList);
-										}
-									})
+									this.reload();
 								}else{
 									message.errorMessage(res.msg)
 								}
@@ -624,35 +630,42 @@ export default {
       ];
     }
   },
-  async created() {
+	async created() {
 		 // 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 start
-		 this.tableTitleIs =
-		 	  (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+		 
+		this.tableTitle =
+		 	  (await requestAjax.requestGetHead(this.$route.params.id));
+				
+				this.initOperateBtn();
 				
 		let paramsA = {mid:parseInt(this.$route.params.id)};
-		getUserConfig(paramsA).then(res=>{
-			this.abccd = true;
-			if(res.data.length>0){
-				this.programmeDataList = res.data;
-				this.programData(0,this.programmeDataList);
+			
+		let res = await getUserConfig(paramsA);
+		if(res.code == 200 && res.data.length>0){
+			this.programmeDataList = res.data;
+			this.programData(0,this.programmeDataList);
+			for(let i=0;i<this.programmeDataList.length;i++){
+				this.configIdList.push(this.programmeDataList[i].configId)
 			}
-			else{
-				this.tableTitle = [...this.tableTitleIs];
-			}
-		})
-		// 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 end
+			this.query2List = this.programmeDataList[0].queryTwoList;
+			
+		}
+
 		this.tableTitle_show = [...this.tableTitle];
 		this.tableTitleUp = [...this.tableTitle];
-    this.initOperateBtn();
-    this.pagination(this.data);
+		this.pagination(this.data);
 		this.add.customField = [...this.customField];
 		this.update.customField = [...this.customField];
 		this.add.customField = deepClone(this.customField);
 		this.update.customField = deepClone(this.customField);
-    this.add.customField = deepClone(this.customField);
-    this.update.customField = deepClone(this.customField);
-  },
-  async mounted() {}
+		this.add.customField = deepClone(this.customField);
+		this.update.customField = deepClone(this.customField);
+		
+		console.log(this.query2List)
+		// 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 end
+					
+	  
+	}
 };
 </script>
 
