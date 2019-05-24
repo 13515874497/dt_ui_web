@@ -185,7 +185,16 @@ export default {
           this.initValue(item);
         }
       });
-    }
+    },
+		// 2019/05/24  下午16:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 start
+		inputData : {
+			handler(val){//添加初始化数据函数 点击方案按钮切换方案时用来显示数据
+				this.inputData = val;
+				this.initInput();
+			}
+		}
+		// 2019/05/24  下午16:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 end
+		
   },
   computed: {
     //直接调用表格的查询 这里改下配置就是模糊查询
@@ -299,7 +308,6 @@ export default {
 					this.data_model[key] = this.data_model.systemLogStatus[key] ;
 				  
 				}
-				console.log(this.data_model);
 			}
 		}
 		// 2019/05/23  下午17:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 end
@@ -307,13 +315,10 @@ export default {
   created() {
     this.updateTableTitle();
     this.setSysLogInclude(+this.$route.params.id)
-		
-		// 2019/05/23  下午16:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 start
-		this.initInput();//添加初始化数据函数 点击方案按钮切换方案时用来显示数据
-		// 2019/05/23  下午16:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 end
-		
   },
-  mounted() {}
+  mounted() {
+		// this.initInput();
+	}
 };
 </script>
 
