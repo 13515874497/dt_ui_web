@@ -1,4 +1,5 @@
 <template>
+    <!-- 待审核 -->
      <div class="auBoxs">
       <!-- 做搜索功能 -->
       <div class="searBox" style="width:100%;display:flex;margin-bottom:10px">
@@ -118,6 +119,7 @@ Vue.filter("dateformat", function(dataStr, pattern = "YYYY-MM-DD HH:mm:ss") {
   return moment(dataStr).format(pattern);
 });
 export default {
+  inject: ["reload"],
   data() {
     return {
       tableData: [], //表信息
@@ -138,7 +140,7 @@ export default {
       let params = {
         currentPage: this.page.pageNo,
         pageSize: this.page.pageSize,
-        uuidNumber: this.query
+        strQuery: this.query
       };
       console.log(params);
 
@@ -213,6 +215,7 @@ export default {
         if (res.code == 200) {
           message.successMessage("审核成功");
         }
+        this.reload()
       });
       this.textarea = "";
       this.dialogVisible = false;
