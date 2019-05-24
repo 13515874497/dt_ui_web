@@ -583,15 +583,21 @@ export default {
 		 // 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 start
 		 this.tableTitleIs =
 		 	  (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+				console.log(this.tableTitleIs)
 		let paramsA = {mid:parseInt(this.$route.params.id)};
 		getUserConfig(paramsA).then(res=>{
 			if(res.data.length>0){
+				console.log('111')
 				this.programmeDataList = res.data;
 				this.programData(0);
-			}else{
-				this.tableTitle = this.tableTitleIs;
 			}
 		})
+		
+		if(this.programmeDataList.length < 1){
+			console.log('222')
+			this.tableTitle = [...this.tableTitleIs];
+			console.log(this.tableTitle)
+		}
 		// 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 end
 		
     this.initOperateBtn();
