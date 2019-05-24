@@ -113,13 +113,15 @@ export default {
     selectedIds: Array, //用户要筛选的条件
     querySuggestionsMethod: Function, //查询搜索建议的方法
     querySuggestionsConfig: Object, //模糊查询的配置对象
-    // 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  start
-    inputData: {
-      type: Object,
-      default: {}
-    }
-    // 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  end
-  },
+		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  start
+		inputData :{
+		  type: Object,
+		  default:function(){
+					return {}
+			}
+		},
+		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  end
+	},
   data() {
     return {
       data: [],
@@ -233,9 +235,11 @@ export default {
           tableTitle._isShow = true;
         }
       }
-      // 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  start
-      this.changeQuery();
-      // 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  end
+			
+			// 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  start
+			this.initInput();//添加初始化数据函数 点击方案按钮切换方案时用来显示数据
+			this.changeQuery();
+			// 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  end
     },
     //查询 搜索建议下拉列表
     async getQuerySuggestions(queryString, cb) {
@@ -286,14 +290,29 @@ export default {
       if (this.sysLogNotInclude.includes(id)) {
         this.sysLogInclude.length = 0;
       }
-    }
+    },
+		// 2019/05/23  下午17:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 start
+		initInput(){
+			if(this.inputData.systemLogStatus){
+				this.data_model = {...this.inputData};
+				console.log(this.data_model)
+				for (let key in this.data_model.systemLogStatus) {
+					this.data_model[key] = this.data_model.systemLogStatus[key] ;
+				  
+				}
+				console.log(this.data_model);
+			}
+		}
+		// 2019/05/23  下午17:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 end
   },
   created() {
     this.updateTableTitle();
-    this.setSysLogInclude(+this.$route.params.id);
-    // 2019/05/22  下午16:00  添加内容 填充搜索框内容  start
-    this.data_model = this.inputData;
-    // 2019/05/22  下午16:00  添加内容 填充搜索框内容  end
+    this.setSysLogInclude(+this.$route.params.id)
+		
+		// 2019/05/23  下午16:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 start
+		this.initInput();//添加初始化数据函数 点击方案按钮切换方案时用来显示数据
+		// 2019/05/23  下午16:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 end
+		
   },
   mounted() {}
 };
