@@ -102,7 +102,7 @@ export default {
       this.$router.push('/index/userfeedback')
     },
     hh(){
-      console.log('管理')
+      console.log('管理员待审核页面')
        this.$router.push('/index/audit')
     }
     

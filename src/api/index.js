@@ -782,6 +782,15 @@ export const review = ({
   tid,
   auditor
 },'post')
+
+//查看已审核页面http://127.0.0.1:9001/api/v1/fee/selProcessHistory?pageSize=3&currentPage=1
+export const selProcessHistory = ({
+  currentPage,
+  pageSize,
+}) => ajax(BASE_URL + '/fee/selProcessHistory', {
+  currentPage,
+  pageSize,
+})
 //表格方案保存
 export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',data, 'POST')
 
