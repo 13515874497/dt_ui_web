@@ -4,9 +4,10 @@
       <Form
         :formItems="formItems_parent"
         @passData="passData"
-        @giveDataModel="getDataModel"
+        @giveForm="getForm"
         :rule="rule"
         :customField="customField"
+        :reset="reset"
       ></Form>
     </section>
     <section>
@@ -15,10 +16,13 @@
       </el-radio-group>
       <Table
         :editable="true"
+        :height="300"
         :tableTitle="tableTitle_children"
         :tableData="tableData_children"
         :customField_table="customField_table"
+        @giveTable="getTable"
       ></Table>
+      <OperateBtn :operateList="operateList"></OperateBtn>
     </section>
     <section></section>
   </div>
@@ -34,6 +38,7 @@
 
 <script>
 import Table from "@/components/ElementUi/Table";
+import OperateBtn from "@/components/ElementUi/OperateBtn";
 export default {
   props: {
     visible: Boolean,
@@ -42,25 +47,31 @@ export default {
       type: Array,
       required: true
     },
-    data: {
-      //[true,{},[]]接收表头锁对于的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
+    data: {//[true,{},[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
       type: Array
     },
-    rule: { 
+    
+    rule: {  //form表单自定义验证的规则
       type: Object,
       default: () => ({})
     },
-    customField: {
+    
+    customField: {//form自定义显示字段
       type: Array,
       default: () => []
     },
     customField_table: {
       type: Array,
       default: () => []
+    },
+    reset: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
-    Table
+    Table,
+    OperateBtn
   },
   data() {
     return {
@@ -69,12 +80,13 @@ export default {
         name: this.$route.params.name
       },
       dialogVisible: false, //是否显示该组件
-      form_data_model: null,
+      form: null,
+      form_data_model:null,
       formItems_parent: [],
       formData_parent: null,
       tableTitle_children: [],
       tableData_children: [],
-      radio: this.$route.params.name
+      radio: this.$route.params.name,
     };
   },
   computed: {
@@ -105,6 +117,20 @@ export default {
     }
   },
   methods: {
+     initOperateBtn() {
+      let self = this;
+      this.operateList = [
+        //对已上传的文件进行操作的按钮列表
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "新增",
+          fn() {
+            self.addRow();
+          }
+        }
+      ];
+    },
     close() {
       this.$emit("close", [true]);
     },
@@ -133,13 +159,26 @@ export default {
       console.log($event);
     },
     //form表单中的数据
-    getDataModel($event){
-      this.form_data_model = $event[0];
-      this.$emit("giveDataModel", [this.form_data_model]);
+    //获取表单组件对象
+    getForm($event){
+      this.form = $event[0];
+      this.form_data_model = this.form.data_model;
+      this.$emit("giveForm", [this.form]);
+    },
+    //获取表格组件对象
+    getTable($event){
+      this.table = $event[0];
+      this.$emit('giveTable',[this.table]);
+    },
+    //点击新增给表格加一行空数据
+    addRow(){
+      // let row = 
+      console.log(this.tableTitle_children);
+      
     }
   },
   created() {
-    console.log(this.page);
+    this.initOperateBtn();
   }
 };
 </script>

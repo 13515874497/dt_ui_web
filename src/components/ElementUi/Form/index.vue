@@ -11,7 +11,7 @@
     class="form-content scrollbar"
     :inline="true"
   >
-    <template v-for="item in formItems_">
+    <template v-for="(item,index) in formItems_">
       <el-form-item
         v-if="item.statusOptions && item.statusOptions.length == 2"
         :label="item.headName"
@@ -38,12 +38,12 @@
         :required="true"
         error="必填项"
       >
-        <el-select v-model="data_model[item.topType]" placeholder="请选择">
+        <el-select v-model="data_model[item.topType]" placeholder="请选择" >
           <el-option
             v-for="option in item.statusOptions"
             :key="option.id"
             :label="option.name"
-            :value="option.id"
+            :value="option"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -94,7 +94,7 @@
           size="small"
           controls-position="right"
         ></el-input-number>
-      </el-form-item> -->
+      </el-form-item>-->
 
       <el-form-item
         v-else-if="item.inputType == 3"
@@ -108,15 +108,16 @@
           :placeholder="item.placeholder || '请选择'"
           :filterable="item.filterable"
           :remote="item.remote"
-          :remoteMethod="item.remoteMethod($event,item)"
+          :remoteMethod="item.remoteMethod"
           :clearable="item.remote"
           size="small"
+          @change="(val)=>{changeSelect(val,item)}"
         >
           <el-option
             v-for="option in item.data"
             :key="option[item.key]"
             :label="option[item.label]"
-            :value="option[item.key]"
+            :value="option[item.bindKey]"
           ></el-option>
         </el-select>
       </el-form-item>
@@ -244,6 +245,7 @@ export default {
     formItems() {
       // this.initData_model();
     },
+    
     formData() {
       this.initData_model();
     },
@@ -252,48 +254,10 @@ export default {
     },
     data_model: {
       async handler(val) {
-        // console.log(val);
-        // this.passData(await this.isVerifyPass());
-        this.$emit("giveDataModel", [val]);
+        
         this.triggerFormChange();
       },
       deep: true
-    },
-    customField: {
-      deep: true,
-      handler(val) {
-        console.log(val);
-        //如果只能在外部提供数据(即customField里提供了data属性)  则需要将当前的数据赋值给该组件formItems中对应的字段
-        let index = this.formItems_.findIndex(formItem => {
-          return formItem.topType === val.currField;
-        });
-
-        let custom = val.find(formItem => {
-          return formItem.topType === val.currField;
-        });
-        this.formItems_[index].data = custom.data;
-        //如果改变了搜索条件  则重新判断检测的id是否在搜索结果中
-        var a = custom.data.findIndex(item => {
-          return item[custom.bindKey] === this.data_model[custom.bindKey];
-        });
-
-        if (this.data_model[custom.bindKey] != null) {
-          if (
-            custom.data.findIndex(item => {
-              return item[custom.bindKey] === this.data_model[custom.bindKey];
-            }) === -1
-          ) {
-            this.data_model[custom.bindKey] = null;
-          }
-        }
-
-        // if (this.data_model[custom.bindKey] && val.currQuery === "") {
-        //   this.data_model[custom.bindKey] = null;
-        // }
-
-        // this.$set(this.$data.formItems_[index], "data", custom.data);
-        this.formItems_ = [...this.formItems_]; //触发下更新
-      }
     }
   },
   methods: {
@@ -314,17 +278,13 @@ export default {
           for (let key in item) {
             formItem[key] = item[key];
           }
-          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
+          if (item.remote) continue; //如果请求需要参数 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
           switch (item.inputType) {
             case 3:
               formItem.data = [];
               let res3 = await item.ajax();
               if (res3.code === 200) {
-                // if(res3.data.dataList){
                 formItem.data = res3.data.dataList || res3.data;
-                // }else {
-                //   formItem.data = res3.data;
-                // }
               }
               break;
             case 5:
@@ -372,6 +332,7 @@ export default {
           });
           switch (item.inputType) {
             case 3:
+              break;
             case 5:
               this.data_model[item.data_model] = getTreePath(
                 this.formData[item.bindKey],
@@ -382,13 +343,9 @@ export default {
               break;
           }
         });
-        console.log(this.formData);
-        console.log(this.data_model);
-
         for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
-        console.log(this.data_model);
       } else {
         //新增
         this.formItems_.forEach(item => {
@@ -396,12 +353,7 @@ export default {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
           } else {
             switch (item.inputType) {
-              case 1:
-                break;
-
-                self.$set(this.data_model, item.topType, 0.00);
               default:
-                
                 self.$set(this.data_model, item.topType, null);
                 break;
             }
@@ -485,6 +437,12 @@ export default {
     },
     async triggerFormChange() {
       this.passData(await this.isVerifyPass());
+    },
+    changeSelect(val,formItem){
+      let option = formItem.data.find(option=>{
+        return option[formItem.bindKey] === val;
+      })
+      this.data_model[formItem.topType] = option[formItem.label];
     }
   },
   async created() {
@@ -492,6 +450,7 @@ export default {
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();
+    this.$emit("giveForm", [this]);
   },
   mounted() {}
 };

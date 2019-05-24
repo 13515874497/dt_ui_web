@@ -290,7 +290,7 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, d
 //出货通知单分页
 export const getNotice = (data) => ajax(BASE_URL + `/no/getNotice`, data, 'POST')
 //根据skuId获取 数据/api/v1/product/getProductAdnSku?skuId=1
-export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data)
+export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data,'GET',[false,'请求失败'])
 
 
 
@@ -782,6 +782,15 @@ export const review = ({
   tid,
   auditor
 },'post')
+
+//查看已审核页面http://127.0.0.1:9001/api/v1/fee/selProcessHistory?pageSize=3&currentPage=1
+export const selProcessHistory = ({
+  currentPage,
+  pageSize,
+}) => ajax(BASE_URL + '/fee/selProcessHistory', {
+  currentPage,
+  pageSize,
+})
 //表格方案保存
 export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',data, 'POST')
 

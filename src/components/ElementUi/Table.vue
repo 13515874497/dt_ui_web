@@ -1,7 +1,7 @@
 <template>
   <el-table
-    :data="tableData"
-    height="500"
+    :data="table_data"
+    :height="height"
     :span-method="spanMethod"
     @selection-change="handleSelectionChange"
     stripe
@@ -32,6 +32,7 @@
           :show-overflow-tooltip="true"
           :key="Math.random()"
           :column-key="index.toString()"
+          min-width="150"
         >
           <template slot-scope="scope">
             <span class="editting" v-if="editable">
@@ -40,12 +41,13 @@
                 :placeholder="title.placeholder || '请选择'"
                 :filterable="title.filterable"
                 :remote="title.remote"
-                :remoteMethod="title.remoteMethod($event,title)"
+                :remoteMethod="(val)=>{title.remoteMethod(val,scope.row)}"
                 :clearable="title.remote"
                 size="small"
+                @change="val=>{changeSelect(val,title,scope.row,title.changeSel)}"
               >
                 <el-option
-                  v-for="option in title.data"
+                  v-for="option in scope.row[title.topType+'_data_']"
                   :key="option[title.key]"
                   :label="option[title.label]"
                   :value="option[title.key]"
@@ -144,13 +146,17 @@ export default {
       options: {}, //存放各种类型的状态
       table_title: [],
       table_data: [],
-			table_title_two:[]
+      table_title_two: []
     };
   },
   props: {
+    height: {
+      type: Number,
+      default: 500
+    },
     tableData: Array,
     tableTitle: Array,
-		tableTitleTwo:Array,
+    tableTitleTwo: Array,
     mode: Number, //在table中表示  需要合并父表的数据  (1普通的表格  2多表合并的表格（需要合并父数据）)
     showOperate: {
       //是否在最右侧显示操作字段
@@ -184,16 +190,19 @@ export default {
     tableData: {
       // this.setRepeatField();
       handler(val) {
+        // if (this.editable) {
         this.table_data = deepClone(val);
+        this.initCustomField();
+        // }
       },
       immediate: true
     },
-		tableTitleTwo:{
-			handler(val) {
-			  this.table_title_two = deepClone(val);
-			},
-			immediate: true
-		}
+    tableTitleTwo: {
+      handler(val) {
+        this.table_title_two = deepClone(val);
+      },
+      immediate: true
+    }
     // tableData() {
     //   this.setRepeatField();
     // }
@@ -201,19 +210,19 @@ export default {
   methods: {
     columnDrop() {
       var wrapperTr = this.$el.querySelector(".el-table__header-wrapper tr");
-      var oldIndex, newIndex, oldItem, newItem,trIndex;
+      var oldIndex, newIndex, oldItem, newItem, trIndex;
       this.sortable = Sortable.create(wrapperTr, {
         animation: 180,
         delay: 0,
         onUpdate: evt => {
-					// 2019/05/23 下午 14:00 判断拖拽的dom数组内与数据数组一致的元素从第几位开始  start
-					for(var i=0;i<wrapperTr.children.length;i++){
-						if(!(wrapperTr.children[i].innerText == "")){
-							trIndex = i ;
-							break;
-							}	
-					}
-					// 2019/05/23 下午 14:00 判断拖拽的dom数组内与数据数组一致的元素从第几位开始  end
+          // 2019/05/23 下午 14:00 判断拖拽的dom数组内与数据数组一致的元素从第几位开始  start
+          for (var i = 0; i < wrapperTr.children.length; i++) {
+            if (!(wrapperTr.children[i].innerText == "")) {
+              trIndex = i;
+              break;
+            }
+          }
+          // 2019/05/23 下午 14:00 判断拖拽的dom数组内与数据数组一致的元素从第几位开始  end
           var $li = wrapperTr.children[evt.newIndex],
             $oldLi = wrapperTr.children[evt.oldIndex];
 
@@ -227,11 +236,11 @@ export default {
           newIndex = evt.newIndex - trIndex;
           var item = this.table_title.splice(oldIndex, 1);
           this.table_title.splice(newIndex, 0, item[0]);
-					// 2019/05/23 下午 15:00 增加新变量接受父组件传来全数据值 用于上传   start
-					var itemTwo = this.table_title_two.splice(oldIndex, 1);
-					this.table_title_two.splice(newIndex, 0, itemTwo[0]);
+          // 2019/05/23 下午 15:00 增加新变量接受父组件传来全数据值 用于上传   start
+          var itemTwo = this.table_title_two.splice(oldIndex, 1);
+          this.table_title_two.splice(newIndex, 0, itemTwo[0]);
           this.$emit("changeTitle", this.table_title_two);
-					// 2019/05/23 下午 15:00 增加新变量接受父组件传来全数据值 用于上传   end
+          // 2019/05/23 下午 15:00 增加新变量接受父组件传来全数据值 用于上传   end
         },
         onEnd: evt => {}
       });
@@ -304,12 +313,12 @@ export default {
     setHeaderMinWidth(column) {
       //挂在到页面上从而获取宽度
       let TextWidth = this.getTempDomWidth(column.label);
-      let minWidth = TextWidth + 20;
+      let minWidth = TextWidth + 24;
       //如果有排序的图标则加24  排序的箭头宽度 26
       if (column.sortable) {
         minWidth += 26;
       }
-      column.minWidth = minWidth;
+      column.minWidth = minWidth < column.minWidth ? column.minWidth : minWidth;
       column.width = column.width < minWidth ? minWidth : column.width;
     },
     //当拖动表头改变了列的宽度的时候会触发该事件
@@ -358,7 +367,7 @@ export default {
         return false;
       });
     },
-    //创建外层的临时dom  用来存放临时的span
+    //创建外层的临时dom  用来存放临时的span 用于计算表头宽度
     createTempWarpdom() {
       this.tempDiv = document.createElement("div");
       this.tempDiv.style.cssText =
@@ -434,53 +443,90 @@ export default {
           resolve(null);
           return;
         }
-
         for (let i = 0; i < self.customField_table.length; i++) {
-          let item = self.customField_table[i];
-
-          let title = self.titles_.find(title => {
-            return title.topType === item.topType;
+          let cusItem = self.customField_table[i];
+          let title = self.table_title.find(title => {
+            return title.topType === cusItem.topType;
           });
-          for (let key in item) {
-            title[key] = item[key];
-          }
-          if (item.data) continue; //如果写了data 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的titles_上
-          switch (item.inputType) {
-            case 3:
-              title.data = [];
-              let res3 = await item.ajax();
-              if (res3.code === 200) {
-                // if(res3.data.dataList){
-                title.data = res3.data.dataList || res3.data;
-                // }else {
-                //   title.data = res3.data;
-                // }
-              }
-              break;
-            case 5:
-              title.data = [];
-              let res = await item.ajax();
-              if (res.code === 200) {
-                title.data = res.data;
-              }
-              self.data_model[item.data_model] = [];
-              break;
+          for (let key in cusItem) {
+            title[key] = cusItem[key];
           }
         }
+        for (let i = 0; i < self.table_data.length; i++) {
+          let row = self.table_data[i];
+          await self.bindRow_data_(row);
+        }
+        console.log("我后面执行");
 
         //等待前方全部请求完毕
         resolve(null);
       });
     },
+    //如果数据中有如select、级联等需要数据选择的   需要给每行数据绑定下拉框list
+    async bindRow_data_(row) {
+      let self = this;
+      return new Promise(async (resolve, reject) => {
+        if (!self.customField_table) {
+          resolve(null);
+          return;
+        }
+        for (let i = 0; i < self.customField_table.length; i++) {
+          let cusItem = self.customField_table[i];
+          let tempKey = cusItem.topType + "_data_";
+          if(row[tempKey]) continue;
+          row[tempKey] = [];
+          // if (cusItem.remote) continue;
+          switch (cusItem.inputType) {
+            case 3:
+              if (cusItem.remote) {
+                cusItem.remoteMethod('',row);
+              } else {
+                let res3 = await cusItem.ajax();
+                if (res3.code === 200) {
+                  row[tempKey] = res3.data.dataList || res3.data;
+                }
+                break;
+              }
+
+            // case 5:
+            //   let res = await cusItem.ajax();
+            //   if (res.code === 200) {
+            //      row[tempKey]  = res.data;
+            //   }
+            //   self.data_model[cusItem.data_model] = [];
+            //   break;
+          }
+        }
+        resolve(null);
+      });
+    },
+    changeSelect(val, title, row, cb) {
+      console.log(val, title, row);
+      let option = row[title.topType + "_data_"].find(option => {
+        return option[title.bindKey] === val;
+      });
+      console.log(option);
+
+      row[title.topType] = option[title.label];
+      if (cb) {
+        cb(val, row, title);
+      }
+      // console.log();
+
+      // this.table_data = [...this.table_data]
+    }
   },
   async created() {
     let self = this;
     // this.table_title = [...this.tableTitle];
-	
+
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
     await this.initCustomField();
+    if (this.editable) {
+      this.$emit("giveTable", [this]);
+    }
   },
 
   mounted() {

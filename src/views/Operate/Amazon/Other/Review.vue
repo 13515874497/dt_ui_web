@@ -16,6 +16,7 @@ export default {
       customField: [
         shopName,
         siteName,
+        starLevelName,
         //sku
         {
           inputType: 3,
@@ -27,11 +28,10 @@ export default {
           filterable: true,
           placeholder: "输入选择sku,需鼠标点击",
           remoteMethod: this.getSkuList,
-          data: []
         },
       ],
       rule: {
-      }
+      },
     };
   },
   watch: {
@@ -82,36 +82,25 @@ export default {
       }
     },
     //获取输入获取sku列表
-    async getSkuList(query,formItem) {
-      console.log(query);
-      console.log(formItem);
+    async getSkuList(query) {
+      console.log(this.form);
       
-      let data = this.form_data_model;
-      if (data.shopId && data.siteId) {
+      let data_model = this.form.data_model;
+      console.log(data_model);
+      
+      let formItems_ = this.form.formItems_;
+      let formItem = formItems_.find(formItem=>{
+        return formItem.topType === 'sku'
+      });
+      if (data_model.shopId && data_model.siteId){
         let res = await getSkuName({
-          sId: data.shopId,
-          seId: data.siteId,
+          sId: data_model.shopId,
+          seId: data_model.siteId,
           kuName: query
         });
-        console.log(res);
         if (res.code === 200) {
-          console.log(res);
-          let customField = null;
-          switch (this.form_editing) {
-            case "add":
-              customField = this.add.customField;
-              break;
-            case "update":
-              customField = this.update.customField;
-              break;
-          }
-          let item =  customField.find(item => {
-            return item.topType === "sku";
-          });
-
-          item.data = res.data;
-          customField.currField = "sku"; //告诉子组件当前修改的字段是 'sku'
-          customField.currQuery = query;
+          formItem.data = res.data
+          this.form.formItems_ = [...this.form.formItems_]
         }
       }
     },
@@ -136,7 +125,7 @@ export default {
   async created() {
     this.setRule();
     // let res = await findByListStarLevel();
-    console.log(res);
+    // console.log(res);
   }
 };
 </script>

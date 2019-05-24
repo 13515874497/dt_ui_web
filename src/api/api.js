@@ -2,6 +2,7 @@
 包含N个接口请求函数的模块
  */
 import ajax from './ajax'
+
 // import {
 //   rejects
 // } from 'assert';
@@ -9,6 +10,7 @@ import ajax from './ajax'
 export const BASE_URL = '/api/api/v1'
 export const WS_URL = 'ws://192.168.208.109:3333/ws'
 // export const WS_URL = 'ws://192.168.1.231:3333/ws'
+
 //用户修改密码
 export const register = ({
   pwd
@@ -64,6 +66,7 @@ export const repHead = (menu_id) => {
       menu_id
     }).then((res) => {
       if (res.code == 200) {
+				// console.log(res)
         res.data.sort(function (a, b) {
           return a.index - b.index
         });
@@ -109,7 +112,8 @@ export const repIndex = () => ajax(BASE_URL + `/index`)
 //登陆状态
 export const getLoginStatus = () => ajax(BASE_URL + '/index/status')
 //注销请求
-export const repLogout = () => ajax(BASE_URL + `api/login/logout`)
+
+export const repLogout = () => ajax(BASE_URL + `/login/logout`)
 
 //查询哪些用户有哪些菜单
 export const repMenu = (type) => ajax(BASE_URL + `/menu/show`, {
@@ -283,9 +287,10 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, d
 
 // 运营管理=> 亚马逊=>通知单
 
-//出货通知单  post
-// export const getNoticeInfo = (data) => ajax(BASE_URL + `/fba/getNoticeInfo`, data, 'POST')
+//出货通知单分页
 export const getNotice = (data) => ajax(BASE_URL + `/no/getNotice`, data, 'POST')
+//根据skuId获取 数据/api/v1/product/getProductAdnSku?skuId=1
+export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data,'GET',[false,'请求失败'])
 
 
 
@@ -557,9 +562,7 @@ export const findByListRegion = (data) => ajax(BASE_URL + '/reg/findByListRegion
 //站点分页 repGetSiteInfo
 export const findByListSite = (data) => ajax(BASE_URL + '/site/findByListSite', data, 'POST')
 //通过洲的arId获取站点
-export const repGetShopIdSiteInfo = (arId) => ajax(BASE_URL + `/site/getByShopIdListSite`, {
-  arId
-})
+export const repGetShopIdSiteInfo = (data) => ajax(BASE_URL + `/site/getByShopIdListSite`, data)
 
 //币别分页 repGetCurrencyInfo
 export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
@@ -751,12 +754,32 @@ export const startFee = ({
   mName,
 },'POST')
 
-//查看反馈信息http://127.0.0.1:9001/api/v1/fee/selProcess?pageSize=0&currentPage=10
-// export const selProcess = ({
-//   currentPage,
-//   pageSize
-// }) => ajax(BASE_URL + '/fee/selProcess', {
-//   currentPage,
-//   pageSize
-// // })
-export const selProcess = (data) => ajax(BASE_URL + '/fee/selProcess', data);
+//查看反馈信息http://127.0.0.1:9001/api/v1/fee/selProcess?pageSize=10&currentPage=1
+export const selProcess = ({
+  currentPage,
+  pageSize
+}) => ajax(BASE_URL + '/fee/selProcess', {
+  currentPage,
+  pageSize
+})
+
+//管理页面信息http://127.0.0.1:9001/api/v1/fee/selThisAudit?pageSize=10&currentPage=1
+export const selThisAudit = ({
+  currentPage,
+  pageSize
+}) => ajax(BASE_URL + '/fee/selThisAudit', {
+  currentPage,
+  pageSize
+})
+//表格方案保存
+export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',data, 'POST')
+
+//获取表格方案
+export const getUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
+
+//删除表格方案
+export const delUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
+
+//修改表格方案
+export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
+

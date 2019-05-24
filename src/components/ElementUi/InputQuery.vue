@@ -148,7 +148,7 @@ export default {
         "auditUser",
         "effectiveDate"
       ],
-      sysLogNotInclude:[63]
+      sysLogNotInclude: [63]
     };
   },
   watch: {
@@ -196,7 +196,6 @@ export default {
       data.currentPage = 1;
       return data;
     }
-		
   },
   methods: {
     //根据父组件传递的数据生成对应的查询列表数据
@@ -208,15 +207,13 @@ export default {
         self.initValue(item);
       });
       this.data = data;
-		
     },
 
     //初始化数据
     initValue(tableTitle) {
-			
       if (tableTitle) {
         let key = tableTitle.topType;
-        this.$set(this.data_model, key, '');
+        this.$set(this.data_model, key, "");
         if (tableTitle.inputType == 4) {
           switch (key) {
             //用户有效期
@@ -228,13 +225,15 @@ export default {
               this.data_model.pwdAlways = false;
               break;
           }
-           this.$set(this.data_model, key + "s", []);
-          if (this.sysLogInclude.includes(key) && !this.sysLogInclude.includes(key+'s')) {
-            this.sysLogInclude.push(key + "s")
+          this.$set(this.data_model, key + "s", []);
+          if (
+            this.sysLogInclude.includes(key) &&
+            !this.sysLogInclude.includes(key + "s")
+          ) {
+            this.sysLogInclude.push(key + "s");
           }
           tableTitle._isShow = true;
         }
-				
       }
 			
 			// 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  start
@@ -251,14 +250,16 @@ export default {
 
       let res = await this.querySuggestionsMethod(query);
       let data = res.data.dataList.map(item => {
-        return item[field] || (item.systemLogStatus && item.systemLogStatus[field]);
+        return (
+          item[field] || (item.systemLogStatus && item.systemLogStatus[field])
+        );
       });
       data = unique(data);
-      
+
       data = data.map(item => {
         return { value: item };
       });
-      
+
       cb(data);
     },
     //验证的checkbox是否显示
@@ -269,25 +270,23 @@ export default {
     isValid(val, data) {
       data._isShow = !val;
       if (val) {
-        this.data_model[data.topType + 's'] = [];
+        this.data_model[data.topType + "s"] = [];
       }
       this.changeQuery();
     },
     //向上回传数据
     changeQuery() {
-      let data_model = {...this.data_model};
+      let data_model = { ...this.data_model };
       for (let key in data_model) {
         if (this.sysLogInclude.includes(key)) {
-          
           data_model.systemLogStatus[key] = data_model[key];
           delete data_model[key];
         }
       }
       this.$emit("changeQuery", [data_model]);
-      console.log(data_model);
     },
-    setSysLogInclude(id){
-      if(this.sysLogNotInclude.includes(id)){
+    setSysLogInclude(id) {
+      if (this.sysLogNotInclude.includes(id)) {
         this.sysLogInclude.length = 0;
       }
     },
@@ -314,10 +313,7 @@ export default {
 		// 2019/05/23  下午16:00  添加内容 填充搜索框内容 拆分systemLogStatus对象 用来显示赋值 end
 		
   },
-	mounted () {
-		
-	}
-  
+  mounted() {}
 };
 </script>
 
