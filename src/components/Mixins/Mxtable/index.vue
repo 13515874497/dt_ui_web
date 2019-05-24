@@ -251,12 +251,12 @@ export default {
 		},
 		// 2019/05/23  下午16:00  表格拖拽时获取拖拽后数组 使用了新的全数组 用于上传  end
 		// 2019/05/23  下午17:00  方案赋值使用的数据提公  start
-		programData(index){
-			this.tValList = this.programmeDataList[index].queryTwoList;
-			this.inputData = this.programmeDataList[index].inputQueryData;
-			this.hiddenFieldsList[this.$route.params.id] = this.programmeDataList[index].hiddenFieldsList;
-			this.nowId = this.programmeDataList[index].configId;
-			this.tableTitle = this.programmeDataList[index].dropTable;
+		programData(index,data){
+			this.tValList = data[index].queryTwoList;
+			this.inputData = data[index].inputQueryData;
+			this.hiddenFieldsList[this.$route.params.id] = data[index].hiddenFieldsList;
+			this.nowId = data[index].configId;
+			this.tableTitle = data[index].dropTable;
 		},
 		// 2019/05/23  下午17:00  方案赋值使用的数据提公  end
 		// 2019/05/22  下午16:00  新增删除当前方案功能  删除接口未接通 start
@@ -268,47 +268,54 @@ export default {
 		// 2019/05/22  下午16:00  新增查询方案功能  查询未完成 start
 		chaxun(index){
 			// 
-			this.programData(index);
+			this.programData(index,this.programmeDataList);
 			console.log(this.programmeDataList[index])
 		},
 		// 2019/05/22  下午16:00  新增修改当前方案功能 查询未完成end
 		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
 		changeSolution(){
 			
-			// MessageBox.prompt('请输入方案名称', '提示', {
-			//     confirmButtonText: '确定',
-			//     cancelButtonText: '取消'
-			//   }).then(({ value }) => {
-			// 			var reg =  /^\s*$/g;
-			// 			if(reg.test(value) || value == null || value == ""){
-			// 				message.errorMessage('方案名称不能为空')
-			// 				return;
-			// 			}else{
-			// 				this.programme = value.replace(/\s+/g,"");
-			// 			
-			// 				let programmeList = {
-			// 					// hiddenFieldsList : this.hiddenFieldsListA,
-			// 					// queryTwoList : this.query2List,
-			// 					// inputQueryData : this.inputQueryData,
-			// 					// programName : this.programme,
-			// 					// mid : parseInt(this.$route.params.id),
-			// 					// dropTable:this.tableTitleUp,
-			// 					// id:this.nowId
-			// 				}
-			// 				console.log(programmeList)
-			// 				
-			// 				upUserConfig(programmeList).then(res=>{
-			// 					console.log(res);
-			// 					if(res.code == 200){
-			// 						message.successMessage('方案修改成功')
-			// 					}else{
-			// 						message.errorMessage(res.msg)
-			// 					}
-			// 				})
-			// 				
-			// 			}
-			// 			
-			//   })	
+			MessageBox.prompt('请输入方案名称', '提示', {
+			    confirmButtonText: '确定',
+			    cancelButtonText: '取消'
+			  }).then(({ value }) => {
+						var reg =  /^\s*$/g;
+						if(reg.test(value) || value == null || value == ""){
+							message.errorMessage('方案名称不能为空')
+							return;
+						}else{
+							this.programme = value.replace(/\s+/g,"");
+						
+							let programmeList = {
+								hiddenFieldsList : this.hiddenFieldsListA,
+								queryTwoList : this.query2List,
+								inputQueryData : this.inputQueryData,
+								programName : this.programme,
+								mid : parseInt(this.$route.params.id),
+								dropTable:this.tableTitleUp,
+								id:this.nowId
+							}
+							console.log(programmeList)
+							
+							upUserConfig(programmeList).then(res=>{
+								console.log(res);
+								if(res.code == 200){
+									message.successMessage('方案修改成功');
+									let paramsA = {mid:parseInt(this.$route.params.id)};
+									getUserConfig(paramsA).then(res=>{
+										if(res.data.length>0){
+											this.programmeDataList = res.data;
+											this.programData(0,this.programmeDataList);
+										}
+									})
+								}else{
+									message.errorMessage(res.msg)
+								}
+							})
+							
+						}
+						
+			  })	
 		},
 		// 2019/05/22  下午16:00  新增修改当前方案功能 修改未完成start
 		// 2019/05/22  下午16:00  新增保存方案功能 start
@@ -337,7 +344,14 @@ export default {
 							getConfMapUser(programmeList).then(res=>{
 								console.log(res);
 								if(res.code == 200){
-									message.successMessage('方案名称保存成功')
+									message.successMessage('方案名称保存成功');
+									let paramsA = {mid:parseInt(this.$route.params.id)};
+									getUserConfig(paramsA).then(res=>{
+										if(res.data.length>0){
+											this.programmeDataList = res.data;
+											this.programData(0,this.programmeDataList);
+										}
+									})
 								}else{
 									message.errorMessage(res.msg)
 								}
@@ -583,21 +597,15 @@ export default {
 		 // 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 start
 		 this.tableTitleIs =
 		 	  (await requestAjax.requestGetHead(this.$route.params.id)) || [];
-				console.log(this.tableTitleIs)
 		let paramsA = {mid:parseInt(this.$route.params.id)};
 		getUserConfig(paramsA).then(res=>{
 			if(res.data.length>0){
-				console.log('111')
 				this.programmeDataList = res.data;
-				this.programData(0);
+				this.programData(0,this.programmeDataList);
+			}else{
+				this.tableTitle = this.tableTitleIs;
 			}
 		})
-		
-		if(this.programmeDataList.length < 1){
-			console.log('222')
-			this.tableTitle = [...this.tableTitleIs];
-			console.log(this.tableTitle)
-		}
 		// 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 end
 		
     this.initOperateBtn();
