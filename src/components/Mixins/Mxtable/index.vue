@@ -628,28 +628,29 @@ export default {
 		 // 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 start
 		 this.tableTitleIs =
 		 	  (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+				
 		let paramsA = {mid:parseInt(this.$route.params.id)};
 		getUserConfig(paramsA).then(res=>{
+			this.abccd = true;
 			if(res.data.length>0){
 				this.programmeDataList = res.data;
 				this.programData(0,this.programmeDataList);
-			}else{
-				this.tableTitle = this.tableTitleIs;
+			}
+			else{
+				this.tableTitle = [...this.tableTitleIs];
 			}
 		})
 		// 2019/05/23  下午16:30  添加内容创建时去请求方案的数据 用来填充赋值 如果有方案就使用方案赋值 没有就使用初始数据 end
-		
+		this.tableTitle_show = [...this.tableTitle];
+		this.tableTitleUp = [...this.tableTitle];
     this.initOperateBtn();
     this.pagination(this.data);
-    this.tableTitle_show = [...this.tableTitle];
-    this.add.customField = [...this.customField];
-    this.update.customField = [...this.customField];
-		this.tableTitleUp = [...this.tableTitle];//如果表格没有被拖拽过 则上传的数据为初始数据
+		this.add.customField = [...this.customField];
+		this.update.customField = [...this.customField];
+		this.add.customField = deepClone(this.customField);
+		this.update.customField = deepClone(this.customField);
     this.add.customField = deepClone(this.customField);
     this.update.customField = deepClone(this.customField);
-
-    // this.add.customField = deepClone(this.customField);
-    // this.update.customField = deepClone(this.customField);
   },
   async mounted() {}
 };
