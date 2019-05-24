@@ -23,12 +23,21 @@ export default {
           key: "skuId",
           label: "sku",
           filterable: true,
-          placeholder: "输入选择sku,需鼠标点击",
+          placeholder: "选择店铺站点后输入,需鼠标点击",
           remoteMethod: this.getSkuList,
           data: [],
           changeSel: this.changeSku
         }
-      ]
+      ],
+      editable_field: [
+        "neGwKg",
+        "neHeightCm",
+        "neLengthCm",
+        "neNwKg",
+        "neWidthCm",
+        "neVolumeM3",
+        "quantity"
+      ] //表格中哪些字段可以被编辑
     };
   },
   watch: {
@@ -37,30 +46,60 @@ export default {
     },
     "form_data_model.siteId"() {
       this.getSkuList("");
+    },
+    table_table_data: {
+      handler(table_data) {
+        if (table_data && table_data.length ){
+          console.log(table_data);
+          console.log("7777777777777777777777777777");
+          console.log(this.form);
+          
+          console.log(JSON.stringify(this.form_data_model));
+          
+          let data_model = this.form_data_model;
+          let sum =  table_data.reduce(
+            (prev, next, index, array) => {
+              return (prev.quantity || 0) + (next.quantity || 0);
+            }
+          );
+          console.log(sum);
+          data_model.ttlPackages = sum;
+          
+          // data_model.ttlPackages = table_data.reduce(
+          //   (prev, next, index, array) => {
+          //     return (prev.quantity || 0) + (next.quantity || 0);
+          //   }
+          // );
+        }
+
+        // data_model.
+      },
+      deep: true
+      // immediate: true
     }
   },
   methods: {
     queryPage(data) {
       return getNotice(data); //查询页面的接口
     },
-    async getSkuList(query) {
-      console.log(query);
+    // async getSkuList(query) {
+    //   console.log(query);
 
-      let data = this.form_data_model;
-      console.log(data);
+    //   let data = this.form_data_model;
+    //   console.log(data);
 
-      if (data.shopId && data.siteId) {
-        let res = await getSkuName({
-          sId: data.shopId,
-          seId: data.siteId,
-          kuName: query
-        });
-        console.log(res);
-        if (res.code === 200) {
-          console.log(res);
-        }
-      }
-    },
+    //   if (data.shopId && data.siteId) {
+    //     let res = await getSkuName({
+    //       sId: data.shopId,
+    //       seId: data.siteId,
+    //       kuName: query
+    //     });
+    //     console.log(res);
+    //     if (res.code === 200) {
+    //       console.log(res);
+    //     }
+    //   }
+    // },
     async changeSku(val, row, title) {
       console.log(val);
       console.log(row);
@@ -68,17 +107,22 @@ export default {
       let res = await getProductAdnSku({
         skuId: val
       });
-      if(res.code == 200){
+      if (res.code == 200) {
         let data = res.data;
-        for(let key in data){
-          row[key] = data[key]
+        for (let key in data) {
+          row[key] = data[key];
         }
+        row.neNwKg = row.neNwKg * row.quantity;
+        row.neGwKg = row.neGwKg * row.quantity;
       }
+
       console.log(res);
       this.table.table_data = [...this.table.table_data];
     },
     //获取输入获取sku列表
     async getSkuList(query, row) {
+      console.log(this.form);
+      console.log(this.form.data_model);
       let data_model = this.form.data_model;
       if (data_model.shopId && data_model.siteId) {
         let res = await getSkuName({
@@ -99,12 +143,7 @@ export default {
       }
     }
   },
-  async created() {
-    let res = await getProductAdnSku({
-      skuId: 1438
-    });
-    console.log(res);
-  }
+  async created() {}
 };
 </script>
 

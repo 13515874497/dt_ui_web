@@ -38,7 +38,7 @@
         :required="true"
         error="必填项"
       >
-        <el-select v-model="data_model[item.topType]" placeholder="请选择" >
+        <el-select v-model="data_model[item.topType]" placeholder="请选择">
           <el-option
             v-for="option in item.statusOptions"
             :key="option.id"
@@ -245,7 +245,7 @@ export default {
     formItems() {
       // this.initData_model();
     },
-    
+
     formData() {
       this.initData_model();
     },
@@ -254,7 +254,6 @@ export default {
     },
     data_model: {
       async handler(val) {
-        
         this.triggerFormChange();
       },
       deep: true
@@ -438,19 +437,21 @@ export default {
     async triggerFormChange() {
       this.passData(await this.isVerifyPass());
     },
-    changeSelect(val,formItem){
-      let option = formItem.data.find(option=>{
+    changeSelect(val, formItem) {
+      let option = formItem.data.find(option => {
         return option[formItem.bindKey] === val;
-      })
+      });
       this.data_model[formItem.topType] = option[formItem.label];
     }
   },
+  beforeCreate() {
+    },
   async created() {
+    this.$emit("giveForm", [this]);
     this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
     await this.initCustomField();
     this.initData_model();
     this.mergeRules();
-    this.$emit("giveForm", [this]);
   },
   mounted() {}
 };

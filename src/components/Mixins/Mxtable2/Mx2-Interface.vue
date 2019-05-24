@@ -16,6 +16,7 @@
       </el-radio-group>
       <Table
         :editable="true"
+        :editable_field="editable_field"
         :height="300"
         :tableTitle="tableTitle_children"
         :tableData="tableData_children"
@@ -47,27 +48,35 @@ export default {
       type: Array,
       required: true
     },
-    data: {//[true,{},[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
+    data: {
+      //[true,{},[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
       type: Array
     },
-    
-    rule: {  //form表单自定义验证的规则
+
+    rule: {
+      //form表单自定义验证的规则
       type: Object,
       default: () => ({})
     },
-    
-    customField: {//form自定义显示字段
+    customField: {
+      //form自定义显示字段
+
       type: Array,
       default: () => []
     },
     customField_table: {
+      //table自定义显示字段
       type: Array,
       default: () => []
     },
     reset: {
       type: Boolean,
       default: false
-    }
+    },
+    editable_field: {
+      type: Array,
+      default: []
+    },
   },
   components: {
     Table,
@@ -81,12 +90,12 @@ export default {
       },
       dialogVisible: false, //是否显示该组件
       form: null,
-      form_data_model:null,
+      form_data_model: null,
       formItems_parent: [],
       formData_parent: null,
       tableTitle_children: [],
       tableData_children: [],
-      radio: this.$route.params.name,
+      radio: this.$route.params.name
     };
   },
   computed: {
@@ -114,10 +123,11 @@ export default {
         this.getParentFormData();
         this.getChildrenTableData();
       }
-    }
+    },
+    tableData_children() {}
   },
   methods: {
-     initOperateBtn() {
+    initOperateBtn() {
       let self = this;
       this.operateList = [
         //对已上传的文件进行操作的按钮列表
@@ -155,26 +165,33 @@ export default {
       console.log(this.tableData_children);
     },
     //form表单中的验证结果
-    passData($event){
+    passData($event) {
       console.log($event);
     },
     //form表单中的数据
     //获取表单组件对象
-    getForm($event){
+    getForm($event) {
       this.form = $event[0];
       this.form_data_model = this.form.data_model;
       this.$emit("giveForm", [this.form]);
     },
     //获取表格组件对象
-    getTable($event){
+    getTable($event) {
       this.table = $event[0];
-      this.$emit('giveTable',[this.table]);
+      this.$emit("giveTable", [this.table]);
     },
     //点击新增给表格加一行空数据
-    addRow(){
-      // let row = 
+    addRow() {
+      let row = {};
+      this.tableTitle_children.forEach(item => {
+        row[item.topType] = null;
+        if (item.bindKey) {
+          row[item.bindKey] = null;
+        }
+      });
+      this.tableData_children.push(row);
+
       console.log(this.tableTitle_children);
-      
     }
   },
   created() {

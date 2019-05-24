@@ -45,6 +45,7 @@
           :data="add.checkedData"
           :customField="customField"
           :customField_table="customField_table"
+          :editable_field="editable_field"
           @giveForm="getForm"
           @giveTable="getTable"
         ></Mx2Interface>
@@ -125,7 +126,7 @@ export default {
       },
       // form: null, //当前form表单(新增、修改)绑定的数据
       // form_data_model: null,
-      form_editing: "add",
+      form_editing: "",
       // table: null,//当前可编辑的table
       add: {
         visible: false,
@@ -173,6 +174,7 @@ export default {
       });
     },
     form() {
+     
       switch (this.form_editing) {
         case "add":
           return this.add.form;
@@ -182,16 +184,25 @@ export default {
       }
     },
     form_data_model() {
-      return (this.form && this.form.data_model) || {};
+      console.log('55555555555555');
+      
+      console.log(this.form.data_model);
+      
+      return (this.form && this.form.data_model) || null;
     },
     table() {
       switch (this.form_editing) {
         case "add":
+          console.log(this.add.table);
           return this.add.table;
           break;
         case "update":
           return this.update.table;
       }
+      
+    },
+    table_table_data(){
+      return this.table && this.table.table_data || null;
     }
   },
   components: {
@@ -323,11 +334,11 @@ export default {
 
       console.log(this.checkVerifyHandler());
       let result = this.checkVerifyHandler();
-      if (!result[0]) return;
+      if (!result[0]) return; 
 
+      this.form_editing = "add";
       this.add.visible = true;
       this.add.checkedData = result;
-      this.form_editing = "add";
     },
     passData_add($event) {
       console.log($event);
