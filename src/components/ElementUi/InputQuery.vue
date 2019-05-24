@@ -113,13 +113,13 @@ export default {
     selectedIds: Array, //用户要筛选的条件
     querySuggestionsMethod: Function, //查询搜索建议的方法
     querySuggestionsConfig: Object, //模糊查询的配置对象
-		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  start
-		inputData :{
-		  type: Object,
-		  default: {}
-		},
-		// 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  end
-	},
+    // 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  start
+    inputData: {
+      type: Object,
+      default: {}
+    }
+    // 2019/05/22  下午16:00  添加内容 父组件传值接受 后台返回的上一次搜索框内容 用于填充  end
+  },
   data() {
     return {
       data: [],
@@ -146,7 +146,7 @@ export default {
         "auditUser",
         "effectiveDate"
       ],
-      sysLogNotInclude:[63]
+      sysLogNotInclude: [63]
     };
   },
   watch: {
@@ -194,7 +194,6 @@ export default {
       data.currentPage = 1;
       return data;
     }
-		
   },
   methods: {
     //根据父组件传递的数据生成对应的查询列表数据
@@ -206,15 +205,13 @@ export default {
         self.initValue(item);
       });
       this.data = data;
-		
     },
 
     //初始化数据
     initValue(tableTitle) {
-			
       if (tableTitle) {
         let key = tableTitle.topType;
-        this.$set(this.data_model, key, '');
+        this.$set(this.data_model, key, "");
         if (tableTitle.inputType == 4) {
           switch (key) {
             //用户有效期
@@ -226,17 +223,19 @@ export default {
               this.data_model.pwdAlways = false;
               break;
           }
-           this.$set(this.data_model, key + "s", []);
-          if (this.sysLogInclude.includes(key) && !this.sysLogInclude.includes(key+'s')) {
-            this.sysLogInclude.push(key + "s")
+          this.$set(this.data_model, key + "s", []);
+          if (
+            this.sysLogInclude.includes(key) &&
+            !this.sysLogInclude.includes(key + "s")
+          ) {
+            this.sysLogInclude.push(key + "s");
           }
           tableTitle._isShow = true;
         }
-				
       }
-			// 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  start
-			this.changeQuery();
-			// 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  end
+      // 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  start
+      this.changeQuery();
+      // 2019/05/22  下午16:00  添加内容 如果内容没有更改也需要对象属性存在  end
     },
     //查询 搜索建议下拉列表
     async getQuerySuggestions(queryString, cb) {
@@ -247,14 +246,16 @@ export default {
 
       let res = await this.querySuggestionsMethod(query);
       let data = res.data.dataList.map(item => {
-        return item[field] || (item.systemLogStatus && item.systemLogStatus[field]);
+        return (
+          item[field] || (item.systemLogStatus && item.systemLogStatus[field])
+        );
       });
       data = unique(data);
-      
+
       data = data.map(item => {
         return { value: item };
       });
-      
+
       cb(data);
     },
     //验证的checkbox是否显示
@@ -265,16 +266,15 @@ export default {
     isValid(val, data) {
       data._isShow = !val;
       if (val) {
-        this.data_model[data.topType + 's'] = [];
+        this.data_model[data.topType + "s"] = [];
       }
       this.changeQuery();
     },
     //向上回传数据
     changeQuery() {
-      let data_model = {...this.data_model};
+      let data_model = { ...this.data_model };
       for (let key in data_model) {
         if (this.sysLogInclude.includes(key)) {
-          
           data_model.systemLogStatus[key] = data_model[key];
           delete data_model[key];
         }
@@ -282,24 +282,20 @@ export default {
       this.$emit("changeQuery", [data_model]);
       console.log(data_model);
     },
-    setSysLogInclude(id){
-      if(this.sysLogNotInclude.includes(id)){
+    setSysLogInclude(id) {
+      if (this.sysLogNotInclude.includes(id)) {
         this.sysLogInclude.length = 0;
       }
     }
   },
   created() {
     this.updateTableTitle();
-    this.setSysLogInclude(+this.$route.params.id)
-		// 2019/05/22  下午16:00  添加内容 填充搜索框内容  start
-		this.data_model = this.inputData;
-		// 2019/05/22  下午16:00  添加内容 填充搜索框内容  end
-		
+    this.setSysLogInclude(+this.$route.params.id);
+    // 2019/05/22  下午16:00  添加内容 填充搜索框内容  start
+    this.data_model = this.inputData;
+    // 2019/05/22  下午16:00  添加内容 填充搜索框内容  end
   },
-	mounted () {
-		
-	}
-  
+  mounted() {}
 };
 </script>
 

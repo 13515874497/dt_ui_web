@@ -1,6 +1,6 @@
 <template>
     <div class="fbBox">
-        <el-form :model="ruleForm"  ref="ruleForm" label-width="100px" class="demo-ruleForm">
+        <el-form :model="ruleForm"  ref="ruleForm" label-width="100px" class="demo-ruleForm"  :rules="rules">
             <el-form-item label="反馈菜单" prop="menu">
                 <el-cascader
                   :options="options"
@@ -57,8 +57,10 @@ export default {
         mName: ""
       },
       options: [],
+      rules: {
+        reason: [{ required: true, message: "请输入理由", trigger: "blur" }]
+      }
     };
-    
   },
   methods: {
     //图片上传
@@ -115,28 +117,27 @@ export default {
     //
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
-        if(this.ruleForm ){
-          return
+        if (!valid) {
+          message.errorMessage("请选择要反馈的菜单，点击上传图片和输入描述");
+          return;
         }
-        if (valid) {
-          console.log(this.ruleForm);
-          let params = {
-            imageUrl: this.ruleForm.imgList.join(","),
-            reason: this.ruleForm.reason,
-            mName: this.ruleForm.mName.join("/")
-          };
-          startFee(params).then(res => {
-            console.log(res);
-            if (res.code !== 200) {
-              message.errorMessage("保存失败");
-              return;
-            }
-            message.successMessage("保存成功");
-            this.ruleForm.reason = "";
-            this.ruleForm.imgList = "";
-            this.ruleForm.mName = "";
-          });
-        }
+        console.log(this.ruleForm);
+        let params = {
+          imageUrl: this.ruleForm.imgList.join(","),
+          reason: this.ruleForm.reason,
+          mName: this.ruleForm.mName.join("/")
+        };
+        startFee(params).then(res => {
+          console.log(res);
+          if (res.code !== 200) {
+            message.errorMessage("保存失败");
+            return;
+          }
+          message.successMessage("保存成功");
+          this.ruleForm.reason = "";
+          this.ruleForm.imgList = "";
+          this.ruleForm.mName = "";
+        });
       });
     },
     resetForm(formName) {
