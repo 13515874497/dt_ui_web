@@ -766,11 +766,22 @@ export const selProcess = ({
 //管理页面信息http://127.0.0.1:9001/api/v1/fee/selThisAudit?pageSize=10&currentPage=1
 export const selThisAudit = ({
   currentPage,
-  pageSize
+  pageSize,
+  uuidNumber
 }) => ajax(BASE_URL + '/fee/selThisAudit', {
   currentPage,
-  pageSize
+  pageSize,
+  uuidNumber
 })
+
+//管理页面审核http://127.0.0.1:9001/api/v1/fee/review post
+export const review = ({
+  tid,
+  auditor
+}) => ajax(BASE_URL + '/fee/review', {
+  tid,
+  auditor
+},'post')
 //表格方案保存
 export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',data, 'POST')
 
@@ -778,7 +789,7 @@ export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',
 export const getUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
 
 //删除表格方案
-export const delUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
+export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',data, 'POST')
 
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')

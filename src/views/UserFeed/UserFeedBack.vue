@@ -1,6 +1,6 @@
 <template>
     <div class="fanBoxs">
-        <!-- 表格 -->
+      <!-- 表格 -->
         <el-table
             border
             stripe
@@ -10,21 +10,25 @@
             @current-change="handleCurrentChange"
             style="width: 100%"
             height="500">
+
             <el-table-column
             type="index"
             width="50"
             label="序号">
             </el-table-column>
+
             <el-table-column
             property="uuidNumber"
             label="反馈编号"
             width="120">
             </el-table-column>
+
             <el-table-column
             property="mName"
             label="反馈菜单"
             width="120">
             </el-table-column>
+
             <el-table-column
             label="图片"
             width="240">
@@ -33,9 +37,6 @@
                 <img v-for="item in scope.row.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px" />
               </viewer>
             </template>
-            <!-- <template slot-scope="scope" >
-        　　　　<img v-for="item in scope.row.imageUrl" :src="item" width="60" height="60" class="head_pic" style="margin-right:5px"/>
-        　　</template> -->
             </el-table-column>
               
             <el-table-column
@@ -43,39 +44,29 @@
             label="描述"
             width="120">
             </el-table-column>
+
             <el-table-column
             property="applyUser"
             label="反馈人"
             width="120">
             </el-table-column>
+
             <el-table-column
             property="applyTime"
             label="反馈时间"
             width="120"
             :formatter="formatTime">
             </el-table-column>
+
              <el-table-column
             property="applyStatus"
             label="反馈状态"
             width="120">
             </el-table-column>
-             <el-table-column
-            property="fbOpinion"
-            label="受理意见"
-            width="120">
-            </el-table-column>
-             <el-table-column
-            property="auditor"
-            label="受理人"
-            width="120">
-            </el-table-column>
-            <el-table-column
-            property=""
-            label="受理时间"
-            >
-            </el-table-column>
+
+           
         </el-table>
-       <!-- 分页 -->
+        <!-- 分页 -->
       <div class="page">
         <el-pagination
           @size-change="sizeChange"
@@ -107,7 +98,6 @@ export default {
         pageSize: 10, //每页条数,  默认10条
         totalCount: 0 //总条数
       },
-       dialogVisible: false
     };
   },
   methods: {
@@ -158,11 +148,7 @@ export default {
         return "";
       }
       return moment(date).format("YYYY-MM-DD HH:mm:ss");
-    },
-    aa(index) {
-    console.log(index)
-     this.dialogVisible = true
-    }    
+    },   
   },
   created() {
     this.initList();

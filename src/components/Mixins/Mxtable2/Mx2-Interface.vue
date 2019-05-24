@@ -7,6 +7,7 @@
         @giveForm="getForm"
         :rule="rule"
         :customField="customField"
+        :reset="reset"
       ></Form>
     </section>
     <section>
@@ -46,21 +47,26 @@ export default {
       type: Array,
       required: true
     },
-    data: {
-      //[true,{},[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
+    data: {//[true,{},[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
       type: Array
     },
-    rule: { 
+    
+    rule: {  //form表单自定义验证的规则
       type: Object,
       default: () => ({})
     },
-    customField: {
+    
+    customField: {//form自定义显示字段
       type: Array,
       default: () => []
     },
     customField_table: {
       type: Array,
       default: () => []
+    },
+    reset: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -80,7 +86,7 @@ export default {
       formData_parent: null,
       tableTitle_children: [],
       tableData_children: [],
-      radio: this.$route.params.name
+      radio: this.$route.params.name,
     };
   },
   computed: {
@@ -166,12 +172,13 @@ export default {
     },
     //点击新增给表格加一行空数据
     addRow(){
-
+      // let row = 
+      console.log(this.tableTitle_children);
+      
     }
   },
   created() {
     this.initOperateBtn();
-    console.log(this.page);
   }
 };
 </script>

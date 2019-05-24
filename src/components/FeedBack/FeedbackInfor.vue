@@ -58,6 +58,7 @@ export default {
       },
       options: [],
     };
+    
   },
   methods: {
     //图片上传

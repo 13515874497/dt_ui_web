@@ -145,7 +145,8 @@ export default {
       fixedCache: {},
       options: {}, //存放各种类型的状态
       table_title: [],
-      table_data: null
+      table_data: [],
+      table_title_two: []
     };
   },
   props: {
@@ -155,6 +156,7 @@ export default {
     },
     tableData: Array,
     tableTitle: Array,
+    tableTitleTwo: Array,
     mode: Number, //在table中表示  需要合并父表的数据  (1普通的表格  2多表合并的表格（需要合并父数据）)
     showOperate: {
       //是否在最右侧显示操作字段
@@ -190,11 +192,17 @@ export default {
       handler(val) {
         // if (this.editable) {
         this.table_data = deepClone(val);
+        this.initCustomField();
         // }
       },
       immediate: true
+    },
+    tableTitleTwo: {
+      handler(val) {
+        this.table_title_two = deepClone(val);
+      },
+      immediate: true
     }
-
     // tableData() {
     //   this.setRepeatField();
     // }
@@ -202,11 +210,19 @@ export default {
   methods: {
     columnDrop() {
       var wrapperTr = this.$el.querySelector(".el-table__header-wrapper tr");
-      var oldIndex, newIndex, oldItem, newItem;
+      var oldIndex, newIndex, oldItem, newItem, trIndex;
       this.sortable = Sortable.create(wrapperTr, {
         animation: 180,
         delay: 0,
         onUpdate: evt => {
+          // 2019/05/23 下午 14:00 判断拖拽的dom数组内与数据数组一致的元素从第几位开始  start
+          for (var i = 0; i < wrapperTr.children.length; i++) {
+            if (!(wrapperTr.children[i].innerText == "")) {
+              trIndex = i;
+              break;
+            }
+          }
+          // 2019/05/23 下午 14:00 判断拖拽的dom数组内与数据数组一致的元素从第几位开始  end
           var $li = wrapperTr.children[evt.newIndex],
             $oldLi = wrapperTr.children[evt.oldIndex];
 
@@ -216,21 +232,15 @@ export default {
           } else {
             wrapperTr.insertBefore($li, $oldLi.nextSibling);
           }
-          oldIndex = evt.oldIndex - 2;
-          newIndex = evt.newIndex - 2;
+          oldIndex = evt.oldIndex - trIndex;
+          newIndex = evt.newIndex - trIndex;
           var item = this.table_title.splice(oldIndex, 1);
           this.table_title.splice(newIndex, 0, item[0]);
-          console.log(this.table_title);
-          console.log(this.tableTitle);
-          this.$emit("changeTitle", this.table_title);
-          // 下面是更改index的测试版 不对
-          // oldIndex = this.table_title.findIndex(element=>{element.headName ==$oldLi.innerText})
-          // oldIndex = this.table_title.indexOf($oldLi);
-          // console.log(oldIndex);
-          // newIndex = this.table_title.find(item=>{return item.headName === $li.innerText})
-          // console.log(newIndex);
-          // var item = this.table_title.splice(oldIndex.index,1);
-          // this.table_title.splice(newIndex.index, 0 ,item[0]);
+          // 2019/05/23 下午 15:00 增加新变量接受父组件传来全数据值 用于上传   start
+          var itemTwo = this.table_title_two.splice(oldIndex, 1);
+          this.table_title_two.splice(newIndex, 0, itemTwo[0]);
+          this.$emit("changeTitle", this.table_title_two);
+          // 2019/05/23 下午 15:00 增加新变量接受父组件传来全数据值 用于上传   end
         },
         onEnd: evt => {}
       });
@@ -456,22 +466,28 @@ export default {
     async bindRow_data_(row) {
       let self = this;
       return new Promise(async (resolve, reject) => {
-        if(!self.customField_table){
+        if (!self.customField_table) {
           resolve(null);
           return;
         }
         for (let i = 0; i < self.customField_table.length; i++) {
           let cusItem = self.customField_table[i];
           let tempKey = cusItem.topType + "_data_";
+          if(row[tempKey]) continue;
           row[tempKey] = [];
-          if (cusItem.remote) continue;
+          // if (cusItem.remote) continue;
           switch (cusItem.inputType) {
             case 3:
-              let res3 = await cusItem.ajax();
-              if (res3.code === 200) {
-                row[tempKey] = res3.data.dataList || res3.data;
+              if (cusItem.remote) {
+                cusItem.remoteMethod('',row);
+              } else {
+                let res3 = await cusItem.ajax();
+                if (res3.code === 200) {
+                  row[tempKey] = res3.data.dataList || res3.data;
+                }
+                break;
               }
-              break;
+
             // case 5:
             //   let res = await cusItem.ajax();
             //   if (res.code === 200) {
@@ -484,7 +500,7 @@ export default {
         resolve(null);
       });
     },
-    changeSelect(val, title, row,cb) {
+    changeSelect(val, title, row, cb) {
       console.log(val, title, row);
       let option = row[title.topType + "_data_"].find(option => {
         return option[title.bindKey] === val;
@@ -492,8 +508,8 @@ export default {
       console.log(option);
 
       row[title.topType] = option[title.label];
-      if(cb){
-        cb(val,row,title)
+      if (cb) {
+        cb(val, row, title);
       }
       // console.log();
 
