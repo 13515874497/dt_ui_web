@@ -49,21 +49,12 @@ export default {
     },
     saveCache(keys){
         this.list[this.page.id] = keys;
-        localStorage.setItem('hideFieldList',JSON.stringify(this.list));
 			
     },
     readCache(){
 
-			 let list = localStorage.getItem('hideFieldList');
-				
-			 if(!list){
-				 	// 2019/05/22  下午16:00  添加内容 判断能否读取之前存的值 如果没有 就使用后台获取到的隐藏字段数组  start
-					 list = this.hiddenFieldsListData	;
-					 // 2019/05/22  下午16:00  添加内容 判断能否读取之前存的值 如果没有 就使用后台获取到的隐藏字段数组  end
-			 }else {
-					 list = JSON.parse(list);
+			let list = this.hiddenFieldsListData
 					
-			 }
 			 this.list = list;
 			 let checked = this.list[this.page.id]
 			 if(checked){
