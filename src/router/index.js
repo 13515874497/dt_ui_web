@@ -54,6 +54,8 @@ import OP_Ad_STR from '../views/Operate/Amazon/Advertisement/Ad_STR'//运营管�
 import OP_Receiving_stock from '../views/Operate/Amazon/Stock/Receiving_stock'//运营管理接收库存
 import OP_Ending_stock from '../views/Operate/Amazon/Stock/Ending_stock'//运营管理期末库存
 import OP_Shipment_not from '../views/Operate/Amazon/Stock/Shipment_not'//运营管理出货通知单
+import sales_ship_notice_packing_list from '../views/Operate/Amazon/Stock/Shipment_not'//运营管理出货装箱单
+
 import OP_Transfer_not from '../views/Operate/Amazon/Stock/Transfer_not'//运营管理移仓通知单
 import OP_FBA_stock from '../views/Operate/Amazon/Stock/FBA_stock'//FBA遗弃
 import OP_Feedback from '../views/Operate/Amazon/Other/Feedback'//Feedback
@@ -420,8 +422,13 @@ export default new Router({
           path:'/index/op_shipment_not/:id/:name',//运营管理->亚马逊->通知单->出货通知单
           component:OP_Shipment_not,
           name:'Shipment_not',
-      
         },
+        {
+          path:'/index/sales_ship_notice_packing_list/:id/:name',//运营管理->亚马逊->通知单->出货装箱单
+          component:sales_ship_notice_packing_list,
+        },
+
+
         {
           path:'/index/op_transfer_not/:id/:name', //运营管理->亚马逊->通知单->移仓通知单
           component:OP_Transfer_not,

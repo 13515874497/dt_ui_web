@@ -6,7 +6,7 @@
                   <router-link :to="item.path" class="tags-li-title" >
                   {{item.title | ellipsis}}
                   </router-link>
-                  <span class="tags-li-icon" @click="closeTags(index)" v-show="index !==0"><i class="el-icon-close"></i></span>
+                  <span class="tags-li-icon" @click="closeTags(index)" v-show="item.path !=='/index'"><i class="el-icon-close"></i></span>
                  
                     <el-button  @click="refresh" class=" el-icon-refresh fresh" size="mini" >刷新</el-button>
                     <el-button @click="collect" class=" el-icon-star-off collect" size="mini">收藏</el-button>  
@@ -33,7 +33,7 @@
 <script>
 import bus from "../../api/bus";
 export default {
-  inject: ["reload"],//引入页面加载刷新
+  inject: ["reload"], //引入页面加载刷新
   //标签字数大于4个就显示省略号
   filters: {
     ellipsis(value) {
@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       tagsList: [],
-      isShow:false,
+      isShow: false
     };
   },
   methods: {
@@ -70,7 +70,7 @@ export default {
     closeAll() {
       this.tagsList = [];
       this.$router.push("/index");
-      this.isShow = false
+      this.isShow = false;
     },
     // 关闭其他标签
     closeOther() {
@@ -84,8 +84,8 @@ export default {
       this.reload();
     },
     //收藏页面
-    collect(){
-      console.log('收藏')
+    collect() {
+      console.log("收藏");
     },
     // 设置标签
     setTags(route) {
@@ -97,7 +97,7 @@ export default {
         //   if (this.tagsList.length >= 15) {
         //   this.isShow = true;
         // }
-        if (this.tagsList.length >= 5) {
+        if (this.tagsList.length >= 18) {
           alert("打开标签过多，请关闭其他标签");
           return;
         }
@@ -105,11 +105,11 @@ export default {
           title: this.$route.params.name,
           path: route.fullPath,
           name: route.name
-    });
+        });
         console.log(route.meta.title);
         console.log(route.fullPath);
         console.log(route.matched[1]);
-        console.log(this.$route.params.name)
+        console.log(this.$route.params.name);
       }
       bus.$emit("tags", this.tagsList);
     },
@@ -117,14 +117,13 @@ export default {
     handleTags(command) {
       command === "other" ? this.closeOther() : this.closeAll();
     },
-    //向左点击
+    // 向左点击
     // next_pic() {
     //   let wrap = this.$refs.ulId;
     //   var newLeft;
     //   newLeft = parseInt(wrap.style.left) - 40;
     //   wrap.style.left = newLeft + "px";
     //   console.log(newLeft)
-   
     // },
     // //向右点击
     // prev_pic() {
@@ -134,7 +133,6 @@ export default {
     //   wrap.style.left = newLeft + "px";
     //   console.log(newLeft)
     // },
-
   },
   computed: {
     showTags() {
@@ -144,7 +142,7 @@ export default {
   watch: {
     $route(newValue, oldValue) {
       this.setTags(newValue);
-        console.log(this.setTags(newValue));
+      console.log(this.setTags(newValue));
     }
   },
   created() {
@@ -156,39 +154,39 @@ export default {
 
 
 <style lang="scss" scoped>
-.arrow_left{
-  border:none;
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    display: inline-block;
-    /* margin-top: 6px; */
-    z-index: 9;
-    font-size: 20px;
-    height: 40px;
-    line-height: 40px;
-    width: 20px;
-    text-align: center;
-    background: antiquewhite;
-    cursor: pointer;
-      outline: none;
-}
-.arrow_right{
-   border:none;
+.arrow_left {
+  border: none;
   position: absolute;
-    top: 0px;
-    right: 110px;
-    display: inline-block;
-    /* margin-top: 6px; */
-    z-index: 9;
-    font-size: 20px;
-    height: 40px;
-    line-height: 40px;
-    width: 20px;
-    text-align: center;
-    background: antiquewhite;
-    cursor: pointer;
-      outline: none;
+  top: 0px;
+  left: 0px;
+  display: inline-block;
+  /* margin-top: 6px; */
+  z-index: 9;
+  font-size: 20px;
+  height: 40px;
+  line-height: 40px;
+  width: 20px;
+  text-align: center;
+  background: antiquewhite;
+  cursor: pointer;
+  outline: none;
+}
+.arrow_right {
+  border: none;
+  position: absolute;
+  top: 0px;
+  right: 110px;
+  display: inline-block;
+  /* margin-top: 6px; */
+  z-index: 9;
+  font-size: 20px;
+  height: 40px;
+  line-height: 40px;
+  width: 20px;
+  text-align: center;
+  background: antiquewhite;
+  cursor: pointer;
+  outline: none;
 }
 a {
   text-decoration: none;
@@ -199,7 +197,7 @@ a {
   height: 50px;
   width: 100%;
   background: #fff;
-  padding-right:110px;
+  padding-right: 110px;
   box-shadow: 0 5px 10px #ddd;
   // overflow: hidden;
 }
@@ -256,22 +254,22 @@ a {
   color: #fff;
 }
 .fresh {
-position:absolute;
-top:23px;
-left:-20px;
-border:none;
-outline: none;
-height:10px;
-background: none;
+  position: absolute;
+  top: 23px;
+  left: -20px;
+  border: none;
+  outline: none;
+  height: 10px;
+  background: none;
 }
-.collect{
-  position:absolute;
-  left:12px;
-  top:23px;
-  border:none;
-outline: none;
-height:10px;
-background: none;
+.collect {
+  position: absolute;
+  left: 12px;
+  top: 23px;
+  border: none;
+  outline: none;
+  height: 10px;
+  background: none;
 }
 .tags-close-box {
   position: absolute;
@@ -293,17 +291,17 @@ background: none;
 }
 
 .tags-li .fresh,
-.tags-li .collect{
+.tags-li .collect {
   display: none;
 }
-.tags-li:hover .fresh{
-   display:block;    
+.tags-li:hover .fresh {
+  display: block;
 }
-.tags-li:hover .collect{
-   display:block;    
+.tags-li:hover .collect {
+  display: block;
 }
-.btnmi{
-  padding:10px 15px;
+.btnmi {
+  padding: 10px 15px;
 }
-</style>
 
+</style>

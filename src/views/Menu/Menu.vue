@@ -132,7 +132,7 @@
 
     <!-- 字段列表 =>  修改 -->
     <el-dialog title="编辑字段" :visible.sync="editDialogFormVisible">
-      <Form :formItems="formItems" :formData="data_field" @passData="passData_update" :rule="rule"></Form>
+      <Form :formItems="formItems" :formData="data_field" @giveFormData="getFormData_update" :rule="rule"></Form>
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="editDialogFormVisible = false">取 消</el-button>
@@ -142,7 +142,7 @@
 
     <!-- 点击新增 -->
     <el-dialog title="新增字段" :visible.sync="addDialogFormVisible">
-      <Form :formItems="formItems" @passData="passData_add" :rule="rule"></Form>
+      <Form :formItems="formItems" @giveFormData="getFormData_add" :rule="rule"></Form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addDialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="passedData_add">确 定</el-button>
@@ -733,7 +733,7 @@ export default {
       this.multipleSelection = val;
     },
     //对某个菜单进行新增字段 实时接收用户编辑中的字段
-    passData_add($event) {
+    getFormData_add($event) {
       // debugger;
       let isPass = $event[0];
       let data = $event[1];
@@ -765,7 +765,7 @@ export default {
         });
       }
     },
-    passData_update($event) {
+    getFormData_update($event) {
       let isPass = $event[0];
       let data = $event[1];
       let modifyData = $event[2];

@@ -46,12 +46,15 @@
           :customField="customField"
           :customField_table="customField_table"
           :editable_field="editable_field"
+          :parentKey="parentKey"
+          :radios="radios"
           @giveForm="getForm"
           @giveTable="getTable"
+          @passData="passData_add"
         ></Mx2Interface>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
-          <el-button type="primary" @click="add.visible = false">确 定</el-button>
+          <el-button type="primary" @click="send_add(true,true)">确 定</el-button>
         </span>
       </el-dialog>
     </section>
@@ -59,17 +62,17 @@
     <!-- 修改 -->
     <section>
       <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
-        <!-- <Form :formItems="formItems" :formData="data_field" @passData="passData_update"></Form> -->
-        <Form
+        <!-- <Form :formItems="formItems" :formData="data_field" @giveFormData="getFormData_update"></Form> -->
+        <!-- <Form
           key="修改"
           :formItems="formItems"
           :formData="update.formData"
-          @passData="passData_update"
+          @giveFormData="getFormData_update"
           @giveForm="getForm"
           @giveTable="getTable"
           :rule="rule"
           :customField="update.customField"
-        ></Form>
+        ></Form> -->
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="update.visible = false">取 消</el-button>
@@ -130,22 +133,23 @@ export default {
       // table: null,//当前可编辑的table
       add: {
         visible: false,
-        data: null,
-        isPass: false,
-        reset: false,
+        data: null, //表单返回过来的数据
+        isPass: false, //表单验证是否通过
+        reset: false, //改变就重置表单 无关false true
         customField: [], //form表单自定义的字段
         checkedData: [true, null, []], //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
-        form: null,
-        table: null
+        form: null, //绑定的form
+        table: null //绑定的table
       },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
       update: {
         visible: false,
-        formData: null,
+        // formData: null,
         data: null,
         isPass: false,
         customField: [],
+        checkedData: [true, null, []],
         form: null,
         table: null
       },
@@ -184,9 +188,6 @@ export default {
       }
     },
     form_data_model() {
-      console.log('55555555555555');
-      
-      console.log(this.form.data_model);
       
       return (this.form && this.form.data_model) || null;
     },
@@ -232,36 +233,7 @@ export default {
     checkboxValue: function(val) {
       this.multipleSelection = val;
     },
-    //对选中的数据进行校验
-    checkVerifyHandler() {
-      let self = this;
-      let val = this.multipleSelection;
-      let result = [];
-      if (!val.length) {
-        result = [true, null, []];
-      } else {
-        let id = val[0][this.primaryKey]; //选中的父id必须相同
-        if (id == undefined) {
-          message.errorMessage("未提供主键或主键错误");
-          result[0] = false;
-        } else {
-          let isOneParent = val.every(item => {
-            //判断选中的条目是否是同一个父对象
-            return item[self.primaryKey] === id;
-          });
-          result[0] = isOneParent;
-          if (!isOneParent) {
-            message.errorMessage("不能多选非关联的数据");
-          } else {
-            result[1] = this.origin_tableData.find(item => {
-              return item[self.primaryKey] === id;
-            });
-            result[2] = val;
-          }
-        }
-      }
-      return result;
-    },
+   
     //点击查询获得table的值
     async search() {
       this.pagination(this.data);
@@ -329,6 +301,39 @@ export default {
         }
       }
     },
+     //对选中的数据进行校验
+    checkVerifyHandler() {
+      let self = this;
+      let val = this.multipleSelection;
+      let result = [];
+      if (!val.length) {
+        result = [true, null, [],[]];
+      } else {
+        let id = val[0][this.primaryKey]; //选中的父id必须相同
+        if (id == undefined) {
+          message.errorMessage("未提供主键或主键错误");
+          result[0] = false;
+        } else {
+          let isOneParent = val.every(item => {
+            //判断选中的条目是否是同一个父对象
+            return item[self.primaryKey] === id;
+          });
+          result[0] = isOneParent;
+          if (!isOneParent) {
+            message.errorMessage("不能多选非关联的数据");
+          } else {
+            result[1] = this.origin_tableData.find(item => {
+              return item[self.primaryKey] === id;
+            });
+            result[2] = val;
+            result[3] = this.data.tableData.filter(item =>{
+              return item[self.primaryKey] === id;
+            })
+          }
+        }
+      }
+      return result;
+    },
     openDialog_add() {
       console.log("新增");
 
@@ -340,7 +345,13 @@ export default {
       this.add.visible = true;
       this.add.checkedData = result;
     },
-    passData_add($event) {
+    passData_add($event){
+      console.log($event);
+      
+       this.add.isPass = $event[0];
+       this.add.data = $event[1];
+    },
+    getFormData_add($event) {
       console.log($event);
       this.add.isPass = $event[0];
       this.add.data = $event[2];
@@ -348,7 +359,7 @@ export default {
     },
     //需要提供一个新增的接口
     ajax_add(data) {},
-    async send_add(isClose, isReset) {
+    async send_add(isClose, isReset) { // isClose: 是否关闭 isReset：是否重置
       if (!this.add.isPass) {
         message.errorMessage("验证未通过");
         return;
@@ -369,19 +380,29 @@ export default {
       console.log(res);
     },
     openDialog_update() {
-      console.log("修改");
-      if (this.multipleSelection.length == 0) {
-        message.infoMessage("必须选中一条数据");
-        return;
-      } else if (this.multipleSelection.length > 1) {
-        message.infoMessage("只能选中一条数据");
-        return;
-      }
-      this.update.formData = this.multipleSelection[0];
-      this.update.visible = true;
+      // console.log("修改");
+      // if (this.multipleSelection.length == 0) {
+      //   message.infoMessage("必须选中一条数据");
+      //   return;
+      // } else if (this.multipleSelection.length > 1) {
+      //   message.infoMessage("只能选中一条数据");
+      //   return;
+      // }
+      // this.update.formData = this.multipleSelection[0];
+      // this.update.visible = true;
+      // this.form_editing = "update";
+      let result = this.checkVerifyHandler();
+      if (!result[0]) return; 
+
       this.form_editing = "update";
+      this.update.visible = true;
+      this.update.checkedData = result;
+
+
+
+
     },
-    passData_update($event) {
+    getFormData_update($event) {
       console.log($event);
 
       this.update.isPass = $event[0];

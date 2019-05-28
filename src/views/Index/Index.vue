@@ -12,7 +12,7 @@
         <Header  />
       </el-header>
 
-      <Tags></Tags>
+        <Tags></Tags>
 
       <el-main style="position:relative;overflow-y:auto;padding-right:0">
           <div >
@@ -22,7 +22,7 @@
         <!--缓存路由组件 , 2019/05/08 修改人：乌日娜  修改内容  在keep-alive外套了div  解决问题：导航伸缩按钮要求固定 这个main页面有滚动条的时候会导致不固定-->
           <div style="height:100%;overflow-y:auto;overflow-x:hidden;" > 
             <keep-alive v-if="isRouterAlive">
-             <router-view ></router-view>
+             <router-view  ></router-view>
             </keep-alive>
           </div>
 
@@ -52,7 +52,6 @@ export default {
     return {
       isRouterAlive:true, //页面刷新
       isRole: true,
-      tagsList: [],
       isCollapse:false
     };
   },
@@ -148,7 +147,7 @@ export default {
   beforeDestroy() {
     this.$ws && this.$ws.close();
   },
-
+ 
 };
 </script>
 

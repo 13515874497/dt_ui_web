@@ -193,6 +193,7 @@ export default {
     tableTitle: {
       handler(val) {
         this.table_title = val;
+				console.log(this.table_title)
       },
       immediate: true
     },
@@ -208,7 +209,17 @@ export default {
       immediate: true
     },
     table_data() {
+      if(!this.editable) return;
       this.initRow_data_();
+      let table_data = JSON.parse(JSON.stringify(this.table_data));
+      table_data.forEach(row=>{
+        for(let key in row){
+          if(key.endsWith('_data_')){
+            delete row[key]
+          }
+        }
+      });
+      this.$emit('giveTableData',[table_data]);
     },
     tableTitleTwo: {
       handler(val) {
@@ -271,7 +282,7 @@ export default {
       });
       return flag;
     },
-    //表格某一列数据全部相同则合并
+    //合并表格
     spanMethod({ row, column, rowIndex, columnIndex }) {
       //如果是多个表的数据合并起来的数据   那么就合并父表的数据
       if (this.mode === 2) {

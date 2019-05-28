@@ -53,6 +53,7 @@
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
+        :required="item.required"
       >
         <el-date-picker
           value-format="timestamp"
@@ -127,6 +128,7 @@
         :label="item.headName"
         :props="item.topType"
         :rules="matchedRule(item)"
+        :required="item.required"
       >
         <el-cascader
           expand-trigger="hover"
@@ -144,6 +146,7 @@
         :label="item.headName"
         :prop="item.topType"
         :rules="matchedRule(item)"
+        :required="item.required"
       >
         <el-input
           v-model.trim="data_model[item.topType]"
@@ -274,6 +277,9 @@ export default {
           let formItem = self.formItems_.find(formItem => {
             return formItem.topType === item.topType;
           });
+          console.log(formItem);
+          console.log(item);
+
           for (let key in item) {
             formItem[key] = item[key];
           }
@@ -290,7 +296,13 @@ export default {
               formItem.data = [];
               let res = await item.ajax();
               if (res.code === 200) {
+                if (formItem.hideChild) {
+                  res.data.forEach(node => {
+                    node.childNode = null;
+                  });
+                }
                 formItem.data = res.data;
+                console.log(formItem.data);
               }
               self.data_model[item.data_model] = [];
               break;
@@ -312,6 +324,7 @@ export default {
       }
       switch (item.inputType) {
         case 1:
+        case 2:
         case 3:
         case 4:
           return item.required ? rules._number : rules.number;
@@ -416,14 +429,14 @@ export default {
       }
       return errCount === 0;
     },
-    passData(isPass) {
+    giveFormData(isPass) {
       let data_model = this.data_model;
       // for (let key in data_model) {
       //   if ( this.customField.includes(key)) {
       //   }
       // }
       // [是否验证通过,绑定的数据,修改后发生变化的数据]
-      this.$emit("passData", [
+      this.$emit("giveFormData", [
         isPass,
         this.getFormData(data_model),
         this.getFormData(data_model, true)
@@ -435,7 +448,7 @@ export default {
       }
     },
     async triggerFormChange() {
-      this.passData(await this.isVerifyPass());
+      this.giveFormData(await this.isVerifyPass());
     },
     changeSelect(val, formItem) {
       let option = formItem.data.find(option => {
@@ -444,8 +457,7 @@ export default {
       this.data_model[formItem.topType] = option[formItem.label];
     }
   },
-  beforeCreate() {
-    },
+  beforeCreate() {},
   async created() {
     this.$emit("giveForm", [this]);
     this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
