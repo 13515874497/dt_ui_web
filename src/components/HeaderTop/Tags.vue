@@ -1,15 +1,16 @@
 <template>
     <div class="tags" v-if="showTags">
-      <div style="position:relative ;height:50px;overflow:hidden">
-        <ul class="tablist" ref="ulId" style="position: absolute;left:0;width:1700px;transition: all 1s; margin-bottom:0">
-              <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title" >
-                  <router-link :to="item.path" class="tags-li-title" >
+      <div style="position:relative ;height:52px;overflow:hidden">
+        <ul id="tablist" ref="ulId" >
+              <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title"  @click="dianji(index,item)"  @mouseleave="leave()">
+                  <router-link :to="item.path" class="tags-li-title">
                   {{item.title | ellipsis}}
                   </router-link>
-                  <span class="tags-li-icon" @click="closeTags(index)" v-show="item.path !=='/index'"><i class="el-icon-close"></i></span>
-                 
+                    <span class="tags-li-icon" @click="closeTags(index)" v-show="item.path !== '/index'"><i class="el-icon-close"></i></span> 
+                 <div id="hides" v-show="indexHide == index&&isHide && item.path !== '/index'">
                     <el-button  @click="refresh" class=" el-icon-refresh fresh" size="mini" >刷新</el-button>
-                    <el-button @click="collect" class=" el-icon-star-off collect" size="mini">收藏</el-button>  
+                    <el-button @click="collect" class=" el-icon-star-off collect" size="mini" >收藏</el-button> 
+                 </div>                                 
               </li>
         </ul>          
       </div>
@@ -25,7 +26,7 @@
                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
                 </el-dropdown-menu>
             </el-dropdown>
-            
+               
         </div>
     </div>
 </template>
@@ -47,10 +48,24 @@ export default {
   data() {
     return {
       tagsList: [],
-      isShow: false
+      indexHide: -1,
+      isHide: false
     };
   },
   methods: {
+    dianji(x, i) {
+      //x代表索引，i代表路径
+      // console.log(x)
+      // console.log(i)
+      // console.log(this.isHide)
+      this.indexHide = x;
+      this.isHide = true;
+      // console.log(this.isHide)
+    },
+    leave() {
+      this.isHide = false;
+    },
+
     isActive(path) {
       return path === this.$route.fullPath;
     },
@@ -68,8 +83,8 @@ export default {
     },
     // 关闭全部标签
     closeAll() {
-      this.tagsList = [];
       this.$router.push("/index");
+      this.tagsList = [];
       this.isShow = false;
     },
     // 关闭其他标签
@@ -83,6 +98,7 @@ export default {
     refresh() {
       this.reload();
     },
+
     //收藏页面
     collect() {
       console.log("收藏");
@@ -116,14 +132,15 @@ export default {
 
     handleTags(command) {
       command === "other" ? this.closeOther() : this.closeAll();
-    },
-    // 向左点击
+    }
+    //向左点击
     // next_pic() {
     //   let wrap = this.$refs.ulId;
     //   var newLeft;
     //   newLeft = parseInt(wrap.style.left) - 40;
     //   wrap.style.left = newLeft + "px";
     //   console.log(newLeft)
+
     // },
     // //向右点击
     // prev_pic() {
@@ -208,11 +225,12 @@ a {
   height: 100%;
   text-decoration: underline;
   padding: 0px;
-  margin-left: 20px;
+  // margin-left: 20px;
 }
 
 .tags-li {
-  float: left;
+  // float: left;
+  display: inline-block; 
   margin: 7px 5px 2px 3px;
   border-radius: 3px;
   font-size: 12px;
@@ -290,18 +308,45 @@ a {
   left: 7px;
 }
 
-.tags-li .fresh,
-.tags-li .collect {
-  display: none;
-}
-.tags-li:hover .fresh {
-  display: block;
-}
-.tags-li:hover .collect {
-  display: block;
-}
+// .tags-li .fresh,
+// .tags-li .collect{
+//   display: none;
+// }
+// .tags-li:hover .fresh{
+//    display:block;
+// }
+// .tags-li:hover .collect{
+//    display:block;
+// }
 .btnmi {
   padding: 10px 15px;
+}
+#tablist { 
+overflow-x: auto; //设置x轴可滑动 
+list-style: none;//去掉li上的小点 
+white-space:nowrap;//元素不换行 
+width: auto;
+position: absolute;
+left:0;
+transition: all 1s; 
+margin-bottom:0;
+}
+/*-------滚动条整体样式----*/
+#tablist::-webkit-scrollbar {
+width:3px;
+height:3px;
+}
+/*滚动条里面小方块样式*/
+#tablist::-webkit-scrollbar-thumb {
+border-radius:100px;
+-webkit-box-shadow:inset 0 0 5px rgba(0,0,0,0.2);
+background:#ccc;
+}
+/*滚动条里面轨道样式*/
+#tablist::-webkit-scrollbar-track {
+-webkit-box-shadow:inset 0 0 5px rgba(0,0,0,0.2);
+border-radius:0;
+background:rgba(0,0,0,0.1);
 }
 
 </style>

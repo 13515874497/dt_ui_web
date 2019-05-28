@@ -113,7 +113,6 @@ export default {
 <style lang="scss" scoped>
 .header {
   position: relative;
-
   background: url("./img/logo.png") no-repeat left center;
   min-width: 930px;
   .main {
