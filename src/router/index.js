@@ -63,6 +63,15 @@ import OP_Review from '../views/Operate/Amazon/Other/Review'//Review
 import OP_Closing from '../views/Operate/Ending/Closing_accounts'//期末关帐
 import OP_Settle from '../views/Operate/Ending/Settle_accounts'//期末结账
 
+//采购管理=>业务处理
+import purchase_po_order from '../views/purchaseManagement/businessProcess/purchase_po_order'
+
+
+
+
+
+
+
 
 //基础资料=>物流管理
 
@@ -92,6 +101,14 @@ import Exit_Customs from '../views/Basic_Data/Basic_Logistics/Exit_Customs' //�
 import Exp_Off from '../views/Basic_Data/Basic_Logistics/Export_management/Off_Shore_Company'//出口管理离岸公司
 import way_of_closing from '../views/Basic_Data/Basic_Logistics/way_of_closing' //成交方式
 import quarantine_type from '../views/Basic_Data/Basic_Logistics/quarantine_type' //检验检疫类别
+
+
+
+
+
+
+
+
 
 
 import Purchase from '../views/Basic_Data/Basic_Purchase/Price'//采购价格
@@ -156,6 +173,10 @@ export default new Router({
       },
       name:'Index',
       children: [
+        {
+          path: '/index/purchase_po_order/:id/:name',   //系统管理-> 用户管理->账号管理
+          component: purchase_po_order,
+        },
         {
           path: '/index/account_management/:id/:name',   //系统管理-> 用户管理->账号管理
           component: AccountManagement,

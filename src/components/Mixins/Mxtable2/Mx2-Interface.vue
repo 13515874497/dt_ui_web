@@ -3,6 +3,7 @@
     <section>
       <Form
         :formItems="formItems_parent"
+        :formData="formData_parent"
         @giveFormData="getFormData"
         @giveForm="getForm"
         :rule="rule"
@@ -12,7 +13,12 @@
     </section>
     <section>
       <el-radio-group v-model="radio" size="mini">
-        <el-radio-button v-show="radio.name" v-for="radio in radios" :label="radio.key" :key="radio.key">{{radio.name}}</el-radio-button>
+        <el-radio-button
+          v-show="radio.name"
+          v-for="(radio,key,index) in radios"
+          :label="radio.key"
+          :key="radio.key_submit"
+        >{{radio.name}}</el-radio-button>
       </el-radio-group>
       <Table
         :editable="true"
@@ -41,17 +47,21 @@
 <script>
 import Table from "@/components/ElementUi/Table";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
-import {saveNotice} from '@/api'
+import { saveNotice } from "@/api";
 export default {
   props: {
     visible: Boolean,
+    type: {
+      type: String, //区分当前是新增还是修改
+      default: 'add'
+    },
     titles: {
       //接收一个表头列表  里面含有2张表组成  如果是主表  那么显示为form表单 子表则显示为表格
       type: Array,
       required: true
     },
     data: {
-      //[true,{},[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,父数据,子数据]
+      //[true,{},[],[]]接收表头所对应的数据[所选择的多个子数据是否是对应父表中的单独一条数据,原始数据,当前选中的子数据(用于新增),同一个父数据下面的所有子数据(用于修改)] 这里的子数据指的是父子合并后的数据
       type: Array
     },
 
@@ -61,30 +71,30 @@ export default {
       default: () => ({})
     },
     customField: {
-      //form自定义显示字段
+      //form自定义字段类型
 
       type: Array,
       default: () => []
     },
     customField_table: {
-      //table自定义显示字段
+      //table自定义字段类型
       type: Array,
       default: () => []
     },
-    reset: {
+    reset: {//改变即重置form
       type: Boolean,
       default: false
     },
-    editable_field: {
+    editable_field: { //表格中哪些字段可以被编辑
       type: Array,
       default: () => []
     },
-    parentKey: {
+    parentKey: { //父主键
       type: String
     },
-    radios: {
-      type: Array,
-      default:() => []
+    radios: { //目前为一个父下只有一个子,所以现在都只有一个数据
+      type: Object,
+      default: () => []
     }
   },
   components: {
@@ -104,9 +114,9 @@ export default {
       formData_parent: null, //form初始值 ，有就代表是修改
       tableTitle_children: [], //
       tableData_children: [],
-      isPass: null,
-      passData: {},
-      radio: this.radios && this.radios[0].key
+      isPass: null, //是否验证通过
+      passData: {}, //向上传递的数据
+      radio: this.radios && this.radios["1"].key_submit //radio默认选中第一个
     };
   },
   computed: {
@@ -136,10 +146,8 @@ export default {
       }
     },
     passData: {
-      handler(val){
-        console.log('2222222222');
-        
-        this.$emit('passData',[this.isPass,val]);
+      handler(val) {
+        this.$emit("passData", [this.isPass, val]);
       },
       deep: true
     },
@@ -177,20 +185,38 @@ export default {
       });
     },
     //获取主表中要显示的form数据
-    getParentFormData() {},
+    getParentFormData() {
+      switch(this.type){
+        case 'add':
+          this.formData_parent = null;
+          break;
+          case 'update':
+          this.formData_parent = this.data_[1];
+          break;
+      }
+    },
     //获取子表中要显示的tableData列表
     getChildrenTableData() {
-      this.tableData_children = this.data_[2];
+      console.log(this.data_);
+      switch(this.type){
+        case 'add':
+          this.tableData_children = this.data_[2];
+          break;
+          case 'update':
+          this.tableData_children = this.data_[3];
+          break;
+      }
+      
+
       console.log(this.tableData_children);
     },
-    //form表单中的验证结果
+    //form表单返回的验证结果和数据
     getFormData($event) {
       console.log($event);
       this.isPass = $event[0];
-      
+
       this.passData[this.parentKey] = $event[2];
       console.log(this.passData);
-      
     },
     //form表单中的数据
     //获取表单组件对象
@@ -204,7 +230,7 @@ export default {
       this.table = $event[0];
       this.$emit("giveTable", [this.table]);
     },
-    getTableData($event){
+    getTableData($event) {
       this.passData[this.radio] = $event[0];
       console.log(this.passData);
       // saveNotice(this.passData);
@@ -221,15 +247,20 @@ export default {
       this.tableData_children.push(row);
 
       console.log(this.tableTitle_children);
+    },
+    //初始化passData
+    initPassData() {
+      this.$set(this.passData, this.parentKey, {});
+      for (let key in this.radios) {
+        let radio = this.radios[key];
+        this.$set(this.passData, radio.key_submit, []);
+      }
     }
   },
   created() {
-    let self = this;
     this.initOperateBtn();
-    this.$set(this.passData,this.parentKey,{});
-    this.radios.forEach(radio=>{
-      self.$set(this.passData,radio.key,[])
-    });
+    console.log(this.data_);
+    
   }
 };
 </script>

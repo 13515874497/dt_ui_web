@@ -47,7 +47,7 @@
           :customField_table="customField_table"
           :editable_field="editable_field"
           :parentKey="parentKey"
-          :radios="radios"
+          :radios="subField"
           @giveForm="getForm"
           @giveTable="getTable"
           @passData="passData_add"
@@ -61,7 +61,7 @@
 
     <!-- 修改 -->
     <section>
-      <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible">
+      <el-dialog :title="'修改 '+page.name" :visible.sync="update.visible" width="90%">
         <!-- <Form :formItems="formItems" :formData="data_field" @giveFormData="getFormData_update"></Form> -->
         <!-- <Form
           key="修改"
@@ -72,7 +72,21 @@
           @giveTable="getTable"
           :rule="rule"
           :customField="update.customField"
-        ></Form> -->
+        ></Form>-->
+         <Mx2Interface
+          :titles="formItems"
+          :data="update.checkedData"
+          :customField="customField"
+          :customField_table="customField_table"
+          :editable_field="editable_field"
+          :parentKey="parentKey"
+          :radios="subField"
+          @giveForm="getForm"
+          @giveTable="getTable"
+          @passData="passData_add"
+
+          type="update"
+        ></Mx2Interface>
 
         <div slot="footer" class="dialog-footer">
           <el-button @click="update.visible = false">取 消</el-button>
@@ -168,7 +182,17 @@ export default {
         "effectiveDate"
       ],
       //在form中需要填写的
-      sysLogForm: ["remark", "status"]
+      sysLogForm: ["remark", "status"],
+      subField:[], //有二级字段的表格必须提供这个 如下:
+      // subField: {
+      //   "1": {
+      //     //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
+      //     //radio选项  和  点击新增、修改的时候传给后台的key
+      //     name: "出货通知单",
+      //     key_submit: "salesShipNoticeEntry", //传给后台的key
+      //     key_get: "noticeEntryList" //获取时从哪里拿出来
+      //   }
+      // }
     };
   },
   computed: {
@@ -178,7 +202,6 @@ export default {
       });
     },
     form() {
-     
       switch (this.form_editing) {
         case "add":
           return this.add.form;
@@ -188,7 +211,6 @@ export default {
       }
     },
     form_data_model() {
-      
       return (this.form && this.form.data_model) || null;
     },
     table() {
@@ -200,10 +222,9 @@ export default {
         case "update":
           return this.update.table;
       }
-      
     },
-    table_table_data(){
-      return this.table && this.table.table_data || null;
+    table_table_data() {
+      return (this.table && this.table.table_data) || null;
     }
   },
   components: {
@@ -233,7 +254,7 @@ export default {
     checkboxValue: function(val) {
       this.multipleSelection = val;
     },
-   
+
     //点击查询获得table的值
     async search() {
       this.pagination(this.data);
@@ -253,7 +274,7 @@ export default {
       if (res.code === 200) {
         //对表格数据进行处理
         this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
-        pUtils.handlerTableData(res, data);
+        pUtils.handlerTableData(res, data,this.subField);
       }
     },
     reset() {
@@ -301,13 +322,13 @@ export default {
         }
       }
     },
-     //对选中的数据进行校验
+    //对选中的数据进行校验
     checkVerifyHandler() {
       let self = this;
       let val = this.multipleSelection;
       let result = [];
       if (!val.length) {
-        result = [true, null, [],[]];
+        result = [true, null, [], []];
       } else {
         let id = val[0][this.primaryKey]; //选中的父id必须相同
         if (id == undefined) {
@@ -326,9 +347,9 @@ export default {
               return item[self.primaryKey] === id;
             });
             result[2] = val;
-            result[3] = this.data.tableData.filter(item =>{
+            result[3] = this.data.tableData.filter(item => {
               return item[self.primaryKey] === id;
-            })
+            });
           }
         }
       }
@@ -339,27 +360,28 @@ export default {
 
       console.log(this.checkVerifyHandler());
       let result = this.checkVerifyHandler();
-      if (!result[0]) return; 
+      if (!result[0]) return;
 
       this.form_editing = "add";
       this.add.visible = true;
       this.add.checkedData = result;
     },
-    passData_add($event){
+    passData_add($event) {
       console.log($event);
-      
-       this.add.isPass = $event[0];
-       this.add.data = $event[1];
-    },
-    getFormData_add($event) {
-      console.log($event);
+
       this.add.isPass = $event[0];
-      this.add.data = $event[2];
-      this.handlerFormData(this.add.data);
+      this.add.data = $event[1];
     },
+    // getFormData_add($event) {
+    //   console.log($event);
+    //   this.add.isPass = $event[0];
+    //   this.add.data = $event[2];
+    //   this.handlerFormData(this.add.data);
+    // },
     //需要提供一个新增的接口
     ajax_add(data) {},
-    async send_add(isClose, isReset) { // isClose: 是否关闭 isReset：是否重置
+    async send_add(isClose, isReset) {
+      // isClose: 是否关闭 isReset：是否重置
       if (!this.add.isPass) {
         message.errorMessage("验证未通过");
         return;
@@ -392,15 +414,11 @@ export default {
       // this.update.visible = true;
       // this.form_editing = "update";
       let result = this.checkVerifyHandler();
-      if (!result[0]) return; 
+      if (!result[0]) return;
 
       this.form_editing = "update";
-      this.update.visible = true;
       this.update.checkedData = result;
-
-
-
-
+      this.update.visible = true;
     },
     getFormData_update($event) {
       console.log($event);
