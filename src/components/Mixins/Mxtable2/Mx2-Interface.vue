@@ -151,7 +151,7 @@ export default {
       },
       deep: true
     },
-    tableData_children() {}
+    // tableData_children() {}
   },
   methods: {
     initOperateBtn() {
@@ -233,7 +233,6 @@ export default {
     getTableData($event) {
       this.passData[this.radio] = $event[0];
       console.log(this.passData);
-      // saveNotice(this.passData);
     },
     //点击新增给表格加一行空数据
     addRow() {
@@ -259,6 +258,7 @@ export default {
   },
   created() {
     this.initOperateBtn();
+    this.initPassData();
     console.log(this.data_);
     
   }

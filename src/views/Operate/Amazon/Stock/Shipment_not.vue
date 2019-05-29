@@ -115,12 +115,12 @@ export default {
         let data_model = this.form_data_model;
         if (table_data && table_data.length) {
           let data_model = this.form_data_model;
-          let calcSum = [
-            "ttlQty:quantity",
-            "ttlVolume:neVolumeM3",
-            "ttlGwKg:neGwKg",
-            "ttlNwKg:neNwKg"
-          ];
+          // let calcSum = [
+          //   "ttlQty:quantity",
+          //   "ttlVolume:neVolumeM3",
+          //   "ttlGwKg:neGwKg",
+          //   "ttlNwKg:neNwKg"
+          // ];
           let ttlQty = 0, //总数量
             ttlVolume = 0, //总体积
             ttlGwKg = 0, //总毛重

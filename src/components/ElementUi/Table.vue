@@ -193,7 +193,7 @@ export default {
     tableTitle: {
       handler(val) {
         this.table_title = val;
-				console.log(this.table_title)
+        console.log(this.table_title);
       },
       immediate: true
     },
@@ -208,18 +208,23 @@ export default {
       },
       immediate: true
     },
-    table_data() {
-      if(!this.editable) return;
-      this.initRow_data_();
-      let table_data = JSON.parse(JSON.stringify(this.table_data));
-      table_data.forEach(row=>{
-        for(let key in row){
-          if(key.endsWith('_data_')){
-            delete row[key]
+    table_data: {
+      deep: true,
+      handler() {
+        if (!this.editable) return;
+        this.initRow_data_();
+        let table_data = JSON.parse(JSON.stringify(this.table_data));
+        table_data.forEach(row => {
+          for (let key in row) {
+            if (key.endsWith("_data_")) {
+              delete row[key];
+            }
           }
-        }
-      });
-      this.$emit('giveTableData',[table_data]);
+        });
+        console.log(888888888888888);
+        
+        this.$emit("giveTableData", [table_data]);
+      }
     },
     tableTitleTwo: {
       handler(val) {
@@ -530,7 +535,7 @@ export default {
       }
 
       // this.table_data = [...this.table_data]
-    },
+    }
   },
   created() {
     let self = this;
