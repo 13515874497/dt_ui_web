@@ -288,11 +288,11 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, d
 // 运营管理=>通知单
 
 //出货通知单分页
-export const getNotice = (data) => ajax(BASE_URL + `/no/getNotice`, data, 'POST')
+export const getNotice = (data) => ajax(BASE_URL + `/ship/getNotice`, data, 'POST')
 //根据skuId获取 数据/api/v1/product/getProductAdnSku?skuId=1
 export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data,'GET',[false,'请求失败'])
 
-export const saveNotice = (data) => ajax(BASE_URL + '/no/saveNotice',data, 'POST')
+export const saveNotice = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 
 
 
