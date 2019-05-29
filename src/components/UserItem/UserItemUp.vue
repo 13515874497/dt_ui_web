@@ -370,7 +370,7 @@ export default {
         this.userForm["accountStatus"] = item.accountStatus;
         this.userForm["mobilePhone"] = item.mobilePhone;
         this.userForm["uid"] = item.uid;
-        this.userForm["rid"] = item.rId;
+        this.userForm["rid"] = item.rid;
         this.userForm["pwdValidityPeriod"] = item.pwdValidityPeriod;
         this.userForm["userExpirationDate"] = item.userExpirationDate;
         this.userForm["version"] = item.version;

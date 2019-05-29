@@ -21,6 +21,7 @@ export const productsName = {
   inputType: 5,
   ajax: findByListProducts,
 }
+//运输类型
 export const transportTypeName = {
   topType: "transportTypeName",
   bindKey: 'transportTypeId',

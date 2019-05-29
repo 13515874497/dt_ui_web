@@ -714,6 +714,9 @@ export default {
                     progress.status = "exception";
                   }
                 });
+              }else if(resAdd.code === -1){
+                message.errorMessage(resAdd.msg);
+                self.setUploadStatus('上传失败', 2, "error");
               }
             });
           }

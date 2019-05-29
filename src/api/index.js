@@ -285,13 +285,14 @@ export const getInventoryInfo = (data) => ajax(BASE_URL + `/fba/getInventoryInfo
 //FBA遗弃  post
 export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, data, 'POST')
 
-// 运营管理=> 亚马逊=>通知单
+// 运营管理=>通知单
 
 //出货通知单分页
 export const getNotice = (data) => ajax(BASE_URL + `/no/getNotice`, data, 'POST')
 //根据skuId获取 数据/api/v1/product/getProductAdnSku?skuId=1
 export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data,'GET',[false,'请求失败'])
 
+export const saveNotice = (data) => ajax(BASE_URL + '/no/saveNotice',data, 'POST')
 
 
 
@@ -319,6 +320,13 @@ export const delReview = (data) => ajax(BASE_URL + `/fba/delReview`, data)
 export const getSkuName = (data) => ajax(BASE_URL + `/sku/getSkuName`, data)
 //Feedback分页
 export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`, data, 'POST')
+
+
+
+
+
+
+
 /**
  *
  * 人事管理 => 基础档案

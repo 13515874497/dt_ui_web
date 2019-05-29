@@ -71,6 +71,7 @@ export default {
         return;
       }
       this.menuList = menu;
+			
     },
     hoverD(){
       this.tool_tips_show = true;

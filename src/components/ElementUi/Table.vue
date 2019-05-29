@@ -121,7 +121,11 @@
         >
           <template slot-scope="scope">
             <span class="editting" v-if="editable">
-              <el-input size="small" v-model="scope.row[title.topType]"></el-input>
+              <el-input
+                :disabled="isEditable(title.topType)"
+                size="small"
+                v-model="scope.row[title.topType]"
+              ></el-input>
             </span>
             <span class="editted">{{scope.row[title.topType]}}</span>
           </template>
@@ -138,6 +142,7 @@
 <script>
 import Sortable from "sortablejs";
 import { deepClone } from "@/utils/Arrays";
+import { Loading } from "element-ui";
 export default {
   data() {
     return {
@@ -168,6 +173,10 @@ export default {
       type: Boolean,
       default: false
     },
+    editable_field: {
+      type: Array,
+      default: () => []
+    },
     customField_table: {
       type: Array,
       default: () => []
@@ -190,13 +199,27 @@ export default {
     },
     tableData: {
       // this.setRepeatField();
-      handler(val) {
+      handler(val, oldVal) {
         // if (this.editable) {
-        this.table_data = deepClone(val);
-        this.initCustomField();
+        this.table_data = [...this.tableData];
+        // this.initCustomField();
+        this.initRow_data_();
         // }
       },
       immediate: true
+    },
+    table_data() {
+      if(!this.editable) return;
+      this.initRow_data_();
+      let table_data = JSON.parse(JSON.stringify(this.table_data));
+      table_data.forEach(row=>{
+        for(let key in row){
+          if(key.endsWith('_data_')){
+            delete row[key]
+          }
+        }
+      });
+      this.$emit('giveTableData',[table_data]);
     },
     tableTitleTwo: {
       handler(val) {
@@ -259,7 +282,7 @@ export default {
       });
       return flag;
     },
-    //表格某一列数据全部相同则合并
+    //合并表格
     spanMethod({ row, column, rowIndex, columnIndex }) {
       //如果是多个表的数据合并起来的数据   那么就合并父表的数据
       if (this.mode === 2) {
@@ -436,98 +459,89 @@ export default {
       });
       return sums;
     },
+    //可编辑的表格某个字段是否可编辑
+    isEditable(topType) {
+      return !this.editable_field.includes(topType);
+    },
     //初始化自定义的字段 //里所有的select数据都放到title上  也就是表格里的每条数据select都是相同的
     initCustomField() {
-      let self = this;
-      return new Promise(async (resolve, reject) => {
-        if (!self.customField_table) {
-          resolve(null);
-          return;
+      // let self = this;
+      for (let i = 0; i < this.customField_table.length; i++) {
+        let cusItem = this.customField_table[i];
+        let title = this.table_title.find(title => {
+          return title.topType === cusItem.topType;
+        });
+        for (let key in cusItem) {
+          title[key] = cusItem[key];
         }
-        for (let i = 0; i < self.customField_table.length; i++) {
-          let cusItem = self.customField_table[i];
-          let title = self.table_title.find(title => {
-            return title.topType === cusItem.topType;
-          });
-          for (let key in cusItem) {
-            title[key] = cusItem[key];
-          }
-        }
-        for (let i = 0; i < self.table_data.length; i++) {
-          let row = self.table_data[i];
-          await self.bindRow_data_(row);
-        }
-        console.log("我后面执行");
-
-        //等待前方全部请求完毕
-        resolve(null);
-      });
+      }
+      this.initRow_data_();
+    },
+    initRow_data_() {
+      // return new Promise(async (resolve, reject) => {
+      for (let i = 0; i < this.table_data.length; i++) {
+        let row = this.table_data[i];
+        this.bindRow_data_(row);
+      }
+      // resolve(null);
+      // });
     },
     //如果数据中有如select、级联等需要数据选择的   需要给每行数据绑定下拉框list
     async bindRow_data_(row) {
-      let self = this;
-      return new Promise(async (resolve, reject) => {
-        if (!self.customField_table) {
-          resolve(null);
-          return;
-        }
-        for (let i = 0; i < self.customField_table.length; i++) {
-          let cusItem = self.customField_table[i];
-          let tempKey = cusItem.topType + "_data_";
-          if(row[tempKey]) continue;
-          row[tempKey] = [];
-          // if (cusItem.remote) continue;
-          switch (cusItem.inputType) {
-            case 3:
-              if (cusItem.remote) {
-                cusItem.remoteMethod('',row);
-              } else {
-                let res3 = await cusItem.ajax();
-                if (res3.code === 200) {
-                  row[tempKey] = res3.data.dataList || res3.data;
-                }
-                break;
+      // let self = this;
+      // return new Promise(async (resolve, reject) => {
+      for (let i = 0; i < this.customField_table.length; i++) {
+        let cusItem = this.customField_table[i];
+        let tempKey = cusItem.topType + "_data_";
+        if (row[tempKey]) continue;
+        row[tempKey] = [];
+        // if (cusItem.remote) continue;
+        switch (cusItem.inputType) {
+          case 3:
+            if (cusItem.remote) {
+              cusItem.remoteMethod("", row);
+            } else {
+              let res3 = await cusItem.ajax();
+              if (res3.code === 200) {
+                row[tempKey] = res3.data.dataList || res3.data;
               }
+              break;
+            }
 
-            // case 5:
-            //   let res = await cusItem.ajax();
-            //   if (res.code === 200) {
-            //      row[tempKey]  = res.data;
-            //   }
-            //   self.data_model[cusItem.data_model] = [];
-            //   break;
-          }
+          // case 5:
+          //   let res = await cusItem.ajax();
+          //   if (res.code === 200) {
+          //      row[tempKey]  = res.data;
+          //   }
+          //   this.data_model[cusItem.data_model] = [];
+          //   break;
         }
-        resolve(null);
-      });
+      }
+      // resolve(null);
+      // });
     },
     changeSelect(val, title, row, cb) {
-      console.log(val, title, row);
       let option = row[title.topType + "_data_"].find(option => {
         return option[title.bindKey] === val;
       });
-      console.log(option);
-
       row[title.topType] = option[title.label];
       if (cb) {
         cb(val, row, title);
       }
-      // console.log();
 
       // this.table_data = [...this.table_data]
-    }
+    },
   },
-  async created() {
+  created() {
     let self = this;
     // this.table_title = [...this.tableTitle];
-console.log(this.table_title)
-    this.readFixedCache();
-    this.initOptions();
-    this.createTempWarpdom();
-    await this.initCustomField();
     if (this.editable) {
       this.$emit("giveTable", [this]);
     }
+    this.readFixedCache();
+    this.initOptions();
+    this.createTempWarpdom();
+    this.initCustomField();
   },
 
   mounted() {
