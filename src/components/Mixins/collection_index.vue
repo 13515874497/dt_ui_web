@@ -71,16 +71,6 @@
 				console.log(`当前页: ${val}`);
 			}
 		},
-		// async created() {
-		// 	let res = await repMenu();
-		// 	console.log(res);
-		// 	let datas = res.data;
-		// 	
-		// 	// /index/log_customs
-		// 	
-		// 	
-		// 	
-		// },
 		mounted:function(){
 
 			var $ul = this.$el.querySelector('ul')
