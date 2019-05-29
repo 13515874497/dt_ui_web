@@ -1,15 +1,15 @@
 <template>
     <div class="tags" v-if="showTags">
-      <div style="position:relative ;height:52px;overflow:hidden">
+      <div style="position:relative ;height:54px;overflow:hidden">
         <ul id="tablist" ref="ulId" >
-              <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title"  @click="dianji(index,item)"  @mouseleave="leave()">
+              <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title"  @click="dianji(index,item)"  @mouseleave="leave()">        
                   <router-link :to="item.path" class="tags-li-title">
                   {{item.title | ellipsis}}
                   </router-link>
                     <span class="tags-li-icon" @click="closeTags(index)" v-show="item.path !== '/index'"><i class="el-icon-close"></i></span> 
                  <div id="hides" v-show="indexHide == index&&isHide && item.path !== '/index'">
-                    <el-button  @click="refresh" class=" el-icon-refresh fresh" size="mini" >刷新</el-button>
-                    <el-button @click="collect" class=" el-icon-star-off collect" size="mini" >收藏</el-button> 
+                    <el-button  @click.stop="refresh" class=" el-icon-refresh fresh" size="mini" >刷新</el-button>
+                    <el-button @click="collect(item)" class=" el-icon-star-off collect" size="mini" >收藏</el-button> 
                  </div>                                 
               </li>
         </ul>          
@@ -33,6 +33,7 @@
 
 <script>
 import bus from "../../api/bus";
+import {repMenu} from '@/api'
 export default {
   inject: ["reload"], //引入页面加载刷新
   //标签字数大于4个就显示省略号
@@ -100,8 +101,12 @@ export default {
     },
 
     //收藏页面
-    collect() {
-      console.log("收藏");
+    collect(item) {
+      console.log("收藏"); 
+      console.log(item.path)
+      let path = item.path //每个标签页的路径
+      console.log(path)
+    
     },
     // 设置标签
     setTags(route) {
@@ -122,7 +127,6 @@ export default {
           path: route.fullPath,
           name: route.name
         });
-        console.log(route.meta.title);
         console.log(route.fullPath);
         console.log(route.matched[1]);
         console.log(this.$route.params.name);
@@ -240,7 +244,7 @@ a {
   line-height: 28px;
   border: 1px solid #e9eaec;
   // background: #409EFF;
-  padding: 0 5px 0 12px;
+  padding: 0 13px 0 13px;
   vertical-align: middle;
   color: #666;
   -webkit-transition: all 0.3s ease-in;
@@ -325,7 +329,7 @@ a {
 overflow-x: auto; //设置x轴可滑动 
 list-style: none;//去掉li上的小点 
 white-space:nowrap;//元素不换行 
-width: auto;
+width:auto;
 position: absolute;
 left:0;
 transition: all 1s; 
@@ -333,18 +337,18 @@ margin-bottom:0;
 }
 /*-------滚动条整体样式----*/
 #tablist::-webkit-scrollbar {
-width:3px;
-height:3px;
+width:5px;
+height:5px;
 }
 /*滚动条里面小方块样式*/
 #tablist::-webkit-scrollbar-thumb {
 border-radius:100px;
--webkit-box-shadow:inset 0 0 5px rgba(0,0,0,0.2);
+-webkit-box-shadow:inset 0 0 8px rgba(0,0,0,0.1);
 background:#ccc;
 }
 /*滚动条里面轨道样式*/
 #tablist::-webkit-scrollbar-track {
--webkit-box-shadow:inset 0 0 5px rgba(0,0,0,0.2);
+-webkit-box-shadow:inset 0 0 8px rgba(0,0,0,0.8);
 border-radius:0;
 background:rgba(0,0,0,0.1);
 }

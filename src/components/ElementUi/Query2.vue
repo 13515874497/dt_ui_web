@@ -54,7 +54,11 @@
       getValue (sel) {
         this.$emit('getValue', sel)
       }
-    }
+    },
+		created() {
+			this.tVal = [...this.tValList];
+			this.getValue (this.tVal);
+		}
 
   }
 </script>

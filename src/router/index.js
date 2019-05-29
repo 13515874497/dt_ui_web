@@ -160,6 +160,8 @@ import UserFeedBack from '../views/UserFeed/UserFeedBack.vue'  //用户反馈
 
 import Audit from '../views/Audit/Audit.vue'  //用户反馈
 
+import Collection from '../views/CollectionIndex/CollectionIndex.vue'//收藏
+
 Vue.use(Router)
 
 
@@ -181,6 +183,7 @@ export default new Router({
           path: '/index/account_management/:id/:name',   //系统管理-> 用户管理->账号管理
           component: AccountManagement,
           name:'AccountManagement',
+      
         },
         {
           path: '/index/role_management/:id/:name',  //系统管理-> 用户管理->角色管理
@@ -831,7 +834,13 @@ export default new Router({
           component: Audit,
           name:'Audit',   
         }, 
-      ]
+					{
+				  path: '/index/collection_index/:id/:name',  //收藏
+				  component: Collection,
+				  name:'Collection',   
+				}
+      ],
+			redirect:'/index/collection_index/336/收藏'
     },
     {
       path: '/login',

@@ -315,6 +315,7 @@ export default {
   created() {
     this.updateTableTitle();
     this.setSysLogInclude(+this.$route.params.id)
+		this.initInput();
   },
   mounted() {
 		// this.initInput();
