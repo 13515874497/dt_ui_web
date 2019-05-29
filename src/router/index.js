@@ -162,6 +162,7 @@ export default new Router({
           path: '/index/account_management/:id/:name',   //系统管理-> 用户管理->账号管理
           component: AccountManagement,
           name:'AccountManagement',
+      
         },
         {
           path: '/index/role_management/:id/:name',  //系统管理-> 用户管理->角色管理
