@@ -358,10 +358,6 @@ export default {
         for (let key in this.formData) {
           this.$set(this.data_model, key, this.formData[key]);
         }
-        console.log('44444444444444444444444444444');
-        
-        console.log(this.data_model);
-        
       } else {
         //新增
         this.formItems_.forEach(item => {
@@ -421,8 +417,6 @@ export default {
         });
       });
       console.log(promise);
-      console.log('1111111111111111111111111111111111');
-      
       //如果修改的字段验证错误发生时 当前值和原先的值一样, 那么验证通过 flag通过并向上传递
       let errCount = 0;
       for (let key in promise[1]) {
