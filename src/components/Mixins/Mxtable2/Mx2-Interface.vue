@@ -147,6 +147,8 @@ export default {
     },
     passData: {
       handler(val) {
+        console.log([this.isPass, val]);
+        
         this.$emit("passData", [this.isPass, val]);
       },
       deep: true

@@ -209,6 +209,8 @@ export default {
       immediate: true
     },
     table_data() {
+      console.log('999999999999999999999');
+      
       if(!this.editable) return;
       this.initRow_data_();
       let table_data = JSON.parse(JSON.stringify(this.table_data));
@@ -220,6 +222,8 @@ export default {
         }
       });
       this.$emit('giveTableData',[table_data]);
+      console.log(table_data);
+      
     },
     tableTitleTwo: {
       handler(val) {
