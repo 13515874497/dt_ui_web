@@ -30,6 +30,7 @@ export default {
     //分页
     handleSizeChange(val) {
       this.data.pageSize = val;
+			console.log(this.data)
       this.$emit("pageData", this.data);
     },
     //val=当前页 分页

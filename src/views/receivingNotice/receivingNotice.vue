@@ -1,6 +1,6 @@
 <script>
 //出货通知单
-import { getReceiving, saveNotice, getProductAdnSku, getSkuName } from "@/api";
+import { getReceiving, saveReceiving, getProductAdnSku, getSkuName } from "@/api";
 import {
   shopName,
   siteName,
@@ -15,7 +15,7 @@ export default {
   data() {
     return {
       primaryKey: "shipNoticeId",
-
+			queryKey: 'purchasePoReceiptNoticeEntry',
       customField: [
         shopName,
         siteName,
@@ -87,9 +87,9 @@ export default {
       subField: {
         "1": { //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
           //radio选项  和  点击新增、修改的时候传给后台的key
-          name: "出货通知单",
-          key_submit: "salesShipNoticeEntry", //传给后台的key
-          key_get: 'noticeEntryList' //获取时从哪里拿出来
+          name: "收货通知单",
+          key_submit: "", //传给后台的key
+          key_get: 'poReceiptNoticeEntryList' //获取时从哪里拿出来
         }
       }
     };
@@ -180,7 +180,7 @@ export default {
       return getReceiving(data); //查询页面的接口
     },
     ajax_add(data) {
-      return saveReceiving(data); //新增的接口
+      return saveReceiving(data); //新增的接口 
     },
     // async getSkuList(query) {
     //   console.log(query);

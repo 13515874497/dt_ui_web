@@ -221,8 +221,6 @@ export default {
             }
           }
         });
-        console.log(888888888888888);
-        
         this.$emit("giveTableData", [table_data]);
       }
     },
