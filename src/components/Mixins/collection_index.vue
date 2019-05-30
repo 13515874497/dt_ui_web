@@ -10,9 +10,9 @@
 					 min-width: 350px;"
 					 >
 			<ul>
-				<li style="margin: 16px;" v-for="(item,index) in collectionList" :key='index' :row-index='index'>
+				<li style="margin: 16px;" v-for="(item,index) in collectionList" :key='index' :row-index='index' @click="linkTo(item)">
 					<span style="display: inline-block;width: 24px;height: 24px;text-align: center;line-height: 24px;border-radius: 12px;background-color:gainsboro;margin-right: 20px;">{{index+1}}</span>
-					<a style="color: #000000;vertical-align:bottom;text-decoration:underline;display: inline-block;width: 65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" href="###">{{item.urlName}}</a>
+					<a style="color: #000000;vertical-align:bottom;text-decoration:underline;display: inline-block;width: 65%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" >{{item.urlName}}</a>
 					<span style="display: inline-block;width: 24px;height: 24px;line-height: 24px;text-align: center;background-color: #DCDFE6;border-radius: 12px;" @click="del(index)"> x </span>
 				</li>
 			</ul>
@@ -38,9 +38,9 @@
 		data(){
 			return{
 				collectionList:[
-					{url:'',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费1'},
-					{url:'',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费2'},
-					{url:'',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费3'},
+					{url:'/index/log_customs/117/报关单',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费1'},
+					{url:'/index/log_packing/118/装箱单',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费2'},
+					{url:'/index/log_invoice/119/发票',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费3'},
 					{url:'',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费4'},
 					{url:'',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费5'},
 					{url:'',urlName:'数据导入\\运营导入\\亚马逊\\月度仓储费6'},
@@ -69,18 +69,18 @@
 			 },
 			handleCurrentChange(val) {
 				console.log(`当前页: ${val}`);
+			},
+			linkTo(e){
+				console.log(e)
+				 this.$router.push({  //核心语句
+					path:e.url,   //跳转的路径
+					// query:{           //路由传参时push和query搭配使用 ，作用时传递参数
+					//   id:this.id ,  
+					// }
+				})
+
 			}
 		},
-		// async created() {
-		// 	let res = await repMenu();
-		// 	console.log(res);
-		// 	let datas = res.data;
-		// 	
-		// 	// /index/log_customs
-		// 	
-		// 	
-		// 	
-		// },
 		mounted:function(){
 
 			var $ul = this.$el.querySelector('ul')

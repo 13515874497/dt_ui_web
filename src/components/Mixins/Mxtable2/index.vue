@@ -274,6 +274,7 @@ export default {
       this.loading = false;
       if (res.code === 200) {
         //对表格数据进行处理
+				console.log(res)
         this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
         pUtils.handlerTableData(res, data, this.subField);
       }

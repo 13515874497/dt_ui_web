@@ -140,6 +140,7 @@ export default {
     titles_: {
       immediate: true,
       handler() {
+				console.log(this.titles)
         this.getParentFormItems();
         this.getChildrenTableTitle();
       }

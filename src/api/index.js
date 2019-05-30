@@ -294,7 +294,10 @@ export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAd
 
 export const saveNotice = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 
+//收货通知单 分页
+export const getReceiving = (data)=> ajax(BASE_URL + `/po/getReceiptNotice`, data, 'POST')
 
+export const saveReceiving = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 
 // 运营管理=> 亚马逊=>费用
 
