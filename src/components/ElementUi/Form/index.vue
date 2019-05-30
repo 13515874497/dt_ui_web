@@ -416,6 +416,7 @@ export default {
           resolve([valid, obj]);
         });
       });
+      console.log(promise);
       //如果修改的字段验证错误发生时 当前值和原先的值一样, 那么验证通过 flag通过并向上传递
       let errCount = 0;
       for (let key in promise[1]) {

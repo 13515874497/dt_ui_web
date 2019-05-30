@@ -1,5 +1,5 @@
 <script>
-//出货通知单
+//采购订单
 import { getNotice, saveNotice, getProductAdnSku, getSkuName } from "@/api";
 import {
   shopName,
@@ -15,7 +15,6 @@ export default {
   data() {
     return {
       primaryKey: "shipNoticeId",
-
       customField: [
         shopName,
         siteName,
@@ -36,23 +35,7 @@ export default {
         {
           topType: "no",
           required: true
-        },
-        // {
-        //   topType: 'ttlQty',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'ttlVolume',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'ttlGwKg',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'ttlNwKg',
-        //   disabled: true,
-        // }
+        }
         // {
         //   topType: 'fba',
         //   required: false,
@@ -84,14 +67,13 @@ export default {
         "quantity"
       ],
       parentKey: "salesShipNotice", // 点击新增、修改的时候传给后台的 key的名字
-      subField: {
-        "1": { //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
+      radios: [
+        {
           //radio选项  和  点击新增、修改的时候传给后台的key
-          name: "外购入库单",
-          key_submit: "salesShipNoticeEntry", //传给后台的key
-          key_get: 'noticeEntryList' //获取时从哪里拿出来
+          name: "出货通知单",
+          key: "salesShipNoticeEntry"
         }
-      }
+      ]
     };
   },
   watch: {
@@ -115,12 +97,12 @@ export default {
         let data_model = this.form_data_model;
         if (table_data && table_data.length) {
           let data_model = this.form_data_model;
-          // let calcSum = [
-          //   "ttlQty:quantity",
-          //   "ttlVolume:neVolumeM3",
-          //   "ttlGwKg:neGwKg",
-          //   "ttlNwKg:neNwKg"
-          // ];
+          let calcSum = [
+            "ttlQty:quantity",
+            "ttlVolume:neVolumeM3",
+            "ttlGwKg:neGwKg",
+            "ttlNwKg:neNwKg"
+          ];
           let ttlQty = 0, //总数量
             ttlVolume = 0, //总体积
             ttlGwKg = 0, //总毛重
@@ -182,7 +164,24 @@ export default {
     ajax_add(data) {
       return saveNotice(data); //新增的接口
     },
+    // async getSkuList(query) {
+    //   console.log(query);
 
+    //   let data = this.form_data_model;
+    //   console.log(data);
+
+    //   if (data.shopId && data.siteId) {
+    //     let res = await getSkuName({
+    //       sId: data.shopId,
+    //       seId: data.siteId,
+    //       kuName: query
+    //     });
+    //     console.log(res);
+    //     if (res.code === 200) {
+    //       console.log(res);
+    //     }
+    //   }
+    // },
     async changeSku(val, row, title) {
       console.log(val);
       console.log(row);

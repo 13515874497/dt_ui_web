@@ -37,16 +37,29 @@ export default {
       pageData.total_size = data.total_size
     }
   },
-  handlerTableData(res,pageData){
+  handlerTableData(res,pageData,subField){
     if(res.code === 200){
       const data = res.data;
       let tableData = [];
       
+
+
+
+
+
       data.dataList.forEach(parent=>{
         parent._versionParent = parent.version;
-        let childrens = parent.noticeEntryList || [];
+        
+        //1.---------------
+        
+        let key = subField['1'].key_get;
+        //---------------
 
-        delete parent.noticeEntryList;
+
+
+        let childrens = parent[key] || [];
+
+        delete parent[key];
         childrens = childrens.map((children,index)=>{
           let data = {...parent,...children}
           //如果是第一个元素 那么得出需要合并的个数 

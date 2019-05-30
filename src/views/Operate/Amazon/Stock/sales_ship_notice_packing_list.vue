@@ -1,5 +1,5 @@
 <script>
-//出货通知单
+//出货装箱单
 import { getNotice, saveNotice, getProductAdnSku, getSkuName } from "@/api";
 import {
   shopName,
