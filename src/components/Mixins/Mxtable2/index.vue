@@ -168,7 +168,9 @@ export default {
         form: null,
         table: null
       },
-      customField: [],
+      customField: [], //form中自定义字段的显示类型
+      customField_table: [], //表格中自定义字段的显示类型
+      editable_field: [],   //表格中哪些字段可以被编辑
       //在form中不需要填写的
       sysLogNotForm: [
         "statusId",
