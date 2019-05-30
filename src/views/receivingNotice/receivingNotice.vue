@@ -1,6 +1,6 @@
 <script>
 //出货通知单
-import { getNotice, saveNotice, getProductAdnSku, getSkuName } from "@/api";
+import { getReceiving, saveNotice, getProductAdnSku, getSkuName } from "@/api";
 import {
   shopName,
   siteName,
@@ -177,10 +177,10 @@ export default {
   },
   methods: {
     queryPage(data) {
-      return getNotice(data); //查询页面的接口
+      return getReceiving(data); //查询页面的接口
     },
     ajax_add(data) {
-      return saveNotice(data); //新增的接口
+      return saveReceiving(data); //新增的接口
     },
     // async getSkuList(query) {
     //   console.log(query);
