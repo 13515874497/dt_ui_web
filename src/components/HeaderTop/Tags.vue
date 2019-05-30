@@ -102,11 +102,9 @@ export default {
 
     //收藏页面
     collect(item) {
-      console.log("收藏"); 
-      console.log(item.path)
+      console.log(item)
       let path = item.path //每个标签页的路径
       console.log(path)
-    
     },
     // 设置标签
     setTags(route) {
@@ -169,7 +167,11 @@ export default {
   created() {
     this.setTags(this.$route);
     // console.log(this.setTags(this.$route));
-  }
+  },
+    async mounted() {
+      let res = await repMenu();
+      console.log(res);
+  },
 };
 </script>
 
