@@ -89,7 +89,10 @@ export default {
       type: Array,
       default: () => []
     },
-    parentKey: { //父主键
+    primaryKey: { //父主键
+      type: String 
+    },
+    parentKey: { //form表单数据 提交给后台的key
       type: String
     },
     radios: { //目前为一个父下只有一个子,所以现在都只有一个数据
@@ -165,7 +168,10 @@ export default {
           fn() {
             self.addRow();
           }
-        }
+        },
+        // {
+        //   type: ''
+        // }
       ];
     },
     close() {
@@ -214,8 +220,11 @@ export default {
     getFormData($event) {
       console.log($event);
       this.isPass = $event[0];
-
+     
       this.passData[this.parentKey] = $event[2];
+       if(this.primaryKey){
+        this.passData[this.parentKey][this.primaryKey] = $event[1][this.primaryKey];
+      }
       console.log(this.passData);
     },
     //form表单中的数据
@@ -259,8 +268,6 @@ export default {
   created() {
     this.initOperateBtn();
     this.initPassData();
-    console.log(this.data_);
-    
   }
 };
 </script>

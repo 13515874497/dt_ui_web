@@ -14,8 +14,9 @@ export default {
   mixins: [MxTable2],
   data() {
     return {
+      queryKey: 'shipNoticeEntry',
       primaryKey: "shipNoticeId",
-
+      primaryKey_child: 'entryId',
       customField: [
         shopName,
         siteName,
@@ -37,26 +38,30 @@ export default {
           topType: "no",
           required: true
         },
-        // {
-        //   topType: 'ttlQty',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'ttlVolume',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'ttlGwKg',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'ttlNwKg',
-        //   disabled: true,
-        // }
-        // {
-        //   topType: 'fba',
-        //   required: false,
-        // }
+        {
+          topType: "ttlQty",
+          disabled: true
+        },
+        {
+          topType: "ttlVolume",
+          disabled: true
+        },
+        {
+          topType: "ttlGwKg",
+          disabled: true
+        },
+        {
+          topType: "ttlNwKg",
+          disabled: true
+        },
+        {
+          topType: "ttlPackages",
+          disabled: true
+        },
+        {
+          topType: "fbaShipmentId",
+          required: false
+        }
       ],
       customField_table: [
         {
@@ -85,11 +90,12 @@ export default {
       ],
       parentKey: "salesShipNotice", // 点击新增、修改的时候传给后台的 key的名字
       subField: {
-        "1": { //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
+        "1": {
+          //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
           //radio选项  和  点击新增、修改的时候传给后台的key
           name: "出货通知单",
           key_submit: "salesShipNoticeEntry", //传给后台的key
-          key_get: 'noticeEntryList' //获取时从哪里拿出来
+          key_get: "noticeEntryList" //获取时从哪里拿出来
         }
       }
     };
@@ -102,12 +108,15 @@ export default {
       this.getSkuList("");
     },
     "form_data_model.platformTypeId"(val) {
-      // if(val === 1){
-      //   let fba = this.customField.find(item=>{
-      //     return item.topType === 'fba'
-      //   })
-      //   fba.required = true;
-      // }
+      console.log(val);
+      let fbaShipmentId = this.customField.find(item => {
+        return item.topType === "fbaShipmentId";
+      });
+      if (val === 1) {
+        fbaShipmentId.required = true;
+      }else {
+        fbaShipmentId.required = false;
+      }
     },
     table_table_data: {
       handler(table_data) {
