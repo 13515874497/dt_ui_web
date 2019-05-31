@@ -3,10 +3,7 @@
     <template v-if="tableOperateList.length>1">
       <el-popover
         placement="top-start"
-        
-        
-        trigger="click"
-        
+        trigger="hover"
       >
         <el-button
           v-for="(item,index) in tableOperateList"

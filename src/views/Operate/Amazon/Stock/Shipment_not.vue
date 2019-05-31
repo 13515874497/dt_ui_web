@@ -112,9 +112,13 @@ export default {
   watch: {
     "form_data_model.shopId"() {
       this.getSkuList("");
+      let table_data = this.table_table_data;
+      table_data = [];
     },
     "form_data_model.siteId"() {
       this.getSkuList("");
+      let table_data = this.table_table_data;
+      table_data = [];
     },
     "form_data_model.platformTypeId"(val) {
       console.log(val);
