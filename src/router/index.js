@@ -183,7 +183,7 @@ export default new Router({
           component: receivingNotice,
         },
 				 {
-				  path: '/index/purchase_po_order/:id/:name',   //系统管理-> 用户管理->账号管理
+				  path: '/index/purchase_po_order/:id/:name',   //采购管理-> 业务处理->采购订单
 				  component: purchase_po_order,
 				},
         {

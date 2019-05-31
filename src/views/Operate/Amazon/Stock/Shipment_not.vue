@@ -1,6 +1,13 @@
 <script>
 //出货通知单
-import { getNotice, saveNotice, getProductAdnSku, getSkuName } from "@/api";
+import {
+  getNotice,
+  saveNotice,
+  getProductAdnSku,
+  getSkuName,
+  upNotice,
+  delShipNoticeAndNoticeEntry
+} from "@/api";
 import {
   shopName,
   siteName,
@@ -14,9 +21,10 @@ export default {
   mixins: [MxTable2],
   data() {
     return {
-      queryKey: 'shipNoticeEntry',
+      queryKey: "shipNoticeEntry",
       primaryKey: "shipNoticeId",
-      primaryKey_child: 'entryId',
+      nameKey: "no",
+      primaryKey_child: "eid",
       customField: [
         shopName,
         siteName,
@@ -90,14 +98,15 @@ export default {
       ],
       parentKey: "salesShipNotice", // 点击新增、修改的时候传给后台的 key的名字
       subField: {
+        //radio选项  和  点击新增、修改的时候传给后台的key
         "1": {
           //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
-          //radio选项  和  点击新增、修改的时候传给后台的key
           name: "出货通知单",
           key_submit: "salesShipNoticeEntry", //传给后台的key
           key_get: "noticeEntryList" //获取时从哪里拿出来
         }
-      }
+      },
+      tableOperateList:[]
     };
   },
   watch: {
@@ -114,7 +123,7 @@ export default {
       });
       if (val === 1) {
         fbaShipmentId.required = true;
-      }else {
+      } else {
         fbaShipmentId.required = false;
       }
     },
@@ -137,16 +146,18 @@ export default {
           let ttlPackages = 0; //总件数   以箱号的 '-'和','分割开来 取最大值
           // let skuIds = [];
           for (let i = 0; i < table_data.length; i++) {
-            let data = table_data[i];
-            // skuIds.push(data.skuId);
-            console.log(data);
+            let row = table_data[i];
+            row.neNwKg = row.neNwKg_ * row.quantity;
+            row.neGwKg = row.neGwKg_ * row.quantity;
+            // skuIds.push(row.skuId);
+            console.log(row);
 
-            ttlQty += +data.quantity || 0;
-            ttlVolume += +data.neVolumeM3 || 0;
-            ttlGwKg += +data.neGwKg || 0;
-            ttlNwKg += +data.neNwKg || 0;
+            ttlQty += +row.quantity || 0;
+            ttlVolume += +row.neVolumeM3 || 0;
+            ttlGwKg += +row.neGwKg || 0;
+            ttlNwKg += +row.neNwKg || 0;
             let ttlPackages_arr =
-              (data.packages && data.packages.split(/,|-/i).map(num => +num)) ||
+              (row.packages && row.packages.split(/,|-/i).map(num => +num)) ||
               [];
             ttlPackages = Math.max(
               ttlPackages,
@@ -190,6 +201,12 @@ export default {
     },
     ajax_add(data) {
       return saveNotice(data); //新增的接口
+    },
+    ajax_update(data) {
+      return upNotice(data);
+    },
+    ajax_remove(data) {
+      return delShipNoticeAndNoticeEntry(data);
     },
     // async getSkuList(query) {
     //   console.log(query);
@@ -236,14 +253,13 @@ export default {
           row.neGwKg_ = row.neGwKg;
           row.neNwKg = row.neNwKg_ * row.quantity;
           row.neGwKg = row.neGwKg_ * row.quantity;
-          Object.defineProperty(row, "quantity", {
-            enumerable: true,
-            set(val) {
-              this.neNwKg = this.neNwKg_ * val;
-              this.neGwKg = this.neGwKg_ * val;
-            }
-          });
-
+          // Object.defineProperty(row, "quantity", {
+          //   enumerable: true,
+          //   set(val) {
+          //     this.neNwKg = this.neNwKg_ * val;
+          //     this.neGwKg = this.neGwKg_ * val;
+          //   }
+          // });
           console.log(res);
         }
 
@@ -272,12 +288,21 @@ export default {
           this.table.table_data = [...this.table.table_data];
         }
       }
+    },
+    initTableOperateList(){
+      this.tableOperateList = [
+        {
+          aa:1
+        }
+      ]
     }
   },
   beforeCreate() {
     transportTypeName.hideChild = true;
   },
-  async created() {}
+  async created() {
+    this.initTableOperateList();
+  }
 };
 </script>
 

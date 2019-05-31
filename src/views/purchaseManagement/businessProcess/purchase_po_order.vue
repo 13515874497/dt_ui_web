@@ -1,11 +1,12 @@
 <script>
-//采购订单
-import { getNotice, saveNotice, getProductAdnSku, getSkuName } from "@/api";
+//出货通知单
+import { getPoOrder, saveNotice, getProductAdnSku, getSkuName,upNotice } from "@/api";
 import {
   shopName,
   siteName,
   platformTypeName,
-  transportTypeName
+  transportTypeName,
+  
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -14,7 +15,9 @@ export default {
   mixins: [MxTable2],
   data() {
     return {
-      primaryKey: "shipNoticeId",
+      queryKey: 'poOrderEntry',
+      primaryKey: "poId",
+      primaryKey_child: 'eid',
       customField: [
         shopName,
         siteName,
@@ -35,11 +38,31 @@ export default {
         {
           topType: "no",
           required: true
+        },
+        {
+          topType: "ttlQty",
+          disabled: true
+        },
+        {
+          topType: "ttlVolume",
+          disabled: true
+        },
+        {
+          topType: "ttlGwKg",
+          disabled: true
+        },
+        {
+          topType: "ttlNwKg",
+          disabled: true
+        },
+        {
+          topType: "ttlPackages",
+          disabled: true
+        },
+        {
+          topType: "fbaShipmentId",
+          required: false
         }
-        // {
-        //   topType: 'fba',
-        //   required: false,
-        // }
       ],
       customField_table: [
         {
@@ -67,102 +90,27 @@ export default {
         "quantity"
       ],
       parentKey: "salesShipNotice", // 点击新增、修改的时候传给后台的 key的名字
-      radios: [
-        {
-          //radio选项  和  点击新增、修改的时候传给后台的key
-          name: "出货通知单",
-          key: "salesShipNoticeEntry"
+      subField: {  //radio选项  和  点击新增、修改的时候传给后台的key
+        "1": { //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
+          name: "采购订单",
+          key_submit: "salesShipNoticeEntry", //传给后台的key
+          key_get: "noticeEntryList" //获取时从哪里拿出来
         }
-      ]
+      }
     };
   },
   watch: {
-    "form_data_model.shopId"() {
-      this.getSkuList("");
-    },
-    "form_data_model.siteId"() {
-      this.getSkuList("");
-    },
-    "form_data_model.platformTypeId"(val) {
-      // if(val === 1){
-      //   let fba = this.customField.find(item=>{
-      //     return item.topType === 'fba'
-      //   })
-      //   fba.required = true;
-      // }
-    },
-    table_table_data: {
-      handler(table_data) {
-        //1.根据表格里的数据计算form里的数据 2.sku不能重复
-        let data_model = this.form_data_model;
-        if (table_data && table_data.length) {
-          let data_model = this.form_data_model;
-          let calcSum = [
-            "ttlQty:quantity",
-            "ttlVolume:neVolumeM3",
-            "ttlGwKg:neGwKg",
-            "ttlNwKg:neNwKg"
-          ];
-          let ttlQty = 0, //总数量
-            ttlVolume = 0, //总体积
-            ttlGwKg = 0, //总毛重
-            ttlNwKg = 0; //总净重
-          let ttlPackages = 0; //总件数   以箱号的 '-'和','分割开来 取最大值
-          // let skuIds = [];
-          for (let i = 0; i < table_data.length; i++) {
-            let data = table_data[i];
-            // skuIds.push(data.skuId);
-            console.log(data);
 
-            ttlQty += +data.quantity || 0;
-            ttlVolume += +data.neVolumeM3 || 0;
-            ttlGwKg += +data.neGwKg || 0;
-            ttlNwKg += +data.neNwKg || 0;
-            let ttlPackages_arr =
-              (data.packages && data.packages.split(/,|-/i).map(num => +num)) ||
-              [];
-            ttlPackages = Math.max(
-              ttlPackages,
-              Math.max.apply(Math, ttlPackages_arr) || 0
-            );
-          }
-
-          let timer = null;
-          function setValue() {
-            //data_model中有些数据需要先请求，必须等待它请求完成
-            let keys = Object.keys(data_model);
-            if (!keys.length) {
-              let self = this;
-              timer = setTimeout(() => {
-                setValue();
-              }, 100);
-            } else {
-              data_model.ttlQty = ttlQty;
-              data_model.ttlVolume = ttlVolume;
-              data_model.ttlGwKg = ttlGwKg;
-              data_model.ttlNwKg = ttlNwKg;
-              data_model.ttlPackages = ttlPackages;
-              clearTimeout(timer);
-            }
-          }
-          setValue();
-
-          // if(isRepetArr(skuIds)){
-          //   message.infoMessage('sku不能重复');
-          //   table_data[1].skuId = null;
-          // }
-        }
-      },
-      deep: true
-      // immediate: true
-    }
   },
   methods: {
     queryPage(data) {
-      return getNotice(data); //查询页面的接口
+      return getPoOrder(data); //查询页面的接口
     },
     ajax_add(data) {
-      return saveNotice(data); //新增的接口
+     
+    },
+    ajax_update(data){
+   
     },
     // async getSkuList(query) {
     //   console.log(query);
