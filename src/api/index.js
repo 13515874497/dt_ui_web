@@ -342,6 +342,9 @@ export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`, data, '
 //* 采购订单
 //采购订单分页
 export const getPoOrder = (data) => ajax(BASE_URL + '/po/getPoOrder', data, 'POST')
+//采购订单新增
+export const savePoOrder = (data) => ajax(BASE_URL + '/po/savePoOrder', data, 'POST')
+
 
 
 
