@@ -32,7 +32,7 @@
         :showOperate="tableOperateList.length>0"
       >
         <template v-slot:operate="scope" v-if="tableOperateList.length">
-          <tableOperate :tableOperateList="tableOperateList" :row="scope.childData.row"></tableOperate>
+          <tableOperate :tableOperateList="tableOperateList" :row="scope.childData.row" :multipleSelection="multipleSelection"></tableOperate>
         </template>
       </Table>
       <div v-if="tableTitle.length" class="control">

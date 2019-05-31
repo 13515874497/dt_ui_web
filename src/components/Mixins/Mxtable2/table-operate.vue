@@ -1,16 +1,13 @@
 <template>
   <div>
     <template v-if="tableOperateList.length>1">
-      <el-popover
-        placement="top-start"
-        trigger="hover"
-      >
+      <el-popover placement="top-start" trigger="hover">
         <el-button
           v-for="(item,index) in tableOperateList"
           :key="index"
           :type="item.type"
           :icon="item.icon"
-          @click="item.fn(row)"
+          @click="item.fn(row,multipleSelection)"
           size="mini"
         >{{item.label}}</el-button>
         <el-button slot="reference">更多</el-button>
@@ -23,7 +20,7 @@
         :key="item.label"
         :type="item.type"
         :icon="item.icon"
-        @click="item.fn(row)"
+        @click="item.fn(row,multipleSelection)"
         size="mini"
       >{{item.label}}</el-button>
     </template>
@@ -42,6 +39,9 @@ export default {
       //当前行的数据
       required: true,
       type: Object
+    },
+    multipleSelection: {
+      type: Array
     }
   }
 };
