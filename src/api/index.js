@@ -291,13 +291,23 @@ export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, d
 export const getNotice = (data) => ajax(BASE_URL + `/ship/getNotice`, data, 'POST')
 //根据skuId获取 数据/api/v1/product/getProductAdnSku?skuId=1
 export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data,'GET',[false,'请求失败'])
-
+//新增出货通知单
 export const saveNotice = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
+//修改出货通知单
+export const upNotice = (data) => ajax(BASE_URL + '/ship/upNotice',data, 'POST')
+//删除出货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
+export const delShipNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/ship/delShipNoticeAndNoticeEntry',data,'POST')
+
 
 //收货通知单 分页
 export const getReceiving = (data)=> ajax(BASE_URL + `/po/getReceiptNotice`, data, 'POST')
 
 export const saveReceiving = (data) => ajax(BASE_URL + '/po/saveReceiptNotice',data, 'POST')
+//修改收货通知单
+export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data, 'POST')
+//删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
+export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
+
 
 // 运营管理=> 亚马逊=>费用
 
@@ -324,6 +334,14 @@ export const getSkuName = (data) => ajax(BASE_URL + `/sku/getSkuName`, data)
 //Feedback分页
 export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`, data, 'POST')
 
+
+/**
+ *
+ * 采购管理 => 业务处理
+ */
+//* 采购订单
+//采购订单分页
+export const getPoOrder = (data) => ajax(BASE_URL + '/po/getPoOrder', data, 'POST')
 
 
 

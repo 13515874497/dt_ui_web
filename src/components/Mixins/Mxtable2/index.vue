@@ -51,6 +51,7 @@
           @giveForm="getForm"
           @giveTable="getTable"
           @passData="passData_add"
+          :tableOperateList="tableOperateList"
         ></Mx2Interface>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
@@ -86,6 +87,9 @@
           @passData="passData_update"
           type="update"
           :primaryKey="primaryKey"
+          :primaryKey_child="primaryKey_child"
+          :ajax_remove="ajax_remove"
+          :tableOperateList="tableOperateList"
         ></Mx2Interface>
 
         <div slot="footer" class="dialog-footer">
@@ -116,7 +120,7 @@ import Table from "@/components/ElementUi/Table";
 import AddDelUpButton from "@/components/ElementUi/AddDelUpButton";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
 import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
-import { deepClone } from "@/utils/Arrays";
+import { deepClone, unique } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
 import PublicPopUp from "@/components/ElementUi/PublicPopUp"
@@ -140,7 +144,7 @@ export default {
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
-        page_sizes: [5, 10, 15, 20, 25],
+        page_sizes: [5, 10, 15, 20, 25]
         // shipNoticeEntry: {
         //   currentPage: 0,
         //   pageSize: 100
@@ -165,6 +169,7 @@ export default {
 		visible :false
 	  },
       primaryKey: "", //提供一个修改、删除时的主键
+      nameKey: "", //提供一个  删除失败时提示给用户那一行的名字
       rule: {},
       update: {
         visible: false,
@@ -178,7 +183,7 @@ export default {
       },
       customField: [], //form中自定义字段的显示类型
       customField_table: [], //表格中自定义字段的显示类型
-      editable_field: [],   //表格中哪些字段可以被编辑
+      editable_field: [], //表格中哪些字段可以被编辑
       //在form中不需要填写的
       sysLogNotForm: [
         "statusId",
@@ -194,7 +199,7 @@ export default {
       ],
       //在form中需要填写的
       sysLogForm: ["remark", "status"],
-      subField: {} //有二级字段的表格必须提供这个 如下:
+      subField: {}, //有二级字段的表格必须提供这个 如下:
       // subField: {
       //   "1": {
       //     //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
@@ -204,6 +209,7 @@ export default {
       //     key_get: "noticeEntryList" //获取时从哪里拿出来
       //   }
       // }
+      tableOperateList:[], //提供一个子表右侧的操作按钮list
     };
   },
   computed: {
@@ -288,7 +294,7 @@ export default {
       this.loading = false;
       if (res.code === 200) {
         //对表格数据进行处理
-				console.log(res)
+        console.log(res);
         this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
         pUtils.handlerTableData(res, data, this.subField);
       }
@@ -452,30 +458,65 @@ export default {
         message.infoMessage("需要选中一条以上的数据");
         return;
       }
-      let thisIds = [],
-        statusIds = [],
-        version = [];
-      this.multipleSelection.forEach(item => {
-        thisIds.push(item[this.primaryKey]);
-        item.statusId != undefined && statusIds.push(item.statusId);
-        version.push(item.version);
+      let self = this;
+      let delIds = [];
+      this.multipleSelection.forEach(row => {
+        delIds.push(row[self.primaryKey]);
       });
-      let data = {
-        thisIds: thisIds.join(","),
-        version: version.join(",")
-      };
-      console.log(data);
-      if (statusIds.length) {
-        data.statusIds = statusIds.join(",");
-      }
+      delIds = unique(delIds);
+      let data = {};
+      data.delParentKey = delIds;
+
+      // let thisIds = [],
+      //   statusIds = [],
+      //   version = [];
+      // this.multipleSelection.forEach(item => {
+      //   thisIds.push(item[this.primaryKey]);
+      //   item.statusId != undefined && statusIds.push(item.statusId);
+      //   version.push(item.version);
+      // });
+      // let data = {
+      //   thisIds: thisIds.join(","),
+      //   version: version.join(",")
+      // };
+      // console.log(data);
+      // if (statusIds.length) {
+      //   data.statusIds = statusIds.join(",");
+      // }
+
       message
         .messageBox_confirm("是否确认删除")
         .then(() => {
           let res = this.ajax_remove(data).then(res => {
             console.log(res);
             if (res.code === 200) {
-              message.successMessage(res.msg);
-              this.search();
+              if (!res.data[0].length) {
+                message.successMessage(res.msg);
+              } else {
+                let errorInfo = "";
+                res.data[0].forEach((id, index) => {
+                  let row = self.multipleSelection.find(row => {
+                    return row[self.primaryKey] === id;
+                  });
+                  console.log(row);
+                  console.log(self.nameKey);
+
+                  let title = self.tableTitle.find(title => {
+                    return title.topType === self.nameKey;
+                  });
+                  console.log(title);
+
+                  if (index != 0) {
+                    errorInfo += "、";
+                  }
+                  errorInfo += `${title.headName}: ${row[title.topType]}`;
+                });
+                errorInfo += " 下有关联数据，请在修改中删除后再删除。";
+                message.errorMessage(errorInfo);
+              }
+              if (re.data[1].length) {
+                this.search();
+              }
             } else {
               message.errorMessage(res.msg);
             }
@@ -486,6 +527,8 @@ export default {
     //需要提供一个修改的接口
     ajax_update(data) {},
     async send_update() {
+      console.log(this.update.data);
+
       let res = await this.ajax_update(this.update.data);
       console.log(res);
       if (res.code == 200) {
@@ -544,7 +587,7 @@ export default {
   },
   async created() {
     this.$set(this.data, this.queryKey, {
-      currentPage: 0,
+      currentPage: 1,
       pageSize: 100
     });
     this.initOperateBtn();

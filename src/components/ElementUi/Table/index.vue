@@ -132,8 +132,9 @@
         </el-table-column>
       </div>
     </template>
-    <el-table-column label="操作" v-if="showOperate" >
-      <template slot-scope="scope" >
+    <el-table-column label="操作" v-if="showOperate" fixed="true">
+      <template slot-scope="scope">
+        <slot name="operate" :childData="scope"></slot>
       </template>
     </el-table-column>
   </el-table>
@@ -142,6 +143,7 @@
 import Sortable from "sortablejs";
 import { deepClone } from "@/utils/Arrays";
 import { Loading } from "element-ui";
+
 export default {
   data() {
     return {
@@ -164,9 +166,8 @@ export default {
     mode: Number, //在table中表示  需要合并父表的数据  (1普通的表格  2多表合并的表格（需要合并父数据）)
     showOperate: {
       //是否在最右侧显示操作字段
-      type: Boolean,
-      // default: false
-	  default:true
+      // type: Boolean,
+      default: false
     },
     editable: {
       //是否可编辑
@@ -586,6 +587,9 @@ export default {
   /deep/ .el-table .cell {
     white-space: nowrap;
   }
+}
+.el-table .cell {
+   white-space: nowrap;
 }
 
 .editting {

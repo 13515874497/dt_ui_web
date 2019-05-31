@@ -1,6 +1,6 @@
 <script>
 //出货通知单
-import { getReceiving, saveReceiving, getProductAdnSku, getSkuName } from "@/api";
+import { getReceiving, saveReceiving, getProductAdnSku, getSkuName ,upReceiving,delReceivingNoticeAndNoticeEntry} from "@/api";
 import {
   shopName,
   siteName,
@@ -99,90 +99,7 @@ export default {
       }
     };
   },
-  watch: {
-    // "form_data_model.shopId"() {
-    //   this.getSkuList("");
-    // },
-    // "form_data_model.siteId"() {
-    //   this.getSkuList("");
-    // },
-    "form_data_model.platformTypeId"(val) {
-      console.log(val);
-      let fbaShipmentId = this.customField.find(item => {
-        return item.topType === "fbaShipmentId";
-      });
-      if (val === 1) {
-        fbaShipmentId.required = true;
-      }else {
-        fbaShipmentId.required = false;
-      }
-    },
-    table_table_data: {
-      handler(table_data) {
-        //1.根据表格里的数据计算form里的数据 2.sku不能重复
-        let data_model = this.form_data_model;
-        if (table_data && table_data.length) {
-          let data_model = this.form_data_model;
-          // let calcSum = [
-          //   "ttlQty:quantity",
-          //   "ttlVolume:neVolumeM3",
-          //   "ttlGwKg:neGwKg",
-          //   "ttlNwKg:neNwKg"
-          // ];
-          let ttlQty = 0, //总数量
-            ttlVolume = 0, //总体积
-            ttlGwKg = 0, //总毛重
-            ttlNwKg = 0; //总净重
-          let ttlPackages = 0; //总件数   以箱号的 '-'和','分割开来 取最大值
-          // let skuIds = [];
-          for (let i = 0; i < table_data.length; i++) {
-            let data = table_data[i];
-            // skuIds.push(data.skuId);
-            console.log(data);
-
-            ttlQty += +data.quantity || 0;
-            ttlVolume += +data.neVolumeM3 || 0;
-            ttlGwKg += +data.neGwKg || 0;
-            ttlNwKg += +data.neNwKg || 0;
-            let ttlPackages_arr =
-              (data.packages && data.packages.split(/,|-/i).map(num => +num)) ||
-              [];
-            ttlPackages = Math.max(
-              ttlPackages,
-              Math.max.apply(Math, ttlPackages_arr) || 0
-            );
-          }
-
-          let timer = null;
-          function setValue() {
-            //data_model中有些数据需要先请求，必须等待它请求完成
-            let keys = Object.keys(data_model);
-            if (!keys.length) {
-              let self = this;
-              timer = setTimeout(() => {
-                setValue();
-              }, 100);
-            } else {
-              data_model.ttlQty = ttlQty;
-              data_model.ttlVolume = ttlVolume;
-              data_model.ttlGwKg = ttlGwKg;
-              data_model.ttlNwKg = ttlNwKg;
-              data_model.ttlPackages = ttlPackages;
-              clearTimeout(timer);
-            }
-          }
-          setValue();
-
-          // if(isRepetArr(skuIds)){
-          //   message.infoMessage('sku不能重复');
-          //   table_data[1].skuId = null;
-          // }
-        }
-      },
-      deep: true
-      // immediate: true
-    }
-  },
+  
   methods: {
     queryPage(data) {
       return getReceiving(data); //查询页面的接口
@@ -190,6 +107,12 @@ export default {
     ajax_add(data) {
       return saveReceiving(data); //新增的接口 
     },
+	ajax_update(data) {
+	  return upReceiving(data);
+	},
+	ajax_remove(data) {
+	  return delReceivingNoticeAndNoticeEntry(data);
+	},
 	arrival_confirmation(){
 		
 	},
