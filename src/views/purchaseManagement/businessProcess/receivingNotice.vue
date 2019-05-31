@@ -16,7 +16,7 @@ export default {
     return {
 		primaryKey: "rnId",
 		queryKey: 'purchasePoReceiptNoticeEntry',
-		nameKey : 'no',
+		nameKey : 'rnNo',
 		primaryKey_child: 'rne_id',
       customField: [
         {
@@ -108,6 +108,8 @@ export default {
       return saveReceiving(data); //新增的接口 
     },
 	ajax_update(data) {
+		data.purchasePoReceiptNotice.statusId = '1';
+		data.purchasePoReceiptNoticeEntry.push( {"version": 0})
 	  return upReceiving(data);
 	},
 	ajax_remove(data) {
