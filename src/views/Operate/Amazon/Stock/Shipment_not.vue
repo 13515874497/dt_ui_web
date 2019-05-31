@@ -289,11 +289,36 @@ export default {
         }
       }
     },
+    addRow(row){
+      console.log(row);
+    },
     initTableOperateList(){
+  
       this.tableOperateList = [
         {
-          aa:1
-        }
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "我是自定义功能",
+          fn(row) {
+            this.addRow(row);
+          }
+        },
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "我是自定义功能",
+          fn(row) {
+            this.addRow(row);
+          }
+        },
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "我是自定义功能",
+          fn(row) {
+            this.addRow(row);
+          }
+        },
       ]
     }
   },

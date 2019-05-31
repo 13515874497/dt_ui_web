@@ -132,7 +132,7 @@
         </el-table-column>
       </div>
     </template>
-    <el-table-column label="操作" v-if="showOperate" fixed="true">
+    <el-table-column label="操作" v-if="showOperate" :fixed="true && 'right'" width="130">
       <template slot-scope="scope">
         <slot name="operate" :childData="scope"></slot>
       </template>
@@ -166,7 +166,7 @@ export default {
     mode: Number, //在table中表示  需要合并父表的数据  (1普通的表格  2多表合并的表格（需要合并父数据）)
     showOperate: {
       //是否在最右侧显示操作字段
-      // type: Boolean,
+      type: Boolean,
       default: false
     },
     editable: {
