@@ -29,7 +29,12 @@
         v-if="tableTitle.length"
         v-loading="loading"
         :mode="2"
-      />
+        :showOperate="tableOperateList.length>0"
+      >
+        <template v-slot:operate="scope" v-if="tableOperateList.length">
+          <tableOperate :tableOperateList="tableOperateList" :row="scope.childData.row"></tableOperate>
+        </template>
+      </Table>
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
@@ -119,6 +124,7 @@ import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone, unique } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
+import tableOperate from './table-operate';
 export default {
   data() {
     return {
@@ -201,7 +207,7 @@ export default {
       //     key_get: "noticeEntryList" //获取时从哪里拿出来
       //   }
       // }
-      tableOperateList:[], //提供一个子表右侧的操作按钮list
+      tableOperateList: [] //提供一个子表右侧的操作按钮list
     };
   },
   computed: {
@@ -245,7 +251,8 @@ export default {
     InputQuery,
     SearchReset,
     PopoverFilterFields,
-    Mx2Interface
+    Mx2Interface,
+    tableOperate
   },
   methods: {
     setQuery($event) {
