@@ -95,7 +95,7 @@ export default {
           name: "收货通知单",
           key_submit: "purchasePoReceiptNoticeEntry", //传给后台的key
           key_get: 'poReceiptNoticeEntryList' //获取时从哪里拿出来
-        }
+        } 
       }
     };
   },
@@ -113,8 +113,35 @@ export default {
 	ajax_remove(data) {
 	  return delReceivingNoticeAndNoticeEntry(data);
 	},
-	arrival_confirmation(){
-		
+	arrival_confirmation(row){
+		console.log(row)
+		this.more.visible = true;
+	},
+	outsourced_warehousing(row){
+		console.log(row)
+		this.more.visible = true;
+	},
+	start_testing(row){
+		console.log(row)
+		this.more.visible = true;
+	},
+	bad_goods(row){
+		console.log(row)
+		this.more.visible = true;
+	},
+	good_warehousing(row){
+		console.log(row)
+		this.more.visible = true;
+	},
+	all_goods(row){
+		console.log(row)
+		this.more.visible = true;
+	},
+	surePop(){
+		console.log('确定111')
+	},
+	cancelPop(){
+		console.log('取消222')
 	},
 	initTableOperateList() {
 	    let self = this;
@@ -128,46 +155,46 @@ export default {
 	          self.arrival_confirmation(row);
 	        }
 	      },
-	      {
-	        // type: "outsourcedWarehousing",
-	        icon: "",
-	        label: "外购入库",
-	        fn(row) {
-	          self.outsourced_warehousing(row);
-	        }
-	      },
-	      {
-	        // type: "startTesting",
-	        icon: "",
-	        label: "开始检测",
-	        fn(row) {
-	          self.start_testing(row);
-	        }
-	      },
-	      {
-	        // type: "badGoods",
-	        icon: "",
-	        label: "不良品入库",
-	        fn(row) {
-	          self.bad_goods(row);
-	        }
-	      },
-		  {
-		    // type: "goodWarehousing",
-		    icon: "",
-		    label: "良品入库",
-		    fn(row) {
-		      self.good_warehousing(row);
-		    }
-		  },
-		  {
-		    // type: "allGoods",
-		    icon: "",
-		    label: "良品不良品入库",
-		    fn(row) {
-		      self.all_goods(row);
-		    }
-		  }
+	   //    {
+	   //      // type: "outsourcedWarehousing",
+	   //      icon: "",
+	   //      label: "外购入库",
+	   //      fn(row) {
+	   //        self.outsourced_warehousing(row);
+	   //      }
+	   //    },
+	   //    {
+	   //      // type: "startTesting",
+	   //      icon: "",
+	   //      label: "开始检测",
+	   //      fn(row) {
+	   //        self.start_testing(row);
+	   //      }
+	   //    },
+	   //    {
+	   //      // type: "badGoods",
+	   //      icon: "",
+	   //      label: "不良品入库",
+	   //      fn(row) {
+	   //        self.bad_goods(row);
+	   //      }
+	   //    },
+		  // {
+		  //   // type: "goodWarehousing",
+		  //   icon: "",
+		  //   label: "良品入库",
+		  //   fn(row) {
+		  //     self.good_warehousing(row);
+		  //   }
+		  // },
+		  // {
+		  //   // type: "allGoods",
+		  //   icon: "",
+		  //   label: "良品不良品入库",
+		  //   fn(row) {
+		  //     self.all_goods(row);
+		  //   }
+		  // }
 	    ];
 	  },
     async changeSku(val, row, title) {

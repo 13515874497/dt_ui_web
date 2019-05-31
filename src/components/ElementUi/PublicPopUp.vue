@@ -11,14 +11,15 @@
 			</div>
 		
 			<el-row style="display: flex;justify-content: center;">
-				<el-button type="primary" style="margin: 50px 35px;padding:10px 50px;">确 定</el-button>
-				<el-button type="info" style="margin: 50px 35px;padding:10px 50px;">取 消</el-button>
+				<el-button type="primary" style="margin: 50px 35px;padding:10px 50px;" @click="surePop">确 定</el-button>
+				<el-button type="info" style="margin: 50px 35px;padding:10px 50px;" @click="cancelPop">取 消</el-button>
 			</el-row>
   </div>
 </template>
 
 <script>
   export default {
+		// props:
     data () {
       return {
 					data:[
@@ -95,8 +96,16 @@
 						
 					]
       }
+			
     },
-  
+		methods:{
+			surePop(){
+				console.log('确定')
+			},
+			cancelPop(){
+				console.log('取消')
+			},
+		}
   }
 </script>
 

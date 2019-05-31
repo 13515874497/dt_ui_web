@@ -293,14 +293,14 @@ export default {
       console.log(row);
     },
     initTableOperateList(){
-  
+      let self = this;
       this.tableOperateList = [
         {
           type: "primary",
           icon: "el-icon-circle-plus-outline",
           label: "我是自定义功能",
           fn(row) {
-            this.addRow(row);
+            self.addRow(row);
           }
         },
         {
@@ -308,7 +308,7 @@ export default {
           icon: "el-icon-circle-plus-outline",
           label: "我是自定义功能",
           fn(row) {
-            this.addRow(row);
+            self.addRow(row);
           }
         },
         {
@@ -316,7 +316,7 @@ export default {
           icon: "el-icon-circle-plus-outline",
           label: "我是自定义功能",
           fn(row) {
-            this.addRow(row);
+            self.addRow(row);
           }
         },
       ]
@@ -325,7 +325,7 @@ export default {
   beforeCreate() {
     transportTypeName.hideChild = true;
   },
-  async created() {
+  created() {
     this.initTableOperateList();
   }
 };

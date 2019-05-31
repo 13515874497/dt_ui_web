@@ -29,7 +29,12 @@
         v-if="tableTitle.length"
         v-loading="loading"
         :mode="2"
-      />
+        :showOperate="tableOperateList.length>0"
+      >
+        <template v-slot:operate="scope" v-if="tableOperateList.length">
+          <tableOperate :tableOperateList="tableOperateList" :row="scope.childData.row"></tableOperate>
+        </template>
+      </Table>
       <div v-if="tableTitle.length" class="control">
         <!-- <AddDelUpButton :up="up" :del="del" :save="save" :recording="recording"/> -->
         <OperateBtn :operateList="operateList"></OperateBtn>
@@ -124,6 +129,7 @@ import { deepClone, unique } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
 import PublicPopUp from "@/components/ElementUi/PublicPopUp"
+import tableOperate from './table-operate';
 export default {
   data() {
     return {
@@ -165,9 +171,9 @@ export default {
         form: null, //绑定的form
         table: null //绑定的table
       },
-	  more:{
-		visible :false
-	  },
+			more:{
+				visible :false
+			},
       primaryKey: "", //提供一个修改、删除时的主键
       nameKey: "", //提供一个  删除失败时提示给用户那一行的名字
       rule: {},
@@ -209,7 +215,7 @@ export default {
       //     key_get: "noticeEntryList" //获取时从哪里拿出来
       //   }
       // }
-      tableOperateList:[], //提供一个子表右侧的操作按钮list
+      tableOperateList: [] //提供一个子表右侧的操作按钮list
     };
   },
   computed: {
@@ -254,7 +260,8 @@ export default {
     SearchReset,
     PopoverFilterFields,
     Mx2Interface,
-	PublicPopUp
+		PublicPopUp,
+		tableOperate
   },
   methods: {
     setQuery($event) {
