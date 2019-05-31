@@ -18,6 +18,7 @@
         :prop="item.topType"
         :required="true"
         error="必填项"
+        :key="index"
       >
         <el-switch
           v-model="data_model[item.topType]"
@@ -37,6 +38,7 @@
         :prop="item.topType"
         :required="true"
         error="必填项"
+        :key="index"
       >
         <el-select v-model="data_model[item.topType]" placeholder="请选择">
           <el-option
@@ -54,6 +56,7 @@
         :prop="item.topType"
         :rules="matchedRule(item)"
         :required="item.required"
+        :key="index"
       >
         <el-date-picker
           value-format="timestamp"
@@ -103,6 +106,7 @@
         :prop="item.bindKey ||  item.topType"
         :rules="matchedRule(item)"
         :required="item.required || true"
+        :key="index"
       >
         <el-select
           v-model="data_model[item.bindKey ||  item.topType]"
@@ -129,6 +133,7 @@
         :props="item.topType"
         :rules="matchedRule(item)"
         :required="item.required"
+        :key="index"
       >
         <el-cascader
           expand-trigger="hover"
@@ -147,6 +152,7 @@
         :prop="item.topType"
         :rules="matchedRule(item)"
         :required="item.required"
+        :key="index"
       >
         <el-input
           v-model.trim="data_model[item.topType]"
@@ -245,6 +251,13 @@ export default {
         this.mergeRules();
       }
     },
+    customField:{
+      deep: true,
+      async handler(){
+      await this.initCustomField();
+      this.formItems_ = [...this.formItems_]
+      }
+    },
     formItems() {
       // this.initData_model();
     },
@@ -277,13 +290,17 @@ export default {
           let formItem = self.formItems_.find(formItem => {
             return formItem.topType === item.topType;
           });
-          console.log(formItem);
-          console.log(item);
-
           for (let key in item) {
             formItem[key] = item[key];
+            // this.$set()
           }
+          if(formItem.topType === 'fbaShipmentId'){
+            
+            console.log(formItem);
+          }
+          
           if (item.remote) continue; //如果请求需要参数 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
+          if (item.data) continue; 
           switch (item.inputType) {
             case 3:
               formItem.data = [];

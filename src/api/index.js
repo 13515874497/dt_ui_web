@@ -294,7 +294,10 @@ export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAd
 
 export const saveNotice = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 
+//收货通知单 分页
+export const getReceiving = (data)=> ajax(BASE_URL + `/po/getReceiptNotice`, data, 'POST')
 
+export const saveReceiving = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 
 // 运营管理=> 亚马逊=>费用
 
@@ -820,3 +823,6 @@ export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',dat
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 
+//获取外购入库分页http://127.0.0.1:9001/api/v1/po/getIcBillStock
+
+export const getIcBillStock = (data) => ajax(BASE_URL + `/po/getIcBillStock`, data, 'POST')

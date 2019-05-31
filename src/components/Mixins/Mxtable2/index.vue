@@ -73,7 +73,7 @@
           :rule="rule"
           :customField="update.customField"
         ></Form>-->
-         <Mx2Interface
+        <Mx2Interface
           :titles="formItems"
           :data="update.checkedData"
           :customField="customField"
@@ -83,9 +83,9 @@
           :radios="subField"
           @giveForm="getForm"
           @giveTable="getTable"
-          @passData="passData_add"
-
+          @passData="passData_update"
           type="update"
+          :primaryKey="primaryKey"
         ></Mx2Interface>
 
         <div slot="footer" class="dialog-footer">
@@ -136,11 +136,12 @@ export default {
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
         page_sizes: [5, 10, 15, 20, 25],
-        shipNoticeEntry: {
-          currentPage: 0,
-          pageSize: 10
-        }
+        // shipNoticeEntry: {
+        //   currentPage: 0,
+        //   pageSize: 100
+        // }
       },
+      queryKey: "", //需要提供一个data中的key {{shipNoticeEntry}}: {currentPage: 0,pageSize: 100} 如  queryKey: 'shipNoticeEntry'
       // form: null, //当前form表单(新增、修改)绑定的数据
       // form_data_model: null,
       form_editing: "",
@@ -167,7 +168,9 @@ export default {
         form: null,
         table: null
       },
-      customField: [],
+      customField: [], //form中自定义字段的显示类型
+      customField_table: [], //表格中自定义字段的显示类型
+      editable_field: [],   //表格中哪些字段可以被编辑
       //在form中不需要填写的
       sysLogNotForm: [
         "statusId",
@@ -183,7 +186,7 @@ export default {
       ],
       //在form中需要填写的
       sysLogForm: ["remark", "status"],
-      subField:{}, //有二级字段的表格必须提供这个 如下:
+      subField: {} //有二级字段的表格必须提供这个 如下:
       // subField: {
       //   "1": {
       //     //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
@@ -273,8 +276,9 @@ export default {
       this.loading = false;
       if (res.code === 200) {
         //对表格数据进行处理
+				console.log(res)
         this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
-        pUtils.handlerTableData(res, data,this.subField);
+        pUtils.handlerTableData(res, data, this.subField);
       }
     },
     reset() {
@@ -402,17 +406,6 @@ export default {
       console.log(res);
     },
     openDialog_update() {
-      // console.log("修改");
-      // if (this.multipleSelection.length == 0) {
-      //   message.infoMessage("必须选中一条数据");
-      //   return;
-      // } else if (this.multipleSelection.length > 1) {
-      //   message.infoMessage("只能选中一条数据");
-      //   return;
-      // }
-      // this.update.formData = this.multipleSelection[0];
-      // this.update.visible = true;
-      // this.form_editing = "update";
       let result = this.checkVerifyHandler();
       if (!result[0]) return;
 
@@ -420,21 +413,27 @@ export default {
       this.update.checkedData = result;
       this.update.visible = true;
     },
-    getFormData_update($event) {
-      console.log($event);
-
+    passData_update($event) {
       this.update.isPass = $event[0];
-
-      this.update.data = $event[2];
-
-      this.update.data[this.primaryKey] = $event[1][this.primaryKey];
-
-      this.update.data.statusId = $event[1].statusId;
-
-      this.update.data.version = $event[1].version;
-
-      this.handlerFormData(this.update.data);
+      this.update.data = $event[1];
+      console.log($event);
+      console.log(this.update.data);
     },
+    // getFormData_update($event) {
+    //   console.log($event);
+
+    //   this.update.isPass = $event[0];
+
+    //   this.update.data = $event[2];
+
+    //   this.update.data[this.primaryKey] = $event[1][this.primaryKey];
+
+    //   this.update.data.statusId = $event[1].statusId;
+
+    //   this.update.data.version = $event[1].version;
+
+    //   this.handlerFormData(this.update.data);
+    // },
     ajax_remove(data) {},
     openDialog_remove() {
       if (this.multipleSelection.length < 1) {
@@ -532,6 +531,10 @@ export default {
     }
   },
   async created() {
+    this.$set(this.data, this.queryKey, {
+      currentPage: 0,
+      pageSize: 100
+    });
     this.initOperateBtn();
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];

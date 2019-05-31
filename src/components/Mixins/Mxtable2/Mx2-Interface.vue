@@ -29,34 +29,28 @@
         :customField_table="customField_table"
         @giveTable="getTable"
         @giveTableData="getTableData"
+        @checkboxValue="checkboxValue"
       ></Table>
       <OperateBtn :operateList="operateList"></OperateBtn>
     </section>
     <section></section>
   </div>
-  <!-- 
-  <el-dialog :title="`新增 ${page.name}`" :visible="dialogVisible" @close="close" width="90%">
-    
-    <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">取 消</el-button>
-      <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
-    </span>
-  </el-dialog>-->
 </template>
 
 <script>
 import Table from "@/components/ElementUi/Table";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
 import { saveNotice } from "@/api";
+import message from "@/utils/Message";
 export default {
   props: {
     visible: Boolean,
     type: {
       type: String, //区分当前是新增还是修改
-      default: 'add'
+      default: "add"
     },
     titles: {
-      //接收一个表头列表  里面含有2张表组成  如果是主表  那么显示为form表单 子表则显示为表格
+      //接收一个表头列表  里面含有2张表组成  如果是主表  那么显示为form表单 子表则显示为表格(根据表头的subField字段区分父子表)
       type: Array,
       required: true
     },
@@ -81,18 +75,29 @@ export default {
       type: Array,
       default: () => []
     },
-    reset: {//改变即重置form
+    reset: {
+      //改变即重置form
       type: Boolean,
       default: false
     },
-    editable_field: { //表格中哪些字段可以被编辑
+    editable_field: {
+      //表格中哪些字段可以被编辑
       type: Array,
       default: () => []
     },
-    parentKey: { //父主键
+    primaryKey: {
+      //父主键 修改、删除的接口需要提供的key
       type: String
     },
-    radios: { //目前为一个父下只有一个子,所以现在都只有一个数据
+    primaryKey_child: {
+      type: String //子主键 修改、删除的接口需要提供的key
+    },
+    parentKey: {
+      //form表单数据 提交给后台的key
+      type: String
+    },
+    radios: {
+      //目前为一个父下只有一个子,所以现在都只有一个数据
       type: Object,
       default: () => []
     }
@@ -107,6 +112,7 @@ export default {
         id: this.$route.params.id,
         name: this.$route.params.name
       },
+      multipleSelection: [], //多选框选中的数据
       dialogVisible: false, //是否显示该组件
       form: null, //表单组件对象
       form_data_model: null, //表单里的data_model对象
@@ -134,6 +140,7 @@ export default {
     titles_: {
       immediate: true,
       handler() {
+				console.log(this.titles)
         this.getParentFormItems();
         this.getChildrenTableTitle();
       }
@@ -150,8 +157,7 @@ export default {
         this.$emit("passData", [this.isPass, val]);
       },
       deep: true
-    },
-    // tableData_children() {}
+    }
   },
   methods: {
     initOperateBtn() {
@@ -165,11 +171,20 @@ export default {
           fn() {
             self.addRow();
           }
+        },
+        {
+          type: "danger",
+          icon: "el-icon-delete",
+          label: "删除",
+          fn() {
+            self.removeRow();
+          }
         }
       ];
     },
-    close() {
-      this.$emit("close", [true]);
+    checkboxValue(val) {
+      console.log(val);
+      this.multipleSelection = val;
     },
     //获取主表要显示的form字段
     getParentFormItems() {
@@ -186,11 +201,11 @@ export default {
     },
     //获取主表中要显示的form数据
     getParentFormData() {
-      switch(this.type){
-        case 'add':
+      switch (this.type) {
+        case "add":
           this.formData_parent = null;
           break;
-          case 'update':
+        case "update":
           this.formData_parent = this.data_[1];
           break;
       }
@@ -198,15 +213,14 @@ export default {
     //获取子表中要显示的tableData列表
     getChildrenTableData() {
       console.log(this.data_);
-      switch(this.type){
-        case 'add':
+      switch (this.type) {
+        case "add":
           this.tableData_children = this.data_[2];
           break;
-          case 'update':
+        case "update":
           this.tableData_children = this.data_[3];
           break;
       }
-      
 
       console.log(this.tableData_children);
     },
@@ -216,6 +230,10 @@ export default {
       this.isPass = $event[0];
 
       this.passData[this.parentKey] = $event[2];
+      if (this.primaryKey) {
+        this.passData[this.parentKey][this.primaryKey] =
+          $event[1][this.primaryKey];
+      }
       console.log(this.passData);
     },
     //form表单中的数据
@@ -230,6 +248,7 @@ export default {
       this.table = $event[0];
       this.$emit("giveTable", [this.table]);
     },
+    //表格中数据发生变化时获取表格的数据
     getTableData($event) {
       this.passData[this.radio] = $event[0];
       console.log(this.passData);
@@ -247,6 +266,41 @@ export default {
 
       console.log(this.tableTitle_children);
     },
+
+    removeRow() {
+      if (!this.multipleSelection.length) return;
+      let self = this;
+      message
+        .messageBox_confirm("是否确认删除")
+        .then(() => {
+          function remove() {
+            self.multipleSelection.forEach(sel => {
+              let index = self.tableData_children.findIndex(row => {
+                return row === sel;
+              });
+              self.tableData_children.splice(index, 1);
+            });
+          }
+          switch (self.type) {
+            case "add":
+             remove();
+              break;
+            case "update":
+              let res = self.ajax_remove(data).then(res => {
+                console.log(res);
+                if (res.code === 200) {
+                  message.successMessage(res.msg);
+                  self.search();
+                  remove();
+                } else {
+                  message.errorMessage(res.msg);
+                }
+              });
+              break;
+          }
+        })
+        .catch(() => {});
+    },
     //初始化passData
     initPassData() {
       this.$set(this.passData, this.parentKey, {});
@@ -259,8 +313,6 @@ export default {
   created() {
     this.initOperateBtn();
     this.initPassData();
-    console.log(this.data_);
-    
   }
 };
 </script>

@@ -221,8 +221,6 @@ export default {
             }
           }
         });
-        console.log(888888888888888);
-        
         this.$emit("giveTableData", [table_data]);
       }
     },
@@ -473,9 +471,13 @@ export default {
       // let self = this;
       for (let i = 0; i < this.customField_table.length; i++) {
         let cusItem = this.customField_table[i];
+        console.log(cusItem);
+        
         let title = this.table_title.find(title => {
           return title.topType === cusItem.topType;
         });
+        console.log(title);
+        
         for (let key in cusItem) {
           title[key] = cusItem[key];
         }

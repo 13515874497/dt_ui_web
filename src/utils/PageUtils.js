@@ -55,7 +55,7 @@ export default {
         let key = subField['1'].key_get;
         //---------------
 
-
+				console.log(key)
 
         let childrens = parent[key] || [];
 
