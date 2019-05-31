@@ -292,41 +292,41 @@ export default {
     addRow(row){
       console.log(row);
     },
-    initTableOperateList(){
-  
-      this.tableOperateList = [
-        {
-          type: "primary",
-          icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
-          fn(row) {
-            this.addRow(row);
-          }
-        },
-        {
-          type: "primary",
-          icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
-          fn(row) {
-            this.addRow(row);
-          }
-        },
-        {
-          type: "primary",
-          icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
-          fn(row) {
-            this.addRow(row);
-          }
-        },
-      ]
-    }
+    // initTableOperateList(){
+    //   let self = this;
+    //   this.tableOperateList = [
+    //     {
+    //       type: "primary",
+    //       icon: "el-icon-circle-plus-outline",
+    //       label: "我是自定义功能",
+    //       fn(row) {
+    //         self.addRow(row);
+    //       }
+    //     },
+    //     {
+    //       type: "primary",
+    //       icon: "el-icon-circle-plus-outline",
+    //       label: "我是自定义功能",
+    //       fn(row) {
+    //         self.addRow(row);
+    //       }
+    //     },
+    //     {
+    //       type: "primary",
+    //       icon: "el-icon-circle-plus-outline",
+    //       label: "我是自定义功能",
+    //       fn(row) {
+    //         self.addRow(row);
+    //       }
+    //     },
+    //   ]
+    // }
   },
   beforeCreate() {
     transportTypeName.hideChild = true;
   },
   async created() {
-    this.initTableOperateList();
+    // this.initTableOperateList();
   }
 };
 </script>
