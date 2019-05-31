@@ -53,9 +53,12 @@ export const unique = (arr) => {
     len = arr.length;
   for (let i = 0; i < len; i++) {
     let item = arr[i];
-    if (obj[item]) break;
-    obj[item] = 1;
-    r.push(item);
+    if (obj[item]){
+      continue;
+    }else {
+      obj[item] = 1;
+      r.push(item);
+    }
   }
   return r;
 }

@@ -21,6 +21,7 @@
         >{{radio.name}}</el-radio-button>
       </el-radio-group>
       <Table
+        :showOperate="tableOperateList.length"
         :editable="true"
         :editable_field="editable_field"
         :height="300"
@@ -30,7 +31,20 @@
         @giveTable="getTable"
         @giveTableData="getTableData"
         @checkboxValue="checkboxValue"
-      ></Table>
+      >
+        <template v-slot:operate="scope" v-if="tableOperateList.length">
+          <tableOperate :tableOperateList="tableOperateList" :row="scope.childData.row"></tableOperate>
+          <!-- <OperateBtn :operateList="operateBtns"></OperateBtn> -->
+          <!-- <el-button
+          @click="download(scope)"
+          v-if="scope.childData.row.status == 2"
+          size="mini"
+          type="primary"
+          icon="el-icon-download"
+        >下载</el-button>
+          <el-button @click="remove(scope)" size="mini" type="danger" icon="el-icon-delete">删除</el-button>-->
+        </template>
+      </Table>
       <OperateBtn :operateList="operateList"></OperateBtn>
     </section>
     <section></section>
@@ -42,6 +56,7 @@ import Table from "@/components/ElementUi/Table";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
 import { saveNotice } from "@/api";
 import message from "@/utils/Message";
+import tableOperate from './table-operate';
 export default {
   props: {
     visible: Boolean,
@@ -100,11 +115,22 @@ export default {
       //目前为一个父下只有一个子,所以现在都只有一个数据
       type: Object,
       default: () => []
+    },
+    //表格右侧操作按钮
+    tableOperateList: {
+      type: Array,
+      default: () => []
+    },
+    //删除子表的方法
+    ajax_remove: {
+      type: Function //有这个说明type是修改
+      // required: true
     }
   },
   components: {
     Table,
-    OperateBtn
+    OperateBtn,
+    tableOperate
   },
   data() {
     return {
@@ -140,7 +166,7 @@ export default {
     titles_: {
       immediate: true,
       handler() {
-				console.log(this.titles)
+        console.log(this.titles);
         this.getParentFormItems();
         this.getChildrenTableTitle();
       }
@@ -231,8 +257,10 @@ export default {
 
       this.passData[this.parentKey] = $event[2];
       if (this.primaryKey) {
+        //如果是修改 需要提供主键和version
         this.passData[this.parentKey][this.primaryKey] =
           $event[1][this.primaryKey];
+        this.passData[this.parentKey].version = $event[1].version;
       }
       console.log(this.passData);
     },
@@ -268,7 +296,10 @@ export default {
     },
 
     removeRow() {
-      if (!this.multipleSelection.length) return;
+      if (!this.multipleSelection.length) {
+        message.infoMessage("至少选中一条数据");
+        return;
+      }
       let self = this;
       message
         .messageBox_confirm("是否确认删除")
@@ -283,17 +314,37 @@ export default {
           }
           switch (self.type) {
             case "add":
-             remove();
+              remove();
               break;
             case "update":
+              let data = {};
+              let delIds = [];
+              self.multipleSelection.forEach(sel => {
+                console.log(sel);
+                
+                console.log(self.primaryKey_child);
+                
+                delIds.push(sel[self.primaryKey_child]);
+              });
+              data.delChildKey = delIds;
+              console.log(data);
+              
               let res = self.ajax_remove(data).then(res => {
                 console.log(res);
-                if (res.code === 200) {
+                // if (res.code === 200) {
+                //   message.successMessage(res.msg);
+                //   self.search();
+                //   remove();
+                // } else {
+                //   message.errorMessage(res.msg);
+                // }
+                if (!res.data) {
                   message.successMessage(res.msg);
-                  self.search();
                   remove();
+                  // res.data[1].forEach(id=>{
+                  //   let index = self.tableData_children
+                  // });
                 } else {
-                  message.errorMessage(res.msg);
                 }
               });
               break;
@@ -313,6 +364,10 @@ export default {
   created() {
     this.initOperateBtn();
     this.initPassData();
+    console.log('777777777777777777777777777777777777777777777777777777');
+    
+    console.log(this.tableOperateList);
+    
   }
 };
 </script>

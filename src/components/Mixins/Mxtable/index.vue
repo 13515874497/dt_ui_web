@@ -154,7 +154,8 @@ export default {
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
-        page_sizes: [5, 10, 15, 20, 25]
+        page_sizes: [5, 10, 15, 20, 25],
+        systemLogStatus:{}
         // shipNoticeEntry: {
         //   currentPage: 0,
         //   pageSize: 10,
