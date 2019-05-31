@@ -244,6 +244,9 @@ export default {
         this.passData[this.parentKey][this.primaryKey] =
           $event[1][this.primaryKey];
         this.passData[this.parentKey].version = $event[1].version;
+        if($event[1].statusId){
+          this.passData[this.parentKey].statusId = $event[1].statusId;
+        }
       }
       console.log(this.passData);
     },

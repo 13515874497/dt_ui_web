@@ -285,15 +285,24 @@ export const getInventoryInfo = (data) => ajax(BASE_URL + `/fba/getInventoryInfo
 //FBA遗弃  post
 export const getAbandonInfo = (data) => ajax(BASE_URL + `/fba/getAbandonInfo`, data, 'POST')
 
-// 运营管理=> 亚马逊=>通知单
+// 运营管理=>通知单
 
 //出货通知单分页
-export const getNotice = (data) => ajax(BASE_URL + `/no/getNotice`, data, 'POST')
+export const getNotice = (data) => ajax(BASE_URL + `/ship/getNotice`, data, 'POST')
 //根据skuId获取 数据/api/v1/product/getProductAdnSku?skuId=1
 export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAdnSku`, data,'GET',[false,'请求失败'])
+//新增出货通知单
+export const saveNotice = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
+//修改出货通知单
+export const upNotice = (data) => ajax(BASE_URL + '/ship/upNotice',data, 'POST')
+//删除出货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
+export const delShipNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/ship/delShipNoticeAndNoticeEntry',data,'POST')
 
 
+//收货通知单 分页
+export const getReceiving = (data)=> ajax(BASE_URL + `/po/getReceiptNotice`, data, 'POST')
 
+export const saveReceiving = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 
 // 运营管理=> 亚马逊=>费用
 
@@ -319,6 +328,21 @@ export const delReview = (data) => ajax(BASE_URL + `/fba/delReview`, data)
 export const getSkuName = (data) => ajax(BASE_URL + `/sku/getSkuName`, data)
 //Feedback分页
 export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`, data, 'POST')
+
+
+/**
+ *
+ * 采购管理 => 业务处理
+ */
+//* 采购订单
+//采购订单分页
+export const getPoOrder = (data) => ajax(BASE_URL + '/po/getPoOrder', data, 'POST')
+
+
+
+
+
+
 /**
  *
  * 人事管理 => 基础档案
@@ -565,7 +589,17 @@ export const findByListSite = (data) => ajax(BASE_URL + '/site/findByListSite', 
 export const repGetShopIdSiteInfo = (data) => ajax(BASE_URL + `/site/getByShopIdListSite`, data)
 
 //币别分页 repGetCurrencyInfo
-export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
+export const findByListCurrency = ({
+  currentPage = 1,
+  total_size = 0,
+  pageSize = 100,
+  page_sizes = '5,10,15,20,25',
+}={}) => ajax(BASE_URL + '/currency/findByListCurrency', {
+  currentPage,
+  total_size,
+  pageSize,
+  page_sizes,
+}, 'POST')
 
 //汇率分页 repGetRate
 export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', data, 'POST')
@@ -766,10 +800,39 @@ export const selProcess = ({
 //管理页面信息http://127.0.0.1:9001/api/v1/fee/selThisAudit?pageSize=10&currentPage=1
 export const selThisAudit = ({
   currentPage,
-  pageSize
+  pageSize,
+  strQuery
 }) => ajax(BASE_URL + '/fee/selThisAudit', {
   currentPage,
-  pageSize
+  pageSize,
+  strQuery
+})
+
+//管理页面审核http://127.0.0.1:9001/api/v1/fee/review post
+export const review = ({
+  tid,
+  auditor
+}) => ajax(BASE_URL + '/fee/review', {
+  tid,
+  auditor
+},'post')
+
+//查看我申请的反馈页面http://127.0.0.1:9001/api/v1/fee/selProcessHistory?pageSize=3&currentPage=1
+export const selProcessHistory = ({
+  currentPage,
+  pageSize,
+}) => ajax(BASE_URL + '/fee/selProcessHistory', {
+  currentPage,
+  pageSize,
+})
+
+//查看已审核记录http://127.0.0.1:9001/api/v1/fee/getAuditRecord?pageSize=2&currentPage=1
+export const getAuditRecord = ({
+  currentPage,
+  pageSize,
+}) => ajax(BASE_URL + '/fee/getAuditRecord', {
+  currentPage,
+  pageSize,
 })
 //表格方案保存
 export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',data, 'POST')
@@ -778,7 +841,7 @@ export const getConfMapUser = (data) => ajax(BASE_URL + '/user/saveUserConfig ',
 export const getUserConfig = (params) => ajax(BASE_URL + '/user/getUserConfig',params, 'GET')
 
 //删除表格方案
-export const delUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
+export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',data, 'POST')
 
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')

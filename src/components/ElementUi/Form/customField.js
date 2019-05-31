@@ -5,7 +5,8 @@ import {
   getSelectSiteRole,
   findByListStarLevel,
   findByListPlatform,
-  findByListType
+  findByListType,
+  findByListCurrency
 } from '@/api/api'
 
 /**
@@ -76,4 +77,15 @@ export const platformTypeName = {
   label: "platformTypeName",
   filterable: true,
   placeholder: "请选择平台类型"
+}
+//币别 findByListCurrency
+export const currency = {
+  inputType: 3,
+  topType: "currency",
+  bindKey: "currencyId",
+  ajax: findByListCurrency,
+  key: "currencyId",
+  label: "currencyName",
+  filterable: true,
+  placeholder: "请选择币别"
 }

@@ -589,7 +589,17 @@ export const findByListSite = (data) => ajax(BASE_URL + '/site/findByListSite', 
 export const repGetShopIdSiteInfo = (data) => ajax(BASE_URL + `/site/getByShopIdListSite`, data)
 
 //币别分页 repGetCurrencyInfo
-export const findByListCurrency = (data) => ajax(BASE_URL + '/currency/findByListCurrency', data, 'POST')
+export const findByListCurrency = ({
+  currentPage = 1,
+  total_size = 0,
+  pageSize = 100,
+  page_sizes = '5,10,15,20,25',
+}={}) => ajax(BASE_URL + '/currency/findByListCurrency', {
+  currentPage,
+  total_size,
+  pageSize,
+  page_sizes,
+}, 'POST')
 
 //汇率分页 repGetRate
 export const findByListRate = (data) => ajax(BASE_URL + '/rate/findByListRate', data, 'POST')

@@ -207,7 +207,7 @@ export default {
       //     key_get: "noticeEntryList" //获取时从哪里拿出来
       //   }
       // }
-      tableOperateList: [] //提供一个子表右侧的操作按钮list
+      tableOperateList: [] //表格右侧的操作按钮list
     };
   },
   computed: {
