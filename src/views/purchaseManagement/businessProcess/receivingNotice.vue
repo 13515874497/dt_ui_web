@@ -116,56 +116,56 @@ export default {
 	arrival_confirmation(){
 		
 	},
-	operateBtn() {
+	initTableOperateList() {
 	    let self = this;
-	    this.operateList = [
+	    this.tableOperateList = [
 	      //对已上传的文件进行操作的按钮列表
 	      {
-	        type: "arrivalConfirmation",
+	        // type: "arrivalConfirmation",
 	        icon: "",
 	        label: "到货确认",
-	        fn() {
-	          self.arrival_confirmation();
+	        fn(row) {
+	          self.arrival_confirmation(row);
 	        }
 	      },
 	      {
-	        type: "outsourcedWarehousing",
+	        // type: "outsourcedWarehousing",
 	        icon: "",
 	        label: "外购入库",
-	        fn() {
-	          self.outsourced_warehousing();
+	        fn(row) {
+	          self.outsourced_warehousing(row);
 	        }
 	      },
 	      {
-	        type: "startTesting",
+	        // type: "startTesting",
 	        icon: "",
 	        label: "开始检测",
-	        fn() {
-	          self.start_testing();
+	        fn(row) {
+	          self.start_testing(row);
 	        }
 	      },
 	      {
-	        type: "badGoods",
+	        // type: "badGoods",
 	        icon: "",
 	        label: "不良品入库",
-	        fn() {
-	          self.bad_goods();
+	        fn(row) {
+	          self.bad_goods(row);
 	        }
 	      },
 		  {
-		    type: "goodWarehousing",
+		    // type: "goodWarehousing",
 		    icon: "",
 		    label: "良品入库",
-		    fn() {
-		      self.good_warehousing();
+		    fn(row) {
+		      self.good_warehousing(row);
 		    }
 		  },
 		  {
-		    type: "allGoods",
+		    // type: "allGoods",
 		    icon: "",
 		    label: "良品不良品入库",
-		    fn() {
-		      self.all_goods();
+		    fn(row) {
+		      self.all_goods(row);
 		    }
 		  }
 	    ];
@@ -238,7 +238,9 @@ export default {
   beforeCreate() {
     // transportTypeName.hideChild = true;
   },
-  async created() {}
+  async created() {
+	  this.initTableOperateList();
+  }
 };
 </script>
 
