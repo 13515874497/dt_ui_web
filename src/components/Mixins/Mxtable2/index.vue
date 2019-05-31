@@ -93,12 +93,16 @@
           <el-button type="primary" :disabled="!update.data" @click="send_update">保 存</el-button>
         </div>
       </el-dialog>
+	 <el-dialog  :visible.sync="more.visible" width="90%">
+		  <PublicPopUp></PublicPopUp>
+	  </el-dialog>
     </section>
     <!-- 表格字段筛选 -->
     <section>
       <PopoverFilterFields :data="tableTitle" @hideField="hideField"></PopoverFilterFields>
       <!-- <div class="el-button fieldShow el-button--primary is-plain"></div> -->
     </section>
+	<div @click="operateClick()">按钮点击</div>
   </main>
 </template>
 <script>
@@ -115,6 +119,7 @@ import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
+import PublicPopUp from "@/components/ElementUi/PublicPopUp"
 export default {
   data() {
     return {
@@ -156,6 +161,9 @@ export default {
         form: null, //绑定的form
         table: null //绑定的table
       },
+	  more:{
+		visible :false
+	  },
       primaryKey: "", //提供一个修改、删除时的主键
       rule: {},
       update: {
@@ -239,7 +247,8 @@ export default {
     InputQuery,
     SearchReset,
     PopoverFilterFields,
-    Mx2Interface
+    Mx2Interface,
+	PublicPopUp
   },
   methods: {
     setQuery($event) {
@@ -249,6 +258,9 @@ export default {
         this.data[key] = value;
       }
     },
+	operateClick(){
+		this.more.visible = true;
+	},
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;

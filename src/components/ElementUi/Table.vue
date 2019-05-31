@@ -132,9 +132,8 @@
         </el-table-column>
       </div>
     </template>
-    <el-table-column label="操作" v-if="showOperate">
-      <template slot-scope="scope">
-        <slot name="operate" :childData="scope"></slot>
+    <el-table-column label="操作" v-if="showOperate" >
+      <template slot-scope="scope" >
       </template>
     </el-table-column>
   </el-table>
@@ -166,7 +165,8 @@ export default {
     showOperate: {
       //是否在最右侧显示操作字段
       type: Boolean,
-      default: false
+      // default: false
+	  default:true
     },
     editable: {
       //是否可编辑
@@ -272,6 +272,9 @@ export default {
         onEnd: evt => {}
       });
     },
+	operateClick(scope){
+		console.log(scope);
+	},
     setTheadClassName() {
       return "noRightKey";
     },

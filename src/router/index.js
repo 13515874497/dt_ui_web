@@ -66,7 +66,7 @@ import OP_Settle from '../views/Operate/Ending/Settle_accounts'//期末结账
 //采购管理=>业务处理
 import purchase_po_order from '../views/purchaseManagement/businessProcess/purchase_po_order'
 
-import receivingNotice from '../views/receivingNotice/receivingNotice'
+import receivingNotice from '../views/purchaseManagement/businessProcess/receivingNotice'
 
 
 
