@@ -21,7 +21,7 @@
         >{{radio.name}}</el-radio-button>
       </el-radio-group>
       <Table
-        :showOperate="tableOperateList.length"
+        :showOperate="tableOperateList.length>0"
         :editable="true"
         :editable_field="editable_field"
         :height="300"
