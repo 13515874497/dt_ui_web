@@ -825,4 +825,6 @@ export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data,
 
 //获取外购入库分页http://127.0.0.1:9001/api/v1/po/getIcBillStock
 
-export const getIcBillStock = (data) => ajax(BASE_URL + `/po/getIcBillStock`, data, 'POST')
+export const getIcBillStock = (data) => ajax(BASE_URL + '/po/getIcBillStock', data, 'POST') 
+
+// export const getIcBillStock = (data) => ajax(`http://192.168.1.232:81/json.php`, data, 'POST') 模拟

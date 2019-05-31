@@ -14,7 +14,7 @@ export default {
   mixins: [MxTable2],
   data() {
     return {
-      nameKey:'no',
+      nameKey:'no', //点击删除，失败的话会有提示，这个是需要传入的key
       primaryKey: "sbId",             //后台返回的
       primaryKey_child: 'sbeId',       //后台返回的
       queryKey: 'purchaseIcBillStockEntry', //后台返回
@@ -58,21 +58,23 @@ export default {
         //   required: false,
         // }
       ],
+     
       customField_table: [
-        // {
-        //   inputType: 3,
-        //   topType: "sku",
-        //   bindKey: "skuId",
-        //   remote: true,
-        //   key: "skuId",
-        //   label: "sku",
-        //   filterable: true,
-        //   placeholder: "选择店铺站点后输入,需鼠标点击",
-        //   remoteMethod: this.getSkuList,
-        //   data: [],
-        //   changeSel: this.changeSku
-        // }
+        {
+          // inputType: 3,
+          // topType: "sku",
+          // bindKey: "skuId",
+          // remote: true,
+          // key: "skuId",
+          // label: "sku",
+          // filterable: true,
+          // placeholder: "选择店铺站点后输入,需鼠标点击",
+          // remoteMethod: this.getSkuList,
+          // data: [],
+          // changeSel: this.changeSku
+        }
       ],
+       // 表格中哪些字段可以被编辑
       editable_field: [
         //表格中哪些字段可以被编辑
         // "neGwKg",
@@ -80,8 +82,8 @@ export default {
         // "neLengthCm",
         // "neNwKg",
         // "neWidthCm",
-        // "neVolumeM3",
-        // "quantity"
+        "eRemark",
+        "quantity"
       ],
       parentKey: "salesShipNotice", // 点击新增、修改的时候传给后台的 key的名字
       subField: {
