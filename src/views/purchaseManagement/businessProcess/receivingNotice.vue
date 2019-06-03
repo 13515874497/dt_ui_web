@@ -58,7 +58,11 @@ export default {
         // {
         //   topType: 'remark',
         //   required: false,
-        // }
+        // },
+			{
+				topType:'deptId',
+				disabled:true
+			}
       ],
       customField_table: [
         // {
