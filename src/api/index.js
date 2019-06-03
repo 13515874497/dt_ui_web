@@ -295,6 +295,7 @@ export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAd
 export const saveNotice = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 //修改出货通知单
 export const upNotice = (data) => ajax(BASE_URL + '/ship/upNotice',data, 'POST')
+
 //删除出货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delShipNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/ship/delShipNoticeAndNoticeEntry',data,'POST')
 
@@ -840,4 +841,9 @@ export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data,
 
 export const getIcBillStock = (data) => ajax(BASE_URL + '/po/getIcBillStock', data, 'POST') 
 
-// export const getIcBillStock = (data) => ajax(`http://192.168.1.232:81/json.php`, data, 'POST') 模拟
+//新增外购入库http://127.0.0.1:9001/api/v1/po/saveIcBillStock
+export const saveIcBillStock = (data) => ajax(BASE_URL + '/po/saveIcBillStock', data, 'POST') 
+
+
+//删除外购入库http://127.0.0.1:9001/api/v1/po/delIcBillStock
+export const delIcBillStock = (data) => ajax(BASE_URL + '/po/delIcBillStock', data, 'POST') 

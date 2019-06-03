@@ -1,6 +1,6 @@
 <script>
 //外购入库
-import { getIcBillStock, saveIcBillStock, getProductAdnSku, getSkuName } from "@/api";
+import { getIcBillStock, saveIcBillStock, delIcBillStock, getSkuName } from "@/api";
 import {
   shopName,
   siteName,
@@ -19,47 +19,27 @@ export default {
       primaryKey_child: 'sbeId',       //后台返回的
       queryKey: 'purchaseIcBillStockEntry', //后台返回
       customField: [
-          //要验证的字段
-        
-        {
-          topType: "date",
-          required: true
-        },
-        {
-          topType: "deptId",
-          required: true
-        },
-        {
-          topType: "supplierId",
-          required: true
-        },
-        {
-          topType: "no",
-          required: true
-        },
+          //要验证的字段        
         // {
-        //   topType: 'ttlQty',
-        //   disabled: true,
+        //   topType: "date",
+        //   required: true
         // },
         // {
-        //   topType: 'ttlVolume',
-        //   disabled: true,
+        //   topType: "deptId",
+        //   required: true
         // },
         // {
-        //   topType: 'ttlGwKg',
-        //   disabled: true,
+        //   topType: "supplierId",
+        //   required: true
         // },
         // {
-        //   topType: 'ttlNwKg',
-        //   disabled: true,
+        //   topType: "no",
+        //   required: true
         // },
-        // {
-        //   topType: 'fba',
-        //   required: false,
-        // }
       ],
      
       customField_table: [
+       //  自定义字段表
         {
           // inputType: 3,
           // topType: "sku",
@@ -74,7 +54,6 @@ export default {
           // changeSel: this.changeSku
         }
       ],
-       // 表格中哪些字段可以被编辑
       editable_field: [
         //表格中哪些字段可以被编辑
         // "neGwKg",
@@ -85,13 +64,13 @@ export default {
         "eRemark",
         "quantity"
       ],
-      parentKey: "salesShipNotice", // 点击新增、修改的时候传给后台的 key的名字
+      parentKey: "purchaseIcBillStock", // 点击新增、修改的时候传给后台的 父key的名字 (后台让传的参数)
       subField: {
         "1": { //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
           //radio选项  和  点击新增、修改的时候传给后台的key
           name: "外购入库单",
-          key_submit: "", //传给后台的key
-          key_get: 'purchaseIcBillStockEntryList' //获取时从哪里拿出来
+          key_submit: "purchaseIcBillStockEntry", //传给后台的子key
+          key_get: 'purchaseIcBillStockEntryList' //获取是从后台返回数据拿出来
         }
       }
     };
@@ -184,7 +163,12 @@ export default {
     ajax_add(data) {
       return saveIcBillStock(data); //新增的接口
     },
-
+    ajax_update(data) {
+      return upNotice(data); //修改
+    },
+     ajax_remove(data) {
+      return delIcBillStock(data); //删除
+    },
     // async changeSku(val, row, title) {
     //   console.log(val);
     //   console.log(row);

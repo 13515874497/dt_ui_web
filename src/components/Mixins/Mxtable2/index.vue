@@ -502,7 +502,7 @@ export default {
                 errorInfo += " 下有关联数据，请在修改中删除后再删除。";
                 message.errorMessage(errorInfo);
               }
-              if (re.data[1].length) {
+              if (res.data[1].length) {
                 this.search();
               }
             } else {
