@@ -21,7 +21,7 @@
         >{{radio.name}}</el-radio-button>
       </el-radio-group>
       <Table
-        :showOperate="tableOperateList.length"
+        
         :editable="true"
         :editable_field="editable_field"
         :height="300"
@@ -32,18 +32,7 @@
         @giveTableData="getTableData"
         @checkboxValue="checkboxValue"
       >
-        <template v-slot:operate="scope" v-if="tableOperateList.length">
-          <tableOperate :tableOperateList="tableOperateList" :row="scope.childData.row"></tableOperate>
-          <!-- <OperateBtn :operateList="operateBtns"></OperateBtn> -->
-          <!-- <el-button
-          @click="download(scope)"
-          v-if="scope.childData.row.status == 2"
-          size="mini"
-          type="primary"
-          icon="el-icon-download"
-        >下载</el-button>
-          <el-button @click="remove(scope)" size="mini" type="danger" icon="el-icon-delete">删除</el-button>-->
-        </template>
+      
       </Table>
       <OperateBtn :operateList="operateList"></OperateBtn>
     </section>
@@ -56,7 +45,7 @@ import Table from "@/components/ElementUi/Table";
 import OperateBtn from "@/components/ElementUi/OperateBtn";
 import { saveNotice } from "@/api";
 import message from "@/utils/Message";
-import tableOperate from './table-operate';
+
 export default {
   props: {
     visible: Boolean,
@@ -116,11 +105,6 @@ export default {
       type: Object,
       default: () => []
     },
-    //表格右侧操作按钮
-    tableOperateList: {
-      type: Array,
-      default: () => []
-    },
     //删除子表的方法
     ajax_remove: {
       type: Function //有这个说明type是修改
@@ -130,7 +114,6 @@ export default {
   components: {
     Table,
     OperateBtn,
-    tableOperate
   },
   data() {
     return {
@@ -261,6 +244,9 @@ export default {
         this.passData[this.parentKey][this.primaryKey] =
           $event[1][this.primaryKey];
         this.passData[this.parentKey].version = $event[1].version;
+        if($event[1].statusId){
+          this.passData[this.parentKey].statusId = $event[1].statusId;
+        }
       }
       console.log(this.passData);
     },
@@ -364,10 +350,6 @@ export default {
   created() {
     this.initOperateBtn();
     this.initPassData();
-    console.log('777777777777777777777777777777777777777777777777777777');
-    
-    console.log(this.tableOperateList);
-    
   }
 };
 </script>

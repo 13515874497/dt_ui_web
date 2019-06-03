@@ -112,9 +112,13 @@ export default {
   watch: {
     "form_data_model.shopId"() {
       this.getSkuList("");
+      // this.table.table_data = [];
+      // table_data = [];
     },
     "form_data_model.siteId"() {
       this.getSkuList("");
+      // this.table.table_data = [];
+      // table_data = [];
     },
     "form_data_model.platformTypeId"(val) {
       console.log(val);
@@ -289,18 +293,45 @@ export default {
         }
       }
     },
+    addRow(row,mul){
+      console.log(row);
+      console.log(mul);
+      
+    },
     initTableOperateList(){
+      let self = this;
       this.tableOperateList = [
         {
-          aa:1
-        }
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "我是自定义功能",
+          fn(row,mul) {
+            self.addRow(row,mul);
+          }
+        },
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "我是自定义功能",
+          fn(row,mul) {
+            self.addRow(row,mul);
+          }
+        },
+        {
+          type: "primary",
+          icon: "el-icon-circle-plus-outline",
+          label: "我是自定义功能",
+          fn(row,mul) {
+            self.addRow(row,mul);
+          }
+        },
       ]
     }
   },
   beforeCreate() {
     transportTypeName.hideChild = true;
   },
-  async created() {
+  created() {
     this.initTableOperateList();
   }
 };
