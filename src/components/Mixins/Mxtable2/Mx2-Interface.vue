@@ -17,7 +17,7 @@
           v-show="radio.name"
           v-for="(radio,key,index) in radios"
           :label="radio.key"
-          :key="radio.key_submit"
+          :key="index"
         >{{radio.name}}</el-radio-button>
       </el-radio-group>
       <Table
@@ -96,10 +96,7 @@ export default {
     primaryKey_child: {
       type: String //子主键 修改、删除的接口需要提供的key
     },
-    parentKey: {
-      //form表单数据 提交给后台的key
-      type: String
-    },
+
     radios: {
       //目前为一个父下只有一个子,所以现在都只有一个数据
       type: Object,
@@ -131,7 +128,7 @@ export default {
       tableData_children: [],
       isPass: null, //是否验证通过
       passData: {}, //向上传递的数据
-      radio: this.radios && this.radios["1"].key_submit //radio默认选中第一个
+      radio: '' //radio默认选中第一个
     };
   },
   computed: {
@@ -230,22 +227,20 @@ export default {
           this.tableData_children = this.data_[3];
           break;
       }
-
-      console.log(this.tableData_children);
     },
     //form表单返回的验证结果和数据
     getFormData($event) {
       console.log($event);
       this.isPass = $event[0];
 
-      this.passData[this.parentKey] = $event[2];
+      this.passData['parentKey'] = $event[2];
       if (this.primaryKey) {
         //如果是修改 需要提供主键和version
-        this.passData[this.parentKey][this.primaryKey] =
+        this.passData['parentKey'][this.primaryKey] =
           $event[1][this.primaryKey];
-        this.passData[this.parentKey].version = $event[1].version;
+        this.passData['parentKey'].version = $event[1].version;
         if($event[1].statusId){
-          this.passData[this.parentKey].statusId = $event[1].statusId;
+          this.passData['parentKey'].statusId = $event[1].statusId;
         }
       }
       console.log(this.passData);
@@ -264,7 +259,7 @@ export default {
     },
     //表格中数据发生变化时获取表格的数据
     getTableData($event) {
-      this.passData[this.radio] = $event[0];
+      this.passData['entry'] = $event[0];
       console.log(this.passData);
     },
     //点击新增给表格加一行空数据
@@ -306,30 +301,17 @@ export default {
               let data = {};
               let delIds = [];
               self.multipleSelection.forEach(sel => {
-                console.log(sel);
-                
-                console.log(self.primaryKey_child);
-                
+
                 delIds.push(sel[self.primaryKey_child]);
               });
               data.delChildKey = delIds;
-              console.log(data);
               
               let res = self.ajax_remove(data).then(res => {
-                console.log(res);
-                // if (res.code === 200) {
-                //   message.successMessage(res.msg);
-                //   self.search();
-                //   remove();
-                // } else {
-                //   message.errorMessage(res.msg);
-                // }
+
                 if (!res.data) {
                   message.successMessage(res.msg);
                   remove();
-                  // res.data[1].forEach(id=>{
-                  //   let index = self.tableData_children
-                  // });
+
                 } else {
                 }
               });
@@ -340,10 +322,10 @@ export default {
     },
     //初始化passData
     initPassData() {
-      this.$set(this.passData, this.parentKey, {});
+      this.$set(this.passData, 'parentKey', {});
       for (let key in this.radios) {
         let radio = this.radios[key];
-        this.$set(this.passData, radio.key_submit, []);
+        this.$set(this.passData,'entry', []);
       }
     }
   },

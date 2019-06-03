@@ -52,7 +52,7 @@ export default {
         
         //1.---------------
         
-        let key = subField['1'].key_get;
+        let key = 'entryList';
         //---------------
 
 				console.log(key)

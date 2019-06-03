@@ -337,6 +337,9 @@ export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`, data, '
 //* 采购订单
 //采购订单分页
 export const getPoOrder = (data) => ajax(BASE_URL + '/po/getPoOrder', data, 'POST')
+//采购订单新增
+export const savePoOrder = (data) => ajax(BASE_URL + '/po/savePoOrder', data, 'POST')
+
 
 
 
@@ -845,4 +848,8 @@ export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',dat
 
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
+
+//获取供应商select下拉框数据  /api/v1/sup/findSupName
+export const findSupName = (data) => ajax(BASE_URL + '/sup/findSupName',data)
+
 
