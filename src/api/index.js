@@ -860,3 +860,7 @@ export const saveIcBillStock = (data) => ajax(BASE_URL + '/po/saveIcBillStock', 
 
 //删除外购入库http://127.0.0.1:9001/api/v1/po/delIcBillStock
 export const delIcBillStock = (data) => ajax(BASE_URL + '/po/delIcBillStock', data, 'POST') 
+
+
+//修改外购入库http://127.0.0.1:9001/api/v1/po/uplIcBillStock
+export const uplIcBillStock = (data) => ajax(BASE_URL + '/po/uplIcBillStock', data, 'POST') 

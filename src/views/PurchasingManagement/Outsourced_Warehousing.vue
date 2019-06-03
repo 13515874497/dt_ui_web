@@ -1,6 +1,6 @@
 <script>
 //外购入库
-import { getIcBillStock, saveIcBillStock, delIcBillStock, getSkuName } from "@/api";
+import { getIcBillStock, saveIcBillStock, delIcBillStock, uplIcBillStock } from "@/api";
 import {
   shopName,
   siteName,
@@ -69,7 +69,7 @@ export default {
         "1": { //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
           //radio选项  和  点击新增、修改的时候传给后台的key
           name: "外购入库单",
-          key_submit: "purchaseIcBillStockEntry", //传给后台的子key
+          key_submit: "purchaseIcBillStockEntry", //传给后台的子key(后台给的)
           key_get: 'purchaseIcBillStockEntryList' //获取是从后台返回数据拿出来
         }
       }
@@ -161,10 +161,11 @@ export default {
       return getIcBillStock(data); //查询页面的接口
     },
     ajax_add(data) {
+      data.mid = 295 //后台需要传入的参数mid就是当前页面的id
       return saveIcBillStock(data); //新增的接口
     },
     ajax_update(data) {
-      return upNotice(data); //修改
+      return uplIcBillStock(data); //修改
     },
      ajax_remove(data) {
       return delIcBillStock(data); //删除
