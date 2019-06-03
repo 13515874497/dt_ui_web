@@ -273,6 +273,9 @@ export default {
         onEnd: evt => {}
       });
     },
+	operateClick(scope){
+		console.log(scope);
+	},
     setTheadClassName() {
       return "noRightKey";
     },

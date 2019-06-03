@@ -112,7 +112,7 @@ export default {
   watch: {
     "form_data_model.shopId": {
       handler(val) {
-        let origin = this.data_origin[1].shopId;
+        let origin = this.data_origin[1] && this.data_origin[1].shopId || null;
         if (val == null) {
           this.form.data_model.shopId = origin;
           return;
@@ -127,7 +127,7 @@ export default {
     "form_data_model.siteId": {
       handler(val) {
         console.log("9999999999999999999999999999999999999");
-        let origin = this.data_origin[1].siteId;
+        let origin = this.data_origin[1] && this.data_origin[1].siteId || null;
         if (val == null) {
           this.form.data_model.siteId = origin;
           return;
@@ -227,10 +227,10 @@ export default {
       return saveNotice(data); //新增的接口
     },
     ajax_update(data) {
-      return upNotice(data);
+      return upNotice(data);    //修改
     },
     ajax_remove(data) {
-      return delShipNoticeAndNoticeEntry(data);
+      return delShipNoticeAndNoticeEntry(data); //删除
     },
     async changeSku(val, row, title) {
       console.log(val);

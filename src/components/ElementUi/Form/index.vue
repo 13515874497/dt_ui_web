@@ -321,7 +321,7 @@ export default {
                 formItem.data = res.data;
                 console.log(formItem.data);
               }
-              self.data_model[item.data_model] = [];
+              // self.data_model[item.data_model] = [];
               break;
           }
         }

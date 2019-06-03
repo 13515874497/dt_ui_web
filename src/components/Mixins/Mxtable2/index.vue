@@ -106,6 +106,9 @@
           <el-button type="primary" :disabled="!update.data" @click="send_update">保 存</el-button>
         </div>
       </el-dialog>
+	 <el-dialog  :visible.sync="more.visible" width="90%">
+		  <PublicPopUp :dataListObj='dataListObj' :pubShow='more.visible' @isPubShow='isPubShow'></PublicPopUp>
+	  </el-dialog>
     </section>
     <!-- 表格字段筛选 -->
     <section>
@@ -129,6 +132,7 @@ import { deepClone, unique } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
 import tableOperate from "./table-operate";
+import PublicPopUp from "@/components/ElementUi/PublicPopUp"
 export default {
   data() {
     return {
@@ -136,6 +140,7 @@ export default {
       page: {
         name: this.$route.params.name
       },
+			dataListObj:{},
       loading: false,
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
@@ -170,6 +175,9 @@ export default {
         form: null, //绑定的form
         table: null //绑定的table
       },
+			more:{
+				visible :false
+			},
       primaryKey: "", //提供一个修改、删除时的主键
       nameKey: "", //提供一个  删除失败时提示给用户那一行的名字
       rule: {},
@@ -256,7 +264,8 @@ export default {
     SearchReset,
     PopoverFilterFields,
     Mx2Interface,
-    tableOperate
+		PublicPopUp,
+		tableOperate
   },
   methods: {
     setQuery($event) {
@@ -266,6 +275,9 @@ export default {
         this.data[key] = value;
       }
     },
+	operateClick(){
+		this.more.visible = true;
+	},
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
@@ -524,7 +536,7 @@ export default {
                 errorInfo += " 下有关联数据，请在修改中删除后再删除。";
                 message.errorMessage(errorInfo);
               }
-              if (re.data[1].length) {
+              if (res.data[1].length) {
                 this.search();
               }
             } else {
@@ -595,7 +607,11 @@ export default {
           }
         }
       ];
-    }
+    },
+		isPubShow($event){
+			console.log($event)
+			this.more.visible = $event;
+		}
   },
   async created() {
     this.initOperateBtn();
