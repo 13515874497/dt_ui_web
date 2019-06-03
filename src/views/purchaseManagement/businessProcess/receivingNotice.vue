@@ -149,13 +149,13 @@ export default {
 				]
 			}else{//确认数量不为0
 				//各品类数量显示按钮
-				if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum==0){
-					this.tableOperateList.push({icon: "",label: "不良品入库",fn(row,mull) {self.bad_goods(row,mull);}})
-				}else if(this.procedure.badNum.badGoodsNum==0&&this.procedure.badNum.goodsNum>0){
-					this.tableOperateList.push({icon: "",label: "良品入库",fn(row,mull) {self.good_warehousing(row,mull);}})
-				}else if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum>0){
-					this.tableOperateList.push({icon: "",label: "良品不良品入库",fn(row,mull) {self.all_goods(row,mull);}})
-				}
+				// if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum==0){
+				// 	this.tableOperateList.push({icon: "",label: "不良品入库",fn(row,mull) {self.bad_goods(row,mull);}})
+				// }else if(this.procedure.badNum.badGoodsNum==0&&this.procedure.badNum.goodsNum>0){
+				// 	this.tableOperateList.push({icon: "",label: "良品入库",fn(row,mull) {self.good_warehousing(row,mull);}})
+				// }else if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum>0){
+				// 	this.tableOperateList.push({icon: "",label: "良品不良品入库",fn(row,mull) {self.all_goods(row,mull);}})
+				// }
 				//入库数量小于确认数量
 				if( this.procedure.goNum < this.procedure.nowNum){
 					this.tableOperateList.push({icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
@@ -216,27 +216,27 @@ export default {
 		this.dataListObj = {type:'03',dataList:this.dataList}
 		console.log(this.dataListObj);
 	},
-	bad_goods(row,mull){//不良品入库
-		console.log(row,mull)
-		this.more.visible = true;
-		mull.length>0?this.dataList = mull:this.dataList = [row]
-		this.dataListObj = {type:'04',dataList:this.dataList}
-		console.log(this.dataListObj);
-	},
-	good_warehousing(row,mull){//良品入库
-		console.log(row,mull)
-		this.more.visible = true;
-		mull.length>0?this.dataList = mull:this.dataList = [row]
-		this.dataListObj = {type:'05',dataList:this.dataList}
-		console.log(this.dataListObj);
-	},
-	all_goods(row,mull){//良品不良品入库
-		console.log(row,mull)
-		this.more.visible = true;
-		mull.length>0?this.dataList = mull:this.dataList = [row]
-		this.dataListObj = {type:'06',dataList:this.dataList}
-		console.log(this.dataListObj);
-	},
+	// bad_goods(row,mull){//不良品入库
+	// 	console.log(row,mull)
+	// 	this.more.visible = true;
+	// 	mull.length>0?this.dataList = mull:this.dataList = [row]
+	// 	this.dataListObj = {type:'04',dataList:this.dataList}
+	// 	console.log(this.dataListObj);
+	// },
+	// good_warehousing(row,mull){//良品入库
+	// 	console.log(row,mull)
+	// 	this.more.visible = true;
+	// 	mull.length>0?this.dataList = mull:this.dataList = [row]
+	// 	this.dataListObj = {type:'05',dataList:this.dataList}
+	// 	console.log(this.dataListObj);
+	// },
+	// all_goods(row,mull){//良品不良品入库
+	// 	console.log(row,mull)
+	// 	this.more.visible = true;
+	// 	mull.length>0?this.dataList = mull:this.dataList = [row]
+	// 	this.dataListObj = {type:'06',dataList:this.dataList}
+	// 	console.log(this.dataListObj);
+	// },
     async changeSku(val, row, title) {
       console.log(val);
       console.log(row);
@@ -301,6 +301,19 @@ export default {
         }
       }
     }
+  },
+  watch:{
+	  form_data_model(val,oldVal){
+		  console.log(val);
+		  console.log(oldVal);
+		  console.log(this.form_editing)
+		  switch(this.form_editing){
+			   case 'add':
+				this.form.data_model.date = new Date().getTime();
+				this.form_data_model.empId = this.getCookie("name");
+				console.log('1111')
+			}
+	  }
   },
   beforeCreate() {
     // transportTypeName.hideChild = true;
