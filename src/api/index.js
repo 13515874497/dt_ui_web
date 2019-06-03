@@ -303,7 +303,12 @@ export const delShipNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/ship/delS
 //收货通知单 分页
 export const getReceiving = (data)=> ajax(BASE_URL + `/po/getReceiptNotice`, data, 'POST')
 
-export const saveReceiving = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
+export const saveReceiving = (data) => ajax(BASE_URL + '/po/saveReceiptNotice',data, 'POST')
+//修改收货通知单
+export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data, 'POST')
+//删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
+export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
+
 
 // 运营管理=> 亚马逊=>费用
 
