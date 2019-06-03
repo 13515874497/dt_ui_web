@@ -223,10 +223,10 @@ export default {
     formData: Object, //有传这个说明是修改
     rule: Object, //某些特殊字段的验证规则
     reset: Boolean, // 改变时重置数据
-    customField: {
+    customField: { //某些特殊字段在填写时需要向后台请求数据 如下拉框里的数据
       type: Array,
       default: () => []
-    } //某些特殊字段在填写时需要想后台请求数据
+    } 
   },
   data() {
     return {
@@ -472,7 +472,7 @@ export default {
       let option = formItem.data.find(option => {
         return option[formItem.bindKey] === val;
       });
-      this.data_model[formItem.topType] = option[formItem.label];
+      this.data_model[formItem.label] = option[formItem.label];
     }
   },
   beforeCreate() {},

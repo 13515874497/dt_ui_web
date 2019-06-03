@@ -291,6 +291,7 @@ export default {
       //如果是多个表的数据合并起来的数据   那么就合并父表的数据
       if (this.mode === 2) {
         let title = this.table_title.find(item => {
+          
           return item.topType === column.property;
         });
         if (title && title.subField === null) {

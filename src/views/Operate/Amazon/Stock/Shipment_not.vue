@@ -21,7 +21,7 @@ export default {
   mixins: [MxTable2],
   data() {
     return {
-      queryKey: "shipNoticeEntry",
+      // queryKey: "shipNoticeEntry",
       primaryKey: "shipNoticeId",
       nameKey: "no",
       primaryKey_child: "eid",
@@ -106,20 +106,40 @@ export default {
           key_get: "noticeEntryList" //获取时从哪里拿出来
         }
       },
-      tableOperateList:[]
+      tableOperateList: []
     };
   },
   watch: {
-    "form_data_model.shopId"() {
-      this.getSkuList("");
-      // this.table.table_data = [];
-      // table_data = [];
+    "form_data_model.shopId": {
+      handler(val) {
+        let origin = this.data_origin[1].shopId;
+        if (val == null) {
+          this.form.data_model.shopId = origin;
+          return;
+        }
+        if (val !== origin) {
+          this.table.table_data = [];
+        }
+
+        this.getSkuList("");
+      }
     },
-    "form_data_model.siteId"() {
-      this.getSkuList("");
-      // this.table.table_data = [];
-      // table_data = [];
+    "form_data_model.siteId": {
+      handler(val) {
+        console.log("9999999999999999999999999999999999999");
+        let origin = this.data_origin[1].siteId;
+        if (val == null) {
+          this.form.data_model.siteId = origin;
+          return;
+        }
+        if (val !== origin) {
+          this.table.table_data = [];
+        }
+        this.getSkuList("");
+        // this.table.table_data = [];
+      }
     },
+    //平台类型为亚马逊时 fba为必选字段
     "form_data_model.platformTypeId"(val) {
       console.log(val);
       let fbaShipmentId = this.customField.find(item => {
@@ -151,8 +171,8 @@ export default {
           // let skuIds = [];
           for (let i = 0; i < table_data.length; i++) {
             let row = table_data[i];
-            row.neNwKg = row.neNwKg_ * row.quantity;
-            row.neGwKg = row.neGwKg_ * row.quantity;
+            // row.neNwKg = row.neNwKg_ * row.quantity || 0 ;
+            // row.neGwKg = row.neGwKg_ * row.quantity || 0 ;
             // skuIds.push(row.skuId);
             console.log(row);
 
@@ -212,24 +232,6 @@ export default {
     ajax_remove(data) {
       return delShipNoticeAndNoticeEntry(data);
     },
-    // async getSkuList(query) {
-    //   console.log(query);
-
-    //   let data = this.form_data_model;
-    //   console.log(data);
-
-    //   if (data.shopId && data.siteId) {
-    //     let res = await getSkuName({
-    //       sId: data.shopId,
-    //       seId: data.siteId,
-    //       kuName: query
-    //     });
-    //     console.log(res);
-    //     if (res.code === 200) {
-    //       console.log(res);
-    //     }
-    //   }
-    // },
     async changeSku(val, row, title) {
       console.log(val);
       console.log(row);
@@ -253,24 +255,25 @@ export default {
           for (let key in data) {
             row[key] = data[key];
           }
-          row.neNwKg_ = row.neNwKg;
-          row.neGwKg_ = row.neGwKg;
+          row.neNwKg_ = row.neNwKg || 0;
+          row.neGwKg_ = row.neGwKg || 0;
           row.neNwKg = row.neNwKg_ * row.quantity;
           row.neGwKg = row.neGwKg_ * row.quantity;
-          // Object.defineProperty(row, "quantity", {
-          //   enumerable: true,
-          //   set(val) {
-          //     this.neNwKg = this.neNwKg_ * val;
-          //     this.neGwKg = this.neGwKg_ * val;
-          //   }
-          // });
+          Object.defineProperty(row, "quantity", {
+            enumerable: true,
+            set(val) {
+              this.neNwKg = this.neNwKg_ * val;
+              this.neGwKg = this.neGwKg_ * val;
+              table_data = [...table_data];
+            }
+          });
           console.log(res);
         }
 
         this.table.table_data = [...this.table.table_data];
       }
     },
-    //获取输入获取sku列表
+    //输入获取sku列表
     async getSkuList(query, row) {
       console.log(this.form);
       console.log(this.form.data_model);
@@ -292,47 +295,47 @@ export default {
           this.table.table_data = [...this.table.table_data];
         }
       }
-    },
-    addRow(row,mul){
-      console.log(row);
-      console.log(mul);
-      
-    },
-    initTableOperateList(){
-      let self = this;
-      this.tableOperateList = [
-        {
-          type: "primary",
-          icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
-          fn(row,mul) {
-            self.addRow(row,mul);
-          }
-        },
-        {
-          type: "primary",
-          icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
-          fn(row,mul) {
-            self.addRow(row,mul);
-          }
-        },
-        {
-          type: "primary",
-          icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
-          fn(row,mul) {
-            self.addRow(row,mul);
-          }
-        },
-      ]
     }
+    // addRow(row,mul){
+    //   console.log(row);
+    //   console.log(mul);
+
+    // },
+    // initTableOperateList(){
+    //   let self = this;
+    //   this.tableOperateList = [
+    //     {
+    //       type: "primary",
+    //       icon: "el-icon-circle-plus-outline",
+    //       label: "我是自定义功能",
+    //       fn(row,mul) {
+    //         self.addRow(row,mul);
+    //       }
+    //     },
+    //     {
+    //       type: "primary",
+    //       icon: "el-icon-circle-plus-outline",
+    //       label: "我是自定义功能",
+    //       fn(row,mul) {
+    //         self.addRow(row,mul);
+    //       }
+    //     },
+    //     {
+    //       type: "primary",
+    //       icon: "el-icon-circle-plus-outline",
+    //       label: "我是自定义功能",
+    //       fn(row,mul) {
+    //         self.addRow(row,mul);
+    //       }
+    //     },
+    //   ]
+    // }
   },
   beforeCreate() {
     transportTypeName.hideChild = true;
   },
   created() {
-    this.initTableOperateList();
+    // this.initTableOperateList();
   }
 };
 </script>
