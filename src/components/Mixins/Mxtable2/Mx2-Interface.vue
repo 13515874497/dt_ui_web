@@ -160,7 +160,8 @@ export default {
     },
     passData: {
       handler(val) {
-        this.$emit("passData", [this.isPass, val]);
+        let isPass = this.isPass && val.entry.length>0;
+        this.$emit("passData", [isPass, val]);
       },
       deep: true
     }
