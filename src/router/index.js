@@ -160,6 +160,9 @@ import UserFeedBack from '../views/UserFeed/UserFeedBack.vue'  //用户反馈
 
 import Audit from '../views/Audit/Audit.vue'  //用户反馈
 
+
+import Outsourced_Warehousing from '../views/PurchasingManagement/Outsourced_Warehousing'//外购入库
+
 import Collection from '../views/CollectionIndex/CollectionIndex.vue'//收藏
 
 Vue.use(Router)
@@ -834,10 +837,16 @@ export default new Router({
           name:'UserFeedBack',   
         }, 
         {
-          path: '/index/audit',  //用户反馈
+          path: '/index/audit',  //管理员查看页面
           component: Audit,
           name:'Audit',   
         }, 
+        {
+          path: '/index/outsourced_warehousing/:id/:name',  //外购入库
+          component: Outsourced_Warehousing,
+          name:'Outsourced_Warehousing',   
+        },
+      
 					{
 				  path: '/index/collection_index/:id/:name',  //收藏
 				  component: Collection,

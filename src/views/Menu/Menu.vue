@@ -693,7 +693,6 @@ export default {
     async sort() {
       console.log("保存排序接口");
       let res = await upHeadSort(this.sortedAjaxObj);
-
       console.log(res);
     },
     //拖拽跟踪 防止拖到内部

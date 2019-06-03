@@ -207,10 +207,10 @@ export default {
       return saveNotice(data); //新增的接口
     },
     ajax_update(data) {
-      return upNotice(data);
+      return upNotice(data);    //修改
     },
     ajax_remove(data) {
-      return delShipNoticeAndNoticeEntry(data);
+      return delShipNoticeAndNoticeEntry(data); //删除
     },
     // async getSkuList(query) {
     //   console.log(query);

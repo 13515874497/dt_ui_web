@@ -295,6 +295,7 @@ export const getProductAdnSku = (data) => ajax(BASE_URL + `/product/getProductAd
 export const saveNotice = (data) => ajax(BASE_URL + '/ship/saveNotice',data, 'POST')
 //修改出货通知单
 export const upNotice = (data) => ajax(BASE_URL + '/ship/upNotice',data, 'POST')
+
 //删除出货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delShipNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/ship/delShipNoticeAndNoticeEntry',data,'POST')
 
@@ -854,3 +855,17 @@ export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',dat
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 
+//获取外购入库分页http://127.0.0.1:9001/api/v1/po/getIcBillStock
+
+export const getIcBillStock = (data) => ajax(BASE_URL + '/po/getIcBillStock', data, 'POST') 
+
+//新增外购入库http://127.0.0.1:9001/api/v1/po/saveIcBillStock
+export const saveIcBillStock = (data) => ajax(BASE_URL + '/po/saveIcBillStock', data, 'POST') 
+
+
+//删除外购入库http://127.0.0.1:9001/api/v1/po/delIcBillStock
+export const delIcBillStock = (data) => ajax(BASE_URL + '/po/delIcBillStock', data, 'POST') 
+
+
+//修改外购入库http://127.0.0.1:9001/api/v1/po/uplIcBillStock
+export const uplIcBillStock = (data) => ajax(BASE_URL + '/po/uplIcBillStock', data, 'POST') 
