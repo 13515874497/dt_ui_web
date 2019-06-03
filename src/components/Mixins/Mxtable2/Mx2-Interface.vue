@@ -160,7 +160,8 @@ export default {
     },
     passData: {
       handler(val) {
-        this.$emit("passData", [this.isPass, val]);
+        let isPass = this.isPass && val.entry.length>0;
+        this.$emit("passData", [isPass, val]);
       },
       deep: true
     }
@@ -271,7 +272,8 @@ export default {
           row[item.bindKey] = null;
         }
       });
-      this.tableData_children.push(row);
+      this.table.table_data.push(row);
+      // this.tableData_children.push(row);
 
       console.log(this.tableTitle_children);
     },
