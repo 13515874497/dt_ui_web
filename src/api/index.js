@@ -855,6 +855,10 @@ export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',dat
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 
+//获取供应商select下拉框数据  /api/v1/sup/findSupName
+export const findSupName = (data) => ajax(BASE_URL + '/sup/findSupName',data)
+
+
 //获取外购入库分页http://127.0.0.1:9001/api/v1/po/getIcBillStock
 
 export const getIcBillStock = (data) => ajax(BASE_URL + '/po/getIcBillStock', data, 'POST') 

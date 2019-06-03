@@ -32,7 +32,11 @@
         :showOperate="tableOperateList.length>0"
       >
         <template v-slot:operate="scope" v-if="tableOperateList.length">
-          <tableOperate :tableOperateList="tableOperateList" :row="scope.childData.row" :multipleSelection="multipleSelection"></tableOperate>
+          <tableOperate
+            :tableOperateList="tableOperateList"
+            :row="scope.childData.row"
+            :multipleSelection="multipleSelection"
+          ></tableOperate>
         </template>
       </Table>
       <div v-if="tableTitle.length" class="control">
@@ -51,7 +55,7 @@
           :customField="customField"
           :customField_table="customField_table"
           :editable_field="editable_field"
-          :parentKey="parentKey"
+
           :radios="subField"
           @giveForm="getForm"
           @giveTable="getTable"
@@ -85,7 +89,7 @@
           :customField="customField"
           :customField_table="customField_table"
           :editable_field="editable_field"
-          :parentKey="parentKey"
+
           :radios="subField"
           @giveForm="getForm"
           @giveTable="getTable"
@@ -127,8 +131,8 @@ import PopoverFilterFields from "@/components/ElementUi/PopoverFilterFields";
 import { deepClone, unique } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
+import tableOperate from "./table-operate";
 import PublicPopUp from "@/components/ElementUi/PublicPopUp"
-import tableOperate from './table-operate';
 export default {
   data() {
     return {
@@ -150,17 +154,17 @@ export default {
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
-        page_sizes: [5, 10, 15, 20, 25]
-        // shipNoticeEntry: {
-        //   currentPage: 0,
-        //   pageSize: 100
-        // }
+        page_sizes: [5, 10, 15, 20, 25],
+        entry: {
+          currentPage: 1,
+          pageSize: 100
+        }
       },
-      queryKey: "", //需要提供一个data中的key {{shipNoticeEntry}}: {currentPage: 0,pageSize: 100} 如  queryKey: 'shipNoticeEntry'
       // form: null, //当前form表单(新增、修改)绑定的数据
       // form_data_model: null,
       form_editing: "",
       // table: null,//当前可编辑的table
+      data_origin: null, //当前选中的数据(处理后的)，即传入mx2-interface的原始数据，可以用来作对比
       add: {
         visible: false,
         data: null, //表单返回过来的数据
@@ -384,6 +388,13 @@ export default {
       }
       return result;
     },
+    //对数据设置entryId
+    setEntryId(data) {
+      let arr = data['entry'];
+      arr.forEach((item, index) => {
+        item.entryId = index + 1;
+      });
+    },
     openDialog_add() {
       console.log("新增");
 
@@ -391,6 +402,7 @@ export default {
       let result = this.checkVerifyHandler();
       if (!result[0]) return;
 
+      this.data_origin = result;
       this.form_editing = "add";
       this.add.visible = true;
       this.add.checkedData = result;
@@ -415,6 +427,8 @@ export default {
         message.errorMessage("验证未通过");
         return;
       }
+      this.setEntryId(this.add.data);
+      // this.add.data.forEach() 加上entryId
       let res = await this.ajax_add(this.add.data);
       if (res.code === 200) {
         message.successMessage(res.msg);
@@ -433,7 +447,7 @@ export default {
     openDialog_update() {
       let result = this.checkVerifyHandler();
       if (!result[0]) return;
-
+      this.data_origin = result;
       this.form_editing = "update";
       this.update.checkedData = result;
       this.update.visible = true;
@@ -459,6 +473,7 @@ export default {
 
     //   this.handlerFormData(this.update.data);
     // },
+    //提供一个删除接口
     ajax_remove(data) {},
     openDialog_remove() {
       if (this.multipleSelection.length < 1) {
@@ -533,9 +548,14 @@ export default {
     },
     //需要提供一个修改的接口
     ajax_update(data) {},
+    //发送修改请求
     async send_update() {
       console.log(this.update.data);
-
+      if (!this.update.isPass) {
+        message.errorMessage("验证未通过");
+        return;
+      }
+      this.setEntryId(this.update.data);
       let res = await this.ajax_update(this.update.data);
       console.log(res);
       if (res.code == 200) {
@@ -546,9 +566,6 @@ export default {
         message.errorMessage(res.msg);
       }
     },
-    // close_add($event) {
-    //   this.add.visible = !$event[0];
-    // },
     //reset值发生改变即重置表单
     resetForm_add() {
       this.add.reset = !this.add.reset;
@@ -597,10 +614,6 @@ export default {
 		}
   },
   async created() {
-    this.$set(this.data, this.queryKey, {
-      currentPage: 1,
-      pageSize: 100
-    });
     this.initOperateBtn();
     this.tableTitle =
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];

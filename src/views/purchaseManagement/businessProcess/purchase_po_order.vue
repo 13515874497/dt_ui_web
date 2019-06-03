@@ -2,11 +2,8 @@
 //采购订单
 import { getPoOrder, savePoOrder } from "@/api";
 import {
-  // shopName,
-  // siteName,
-  // platformTypeName,
-  // transportTypeName,
-  currency
+  currency,
+  supplierId
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -15,11 +12,25 @@ export default {
   mixins: [MxTable2],
   data() {
     return {
-      queryKey: 'poOrderEntry', //分页中查询的key
+      // queryKey: 'poOrderEntry', //分页中查询的key
+      // queryKey: 'entry', //分页中查询的key
       primaryKey: "poId",
       primaryKey_child: 'poeId',
       customField: [
-        currency
+        currency,
+        supplierId,
+        {
+          topType: 'no',
+          required: true
+        },
+        {
+          topType: 'date',
+          required: true
+        },
+        // {
+        //   topType: 'quantity',
+        //   required: true
+        // },
       ],
       customField_table: [
 
@@ -32,7 +43,8 @@ export default {
         "1": { //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
           name: "采购订单",
           key_submit: "purchasePoOrderEntry", //传给后台的key
-          key_get: "poOrderEntryList" //获取时从哪里拿出来
+          // key_get: "poOrderEntryList" //获取时从哪里拿出来
+          // key_get: "entryList" //获取时从哪里拿出来
         }
       }
     };
@@ -45,17 +57,31 @@ export default {
       return getPoOrder(data); //查询页面的接口
     },
     ajax_add(data) {
+      console.log(data);
+      
+      data.purchasePoOrderEntry[0].quantity = 1;
+      data.purchasePoOrder.entryId = 1;
      return savePoOrder(data);
     },
     ajax_update(data){
    
     },
+    addEditableField(){
+      // this.
+    }
   },
   beforeCreate() {
+    supplierId.required = true;
   },
+  
   async created() {
+    // let 
     console.log(this.customField);
-    
+    // let res = await findSupName();
+    // console.log(res);
+    this.tableTitle.forEach(title=>{
+
+    });
   }
 };
 </script>

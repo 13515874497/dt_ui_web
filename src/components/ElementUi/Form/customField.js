@@ -6,7 +6,8 @@ import {
   findByListStarLevel,
   findByListPlatform,
   findByListType,
-  findByListCurrency
+  findByListCurrency,
+  findSupName
 } from '@/api/api'
 
 /**
@@ -29,6 +30,7 @@ export const transportTypeName = {
   data_model: '_transportTypeId',
   inputType: 5,
   ajax: findByListType,
+  required: true
 }
 /**
  *
@@ -78,7 +80,7 @@ export const platformTypeName = {
   filterable: true,
   placeholder: "请选择平台类型"
 }
-//币别 findByListCurrency
+//币别 
 export const currency = {
   inputType: 3,
   topType: "currency",
@@ -88,4 +90,15 @@ export const currency = {
   label: "currencyName",
   filterable: true,
   placeholder: "请选择币别"
+}
+//供应商 findSupName
+export const supplierId = {
+  inputType: 3,
+  topType: "supplierId",
+  bindKey: "supplierId",
+  ajax: findSupName,
+  key: "supplierId",
+  label: "supplierFullName",
+  filterable: true,
+  placeholder: "请选供应商"
 }
