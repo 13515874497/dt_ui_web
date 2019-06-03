@@ -271,7 +271,8 @@ export default {
           row[item.bindKey] = null;
         }
       });
-      this.tableData_children.push(row);
+      this.table.table_data.push(row);
+      // this.tableData_children.push(row);
 
       console.log(this.tableTitle_children);
     },

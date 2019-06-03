@@ -321,7 +321,7 @@ export default {
                 formItem.data = res.data;
                 console.log(formItem.data);
               }
-              // self.data_model[item.data_model] = [];
+              self.data_model[item.data_model] = [];
               break;
           }
         }
@@ -363,12 +363,12 @@ export default {
             case 3:
               break;
             case 5:
-              this.data_model[item.data_model] = getTreePath(
+              this.$set(this.data_model,item.data_model,getTreePath(
                 this.formData[item.bindKey],
                 formItem.data,
                 this.props_inputType5.value,
                 this.props_inputType5.children
-              );
+              ))
               break;
           }
         });
@@ -377,6 +377,10 @@ export default {
         }
       } else {
         //新增
+        console.log('777777777777777777777777777777777777');
+        
+        console.log(this.data_model);
+        
         this.formItems_.forEach(item => {
           if (item.statusOptions && item.statusOptions.length) {
             self.$set(this.data_model, item.topType, item.statusOptions[0].id);
@@ -391,9 +395,11 @@ export default {
             }
           }
         });
+        // console.log(JSON.stringify(JSON.parse(this.data_model)));
       }
 
       this.data_model_cache = { ...this.data_model }; //用于对比数据 只回传发生改变的数据
+
     },
     //isModify 为true时，只获取修改的部分
     getFormData(data_model, isModify) {
@@ -428,6 +434,8 @@ export default {
     },
     async isVerifyPass() {
       let self = this;
+      console.log(JSON.parse(JSON.stringify(this.data_model)));
+      
       let promise = await new Promise((resolve, reject) => {
         this.$refs["data_model"].validate((valid, obj) => {
           resolve([valid, obj]);
@@ -462,6 +470,12 @@ export default {
     },
     handlerValidate(key, valid, errMsg) {
       if (this.data_model[key] === this.data_model_cache[key]) {
+        if(!key){
+          
+          console.log(JSON.parse(JSON.stringify(this.data_model)));
+          console.log(JSON.parse(JSON.stringify(this.formItems_)));
+        }
+        
         this.$refs["data_model"].clearValidate([key]);
       }
     },
