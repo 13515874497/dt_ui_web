@@ -2,10 +2,10 @@
 //外购入库
 import { getIcBillStock, saveIcBillStock, delIcBillStock, uplIcBillStock } from "@/api";
 import {
-  shopName,
-  siteName,
-  platformTypeName,
-  transportTypeName
+  // shopName,
+  // siteName,
+  // platformTypeName,
+  // transportTypeName
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
