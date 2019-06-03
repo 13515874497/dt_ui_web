@@ -1,11 +1,12 @@
 <script>
 //出货通知单
-import { getReceiving, saveReceiving, getProductAdnSku, getSkuName ,upReceiving,delReceivingNoticeAndNoticeEntry} from "@/api";
+import { getReceiving, saveReceiving, getProductAdnSku, getSkuName ,upReceiving,delReceivingNoticeAndNoticeEntry, findByListDepartment} from "@/api";
 import {
   shopName,
   siteName,
   platformTypeName,
-  transportTypeName
+  transportTypeName,
+  supplierId
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -101,6 +102,7 @@ export default {
           key_get: 'poReceiptNoticeEntryList' //获取时从哪里拿出来
         } 
       },
+	  department:'',
 	  dataList:[],
 	  procedure : {
 		  goodNum:100,//商品数量
@@ -184,6 +186,15 @@ export default {
 			}
 			
 		}
+	},
+	async getDepartment(){
+		//部门接口有问题 目前先使用数组第一个的充数
+		let res = await findByListDepartment();
+		if(res.data.length>0){
+			this.department = res.data[0].treeName;
+			console.log(res);
+		}
+		
 	},
     queryPage(data) {
       return getReceiving(data); //查询页面的接口
@@ -315,6 +326,7 @@ export default {
 			   case 'add':
 				this.form.data_model.date = new Date().getTime();
 				this.form_data_model.empId = this.getCookie("name");
+				this.form_data_model.deptId = this.department;//部门接口有问题 目前先使用数组第一个的充数
 				console.log('1111')
 			}
 	  }
@@ -325,6 +337,7 @@ export default {
   async created() {
 	  // this.initTableOperateList();
 	  this.btnShow();
+	  this.getDepartment();
   }
 };
 </script>
