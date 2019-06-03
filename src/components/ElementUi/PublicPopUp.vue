@@ -19,9 +19,20 @@
 
 <script>
   export default {
-		// props:
+		props:{
+			dataListObj:{
+				type:Object,
+				default:function(){
+					return {}
+				}
+			},
+			pubShow:Boolean
+		},
     data () {
       return {
+					goodData:[],
+					type:'',
+					showFlag:false,
 					data:[
 						{
 						goodName:"产品A",
@@ -98,13 +109,58 @@
       }
 			
     },
+		watch:{
+			dataListObj:{
+				handler(val){
+					this.goodData = val.dataList;
+					this.type = val.type;
+					console.log(this.goodData);
+					console.log(this.type)
+					
+				}
+			},
+			pubShow:{
+				handler(val){
+					this.pubShow = val;
+					this.showFlag = this.pubShow;
+				}
+			}
+		},
 		methods:{
 			surePop(){
 				console.log('确定')
+				switch(this.type){
+					case '01': 
+						console.log('到货确认');
+						break;
+					case '02': 
+						console.log('外购入库');
+						break;
+					case '03': 
+						console.log('开始检测');
+						break;
+					case '04': 
+						console.log('不良品入库');
+						break;
+					case '05': 
+						console.log('良品入库');
+						break;
+					case '06': 
+						console.log('良品不良品入库');
+						break;
+				}
 			},
 			cancelPop(){
 				console.log('取消')
+				this.showFlag = false;
+				this.$emit('isPubShow',this.showFlag)
 			},
+		},
+		created() {
+			this.goodData = this.dataListObj.dataList;
+			this.type = this.dataListObj.type;
+			this.showFlag = this.pubShow;
+			console.log(this.goodData)
 		}
   }
 </script>

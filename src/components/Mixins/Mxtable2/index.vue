@@ -103,7 +103,7 @@
         </div>
       </el-dialog>
 	 <el-dialog  :visible.sync="more.visible" width="90%">
-		  <PublicPopUp></PublicPopUp>
+		  <PublicPopUp :dataListObj='dataListObj' :pubShow='more.visible' @isPubShow='isPubShow'></PublicPopUp>
 	  </el-dialog>
     </section>
     <!-- 表格字段筛选 -->
@@ -111,7 +111,6 @@
       <PopoverFilterFields :data="tableTitle" @hideField="hideField"></PopoverFilterFields>
       <!-- <div class="el-button fieldShow el-button--primary is-plain"></div> -->
     </section>
-	<div @click="operateClick()">按钮点击</div>
   </main>
 </template>
 <script>
@@ -137,6 +136,7 @@ export default {
       page: {
         name: this.$route.params.name
       },
+			dataListObj:{},
       loading: false,
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
@@ -590,7 +590,11 @@ export default {
           }
         }
       ];
-    }
+    },
+		isPubShow($event){
+			console.log($event)
+			this.more.visible = $event;
+		}
   },
   async created() {
     this.$set(this.data, this.queryKey, {

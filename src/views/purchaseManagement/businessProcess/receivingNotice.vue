@@ -16,7 +16,7 @@ export default {
     return {
 		primaryKey: "rnId",
 		queryKey: 'purchasePoReceiptNoticeEntry',
-		nameKey : 'rnNo',
+		nameKey : 'no',
 		primaryKey_child: 'rne_id',
       customField: [
         {
@@ -96,11 +96,91 @@ export default {
           key_submit: "purchasePoReceiptNoticeEntry", //传给后台的key
           key_get: 'poReceiptNoticeEntryList' //获取时从哪里拿出来
         } 
-      }
+      },
+	  dataList:[],
+	  procedure : {
+		  goodNum:100,//商品数量
+		  nowNum : 50,//确认数量
+		  goNum:70,//入库数量
+		  isclosed:false,//是否关闭
+		  isTesting : {//检测
+			  noTesting : false,//免检
+			  yesTesting:{
+				  allTesting:false,//全检
+				  everyTesting : true//抽检
+			  },
+		  },
+		  badNum:{//不良产品
+			  badGoodsNum:0,//不良产品数量
+			  goodsNum:90//合格产品数量
+			  
+		  }  
+	  }
     };
   },
   
   methods: {
+	btnShow(){
+		let self = this;
+		if(this.procedure.isclosed){//如果关闭了
+			this.tableOperateList = [
+			  //对已上传的文件进行操作的按钮列表
+			  {
+			    type: "",
+			    icon: "",
+			    label: "已完成",
+			    fn(row,mull) {
+			    }
+			  },
+			]
+		}else{//没有关闭
+		
+			if(this.procedure.nowNum == 0){//如果确认数量为0
+				this.tableOperateList = [
+				  //对已上传的文件进行操作的按钮列表
+				  {
+				    type: "",
+				    icon: "",
+				    label: "到货确认",
+				    fn(row,mull) {
+				      self.arrival_confirmation(row,mull);
+				    }
+				  },
+				]
+			}else{//确认数量不为0
+				//各品类数量显示按钮
+				if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum==0){
+					this.tableOperateList.push({icon: "",label: "不良品入库",fn(row,mull) {self.bad_goods(row,mull);}})
+				}else if(this.procedure.badNum.badGoodsNum==0&&this.procedure.badNum.goodsNum>0){
+					this.tableOperateList.push({icon: "",label: "良品入库",fn(row,mull) {self.good_warehousing(row,mull);}})
+				}else if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum>0){
+					this.tableOperateList.push({icon: "",label: "良品不良品入库",fn(row,mull) {self.all_goods(row,mull);}})
+				}
+				//入库数量小于确认数量
+				if( this.procedure.goNum < this.procedure.nowNum){
+					this.tableOperateList.push({icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
+				}else if(this.procedure.goNum == this.procedure.nowNum){
+					this.tableOperateList.push({icon: "",label: "已完成",fn(row,mull) {}})
+				}
+				if(this.procedure.isTesting.noTesting){//如果免检
+					if(this.procedure.nowNum>0&&this.procedure.nowNum<this.procedure.goodNum){//确认数量大于0并且小于数量
+						this.tableOperateList.push({icon: "",label: "到货确认",fn(row,mull) {self.arrival_confirmation(row,mull);}},{icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
+					}else if(this.procedure.nowNum > this.procedure.goodNum || this.procedure.nowNum == this.procedure.goodNum){//确认数量大于等于数量
+						this.tableOperateList.push({icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
+					}
+				}else {
+					if(this.procedure.nowNum>0&&this.procedure.nowNum<this.procedure.goodNum){//确认数量大于0并且小于数量
+						this.tableOperateList.push({icon: "",label: "到货确认",fn(row,mull) {self.arrival_confirmation(row,mull);}},{icon: "",label: "开始检测",fn(row,mull) {self.start_testing(row,mull);}})
+					}else if(this.procedure.nowNum > this.procedure.goodNum || this.procedure.nowNum == this.procedure.goodNum){//确认数量大于等于数量
+						this.tableOperateList.push({icon: "",label: "开始检测",fn(row,mull) {self.start_testing(row,mull);}})
+					}
+			
+				}
+		
+			}
+			
+		}
+	},
     queryPage(data) {
       return getReceiving(data); //查询页面的接口
     },
@@ -115,90 +195,48 @@ export default {
 	ajax_remove(data) {
 	  return delReceivingNoticeAndNoticeEntry(data);
 	},
-	arrival_confirmation(row){
-		console.log(row)
+	arrival_confirmation(row,mull){//到货确认
+		console.log(row,mull)
 		this.more.visible = true;
+		mull.length>0?this.dataList = mull:this.dataList = [row];
+		this.dataListObj = {type:'01',dataList:this.dataList}
+		console.log(this.dataListObj);
 	},
-	outsourced_warehousing(row){
-		console.log(row)
+	outsourced_warehousing(row,mull){//外购入库
+		console.log(row,mull)
 		this.more.visible = true;
+		mull.length>0?this.dataList = mull:this.dataList = [row]
+		this.dataListObj = {type:'02',dataList:this.dataList}
+		console.log(this.dataListObj);
 	},
-	start_testing(row){
-		console.log(row)
+	start_testing(row,mull){//开始检测
+		console.log(row,mull)
 		this.more.visible = true;
+		mull.length>0?this.dataList = mull:this.dataList = [row]
+		this.dataListObj = {type:'03',dataList:this.dataList}
+		console.log(this.dataListObj);
 	},
-	bad_goods(row){
-		console.log(row)
+	bad_goods(row,mull){//不良品入库
+		console.log(row,mull)
 		this.more.visible = true;
+		mull.length>0?this.dataList = mull:this.dataList = [row]
+		this.dataListObj = {type:'04',dataList:this.dataList}
+		console.log(this.dataListObj);
 	},
-	good_warehousing(row){
-		console.log(row)
+	good_warehousing(row,mull){//良品入库
+		console.log(row,mull)
 		this.more.visible = true;
+		mull.length>0?this.dataList = mull:this.dataList = [row]
+		this.dataListObj = {type:'05',dataList:this.dataList}
+		console.log(this.dataListObj);
 	},
-	all_goods(row){
-		console.log(row)
+	all_goods(row,mull){//良品不良品入库
+		console.log(row,mull)
 		this.more.visible = true;
+		mull.length>0?this.dataList = mull:this.dataList = [row]
+		this.dataListObj = {type:'06',dataList:this.dataList}
+		console.log(this.dataListObj);
 	},
-	surePop(){
-		console.log('确定111')
-	},
-	cancelPop(){
-		console.log('取消222')
-	},
-	initTableOperateList() {
-	    let self = this;
-	    this.tableOperateList = [
-	      //对已上传的文件进行操作的按钮列表
-	      {
-	        // type: "arrivalConfirmation",
-	        icon: "",
-	        label: "到货确认",
-	        fn(row) {
-	          self.arrival_confirmation(row);
-	        }
-	      },
-	   //    {
-	   //      // type: "outsourcedWarehousing",
-	   //      icon: "",
-	   //      label: "外购入库",
-	   //      fn(row) {
-	   //        self.outsourced_warehousing(row);
-	   //      }
-	   //    },
-	   //    {
-	   //      // type: "startTesting",
-	   //      icon: "",
-	   //      label: "开始检测",
-	   //      fn(row) {
-	   //        self.start_testing(row);
-	   //      }
-	   //    },
-	   //    {
-	   //      // type: "badGoods",
-	   //      icon: "",
-	   //      label: "不良品入库",
-	   //      fn(row) {
-	   //        self.bad_goods(row);
-	   //      }
-	   //    },
-		  // {
-		  //   // type: "goodWarehousing",
-		  //   icon: "",
-		  //   label: "良品入库",
-		  //   fn(row) {
-		  //     self.good_warehousing(row);
-		  //   }
-		  // },
-		  // {
-		  //   // type: "allGoods",
-		  //   icon: "",
-		  //   label: "良品不良品入库",
-		  //   fn(row) {
-		  //     self.all_goods(row);
-		  //   }
-		  // }
-	    ];
-	  },
     async changeSku(val, row, title) {
       console.log(val);
       console.log(row);
@@ -268,7 +306,8 @@ export default {
     // transportTypeName.hideChild = true;
   },
   async created() {
-	  this.initTableOperateList();
+	  // this.initTableOperateList();
+	  this.btnShow();
   }
 };
 </script>
