@@ -39,9 +39,7 @@
 						data_list:[
 							{name:'总数量'},
 							{name:'确认数量'},
-							{name:'不合格数量'},
-							{name:'合格数量'},
-							{name:'合格不合格数量'},
+							{name:'入库数量'}
 						]
 					},
 						{
@@ -49,62 +47,9 @@
 							data_list:[
 								{name:'总数量'},
 								{name:'确认数量'},
-								{name:'不合格数量'},
-								{name:'合格数量'},
-								{name:'合格不合格数量'},
+								{name:'入库数量'}
 							]
-						},
-						{
-							goodName:"产品B",
-							data_list:[
-								{name:'总数量'},
-								{name:'确认数量'},
-								{name:'不合格数量'},
-								{name:'合格数量'},
-								{name:'合格不合格数量'},
-							]
-						},
-						{
-							goodName:"产品B",
-							data_list:[
-								{name:'总数量'},
-								{name:'确认数量'},
-								{name:'不合格数量'},
-								{name:'合格数量'},
-								{name:'合格不合格数量'},
-							]
-						},
-						{
-							goodName:"产品B",
-							data_list:[
-								{name:'总数量'},
-								{name:'确认数量'},
-								{name:'不合格数量'},
-								{name:'合格数量'},
-								{name:'合格不合格数量'},
-							]
-						},
-						{
-							goodName:"产品B",
-							data_list:[
-								{name:'总数量'},
-								{name:'确认数量'},
-								{name:'不合格数量'},
-								{name:'合格数量'},
-								{name:'合格不合格数量'},
-							]
-						},
-						{
-							goodName:"产品B",
-							data_list:[
-								{name:'总数量'},
-								{name:'确认数量'},
-								{name:'不合格数量'},
-								{name:'合格数量'},
-								{name:'合格不合格数量'},
-							]
-						},
-						
+						}
 					]
       }
 			
