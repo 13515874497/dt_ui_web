@@ -308,8 +308,7 @@ export const saveReceiving = (data) => ajax(BASE_URL + '/po/saveReceiptNotice',d
 export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data, 'POST')
 //删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
-//部门收货通知单
-export const getDepartment = ()=>ajax(BASE_URL + '/staff/getDepartment')
+
 
 // 运营管理=> 亚马逊=>费用
 
@@ -345,8 +344,7 @@ export const getFeedback = (data) => ajax(BASE_URL + `/fba/getFeedback`, data, '
 //采购订单分页
 export const getPoOrder = (data) => ajax(BASE_URL + '/po/getPoOrder', data, 'POST')
 //采购订单新增
-export const savePoOrder = (data) =>{console.log(data);
-  return  ajax(BASE_URL + '/po/savePoOrder', data, 'POST')}
+export const savePoOrder = (data) => ajax(BASE_URL + '/po/savePoOrder', data, 'POST')
 //采购订单修改
 export const upPoOrder = (data) => ajax(BASE_URL + '/po/upPoOrder', data, 'POST')
 //采购订单删除
@@ -367,7 +365,8 @@ export const delPoOrder = (data) => ajax(BASE_URL + '/po/delPoOrder', data, 'POS
 export const findByListEmployee = (data) => ajax(BASE_URL + '/staff/findByListEmployee', data, 'POST');
 //员工 tree http://127.0.0.1:9001/api/v1/staff/findByListDepartment  get  tree 部门
 export const findByListDepartment = (data) => ajax(BASE_URL + '/staff/findByListDepartment', data);
-
+//获取部门
+export const getDepartment = ()=>ajax(BASE_URL + '/staff/getDepartment')
 
 
 /**
@@ -862,8 +861,11 @@ export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',dat
 //修改表格方案
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 
-//获取供应商select下拉框数据  /api/v1/sup/findSupName
-export const findSupName = (data) => ajax(BASE_URL + '/sup/findSupList',data,'POST')
+//获取供应商select下拉框数据
+export const findSupList = (data) => ajax(BASE_URL + '/sup/findSupList',data,'POST')
+//获取预付单号
+export const getRPPay = (data) => ajax(BASE_URL + '/rpp/getRPPay',data,'POST')
+
 
 
 //获取外购入库分页http://127.0.0.1:9001/api/v1/po/getIcBillStock

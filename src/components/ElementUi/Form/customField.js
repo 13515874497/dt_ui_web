@@ -7,7 +7,7 @@ import {
   findByListPlatform,
   findByListType,
   findByListCurrency,
-  findSupName,
+  findSupList,
 	findByListWar
 } from '@/api/api'
 
@@ -92,12 +92,12 @@ export const currencyName = {
   filterable: true,
   placeholder: "请选择币别"
 }
-//供应商 findSupName
+//供应商 findSupList
 export const supplierId = {
   inputType: 3,
   topType: "supplierId",
   bindKey: "supplierId",
-  ajax: findSupName,
+  ajax: findSupList,
   key: "supplierId",
   label: "supplierFullName",
   filterable: true,
