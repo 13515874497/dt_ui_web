@@ -7,8 +7,7 @@ import {
 	getSkuName ,
 	upReceiving,
 	delReceivingNoticeAndNoticeEntry, 
-	getDepartment,
-	findByListFreight
+	getDepartment
 	} from "@/api";
 import {
   shopName,
@@ -16,7 +15,8 @@ import {
   platformTypeName,
   transportTypeName,
   supplierId,
-  findListWar
+  findListWar,
+  findFreight
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -31,6 +31,7 @@ export default {
 		primaryKey_child: 'rne_id',
 		customField: [
 		  supplierId,
+		  // findFreight
 		  // findListWar
   //       {
   //         topType: "date",
@@ -139,8 +140,8 @@ export default {
   
   methods: {
 	  async aaa(){
-		 let res = await findByListFreight();
-		 console.log(res);
+		 // let res = await findByListFreight();
+		 // console.log(res);
 	  },
 	btnShow(){
 		let self = this;
