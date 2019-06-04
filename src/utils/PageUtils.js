@@ -62,7 +62,6 @@ export default {
             ...parent,
             ...children
           }
-          data._transportTypeId = [1];
           //如果是第一个元素 那么得出需要合并的个数 
           if (index === 0) {
             data._mergeNum = childrens.length;
