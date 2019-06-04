@@ -204,7 +204,7 @@ export default {
         // if (this.editable) {
         this.table_data = [...this.tableData];
         // this.initCustomField();
-        this.initRow_data_();
+        // this.initRow_data_();
         // }
       },
       immediate: true
@@ -223,7 +223,8 @@ export default {
           }
         });
         this.$emit("giveTableData", [table_data]);
-      }
+      },
+      immediate: true
     },
     tableTitleTwo: {
       handler(val) {

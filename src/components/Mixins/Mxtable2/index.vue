@@ -194,7 +194,7 @@ export default {
       editable_field: [], //表格中哪些字段可以被编辑
       //在form中不需要填写的
       sysLogNotForm: [
-        "statusId",//这个放外面了
+        "statusId",
         // "remark",
         // "status",
         "createDate",
@@ -430,7 +430,11 @@ export default {
     async send_add(isClose, isReset) {
       // isClose: 是否关闭 isReset：是否重置
       if (!this.add.isPass) {
-        message.errorMessage("验证未通过");
+        message.errorMessage("表单验证未通过");
+        return;
+      }
+      if(!this.add.data.entry.length){
+        message.errorMessage("新增表格信息不能为空");
         return;
       }
       this.setEntryId(this.add.data);
@@ -563,7 +567,7 @@ export default {
     async send_update() {
       console.log(this.update.data);
       if (!this.update.isPass) {
-        message.errorMessage("验证未通过");
+        message.errorMessage("表单验证未通过");
         return;
       }
       this.setEntryId(this.update.data);
