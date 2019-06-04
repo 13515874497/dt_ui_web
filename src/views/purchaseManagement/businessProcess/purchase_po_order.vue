@@ -1,7 +1,7 @@
 <script>
 //采购订单
-import { getPoOrder, savePoOrder } from "@/api";
-import { currency, supplierId } from "@/components/ElementUi/Form/customField";
+import { getPoOrder, savePoOrder,upPoOrder,delPoOrder } from "@/api";
+import { currencyName, supplierId } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
 import message from "@/utils/Message";
@@ -14,7 +14,7 @@ export default {
       primaryKey: "poId",
       primaryKey_child: "poeId",
       customField: [
-        currency,
+        currencyName,
         supplierId,
         {
           topType: "no",
@@ -49,9 +49,6 @@ export default {
   watch: {
     tableTitle() {
       let self = this;
-      console.log(this.customField);
-      // let res = await findSupName();
-      // console.log(res);
       this.tableTitle.forEach(title => {
         self.editable_field.push(title.topType);
       });
@@ -65,7 +62,12 @@ export default {
       console.log(data);
       return savePoOrder(data);
     },
-    ajax_update(data) {},
+    ajax_update(data) {
+      return upPoOrder(data);
+    },
+     ajax_remove(data) {
+      return delPoOrder(data);
+    },
     addEditableField() {
       // this.
     }
@@ -75,7 +77,6 @@ export default {
   },
 
   async created() {
-    console.log(this.editable_field);
   }
 };
 </script>

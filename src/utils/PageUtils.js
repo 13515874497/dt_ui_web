@@ -37,40 +37,44 @@ export default {
       pageData.total_size = data.total_size
     }
   },
-  handlerTableData(res,pageData,subField){
-    if(res.code === 200){
+  handlerTableData(res, pageData) { //res:后台返回的数据 pageData:Mxtable2 $data.data  origin_tableData:Mxtable2 $data.origin_tableData
+    if (res.code === 200) {
       const data = res.data;
-      let tableData = [];
+      data.dataList.forEach(parent => {
+        if (parent.systemLogStatus) {
+          for (let key in parent.systemLogStatus) {
+            parent[key] = parent.systemLogStatus[key]
+          }
+          delete parent.systemLogStatus;
+        }
+      });
+      pageData.origin_tableData = JSON.parse(JSON.stringify(data.dataList))
+      console.log('99999999999999999999999999999');
+      
+      console.log(pageData.origin_tableData);
       
 
+      let tableData = [];
+      data.dataList.forEach(parent => {
+        let childrens = parent['entryList'] || [];
 
-
-
-
-      data.dataList.forEach(parent=>{
-        parent._versionParent = parent.version;
-        
-        //1.---------------
-        
-        let key = 'entryList';
-        //---------------
-
-				console.log(key)
-
-        let childrens = parent[key] || [];
-
-        delete parent[key];
-        childrens = childrens.map((children,index)=>{
-          let data = {...parent,...children}
+        delete parent['entryList'];
+        childrens = childrens.map((children, index) => {
+          let data = {
+            ...parent,
+            ...children
+          }
           //如果是第一个元素 那么得出需要合并的个数 
-          if(index === 0){
+          if (index === 0) {
             data._mergeNum = childrens.length;
           }
           return data
         });
-        if(!childrens.length){
+        if (!childrens.length) {
           parent._mergeNum = 1;
-          childrens = [{...parent}]
+          childrens = [{
+            ...parent
+          }]
         }
         tableData = tableData.concat(childrens)
       });

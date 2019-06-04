@@ -55,7 +55,6 @@
           :customField="customField"
           :customField_table="customField_table"
           :editable_field="editable_field"
-
           :radios="subField"
           @giveForm="getForm"
           @giveTable="getTable"
@@ -89,7 +88,6 @@
           :customField="customField"
           :customField_table="customField_table"
           :editable_field="editable_field"
-
           :radios="subField"
           @giveForm="getForm"
           @giveTable="getTable"
@@ -106,9 +104,9 @@
           <el-button type="primary" :disabled="!update.data" @click="send_update">保 存</el-button>
         </div>
       </el-dialog>
-	 <el-dialog  :visible.sync="more.visible" width="90%">
-		  <PublicPopUp :dataListObj='dataListObj' :pubShow='more.visible' @isPubShow='isPubShow'></PublicPopUp>
-	  </el-dialog>
+      <el-dialog :visible.sync="more.visible" width="90%">
+        <PublicPopUp :dataListObj="dataListObj" :pubShow="more.visible" @isPubShow="isPubShow"></PublicPopUp>
+      </el-dialog>
     </section>
     <!-- 表格字段筛选 -->
     <section>
@@ -132,7 +130,7 @@ import { deepClone, unique } from "@/utils/Arrays";
 import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
 import tableOperate from "./table-operate";
-import PublicPopUp from "@/components/ElementUi/PublicPopUp"
+import PublicPopUp from "@/components/ElementUi/PublicPopUp";
 export default {
   data() {
     return {
@@ -140,17 +138,17 @@ export default {
       page: {
         name: this.$route.params.name
       },
-			dataListObj:{},
+      dataListObj: {},
       loading: false,
       queryIds: [],
       showQuery: true, //是否显示最上方的查询组件
       tableTitle: [], //表头信息
       tableTitle_show: [],
       multipleSelection: [], //当前表格checkbox选中的[childList,parent]
-      origin_tableData: [], // 未处理的表格数据
+
       data: {
         tableData: [], //表信息
-
+        // origin_tableData: [], // 未处理的表格数据(但是已将systemLogStatus进行提取)
         currentPage: 1, //当前页
         total_size: 0, //总的页
         pageSize: 10, //显示最大的页
@@ -175,9 +173,9 @@ export default {
         form: null, //绑定的form
         table: null //绑定的table
       },
-			more:{
-				visible :false
-			},
+      more: {
+        visible: false
+      },
       primaryKey: "", //提供一个修改、删除时的主键
       nameKey: "", //提供一个  删除失败时提示给用户那一行的名字
       rule: {},
@@ -252,6 +250,9 @@ export default {
     },
     table_table_data() {
       return (this.table && this.table.table_data) || null;
+    },
+    systemLogStatus() {
+      return [...this.sysLogNotForm,...this.sysLogForm]
     }
   },
   components: {
@@ -264,8 +265,8 @@ export default {
     SearchReset,
     PopoverFilterFields,
     Mx2Interface,
-		PublicPopUp,
-		tableOperate
+    PublicPopUp,
+    tableOperate
   },
   methods: {
     setQuery($event) {
@@ -275,9 +276,9 @@ export default {
         this.data[key] = value;
       }
     },
-	operateClick(){
-		this.more.visible = true;
-	},
+    operateClick() {
+      this.more.visible = true;
+    },
     //获得input框里的id列表
     getValue(val) {
       this.queryIds = val;
@@ -306,8 +307,8 @@ export default {
       if (res.code === 200) {
         //对表格数据进行处理
         console.log(res);
-        this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
-        pUtils.handlerTableData(res, data, this.subField);
+        // this.origin_tableData = JSON.parse(JSON.stringify(res.data.dataList));
+        pUtils.handlerTableData(res, data);
       }
     },
     reset() {
@@ -348,8 +349,9 @@ export default {
     },
     handlerFormData(data) {
       data.systemLogStatus = {};
+      
       for (let key in data) {
-        if (this.sysLogForm.includes(key)) {
+        if (this.systemLogStatus.includes(key)) {
           data.systemLogStatus[key] = data[key];
           delete data[key];
         }
@@ -376,7 +378,7 @@ export default {
           if (!isOneParent) {
             message.errorMessage("不能多选非关联的数据");
           } else {
-            result[1] = this.origin_tableData.find(item => {
+            result[1] = this.data.origin_tableData.find(item => {
               return item[self.primaryKey] === id;
             });
             result[2] = val;
@@ -390,7 +392,7 @@ export default {
     },
     //对数据设置entryId
     setEntryId(data) {
-      let arr = data['entry'];
+      let arr = data["entry"];
       arr.forEach((item, index) => {
         item.entryId = index + 1;
       });
@@ -411,7 +413,10 @@ export default {
       console.log($event);
 
       this.add.isPass = $event[0];
+      this.handlerFormData($event[1].parentKey);
       this.add.data = $event[1];
+      console.log(this.add.data);
+      
     },
     // getFormData_add($event) {
     //   console.log($event);
@@ -445,6 +450,10 @@ export default {
       console.log(res);
     },
     openDialog_update() {
+      if (!this.multipleSelection.length) {
+        message.errorMessage("未选择数据");
+        return;
+      }
       let result = this.checkVerifyHandler();
       if (!result[0]) return;
       this.data_origin = result;
@@ -454,6 +463,7 @@ export default {
     },
     passData_update($event) {
       this.update.isPass = $event[0];
+      this.handlerFormData($event[1].parentKey);
       this.update.data = $event[1];
       console.log($event);
       console.log(this.update.data);
@@ -608,10 +618,10 @@ export default {
         }
       ];
     },
-		isPubShow($event){
-			console.log($event)
-			this.more.visible = $event;
-		}
+    isPubShow($event) {
+      console.log($event);
+      this.more.visible = $event;
+    }
   },
   async created() {
     this.initOperateBtn();
