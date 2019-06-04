@@ -21,7 +21,6 @@
         >{{radio.name}}</el-radio-button>
       </el-radio-group>
       <Table
-        
         :editable="true"
         :editable_field="editable_field"
         :height="300"
@@ -31,9 +30,7 @@
         @giveTable="getTable"
         @giveTableData="getTableData"
         @checkboxValue="checkboxValue"
-      >
-      
-      </Table>
+      ></Table>
       <OperateBtn :operateList="operateList"></OperateBtn>
     </section>
     <section></section>
@@ -110,7 +107,7 @@ export default {
   },
   components: {
     Table,
-    OperateBtn,
+    OperateBtn
   },
   data() {
     return {
@@ -123,12 +120,12 @@ export default {
       form: null, //表单组件对象
       form_data_model: null, //表单里的data_model对象
       formItems_parent: [], //form里要显示的字段
-      formData_parent: null, //form初始值 ，有就代表是修改
+      formData_parent: null, //form数据初始值 ，有就代表是修改
       tableTitle_children: [], //
       tableData_children: [],
       isPass: null, //是否验证通过
       passData: {}, //向上传递的数据
-      radio: '' //radio默认选中第一个
+      radio: "" //radio默认选中第一个
     };
   },
   computed: {
@@ -146,7 +143,6 @@ export default {
     titles_: {
       immediate: true,
       handler() {
-        console.log(this.titles);
         this.getParentFormItems();
         this.getChildrenTableTitle();
       }
@@ -160,7 +156,8 @@ export default {
     },
     passData: {
       handler(val) {
-        this.$emit("passData", [this.isPass, val]);
+        let isPass = this.isPass && val.entry.length > 0;
+        this.$emit("passData", [isPass, val]);
       },
       deep: true
     }
@@ -189,7 +186,6 @@ export default {
       ];
     },
     checkboxValue(val) {
-      console.log(val);
       this.multipleSelection = val;
     },
     //获取主表要显示的form字段
@@ -197,7 +193,6 @@ export default {
       this.formItems_parent = this.titles_.filter(item => {
         return item.subField === null;
       });
-      console.log(this.formItems_parent);
     },
     //获取子表要显示的tableTitle
     getChildrenTableTitle() {
@@ -218,7 +213,6 @@ export default {
     },
     //获取子表中要显示的tableData列表
     getChildrenTableData() {
-      console.log(this.data_);
       switch (this.type) {
         case "add":
           this.tableData_children = this.data_[2];
@@ -230,20 +224,16 @@ export default {
     },
     //form表单返回的验证结果和数据
     getFormData($event) {
-      console.log($event);
       this.isPass = $event[0];
-
-      this.passData['parentKey'] = $event[2];
-      if (this.primaryKey) {
-        //如果是修改 需要提供主键和version
-        this.passData['parentKey'][this.primaryKey] =
-          $event[1][this.primaryKey];
-        this.passData['parentKey'].version = $event[1].version;
-        if($event[1].statusId){
-          this.passData['parentKey'].statusId = $event[1].statusId;
-        }
+      this.passData["parentKey"] = $event[2];
+      if ($event[1].statusId) {//如果有statusId就传statusId
+        this.passData["parentKey"].statusId = $event[1].statusId;
       }
-      console.log(this.passData);
+      if (this.primaryKey) {        //如果是修改 需要提供主键和version
+        this.passData["parentKey"][this.primaryKey] =
+          $event[1][this.primaryKey];
+        this.passData["parentKey"].version = $event[1].version;
+      }
     },
     //form表单中的数据
     //获取表单组件对象
@@ -259,8 +249,7 @@ export default {
     },
     //表格中数据发生变化时获取表格的数据
     getTableData($event) {
-      this.passData['entry'] = $event[0];
-      console.log(this.passData);
+      this.passData["entry"] = $event[0];
     },
     //点击新增给表格加一行空数据
     addRow() {
@@ -271,9 +260,7 @@ export default {
           row[item.bindKey] = null;
         }
       });
-      this.tableData_children.push(row);
-
-      console.log(this.tableTitle_children);
+      this.table.table_data.push(row);
     },
 
     removeRow() {
@@ -301,17 +288,14 @@ export default {
               let data = {};
               let delIds = [];
               self.multipleSelection.forEach(sel => {
-
                 delIds.push(sel[self.primaryKey_child]);
               });
               data.delChildKey = delIds;
-              
-              let res = self.ajax_remove(data).then(res => {
 
+              let res = self.ajax_remove(data).then(res => {
                 if (!res.data) {
                   message.successMessage(res.msg);
                   remove();
-
                 } else {
                 }
               });
@@ -322,10 +306,10 @@ export default {
     },
     //初始化passData
     initPassData() {
-      this.$set(this.passData, 'parentKey', {});
+      this.$set(this.passData, "parentKey", {});
       for (let key in this.radios) {
         let radio = this.radios[key];
-        this.$set(this.passData,'entry', []);
+        this.$set(this.passData, "entry", []);
       }
     }
   },

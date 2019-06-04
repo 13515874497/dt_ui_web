@@ -130,7 +130,7 @@
       <el-form-item
         v-else-if="item.inputType === 5"
         :label="item.headName"
-        :props="item.topType"
+        :prop="item.bindKey || item.topType"
         :rules="matchedRule(item)"
         :required="item.required"
         :key="index"
@@ -139,7 +139,7 @@
           expand-trigger="hover"
           :options="item.data"
           v-model="data_model[item.data_model]"
-          @change="triggerFormChange"
+          @change="(val)=>{changeCascader(val,item)}"
           :props="props_inputType5"
           :filterable="true"
           size="small"
@@ -321,7 +321,7 @@ export default {
                 formItem.data = res.data;
                 console.log(formItem.data);
               }
-              // self.data_model[item.data_model] = [];
+              self.data_model[item.data_model] = [];
               break;
           }
         }
@@ -344,6 +344,7 @@ export default {
         case 2:
         case 3:
         case 4:
+        case 5:
           return item.required ? rules._number : rules.number;
           break;
         case 0:
@@ -467,6 +468,10 @@ export default {
     },
     async triggerFormChange() {
       this.giveFormData(await this.isVerifyPass());
+    },
+    changeCascader(val,formItem){
+      this.data_model[formItem.bindKey] = val[val.length-1];
+      this.triggerFormChange();
     },
     changeSelect(val, formItem) {
       let option = formItem.data.find(option => {

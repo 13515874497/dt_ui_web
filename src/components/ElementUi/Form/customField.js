@@ -81,9 +81,9 @@ export const platformTypeName = {
   placeholder: "请选择平台类型"
 }
 //币别 
-export const currency = {
+export const currencyName = {
   inputType: 3,
-  topType: "currency",
+  topType: "currencyName",
   bindKey: "currencyId",
   ajax: findByListCurrency,
   key: "currencyId",
