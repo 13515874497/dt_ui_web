@@ -8,6 +8,13 @@ export default {
     let loadingInstance = loading.loading_dom({text:'加载中',background:'rgba(255, 255, 255, 1)',target:'.el-main'});
     
     const resultHead = await repHead(id)
+
+
+    // let supplierId = resultHead.data.find(title=>{
+    //   return title.topType = 'supplierId';
+    // })
+    // supplierId.subField = '1';
+    
     loadingInstance.close();
     if (resultHead.code === 200) {
       if (resultHead.data.length === 0) {
