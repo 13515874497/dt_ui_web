@@ -2,7 +2,8 @@
 //外购入库
 import { getIcBillStock, saveIcBillStock, delIcBillStock, uplIcBillStock } from "@/api";
 import {
- supplierId
+ supplierId,//供应商
+ findListWar //仓库
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -17,6 +18,7 @@ export default {
       queryKey: 'purchaseIcBillStockEntry', //后台返回
       customField: [
         supplierId,
+       
           //要验证的字段        
         {
           topType: "date",
@@ -29,8 +31,10 @@ export default {
       ],
      
       customField_table: [
+         findListWar,
        //  自定义字段表
-        {
+        { 
+          
           // inputType: 3,
           // topType: "sku",
           // bindKey: "skuId",
@@ -47,7 +51,7 @@ export default {
       editable_field: [
         //表格中哪些字段可以被编辑
         "eRemark",
-        "quantity"
+        "quantity",
       ],
       parentKey: "purchaseIcBillStock", // 点击新增、修改的时候传给后台的 父key的名字 (后台让传的参数)
       subField: {
@@ -86,10 +90,12 @@ export default {
 
     ajax_add(data) {
       data.mid = 295 //后台需要传入的参数mid就是当前页面的id
+      delete data.entry[0]._reciveWarehouseId
       return saveIcBillStock(data); //新增的接口
     },
 
     ajax_update(data) {
+      delete data.entry[0]._reciveWarehouseId //删除级联选择器中返回给后台的不需要的数据
       return uplIcBillStock(data); //修改
     },
      ajax_remove(data) {
