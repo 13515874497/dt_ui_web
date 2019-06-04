@@ -75,7 +75,7 @@
                 expand-trigger="hover"
                 :options="scope.row[title.topType+'_data_']"
                 v-model="scope.row[title.data_model]"
-                @change="(val)=>{changeCascader(val,title)}"
+                @change="(val)=>{changeCascader(val,title,scope.row,title.changeSel)}"
                 :props="props_inputType5"
                 :filterable="true"
                 size="small"
@@ -168,9 +168,8 @@
 </template>
 <script>
 import Sortable from "sortablejs";
-import { deepClone } from "@/utils/Arrays";
+import { deepClone, getTreePath } from "@/utils/Arrays";
 import { Loading } from "element-ui";
-
 export default {
   data() {
     return {
@@ -180,7 +179,7 @@ export default {
       table_title: [],
       table_data: [],
       table_title_two: [],
-       props_inputType5: {
+      props_inputType5: {
         value: "treeId",
         label: "treeName",
         children: "childNode"
@@ -269,8 +268,8 @@ export default {
     // }
   },
   methods: {
-    changeCascader(val,title){
-
+    changeCascader(val, title, row, cb) {
+      row[title.bindKey] = val[val.length - 1];
     },
     columnDrop() {
       var wrapperTr = this.$el.querySelector(".el-table__header-wrapper tr");
@@ -552,20 +551,32 @@ export default {
               if (res3.code === 200) {
                 row[tempKey] = res3.data.dataList || res3.data;
               }
-              
             }
             break;
 
           case 5:
-           console.log(cusItem);
-           
+            console.log(cusItem);
+
             let res = await cusItem.ajax();
             if (res.code === 200) {
-               row[tempKey]  = res.data;
+              if (cusItem.hideChild) {
+                res.data.forEach(node => {
+                  node.childNode = null;
+                });
+              }
+              row[tempKey] = res.data;
             }
             row[cusItem.data_model] = [];
+            if (row[cusItem.bindKey]) {
+              row[cusItem.data_model] = getTreePath(
+                row[cusItem.bindKey],
+                row[tempKey],
+                this.props_inputType5.value,
+                this.props_inputType5.children
+              );
+            }
             console.log(row);
-            
+
             break;
         }
       }
