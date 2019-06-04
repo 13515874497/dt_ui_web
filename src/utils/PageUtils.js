@@ -40,6 +40,16 @@ export default {
   handlerTableData(res, pageData) { //res:后台返回的数据 pageData:Mxtable2 $data.data  origin_tableData:Mxtable2 $data.origin_tableData
     if (res.code === 200) {
       const data = res.data;
+
+      let supplierId = data.dataList.find(title=>{
+        return title.topType = 'supplierId';
+      });
+      supplierId.subField = '1';
+      console.log(supplierId);
+      
+
+
+
       data.dataList.forEach(parent => {
         if (parent.systemLogStatus) {
           for (let key in parent.systemLogStatus) {
@@ -49,9 +59,6 @@ export default {
         }
       });
       pageData.origin_tableData = JSON.parse(JSON.stringify(data.dataList))
-      console.log('99999999999999999999999999999');
-      
-      console.log(pageData.origin_tableData);
       
 
       let tableData = [];

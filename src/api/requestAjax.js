@@ -8,6 +8,13 @@ export default {
     let loadingInstance = loading.loading_dom({text:'加载中',background:'rgba(255, 255, 255, 1)',target:'.el-main'});
     
     const resultHead = await repHead(id)
+    
+    // let currencyName = resultHead.data.find(title=>{
+    //   return title.topType === 'currencyName';
+    // })
+    // console.log(currencyName);
+    // currencyName.subField = '1';
+    
     loadingInstance.close();
     if (resultHead.code === 200) {
       if (resultHead.data.length === 0) {

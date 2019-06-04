@@ -1,11 +1,21 @@
 <script>
 //出货通知单
-import { getReceiving, saveReceiving, getProductAdnSku, getSkuName ,upReceiving,delReceivingNoticeAndNoticeEntry} from "@/api";
+import { 
+	getReceiving, 
+	saveReceiving, 
+	getProductAdnSku, 
+	getSkuName ,
+	upReceiving,
+	delReceivingNoticeAndNoticeEntry, 
+	getDepartment
+	} from "@/api";
 import {
   shopName,
   siteName,
   platformTypeName,
-  transportTypeName
+  transportTypeName,
+  supplierId,
+  findListWar
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -18,47 +28,53 @@ export default {
 		queryKey: 'purchasePoReceiptNoticeEntry',
 		nameKey : 'no',
 		primaryKey_child: 'rne_id',
-      customField: [
-        {
-          topType: "date",
-          required: true
-        },
-        // {
-        //   topType: "deliveryDate",
-        //   required: true
-        // },
-        {
-          topType: "closeUser",
-          required: true
-        },
-        {
-          topType: "no",
-          required: true
-        },
-		 {
-		  topType: "closeDate",
-		  required: true
-		},
-        {
-          topType: 'empId',
-          disabled: true,
-        },
-        {
-          topType: 'mangerId',
-          disabled: true,
-        },
-        // {
-        //   topType: 'fetchAdd',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'status',
-        //   disabled: true,
-        // },
-        // {
-        //   topType: 'remark',
-        //   required: false,
-        // }
+		customField: [
+		  supplierId,
+		  // findListWar
+  //       {
+  //         topType: "date",
+  //         required: true
+  //       },
+  //       // {
+  //       //   topType: "deliveryDate",
+  //       //   required: true
+  //       // },
+  //       {
+  //         topType: "closeUser",
+  //         required: true
+  //       },
+  //       {
+  //         topType: "no",
+  //         required: true
+  //       },
+		//  {
+		//   topType: "closeDate",
+		//   required: true
+		// },
+  //       {
+  //         topType: 'empId',
+  //         disabled: true,
+  //       },
+  //       // {
+  //       //   topType: 'mangerId',
+  //       //   disabled: true,
+  //       // },
+  //       // {
+  //       //   topType: 'fetchAdd',
+  //       //   disabled: true,
+  //       // },
+  //       // {
+  //       //   topType: 'status',
+  //       //   disabled: true,
+  //       // },
+  //       // {
+  //       //   topType: 'remark',
+  //       //   required: false,
+  //       // },
+		// 	{
+		// 		topType:'deptId',
+		// 		disabled:true
+		// 	}
       ],
       customField_table: [
         // {
@@ -97,6 +113,7 @@ export default {
           key_get: 'poReceiptNoticeEntryList' //获取时从哪里拿出来
         } 
       },
+	  department:'',
 	  dataList:[],
 	  procedure : {
 		  goodNum:100,//商品数量
@@ -149,13 +166,13 @@ export default {
 				]
 			}else{//确认数量不为0
 				//各品类数量显示按钮
-				if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum==0){
-					this.tableOperateList.push({icon: "",label: "不良品入库",fn(row,mull) {self.bad_goods(row,mull);}})
-				}else if(this.procedure.badNum.badGoodsNum==0&&this.procedure.badNum.goodsNum>0){
-					this.tableOperateList.push({icon: "",label: "良品入库",fn(row,mull) {self.good_warehousing(row,mull);}})
-				}else if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum>0){
-					this.tableOperateList.push({icon: "",label: "良品不良品入库",fn(row,mull) {self.all_goods(row,mull);}})
-				}
+				// if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum==0){
+				// 	this.tableOperateList.push({icon: "",label: "不良品入库",fn(row,mull) {self.bad_goods(row,mull);}})
+				// }else if(this.procedure.badNum.badGoodsNum==0&&this.procedure.badNum.goodsNum>0){
+				// 	this.tableOperateList.push({icon: "",label: "良品入库",fn(row,mull) {self.good_warehousing(row,mull);}})
+				// }else if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum>0){
+				// 	this.tableOperateList.push({icon: "",label: "良品不良品入库",fn(row,mull) {self.all_goods(row,mull);}})
+				// }
 				//入库数量小于确认数量
 				if( this.procedure.goNum < this.procedure.nowNum){
 					this.tableOperateList.push({icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
@@ -181,6 +198,15 @@ export default {
 			
 		}
 	},
+	async getDepartment(){
+		//部门接口有问题 目前先使用数组第一个的充数
+		let res = await getDepartment();
+		if(res.code == 200){
+			this.department = res.data.treeName;
+			console.log(res);
+		}
+		
+	},
     queryPage(data) {
       return getReceiving(data); //查询页面的接口
     },
@@ -188,8 +214,8 @@ export default {
       return saveReceiving(data); //新增的接口 
     },
 	ajax_update(data) {
-		data.purchasePoReceiptNotice.statusId = '1';
-		data.purchasePoReceiptNoticeEntry.push( {"version": 0})
+		data.parentKey.statusId = '1';
+		// data.entry[0].version = 0 ;
 	  return upReceiving(data);
 	},
 	ajax_remove(data) {
@@ -216,27 +242,27 @@ export default {
 		this.dataListObj = {type:'03',dataList:this.dataList}
 		console.log(this.dataListObj);
 	},
-	bad_goods(row,mull){//不良品入库
-		console.log(row,mull)
-		this.more.visible = true;
-		mull.length>0?this.dataList = mull:this.dataList = [row]
-		this.dataListObj = {type:'04',dataList:this.dataList}
-		console.log(this.dataListObj);
-	},
-	good_warehousing(row,mull){//良品入库
-		console.log(row,mull)
-		this.more.visible = true;
-		mull.length>0?this.dataList = mull:this.dataList = [row]
-		this.dataListObj = {type:'05',dataList:this.dataList}
-		console.log(this.dataListObj);
-	},
-	all_goods(row,mull){//良品不良品入库
-		console.log(row,mull)
-		this.more.visible = true;
-		mull.length>0?this.dataList = mull:this.dataList = [row]
-		this.dataListObj = {type:'06',dataList:this.dataList}
-		console.log(this.dataListObj);
-	},
+	// bad_goods(row,mull){//不良品入库
+	// 	console.log(row,mull)
+	// 	this.more.visible = true;
+	// 	mull.length>0?this.dataList = mull:this.dataList = [row]
+	// 	this.dataListObj = {type:'04',dataList:this.dataList}
+	// 	console.log(this.dataListObj);
+	// },
+	// good_warehousing(row,mull){//良品入库
+	// 	console.log(row,mull)
+	// 	this.more.visible = true;
+	// 	mull.length>0?this.dataList = mull:this.dataList = [row]
+	// 	this.dataListObj = {type:'05',dataList:this.dataList}
+	// 	console.log(this.dataListObj);
+	// },
+	// all_goods(row,mull){//良品不良品入库
+	// 	console.log(row,mull)
+	// 	this.more.visible = true;
+	// 	mull.length>0?this.dataList = mull:this.dataList = [row]
+	// 	this.dataListObj = {type:'06',dataList:this.dataList}
+	// 	console.log(this.dataListObj);
+	// },
     async changeSku(val, row, title) {
       console.log(val);
       console.log(row);
@@ -302,12 +328,30 @@ export default {
       }
     }
   },
+  watch:{
+	  form_data_model(val,oldVal){
+		  console.log(val);
+		  console.log(oldVal);
+		  console.log(this.form_editing)
+		  switch(this.form_editing){
+			   case 'add':
+					this.form.data_model.date = new Date().getTime();
+					this.form_data_model.empId = this.getCookie("name");
+					// this.form_data_model.deptId = this.department;//部门接口有问题 目前先使用数组第一个的充数
+					console.log('1111')
+					break;
+				
+			}
+	  }
+  },
   beforeCreate() {
     // transportTypeName.hideChild = true;
   },
   async created() {
 	  // this.initTableOperateList();
 	  this.btnShow();
+	  this.getDepartment();
+	 
   }
 };
 </script>
