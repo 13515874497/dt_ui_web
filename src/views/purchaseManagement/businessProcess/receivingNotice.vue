@@ -343,7 +343,7 @@ export default {
 			   case 'add':
 					this.form.data_model.date = new Date().getTime();
 					this.form_data_model.empId = this.getCookie("name");
-					// this.form_data_model.deptId = this.department;//部门接口有问题 目前先使用数组第一个的充数
+					this.form_data_model.deptId = this.department;
 					console.log('1111')
 					break;
 				
