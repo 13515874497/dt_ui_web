@@ -31,6 +31,7 @@ export default {
 		primaryKey_child: 'rne_id',
 		customField: [
 		  supplierId,
+		  
 		  // findFreight
 		  // findListWar
   //       {
@@ -79,6 +80,7 @@ export default {
 		// 	}
       ],
       customField_table: [
+		  findListWar
         // {
         //   inputType: 3,
         //   topType: "sku",
