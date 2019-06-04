@@ -308,8 +308,6 @@ export const saveReceiving = (data) => ajax(BASE_URL + '/po/saveReceiptNotice',d
 export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data, 'POST')
 //删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
-//部门收货通知单
-export const getDepartment = ()=>ajax(BASE_URL + '/staff/getDepartment')
 
 // 运营管理=> 亚马逊=>费用
 
@@ -366,7 +364,8 @@ export const delPoOrder = (data) => ajax(BASE_URL + '/po/delPoOrder', data, 'POS
 export const findByListEmployee = (data) => ajax(BASE_URL + '/staff/findByListEmployee', data, 'POST');
 //员工 tree http://127.0.0.1:9001/api/v1/staff/findByListDepartment  get  tree 部门
 export const findByListDepartment = (data) => ajax(BASE_URL + '/staff/findByListDepartment', data);
-
+//获取部门
+export const getDepartment = ()=>ajax(BASE_URL + '/staff/getDepartment')
 
 
 /**

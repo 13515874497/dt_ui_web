@@ -15,7 +15,8 @@ import {
   platformTypeName,
   transportTypeName,
   supplierId,
-  findListWar
+  findListWar,
+  findFreight
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -30,6 +31,8 @@ export default {
 		primaryKey_child: 'rne_id',
 		customField: [
 		  supplierId,
+		  
+		  // findFreight
 		  // findListWar
   //       {
   //         topType: "date",
@@ -77,6 +80,7 @@ export default {
 		// 	}
       ],
       customField_table: [
+		  findListWar
         // {
         //   inputType: 3,
         //   topType: "sku",
@@ -137,6 +141,10 @@ export default {
   },
   
   methods: {
+	  async aaa(){
+		 // let res = await findByListFreight();
+		 // console.log(res);
+	  },
 	btnShow(){
 		let self = this;
 		if(this.procedure.isclosed){//如果关闭了
@@ -214,7 +222,7 @@ export default {
       return saveReceiving(data); //新增的接口 
     },
 	ajax_update(data) {
-		data.parentKey.statusId = '1';
+		// data.parentKey.statusId = '1';
 		// data.entry[0].version = 0 ;
 	  return upReceiving(data);
 	},
@@ -337,7 +345,7 @@ export default {
 			   case 'add':
 					this.form.data_model.date = new Date().getTime();
 					this.form_data_model.empId = this.getCookie("name");
-					// this.form_data_model.deptId = this.department;//部门接口有问题 目前先使用数组第一个的充数
+					this.form_data_model.deptId = this.department;
 					console.log('1111')
 					break;
 				
@@ -351,7 +359,7 @@ export default {
 	  // this.initTableOperateList();
 	  this.btnShow();
 	  this.getDepartment();
-	 
+	 this.aaa();
   }
 };
 </script>

@@ -309,7 +309,6 @@ export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data,
 //删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
 
-
 // 运营管理=> 亚马逊=>费用
 
 //月度仓储费 http://127.0.0.1:9001/api/v1/fba/getMWarInfo post
