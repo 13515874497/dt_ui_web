@@ -17,7 +17,7 @@ export default {
       primaryKey: "poId",
       primaryKey_child: "poeId",
       customField: [
-        currencyName,
+        // currencyName,
         supplierId,
         {
           topType: "no",
@@ -32,7 +32,9 @@ export default {
         //   required: true
         // },
       ],
-      customField_table: [],
+      customField_table: [
+                currencyName,
+      ],
       editable_field: [
         //表格中哪些字段可以被编辑
       ],

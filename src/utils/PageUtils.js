@@ -41,15 +41,6 @@ export default {
     if (res.code === 200) {
       const data = res.data;
 
-      let supplierId = data.dataList.find(title=>{
-        return title.topType = 'supplierId';
-      });
-      supplierId.subField = '1';
-      console.log(supplierId);
-      
-
-
-
       data.dataList.forEach(parent => {
         if (parent.systemLogStatus) {
           for (let key in parent.systemLogStatus) {

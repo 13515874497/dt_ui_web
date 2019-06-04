@@ -9,12 +9,6 @@ export default {
     
     const resultHead = await repHead(id)
     
-    // let currencyName = resultHead.data.find(title=>{
-    //   return title.topType === 'currencyName';
-    // })
-    // console.log(currencyName);
-    // currencyName.subField = '1';
-    
     loadingInstance.close();
     if (resultHead.code === 200) {
       if (resultHead.data.length === 0) {
