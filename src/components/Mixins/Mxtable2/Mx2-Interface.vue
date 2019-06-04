@@ -156,7 +156,7 @@ export default {
     },
     passData: {
       handler(val) {
-        let isPass = this.isPass && val.entry.length > 0;
+        let isPass = this.isPass; //表单验证通过
         this.$emit("passData", [isPass, val]);
       },
       deep: true

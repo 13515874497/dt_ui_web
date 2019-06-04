@@ -59,6 +59,33 @@
         </el-table-column>
 
         <el-table-column
+          v-if="title.inputType==5"
+          :label="title.headName"
+          :fixed="isFixed(title)"
+          :prop="title.topType"
+          :render-header="renderHeader"
+          :show-overflow-tooltip="true"
+          :key="Math.random()"
+          :column-key="index.toString()"
+          min-width="150"
+        >
+          <template slot-scope="scope">
+            <span class="editting" v-if="editable">
+              <el-cascader
+                expand-trigger="hover"
+                :options="scope.row[title.topType+'_data_']"
+                v-model="scope.row[title.data_model]"
+                @change="(val)=>{changeCascader(val,title,scope.row,title.changeSel)}"
+                :props="props_inputType5"
+                :filterable="true"
+                size="small"
+              ></el-cascader>
+            </span>
+            <span class="editted">{{scope.row[title.topType]}}</span>
+          </template>
+        </el-table-column>
+
+        <el-table-column
           v-else-if="title.topType==='userExpirationDate'"
           :label="title.headName"
           :fixed="isFixed(title)"
@@ -141,9 +168,8 @@
 </template>
 <script>
 import Sortable from "sortablejs";
-import { deepClone } from "@/utils/Arrays";
+import { deepClone, getTreePath } from "@/utils/Arrays";
 import { Loading } from "element-ui";
-
 export default {
   data() {
     return {
@@ -152,7 +178,12 @@ export default {
       options: {}, //存放各种类型的状态
       table_title: [],
       table_data: [],
-      table_title_two: []
+      table_title_two: [],
+      props_inputType5: {
+        value: "treeId",
+        label: "treeName",
+        children: "childNode"
+      }
     };
   },
   props: {
@@ -204,7 +235,7 @@ export default {
         // if (this.editable) {
         this.table_data = [...this.tableData];
         // this.initCustomField();
-        this.initRow_data_();
+        // this.initRow_data_();
         // }
       },
       immediate: true
@@ -223,7 +254,8 @@ export default {
           }
         });
         this.$emit("giveTableData", [table_data]);
-      }
+      },
+      immediate: true
     },
     tableTitleTwo: {
       handler(val) {
@@ -236,6 +268,9 @@ export default {
     // }
   },
   methods: {
+    changeCascader(val, title, row, cb) {
+      row[title.bindKey] = val[val.length - 1];
+    },
     columnDrop() {
       var wrapperTr = this.$el.querySelector(".el-table__header-wrapper tr");
       var oldIndex, newIndex, oldItem, newItem, trIndex;
@@ -273,9 +308,9 @@ export default {
         onEnd: evt => {}
       });
     },
-	operateClick(scope){
-		console.log(scope);
-	},
+    operateClick(scope) {
+      console.log(scope);
+    },
     setTheadClassName() {
       return "noRightKey";
     },
@@ -294,7 +329,6 @@ export default {
       //如果是多个表的数据合并起来的数据   那么就合并父表的数据
       if (this.mode === 2) {
         let title = this.table_title.find(item => {
-          
           return item.topType === column.property;
         });
         if (title && title.subField === null) {
@@ -477,12 +511,12 @@ export default {
       for (let i = 0; i < this.customField_table.length; i++) {
         let cusItem = this.customField_table[i];
         console.log(cusItem);
-        
+
         let title = this.table_title.find(title => {
           return title.topType === cusItem.topType;
         });
         console.log(title);
-        
+
         for (let key in cusItem) {
           title[key] = cusItem[key];
         }
@@ -517,16 +551,33 @@ export default {
               if (res3.code === 200) {
                 row[tempKey] = res3.data.dataList || res3.data;
               }
-              break;
             }
+            break;
 
-          // case 5:
-          //   let res = await cusItem.ajax();
-          //   if (res.code === 200) {
-          //      row[tempKey]  = res.data;
-          //   }
-          //   this.data_model[cusItem.data_model] = [];
-          //   break;
+          case 5:
+            console.log(cusItem);
+
+            let res = await cusItem.ajax();
+            if (res.code === 200) {
+              if (cusItem.hideChild) {
+                res.data.forEach(node => {
+                  node.childNode = null;
+                });
+              }
+              row[tempKey] = res.data;
+            }
+            row[cusItem.data_model] = [];
+            if (row[cusItem.bindKey]) {
+              row[cusItem.data_model] = getTreePath(
+                row[cusItem.bindKey],
+                row[tempKey],
+                this.props_inputType5.value,
+                this.props_inputType5.children
+              );
+            }
+            console.log(row);
+
+            break;
         }
       }
       // resolve(null);
@@ -590,7 +641,7 @@ export default {
   }
 }
 .el-table .cell {
-   white-space: nowrap;
+  white-space: nowrap;
 }
 
 .editting {

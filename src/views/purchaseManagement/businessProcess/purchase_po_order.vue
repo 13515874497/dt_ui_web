@@ -17,7 +17,7 @@ export default {
       primaryKey: "poId",
       primaryKey_child: "poeId",
       customField: [
-        // currencyName,
+        currencyName,
         supplierId,
         {
           topType: "no",
@@ -32,9 +32,7 @@ export default {
         //   required: true
         // },
       ],
-      customField_table: [
-                currencyName,
-      ],
+      customField_table: [],
       editable_field: [
         //表格中哪些字段可以被编辑
       ],
@@ -57,9 +55,6 @@ export default {
       this.tableTitle.forEach(title => {
         self.editable_field.push(title.topType);
       });
-     
-      // val.push(supplierId);
-      // this.tableTitle = [...this.tableTitle]
     }
   },
   methods: {
