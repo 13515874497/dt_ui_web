@@ -9,6 +9,18 @@ export default {
     
     const resultHead = await repHead(id)
     
+
+
+    let title = resultHead.data.find(title=>{
+      return title.topType === 'transportTypeName';
+    })
+    if(title){
+      title.subField = '1'
+
+    }
+
+
+
     loadingInstance.close();
     if (resultHead.code === 200) {
       if (resultHead.data.length === 0) {

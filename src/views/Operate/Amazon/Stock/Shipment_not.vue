@@ -29,7 +29,7 @@ export default {
         shopName,
         siteName,
         platformTypeName,
-        transportTypeName,
+        // transportTypeName,
         {
           topType: "date",
           required: true
@@ -72,6 +72,7 @@ export default {
         }
       ],
       customField_table: [
+        transportTypeName,
         {
           inputType: 3,
           topType: "sku",
@@ -87,6 +88,7 @@ export default {
         }
       ],
       editable_field: [
+        'transportTypeName',
         //表格中哪些字段可以被编辑
         "neGwKg",
         "neHeightCm",
