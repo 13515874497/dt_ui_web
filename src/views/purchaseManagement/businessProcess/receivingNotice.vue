@@ -219,6 +219,7 @@ export default {
       return getReceiving(data); //查询页面的接口
     },
     ajax_add(data) {
+		delete data.entry[0]._reciveWarehouseId;
       return saveReceiving(data); //新增的接口 
     },
 	ajax_update(data) {
