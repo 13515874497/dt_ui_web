@@ -44,7 +44,7 @@
                 :remoteMethod="(val)=>{title.remoteMethod(val,scope.row)}"
                 :clearable="title.remote"
                 size="small"
-                @change="val=>{changeSelect(val,title,scope.row,title.changeSel)}"
+                @change="val=>{changeSelect(val,title,scope.row,title.cb)}"
               >
                 <el-option
                   v-for="option in scope.row[title.topType+'_data_']"
@@ -75,7 +75,7 @@
                 expand-trigger="hover"
                 :options="scope.row[title.topType+'_data_']"
                 v-model="scope.row[title.data_model]"
-                @change="(val)=>{changeCascader(val,title,scope.row,title.changeSel)}"
+                @change="(val)=>{changeCascader(val,title,scope.row,title.cb)}"
                 :props="props_inputType5"
                 :filterable="true"
                 size="small"
@@ -589,7 +589,7 @@ export default {
       });
       row[title.topType] = option[title.label];
       if (cb) {
-        cb(val, row, title);
+        cb(val, row, title, option);
       }
 
       // this.table_data = [...this.table_data]

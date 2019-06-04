@@ -29,7 +29,7 @@ export const productsName = {
 export const transportTypeName = {
   topType: "transportTypeName",
   bindKey: 'transportTypeId',
-  data_model: '_transportTypeId',
+  data_model: 'transportTypeId_',
   inputType: 5,
   ajax: findByListType,
   required: true

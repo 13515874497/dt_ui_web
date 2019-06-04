@@ -89,7 +89,19 @@ export default {
           }
         }
       ];
+    },
+    supplierId_change(val,formItem,option){
+      console.log(val);
+      console.log(formItem);
+      console.log(option);
+      console.log(this.form.data_model);
+      
+      this.form.data_model.contactPerson = option.contactPerson;
+      this.form.data_model.telPhone = option.telPhone;
+      // this.form.data_model = {...this.form.data_model }
+      
     }
+
   },
   beforeCreate() {
     
@@ -97,7 +109,8 @@ export default {
   },
 
   async created() {
-    // supplierId.required = true;
+    supplierId.required = true;
+    supplierId.cb = this.supplierId_change;
     let res = await getRPPay();
   }
 };
