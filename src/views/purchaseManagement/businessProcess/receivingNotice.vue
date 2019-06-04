@@ -214,7 +214,7 @@ export default {
       return saveReceiving(data); //新增的接口 
     },
 	ajax_update(data) {
-		data.parentKey.statusId = '1';
+		// data.parentKey.statusId = '1';
 		// data.entry[0].version = 0 ;
 	  return upReceiving(data);
 	},
