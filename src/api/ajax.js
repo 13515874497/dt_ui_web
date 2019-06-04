@@ -31,6 +31,8 @@ export default function ajax(url, data = {}, type = 'GET', msg) {
       promise = axios.get(url)
     } else {
       // 发送post请求
+      console.log(data);
+      
       promise = axios.post(url, data)
     }
     // axios.interceptors.request.use(config => {

@@ -1,7 +1,10 @@
 <script>
 //采购订单
-import { getPoOrder, savePoOrder,upPoOrder,delPoOrder } from "@/api";
-import { currencyName, supplierId } from "@/components/ElementUi/Form/customField";
+import { getPoOrder, savePoOrder, upPoOrder, delPoOrder } from "@/api";
+import {
+  currencyName,
+  supplierId
+} from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
 import message from "@/utils/Message";
@@ -47,11 +50,14 @@ export default {
     };
   },
   watch: {
-    tableTitle() {
+    tableTitle(val) {
       let self = this;
       this.tableTitle.forEach(title => {
         self.editable_field.push(title.topType);
       });
+     
+      // val.push(supplierId);
+      // this.tableTitle = [...this.tableTitle]
     }
   },
   methods: {
@@ -65,7 +71,7 @@ export default {
     ajax_update(data) {
       return upPoOrder(data);
     },
-     ajax_remove(data) {
+    ajax_remove(data) {
       return delPoOrder(data);
     },
     addEditableField() {
@@ -76,8 +82,7 @@ export default {
     supplierId.required = true;
   },
 
-  async created() {
-  }
+  async created() {}
 };
 </script>
 
