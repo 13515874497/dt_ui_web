@@ -194,7 +194,7 @@ export default {
       editable_field: [], //表格中哪些字段可以被编辑
       //在form中不需要填写的
       sysLogNotForm: [
-        "statusId",
+        "statusId",//这个放外面了
         // "remark",
         // "status",
         "createDate",
