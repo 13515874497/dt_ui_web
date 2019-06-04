@@ -8,7 +8,8 @@ import {
   findByListType,
   findByListCurrency,
   findSupName,
-	findByListWar
+	findByListWar,
+	findByListFreight
 } from '@/api/api'
 
 /**
@@ -32,6 +33,14 @@ export const transportTypeName = {
   inputType: 5,
   ajax: findByListType,
   required: true
+}
+//仓库 findByListWar
+export const findListWar = {
+  topType: "reciveWarehouseId",
+  bindKey: 'reciveWarehouseId',
+  data_model: '_reciveWarehouseId',
+  inputType: 5,
+  ajax: findByListWar,
 }
 /**
  *
@@ -103,11 +112,14 @@ export const supplierId = {
   filterable: true,
   placeholder: "请选供应商"
 }
-//仓库 findByListWar
-export const findListWar = {
-  topType: "reciveWarehouseId",
-  bindKey: 'reciveWarehouseId',
-  data_model: '_reciveWarehouseId',
-  inputType: 5,
-  ajax: findByListWar,
+//货运公司
+export const findFreight = {
+  inputType: 3,
+  topType: "transportCompanyId",
+  bindKey: "transportCompanyId",
+  ajax: findByListFreight,
+  key: "transportCompanyId",
+  label: "transportCompanyFullName",
+  filterable: true,
+  placeholder: "请选货运公司"
 }

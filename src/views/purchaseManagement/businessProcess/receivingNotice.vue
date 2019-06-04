@@ -7,7 +7,8 @@ import {
 	getSkuName ,
 	upReceiving,
 	delReceivingNoticeAndNoticeEntry, 
-	getDepartment
+	getDepartment,
+	findByListFreight
 	} from "@/api";
 import {
   shopName,
@@ -137,6 +138,10 @@ export default {
   },
   
   methods: {
+	  async aaa(){
+		 let res = await findByListFreight();
+		 console.log(res);
+	  },
 	btnShow(){
 		let self = this;
 		if(this.procedure.isclosed){//如果关闭了
@@ -351,7 +356,7 @@ export default {
 	  // this.initTableOperateList();
 	  this.btnShow();
 	  this.getDepartment();
-	 
+	 this.aaa();
   }
 };
 </script>
