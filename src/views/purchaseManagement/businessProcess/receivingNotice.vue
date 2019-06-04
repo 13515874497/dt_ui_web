@@ -7,7 +7,7 @@ import {
 	getSkuName ,
 	upReceiving,
 	delReceivingNoticeAndNoticeEntry, 
-	findByListDepartment,
+	getDepartment
 	} from "@/api";
 import {
   shopName,
@@ -28,9 +28,9 @@ export default {
 		queryKey: 'purchasePoReceiptNoticeEntry',
 		nameKey : 'no',
 		primaryKey_child: 'rne_id',
-      customField: [
+		customField: [
 		  supplierId,
-		  findListWar
+		  // findListWar
   //       {
   //         topType: "date",
   //         required: true
@@ -200,9 +200,9 @@ export default {
 	},
 	async getDepartment(){
 		//部门接口有问题 目前先使用数组第一个的充数
-		let res = await findByListDepartment();
-		if(res.data.length>0){
-			this.department = res.data[0].treeName;
+		let res = await getDepartment();
+		if(res.code == 200){
+			this.department = res.data.treeName;
 			console.log(res);
 		}
 		

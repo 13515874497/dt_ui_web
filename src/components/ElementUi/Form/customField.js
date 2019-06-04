@@ -105,11 +105,9 @@ export const supplierId = {
 }
 //仓库 findByListWar
 export const findListWar = {
-	topType: "reciveWarehouseId",
-  inputType: 3,
-  bindKey: "treeId",
+  topType: "reciveWarehouseId",
+  bindKey: 'reciveWarehouseId',
+  data_model: '_reciveWarehouseId',
+  inputType: 5,
   ajax: findByListWar,
-  key: "treeId",
-  label: "treeName",
-  placeholder: "请选仓库"
 }

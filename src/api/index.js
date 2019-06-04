@@ -308,7 +308,8 @@ export const saveReceiving = (data) => ajax(BASE_URL + '/po/saveReceiptNotice',d
 export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data, 'POST')
 //删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
-
+//部门收货通知单
+export const getDepartment = ()=>ajax(BASE_URL + '/staff/getDepartment')
 
 // 运营管理=> 亚马逊=>费用
 
@@ -861,7 +862,7 @@ export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',dat
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 
 //获取供应商select下拉框数据  /api/v1/sup/findSupName
-export const findSupName = (data) => ajax(BASE_URL + '/sup/findSupName',data)
+export const findSupName = (data) => ajax(BASE_URL + '/sup/findSupList',data,'POST')
 
 
 //获取外购入库分页http://127.0.0.1:9001/api/v1/po/getIcBillStock

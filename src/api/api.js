@@ -850,6 +850,6 @@ export const delUserConfig = (data) => ajax(BASE_URL + '/user/delUserConfig',dat
 export const upUserConfig = (data) => ajax(BASE_URL + '/user/upUserConfig',data, 'POST')
 
 //获取供应商select下拉框数据  /api/v1/sup/findSupName
-export const findSupName = (data) => ajax(BASE_URL + '/sup/findSupName',data)
+export const findSupName = (data) => ajax(BASE_URL + '/sup/findSupList',data,'POST')
 
 
