@@ -434,7 +434,7 @@ export default {
         return;
       }
       if(!this.add.data.entry.length){
-        message.errorMessage("新增表格信息不能为空");
+        message.errorMessage("表格信息不能为空");
         return;
       }
       this.setEntryId(this.add.data);
@@ -568,6 +568,10 @@ export default {
       console.log(this.update.data);
       if (!this.update.isPass) {
         message.errorMessage("表单验证未通过");
+        return;
+      }
+      if(!this.update.data.entry.length){
+        message.errorMessage("表格信息不能为空");
         return;
       }
       this.setEntryId(this.update.data);
