@@ -8,7 +8,7 @@
                   </router-link>
                     <span class="tags-li-icon" @click="closeTags(index)" v-show="item.path !== '/index'"><i class="el-icon-close"></i></span> 
                  <div id="hides" v-show="indexHide == index&&isHide && item.path !== '/index'">
-                    <el-button  @click.stop="refresh" class=" el-icon-refresh fresh" size="mini" >刷新</el-button>
+                    <el-button  @click.prevent.stop="refresh(item)" class=" el-icon-refresh fresh" size="mini" >刷新</el-button>
                     <el-button @click="collect(item)" class=" el-icon-star-off collect" size="mini" >收藏</el-button> 
                  </div>                                 
               </li>
@@ -96,7 +96,7 @@ export default {
       this.tagsList = curItem;
     },
     //刷新页面
-    refresh() {
+    refresh(item) {
       this.reload();
     },
 

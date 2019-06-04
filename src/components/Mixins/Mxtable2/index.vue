@@ -409,8 +409,7 @@ export default {
     },
     passData_add($event) {
       console.log($event);
-
-      this.add.isPass = $event[0];
+      this.add.isPass = $event[0];     
       this.add.data = $event[1];
     },
     // getFormData_add($event) {
