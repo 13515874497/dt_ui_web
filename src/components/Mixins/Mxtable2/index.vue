@@ -252,7 +252,7 @@ export default {
       return (this.table && this.table.table_data) || null;
     },
     systemLogStatus() {
-      return [...this.sysLogNotForm,...this.sysLogForm]
+      return [...this.sysLogNotForm, ...this.sysLogForm];
     }
   },
   components: {
@@ -348,12 +348,14 @@ export default {
       }
     },
     handlerFormData(data) {
-      data.systemLogStatus = {};
-      
-      for (let key in data) {
-        if (this.systemLogStatus.includes(key)) {
-          data.systemLogStatus[key] = data[key];
-          delete data[key];
+      // data.systemLogStatus = {};
+      if (!data.systemLogStatus) {
+        data.systemLogStatus = {};
+        for (let key in data) {
+          if (this.systemLogStatus.includes(key)) {
+            data.systemLogStatus[key] = data[key];
+            delete data[key];
+          }
         }
       }
     },
@@ -416,7 +418,6 @@ export default {
       this.handlerFormData($event[1].parentKey);
       this.add.data = $event[1];
       console.log(this.add.data);
-      
     },
     // getFormData_add($event) {
     //   console.log($event);
