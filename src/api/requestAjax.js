@@ -11,13 +11,12 @@ export default {
     
 
 
-    let title = resultHead.data.find(title=>{
-      return title.topType === 'transportTypeName';
-    })
-    if(title){
-      title.subField = '1'
-
-    }
+    // let title = resultHead.data.find(title=>{
+    //   return title.topType === 'transportTypeName';
+    // })
+    // if(title){
+    //   title.subField = '1'
+    // }
 
 
 
