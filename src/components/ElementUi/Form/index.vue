@@ -116,7 +116,7 @@
           :remoteMethod="item.remoteMethod"
           :clearable="item.remote"
           size="small"
-          @change="(val)=>{changeSelect(val,item)}"
+          @change="(val)=>{changeSelect(val,item,item.cb)}"
         >
           <el-option
             v-for="option in item.data"
@@ -473,11 +473,14 @@ export default {
       this.data_model[formItem.bindKey] = val[val.length-1];
       this.triggerFormChange();
     },
-    changeSelect(val, formItem) {
+    changeSelect(val, formItem,cb) {
       let option = formItem.data.find(option => {
         return option[formItem.bindKey] === val;
       });
       this.data_model[formItem.label] = option[formItem.label];
+      if(cb){
+        cb(val,formItem,option);
+      }
     }
   },
   beforeCreate() {},

@@ -308,6 +308,7 @@ export const saveReceiving = (data) => ajax(BASE_URL + '/po/saveReceiptNotice',d
 export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data, 'POST')
 //删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
+//
 
 // 运营管理=> 亚马逊=>费用
 
@@ -526,6 +527,8 @@ export const findByListSur = (data) => ajax(BASE_URL + '/vat/findByListVat', dat
 
 //仓库tree
 export const findByListWar = () => ajax(BASE_URL + '/war/findByListWar')
+//仓位
+export const findByListWarP = () =>ajax(BASE_URL+'/warp/findByListWarP')
 //产品类目tree
 export const findByListProducts = () => ajax(BASE_URL + '/pro/findByListProducts')
 //导入模板分页

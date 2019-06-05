@@ -44,7 +44,7 @@
                 :remoteMethod="(val)=>{title.remoteMethod(val,scope.row)}"
                 :clearable="title.remote"
                 size="small"
-                @change="val=>{changeSelect(val,title,scope.row,title.changeSel)}"
+                @change="val=>{changeSelect(val,title,scope.row,title.cb)}"
               >
                 <el-option
                   v-for="option in scope.row[title.topType+'_data_']"
@@ -59,7 +59,7 @@
         </el-table-column>
 
         <el-table-column
-          v-if="title.inputType==5"
+          v-else-if="title.inputType==5"
           :label="title.headName"
           :fixed="isFixed(title)"
           :prop="title.topType"
@@ -73,9 +73,9 @@
             <span class="editting" v-if="editable">
               <el-cascader
                 expand-trigger="hover"
-                :options="scope.row[title.topType+'_data_']"
+                :options="scope.row[title.topType+'_data_'] || []"
                 v-model="scope.row[title.data_model]"
-                @change="(val)=>{changeCascader(val,title,scope.row,title.changeSel)}"
+                @change="(val)=>{changeCascader(val,title,scope.row,title.cb)}"
                 :props="props_inputType5"
                 :filterable="true"
                 size="small"
@@ -587,9 +587,9 @@ export default {
       let option = row[title.topType + "_data_"].find(option => {
         return option[title.bindKey] === val;
       });
-      row[title.topType] = option[title.label];
+      row[title.label] = option[title.label];
       if (cb) {
-        cb(val, row, title);
+        cb(val, row, title, option);
       }
 
       // this.table_data = [...this.table_data]

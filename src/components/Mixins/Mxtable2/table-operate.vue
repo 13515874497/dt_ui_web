@@ -1,9 +1,9 @@
 <template>
   <div>
-    <template v-if="tableOperateList.length>1">
+    <template v-if="btnList.length>1">
       <el-popover placement="top-start" trigger="hover">
         <el-button
-          v-for="(item,index) in tableOperateList"
+          v-for="(item,index) in btnList"
           :key="index"
           :type="item.type"
           :icon="item.icon"
@@ -15,7 +15,7 @@
     </template>
     <template v-else>
       <el-button
-        v-for="item in tableOperateList"
+        v-for="item in btnList"
         :key="item.label"
         :type="item.type"
         :icon="item.icon"
@@ -33,6 +33,17 @@ export default {
     tableOperateList: {
       type: Array,
       default: () => []
+      //  {
+      //     type: "primary",
+      //     icon: "el-icon-circle-plus-outline",
+      //     label: "生成收货通知单",
+      //     fn(row, mul) { //点击时的回调
+      //       self.btn_generateReceivingNotice(row, mul);
+      //     },
+      //     isShow(row, mul){ //当前行是否显示该按钮
+      //       return false;
+      //     }
+      //   }
     },
     row: {
       //当前行的数据
@@ -41,6 +52,44 @@ export default {
     },
     multipleSelection: {
       type: Array
+    }
+  },
+  data(){
+    return {
+      btnList: []
+
+    }
+  },
+  watch: {
+    row: {
+      handler(val) {
+        this.handlerBtnList(val, this.multipleSelection);
+      },
+      deep: true,
+      immediate: true
+    },
+    multipleSelection:{
+      handler(val) {
+        this.handlerBtnList(this.row, val);
+
+      }
+    }
+  },
+  methods: {
+    handlerBtnList(row, mul) {
+      let btnList = [];
+      this.tableOperateList.forEach(item => {
+        if (!item.isShow) {
+          //默认显示按钮
+          btnList.push(item);
+        } else {
+          let flag = item.isShow(row, mul);
+          if (flag) {
+            btnList.push(item);
+          }
+        }
+      });
+      this.btnList = btnList;
     }
   }
 };

@@ -83,7 +83,7 @@ export default {
           placeholder: "选择店铺站点后输入,需鼠标点击",
           remoteMethod: this.getSkuList,
           data: [],
-          changeSel: this.changeSku
+          cb: this.changeSku
         }
       ],
       editable_field: [
@@ -126,7 +126,7 @@ export default {
     },
     "form_data_model.siteId": {
       handler(val) {
-        console.log("9999999999999999999999999999999999999");
+       
         let origin = this.data_origin[1] && this.data_origin[1].siteId || null;
         if (val == null) {
           this.form.data_model.siteId = origin;
@@ -141,7 +141,7 @@ export default {
     },
     //平台类型为亚马逊时 fba为必选字段
     "form_data_model.platformTypeId"(val) {
-      console.log(val);
+    
       let fbaShipmentId = this.customField.find(item => {
         return item.topType === "fbaShipmentId";
       });

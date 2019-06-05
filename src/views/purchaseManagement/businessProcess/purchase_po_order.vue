@@ -77,19 +77,38 @@ export default {
     ajax_remove(data) {
       return delPoOrder(data);
     },
+    btn_generateReceivingNotice(row,mul){
+
+    },
     initTableOperateList() {
       let self = this;
       this.tableOperateList = [
         {
           type: "primary",
           icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
+          label: "生成收货通知单",
           fn(row, mul) {
-            self.addRow(row, mul);
+            self.btn_generateReceivingNotice(row, mul);
+          },
+          isShow(row, mul){
+            console.log(row);
+            console.log(mul);
+            
+            return mul.length;
           }
         }
       ];
+    },
+    supplierId_change(val,formItem,option){
+      console.log(val);
+      console.log(formItem);
+      console.log(option);
+      console.log(this.form.data_model);
+      
+      this.form.data_model.contactPerson = option.contactPerson;
+      this.form.data_model.telPhone = option.telPhone;
     }
+
   },
   beforeCreate() {
     
@@ -97,7 +116,9 @@ export default {
   },
 
   async created() {
-    // supplierId.required = true;
+    this.initTableOperateList();
+    supplierId.required = true;
+    supplierId.cb = this.supplierId_change;
     let res = await getRPPay();
   }
 };
