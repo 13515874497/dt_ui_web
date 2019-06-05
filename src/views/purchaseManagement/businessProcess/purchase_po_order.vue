@@ -98,8 +98,6 @@ export default {
       
       this.form.data_model.contactPerson = option.contactPerson;
       this.form.data_model.telPhone = option.telPhone;
-      // this.form.data_model = {...this.form.data_model }
-      
     }
 
   },
