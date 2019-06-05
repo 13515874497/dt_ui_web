@@ -108,6 +108,28 @@
         <PublicPopUp :dataListObj="dataListObj" :pubShow="more.visible" @isPubShow="isPubShow"></PublicPopUp>
       </el-dialog>
     </section>
+
+    <!-- 表格操作里显示其他页面的信息 -->
+    <section>
+       <el-dialog :title="`其他`" :visible.sync="other.visible" width="90%">
+        <Mx2Interface
+          :titles="formItems"
+          :data="add.checkedData"
+          :customField="customField"
+          :customField_table="customField_table"
+          :editable_field="editable_field"
+          :radios="subField"
+          @giveForm="getForm"
+          @giveTable="getTable"
+          @passData="passData_add"
+          :tableOperateList="tableOperateList"
+        ></Mx2Interface>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="add.visible = false">取 消</el-button>
+          <el-button type="primary" @click="send_add(true,true)">确 定</el-button>
+        </span>
+      </el-dialog>
+    </section>
     <!-- 表格字段筛选 -->
     <section>
       <PopoverFilterFields :data="tableTitle" @hideField="hideField"></PopoverFilterFields>
@@ -175,6 +197,10 @@ export default {
       },
       more: {
         visible: false
+      },
+      other: {
+        tableTitle:[],
+        visible: false,
       },
       primaryKey: "", //提供一个修改、删除时的主键
       nameKey: "", //提供一个  删除失败时提示给用户那一行的名字

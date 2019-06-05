@@ -130,9 +130,22 @@
           :column-key="index.toString()"
         >
           <template slot-scope="scope">
+            <span class="editting" v-if="editable">
+              <el-date-picker
+                value-format="timestamp"
+                v-model="scope.row[title.topType]"
+                type="date"
+                placeholder="选择日期"
+                size="small"
+              ></el-date-picker>
+            </span>
+            <span class="editted">{{scope.row[title.topType] | date-format}}</span>
+          </template>
+
+          <!-- <template slot-scope="scope">
             <i class="el-icon-time" v-show="scope.row[title.topType]"></i>
             <span>{{ scope.row[title.topType] | date-format}}</span>
-          </template>
+          </template>-->
         </el-table-column>
 
         <el-table-column
