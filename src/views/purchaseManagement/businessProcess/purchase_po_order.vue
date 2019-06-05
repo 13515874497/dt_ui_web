@@ -5,11 +5,13 @@ import {
   savePoOrder,
   upPoOrder,
   delPoOrder,
-  getRPPay
+  startProcess
 } from "@/api";
 import {
   currencyName,
-  supplierId
+  supplierId,
+  prePayId,
+  
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -25,6 +27,7 @@ export default {
       customField: [
         currencyName,
         supplierId,
+        prePayId,
         {
           topType: "no",
           required: true
@@ -69,6 +72,9 @@ export default {
     },
     ajax_add(data) {
       console.log(data);
+      // let start = {...data};
+      // start.pOrderGroup = "数据部,供应中心";
+      // startProcess(start);
       return savePoOrder(data);
     },
     ajax_update(data) {
@@ -99,7 +105,7 @@ export default {
         }
       ];
     },
-    supplierId_change(val,formItem,option){
+    changeSel_supplierId(val,formItem,option){
       console.log(val);
       console.log(formItem);
       console.log(option);
@@ -107,6 +113,11 @@ export default {
       
       this.form.data_model.contactPerson = option.contactPerson;
       this.form.data_model.telPhone = option.telPhone;
+    },
+    changeSel_prePayId(val,formItem,option){
+      this.form.data_model.prePayAmt = option.amount;
+      console.log(this.form.data_model);
+      
     }
 
   },
@@ -116,10 +127,11 @@ export default {
   },
 
   async created() {
+    prePayId.cb = this.changeSel_prePayId;
+    supplierId.cb = this.changeSel_supplierId;
     this.initTableOperateList();
     supplierId.required = true;
-    supplierId.cb = this.supplierId_change;
-    let res = await getRPPay();
+    // let res = await getRPPay();
   }
 };
 </script>
