@@ -77,15 +77,24 @@ export default {
     ajax_remove(data) {
       return delPoOrder(data);
     },
+    btn_generateReceivingNotice(row,mul){
+
+    },
     initTableOperateList() {
       let self = this;
       this.tableOperateList = [
         {
           type: "primary",
           icon: "el-icon-circle-plus-outline",
-          label: "我是自定义功能",
+          label: "生成收货通知单",
           fn(row, mul) {
-            self.addRow(row, mul);
+            self.btn_generateReceivingNotice(row, mul);
+          },
+          isShow(row, mul){
+            console.log(row);
+            console.log(mul);
+            
+            return mul.length;
           }
         }
       ];
@@ -107,6 +116,7 @@ export default {
   },
 
   async created() {
+    this.initTableOperateList();
     supplierId.required = true;
     supplierId.cb = this.supplierId_change;
     let res = await getRPPay();
