@@ -10,8 +10,11 @@ import {
   findSupList,
 	findByListWar,
 	findByListWarP,
-  findByListFreight,
+	findByListFreight,
+	findByListProduct,
+	getFindByListQIMethod,
   getRPPay
+
 } from '@/api/api'
 
 /**
@@ -143,4 +146,26 @@ export const findFreight = {
   label: "transportCompanyFullName",
   filterable: true,
   placeholder: "请选货运公司"
+}
+//商品代码
+export const findProduct = {
+  inputType: 3,
+  topType: "productId",
+  bindKey: "productId",
+  ajax: findByListProduct,
+  key: "productId",
+  label: "productCode",
+  filterable: true,
+  placeholder: "请选商品代码"
+}
+//检验
+export const getQIMethod = {
+  inputType: 3,
+  topType: "inspectionMethodId",
+  bindKey: "inspectionMethodId",
+  ajax: getFindByListQIMethod,
+  key: "inspectionMethodId",
+  label: "inspectionQuarantineName",
+  filterable: true,
+  placeholder: "请选检验方式"
 }

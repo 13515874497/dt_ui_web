@@ -308,7 +308,14 @@ export const saveReceiving = (data) => ajax(BASE_URL + '/po/saveReceiptNotice',d
 export const upReceiving = (data) => ajax(BASE_URL + '/po/upReceiptNotice',data, 'POST')
 //删除收货通知单 http://127.0.0.1:9002/api/v1/ship/delShipNoticeAndNoticeEntry
 export const delReceivingNoticeAndNoticeEntry = (data) => ajax(BASE_URL + '/po/delReceiptNotice',data,'POST')
-//
+//流程测试
+export const getSelThisGroup = () => ajax(BASE_URL+'/act/selThisGroup')
+//签收测试
+export const goClaim = (data)=>ajax(BASE_URL+'/act/claim',data,'GET')
+//流程完成测试
+export const goComplete = (data) => ajax(BASE_URL + '/act/complete',data,'POST')
+//检验
+export const getFindByListQIMethod = () => ajax(BASE_URL + '/qim/findByListQIMethod') 
 
 // 运营管理=> 亚马逊=>费用
 

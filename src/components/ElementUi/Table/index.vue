@@ -562,7 +562,9 @@ export default {
             } else {
               let res3 = await cusItem.ajax();
               if (res3.code === 200) {
-                row[tempKey] = res3.data.dataList || res3.data;
+                row[tempKey] = res3.data.dataList || res3.data.data;
+                console.log(row[tempKey]);
+                
               }
             }
             break;
@@ -604,8 +606,6 @@ export default {
       if (cb) {
         cb(val, row, title, option);
       }
-
-      // this.table_data = [...this.table_data]
     }
   },
   created() {

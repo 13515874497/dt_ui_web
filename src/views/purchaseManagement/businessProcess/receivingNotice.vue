@@ -8,9 +8,12 @@ import {
 	upReceiving,
 	delReceivingNoticeAndNoticeEntry, 
 	getDepartment,
+	getFindByListQIMethod,
 	findByListWarP,
 	findByListFreight,
-	findByListProduct
+	getSelThisGroup,
+	goClaim,
+	goComplete
 	} from "@/api";
 import {
   shopName,
@@ -20,7 +23,9 @@ import {
   supplierId,
   findListWar,
   findListWarP,
-  findFreight
+  findFreight,
+  findProduct,
+  getQIMethod
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -86,7 +91,9 @@ export default {
       customField_table: [
 		  findListWar,
 		  findListWarP,
-		  findFreight
+		  findFreight,
+		  findProduct,
+		  getQIMethod
         // {
         //   inputType: 3,
         //   topType: "sku",
@@ -147,9 +154,80 @@ export default {
   },
   
   methods: {
+	  async bbb(){
+		let res = await getFindByListQIMethod();
+		  console.log(res);
+	  },
 	  async aaa(){
-		 // let res = await findByListProduct();
-		 // console.log(res);
+		  let resA = await getSelThisGroup();
+		  console.log(resA)
+		 //  let tkId = {
+			//   taskId : resA.data[0].tkId
+		 //  }
+		 //  console.log(tkId);
+		 // let resB = await goClaim(tkId);
+		 // console.log(resB);
+		 // // let tackId = JSON.stringify(tkId);
+		 // let aaa = {taskId : resA.data[0].tkId,rNoticerGroup:'供应中心'}
+		 // let resC = await goComplete(aaa);
+		 // console.log(resC)
+	  },
+	  initTableOperateList() {
+	    let self = this;
+	    this.tableOperateList = [
+	      // {
+	      //   type: "",
+	      //   icon: "",
+	      //   label: "外购入库",
+	      //   fn(row, mul) {
+	      //     self.outsourced_warehousing(row, mul);
+	      //   },
+	      //   isShow(row, mul){
+	      //     console.log(row);
+	      //     console.log(mul);
+	      //     
+	      //     return mul.length;
+	      //   }
+	      // },
+		  // {
+		  //   type: "",
+		  //   icon: "",
+		  //   label: "开始检测",
+		  //   fn(row, mul) {
+		  //     self.start_testing(row, mul);
+		  //   },
+		  //   isShow(row, mul){
+		  //     console.log(row);
+		  //     console.log(mul);
+		  //     
+		  //     return mul.length;
+		  //   }
+		  // },
+		  {
+		    type: "",
+		    icon: "",
+		    label: "到货确认",
+		    fn(row, mul) {
+		      self.arrival_confirmation(row, mul);
+		    },
+		    isShow(row, mul){
+		      // if(!row.closed){
+				   return row.arQty;
+			  // }
+		     
+		    }
+		  },
+		  {
+		    type: "",
+		    icon: "",
+		    label: "已完成",
+		    fn(row, mul) {},
+		    isShow(row, mul){
+		      
+		      return row.closed;
+		    }
+		  }
+	    ];
 	  },
 	btnShow(){
 		let self = this;
@@ -225,7 +303,7 @@ export default {
       return getReceiving(data); //查询页面的接口
     },
     ajax_add(data) {
-		delete data.entry[0]._reciveWarehouseId;
+		// delete data.entry[0]._reciveWarehouseId;
       return saveReceiving(data); //新增的接口 
     },
 	ajax_update(data) {
@@ -341,7 +419,20 @@ export default {
           this.table.table_data = [...this.table.table_data];
         }
       }
-    }
+    },
+	product_change(val,row,title,option){
+	  console.log(val);
+	  console.log(row);
+	  console.log(title);
+	  console.log(option)
+	  // console.log(this.form.data_model);
+	  // 
+	  // this.form.data_model.contactPerson = option.contactPerson;
+	  // this.form.data_model.telPhone = option.telPhone;
+	  row.model = option.model;
+	  row.productName = option.productName;
+	  row.unitId = option.unitId;
+	}
   },
   watch:{
 	  form_data_model(val,oldVal){
@@ -357,16 +448,20 @@ export default {
 					break;
 				
 			}
-	  }
+	  },
+	  
   },
   beforeCreate() {
     // transportTypeName.hideChild = true;
   },
   async created() {
 	  // this.initTableOperateList();
-	  this.btnShow();
+	  // this.btnShow();
 	  this.getDepartment();
 	 this.aaa();
+	 this.bbb();
+	 findProduct.required = true;
+	 findProduct.cb = this.product_change;
   }
 };
 </script>
