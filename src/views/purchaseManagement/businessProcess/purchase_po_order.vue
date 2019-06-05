@@ -11,7 +11,8 @@ import {
   currencyName,
   supplierId,
   prePayId,
-  
+  findListWar,
+  findListWarP
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -41,7 +42,7 @@ export default {
         //   required: true
         // },
       ],
-      customField_table: [],
+      customField_table: [findListWar, findListWarP],
       editable_field: [
         //表格中哪些字段可以被编辑
       ],
@@ -50,7 +51,7 @@ export default {
         //radio选项  和  点击新增、修改的时候传给后台的key
         "1": {
           //1代表  第一个二级子字段  2代表第二个子字段  1-1代表第1个2级子字段的第1个3级子字段(暂时不考虑3级子字段)
-          name: "采购订单",
+          name: "采购订单"
           // key_submit: "purchasePoOrderEntry" //传给后台的key
           // key_get: "poOrderEntryList" //获取时从哪里拿出来
           // key_get: "entryList" //获取时从哪里拿出来
@@ -83,10 +84,24 @@ export default {
     ajax_remove(data) {
       return delPoOrder(data);
     },
-    btn_generateReceivingNotice(row,mul){
+    async btn_generateReceivingNotice(row, mul) {
+      if(!this.other.tableTitle.length){
+        this.other.tableTitle =
+        (await requestAjax.requestGetHead(this.$route.params.id)) || [];
+        console.log(this.other.tableTitle);
+        
+      }
 
     },
-    initTableOperateList() {
+   
+    changeSel_supplierId(val, formItem, option) {
+      this.form.data_model.contactPerson = option.contactPerson;
+      this.form.data_model.telPhone = option.telPhone;
+    },
+    changeSel_prePayId(val, formItem, option) {
+      this.form.data_model.prePayAmt = option.amount;
+    },
+     initTableOperateList() {
       let self = this;
       this.tableOperateList = [
         {
@@ -96,35 +111,17 @@ export default {
           fn(row, mul) {
             self.btn_generateReceivingNotice(row, mul);
           },
-          isShow(row, mul){
-            console.log(row);
-            console.log(mul);
-            
-            return mul.length;
-          }
+          // isShow(row, mul) {
+          //   console.log(row);
+          //   console.log(mul);
+
+          //   return mul.length;
+          // }
         }
       ];
     },
-    changeSel_supplierId(val,formItem,option){
-      console.log(val);
-      console.log(formItem);
-      console.log(option);
-      console.log(this.form.data_model);
-      
-      this.form.data_model.contactPerson = option.contactPerson;
-      this.form.data_model.telPhone = option.telPhone;
-    },
-    changeSel_prePayId(val,formItem,option){
-      this.form.data_model.prePayAmt = option.amount;
-      console.log(this.form.data_model);
-      
-    }
-
   },
-  beforeCreate() {
-    
-
-  },
+  beforeCreate() {},
 
   async created() {
     prePayId.cb = this.changeSel_prePayId;
