@@ -73,7 +73,7 @@
             <span class="editting" v-if="editable">
               <el-cascader
                 expand-trigger="hover"
-                :options="scope.row[title.topType+'_data_']"
+                :options="scope.row[title.topType+'_data_'] || []"
                 v-model="scope.row[title.data_model]"
                 @change="(val)=>{changeCascader(val,title,scope.row,title.cb)}"
                 :props="props_inputType5"
