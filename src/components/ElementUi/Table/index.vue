@@ -587,7 +587,7 @@ export default {
       let option = row[title.topType + "_data_"].find(option => {
         return option[title.bindKey] === val;
       });
-      row[title.label] = option[title.label];
+      // row[title.label] = option[title.label];
       if (cb) {
         cb(val, row, title, option);
       }

@@ -349,6 +349,8 @@ export const savePoOrder = (data) => ajax(BASE_URL + '/po/savePoOrder', data, 'P
 export const upPoOrder = (data) => ajax(BASE_URL + '/po/upPoOrder', data, 'POST')
 //采购订单删除
 export const delPoOrder = (data) => ajax(BASE_URL + '/po/delPoOrder', data, 'POST')
+//采购订单开始流程
+export const startProcess = (data) => ajax(BASE_URL + '/act/startProcess', data, 'POST')
 
 
 

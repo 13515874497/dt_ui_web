@@ -477,7 +477,7 @@ export default {
       let option = formItem.data.find(option => {
         return option[formItem.bindKey] === val;
       });
-      this.data_model[formItem.label] = option[formItem.label];
+      // this.data_model[formItem.label] = option[formItem.label];
       if(cb){
         cb(val,formItem,option);
       }
