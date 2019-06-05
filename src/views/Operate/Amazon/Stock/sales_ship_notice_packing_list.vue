@@ -53,7 +53,7 @@ export default {
           placeholder: "选择店铺站点后输入,需鼠标点击",
           remoteMethod: this.getSkuList,
           data: [],
-          changeSel: this.changeSku
+          cb: this.changeSku
         }
       ],
       editable_field: [

@@ -31,7 +31,7 @@ export const productsName = {
 export const transportTypeName = {
   topType: "transportTypeName",
   bindKey: 'transportTypeId',
-  data_model: '_transportTypeId',
+  data_model: 'transportTypeId_',
   inputType: 5,
   ajax: findByListType,
   required: true
@@ -122,6 +122,17 @@ export const supplierId = {
   filterable: true,
   placeholder: "请选供应商"
 }
+//预付单号 prePayNo
+// export const supplierId = {
+//   inputType: 3,
+//   topType: "prePayNo",
+//   bindKey: "prePayNo",
+//   ajax: findSupList,
+//   key: "supplierId",
+//   label: "supplierFullName",
+//   filterable: true,
+//   placeholder: "请选供应商"
+// }
 //货运公司
 export const findFreight = {
   inputType: 3,
