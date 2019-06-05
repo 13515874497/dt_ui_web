@@ -26,7 +26,7 @@ import {
 export const productsName = {
   topType: "productsName",
   bindKey: 'productsId',
-  data_model: 'productsIds',
+  data_model: 'productsId$',
   inputType: 5,
   ajax: findByListProducts,
 }
@@ -34,7 +34,7 @@ export const productsName = {
 export const transportTypeName = {
   topType: "transportTypeName",
   bindKey: 'transportTypeId',
-  data_model: 'transportTypeId_',
+  data_model: 'transportTypeId$',
   inputType: 5,
   ajax: findByListType,
   required: true
@@ -43,7 +43,7 @@ export const transportTypeName = {
 export const findListWar = {
   topType: "reciveWarehouseId",
   bindKey: 'reciveWarehouseId',
-  data_model: 'reciveWarehouseIds',
+  data_model: 'reciveWarehouseId$',
   inputType: 5,
   ajax: findByListWar,
 }
@@ -51,7 +51,7 @@ export const findListWar = {
 export const findListWarP = {
   topType: "recivePositionId",
   bindKey: 'recivePositionId',
-  data_model: 'recivePositionIds',
+  data_model: 'recivePositionId$',
   inputType: 5,
   ajax: findByListWarP,
 }
@@ -159,13 +159,13 @@ export const findProduct = {
   placeholder: "请选商品代码"
 }
 //检验
-export const getQIMethod = {
-  inputType: 3,
-  topType: "inspectionMethodId",
-  bindKey: "inspectionMethodId",
-  ajax: getFindByListQIMethod,
-  key: "inspectionMethodId",
-  label: "inspectionQuarantineName",
-  filterable: true,
-  placeholder: "请选检验方式"
-}
+// export const getQIMethod = {
+//   inputType: 3,
+//   topType: "inspectionMethodId",
+//   bindKey: "inspectionMethodId",
+//   ajax: getFindByListQIMethod,
+//   key: "inspectionMethodId",
+//   label: "inspectionQuarantineName",
+//   filterable: true,
+//   placeholder: "请选检验方式"
+// }

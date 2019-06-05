@@ -25,7 +25,7 @@ import {
   findListWarP,
   findFreight,
   findProduct,
-  getQIMethod
+  // getQIMethod
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -93,20 +93,8 @@ export default {
 		  findListWarP,
 		  findFreight,
 		  findProduct,
-		  getQIMethod
-        // {
-        //   inputType: 3,
-        //   topType: "sku",
-        //   bindKey: "skuId",
-        //   remote: true,
-        //   key: "skuId",
-        //   label: "sku",
-        //   filterable: true,
-        //   placeholder: "选择店铺站点后输入,需鼠标点击",
-        //   remoteMethod: this.getSkuList,
-        //   data: [],
-        //   changeSel: this.changeSku
-        // }
+		  // getQIMethod
+        
 		
       ],
       editable_field: [
@@ -155,12 +143,12 @@ export default {
   
   methods: {
 	  async bbb(){
-		let res = await getFindByListQIMethod();
-		  console.log(res);
+		// let res = await getFindByListQIMethod();
+		//   console.log(res);
 	  },
 	  async aaa(){
-		  let resA = await getSelThisGroup();
-		  console.log(resA)
+		  // let resA = await getSelThisGroup();
+		  // console.log(resA)
 		 //  let tkId = {
 			//   taskId : resA.data[0].tkId
 		 //  }
@@ -211,9 +199,10 @@ export default {
 		      self.arrival_confirmation(row, mul);
 		    },
 		    isShow(row, mul){
-		      // if(!row.closed){
-				   return row.arQty;
-			  // }
+		      if(!row.rowClosed){
+				   // return row.arQty;
+				   return !row.quantity
+			  }
 		     
 		    }
 		  },
@@ -224,7 +213,7 @@ export default {
 		    fn(row, mul) {},
 		    isShow(row, mul){
 		      
-		      return row.closed;
+		      return row.rowClosed;
 		    }
 		  }
 	    ];
@@ -455,7 +444,7 @@ export default {
     // transportTypeName.hideChild = true;
   },
   async created() {
-	  // this.initTableOperateList();
+	  this.initTableOperateList();
 	  // this.btnShow();
 	  this.getDepartment();
 	 this.aaa();
