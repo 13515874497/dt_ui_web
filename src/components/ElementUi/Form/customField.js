@@ -11,7 +11,8 @@ import {
 	findByListWar,
 	findByListWarP,
 	findByListFreight,
-	findByListProduct
+	findByListProduct,
+	getFindByListQIMethod
 } from '@/api/api'
 
 /**
@@ -154,4 +155,15 @@ export const findProduct = {
   label: "productCode",
   filterable: true,
   placeholder: "请选商品代码"
+}
+//检验
+export const getQIMethod = {
+  inputType: 3,
+  topType: "inspectionMethodId",
+  bindKey: "inspectionMethodId",
+  ajax: getFindByListQIMethod,
+  key: "inspectionMethodId",
+  label: "inspectionQuarantineName",
+  filterable: true,
+  placeholder: "请选检验方式"
 }
