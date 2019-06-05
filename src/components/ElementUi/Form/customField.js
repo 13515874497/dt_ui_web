@@ -10,8 +10,11 @@ import {
   findSupList,
 	findByListWar,
 	findByListWarP,
-  findByListFreight,
+	findByListFreight,
+	findByListProduct,
+	getFindByListQIMethod,
   getRPPay
+
 } from '@/api/api'
 
 /**
@@ -23,7 +26,7 @@ import {
 export const productsName = {
   topType: "productsName",
   bindKey: 'productsId',
-  data_model: '_productsId',
+  data_model: 'productsId$',
   inputType: 5,
   ajax: findByListProducts,
 }
@@ -31,7 +34,7 @@ export const productsName = {
 export const transportTypeName = {
   topType: "transportTypeName",
   bindKey: 'transportTypeId',
-  data_model: 'transportTypeId_',
+  data_model: 'transportTypeId$',
   inputType: 5,
   ajax: findByListType,
   required: true
@@ -40,7 +43,7 @@ export const transportTypeName = {
 export const findListWar = {
   topType: "reciveWarehouseId",
   bindKey: 'reciveWarehouseId',
-  data_model: '_reciveWarehouseId',
+  data_model: 'reciveWarehouseId$',
   inputType: 5,
   ajax: findByListWar,
 }
@@ -48,7 +51,7 @@ export const findListWar = {
 export const findListWarP = {
   topType: "recivePositionId",
   bindKey: 'recivePositionId',
-  data_model: '_recivePositionId',
+  data_model: 'recivePositionId$',
   inputType: 5,
   ajax: findByListWarP,
 }
@@ -143,4 +146,26 @@ export const findFreight = {
   label: "transportCompanyFullName",
   filterable: true,
   placeholder: "请选货运公司"
+}
+//商品代码
+export const findProduct = {
+  inputType: 3,
+  topType: "productId",
+  bindKey: "productId",
+  ajax: findByListProduct,
+  key: "productId",
+  label: "productCode",
+  filterable: true,
+  placeholder: "请选商品代码"
+}
+//检验
+export const getQIMethod = {
+  inputType: 3,
+  topType: "inspectionMethodId",
+  bindKey: "inspectionMethodId",
+  ajax: getFindByListQIMethod,
+  key: "inspectionMethodId",
+  label: "inspectionQuarantineName",
+  filterable: true,
+  placeholder: "请选检验方式"
 }
