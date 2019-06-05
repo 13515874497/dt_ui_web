@@ -9,8 +9,7 @@ import {
 	delReceivingNoticeAndNoticeEntry, 
 	getDepartment,
 	findByListWarP,
-	findByListFreight,
-	findByListProduct
+	findByListFreight
 	} from "@/api";
 import {
   shopName,
@@ -20,7 +19,8 @@ import {
   supplierId,
   findListWar,
   findListWarP,
-  findFreight
+  findFreight,
+  findProduct
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -86,7 +86,8 @@ export default {
       customField_table: [
 		  findListWar,
 		  findListWarP,
-		  findFreight
+		  findFreight,
+		  findProduct
         // {
         //   inputType: 3,
         //   topType: "sku",
