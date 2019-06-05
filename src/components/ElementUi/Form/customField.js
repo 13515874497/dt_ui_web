@@ -10,7 +10,8 @@ import {
   findSupList,
 	findByListWar,
 	findByListWarP,
-	findByListFreight
+  findByListFreight,
+  getRPPay
 } from '@/api/api'
 
 /**
@@ -122,16 +123,16 @@ export const supplierId = {
   placeholder: "请选供应商"
 }
 //预付单号 prePayNo
-// export const supplierId = {
-//   inputType: 3,
-//   topType: "prePayNo",
-//   bindKey: "prePayNo",
-//   ajax: findSupList,
-//   key: "supplierId",
-//   label: "supplierFullName",
-//   filterable: true,
-//   placeholder: "请选供应商"
-// }
+export const prePayId = {
+  inputType: 3,
+  topType: "prePayId",
+  bindKey: "prePayId",
+  ajax: getRPPay,
+  key: "prePayId",
+  label: "no",
+  filterable: true,
+  placeholder: "请选择预付单号"
+}
 //货运公司
 export const findFreight = {
   inputType: 3,
