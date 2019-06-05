@@ -9,6 +9,7 @@ import {
   findByListCurrency,
   findSupList,
 	findByListWar,
+	findByListWarP,
 	findByListFreight
 } from '@/api/api'
 
@@ -42,14 +43,14 @@ export const findListWar = {
   inputType: 5,
   ajax: findByListWar,
 }
-// //仓位 findByListWar
-// export const findListWar = {
-//   topType: "reciveWarehouseId",
-//   bindKey: 'reciveWarehouseId',
-//   data_model: '_reciveWarehouseId',
-//   inputType: 5,
-//   ajax: findByListWar,
-// }
+//仓位 findByListWarP
+export const findListWarP = {
+  topType: "recivePositionId",
+  bindKey: 'recivePositionId',
+  data_model: '_recivePositionId',
+  inputType: 5,
+  ajax: findByListWarP,
+}
 /**
  *
  * select下拉框

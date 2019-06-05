@@ -7,7 +7,10 @@ import {
 	getSkuName ,
 	upReceiving,
 	delReceivingNoticeAndNoticeEntry, 
-	getDepartment
+	getDepartment,
+	findByListWarP,
+	findByListFreight,
+	findByListProduct
 	} from "@/api";
 import {
   shopName,
@@ -16,6 +19,7 @@ import {
   transportTypeName,
   supplierId,
   findListWar,
+  findListWarP,
   findFreight
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
@@ -80,7 +84,9 @@ export default {
 		// 	}
       ],
       customField_table: [
-		  findListWar
+		  findListWar,
+		  findListWarP,
+		  findFreight
         // {
         //   inputType: 3,
         //   topType: "sku",
@@ -142,7 +148,7 @@ export default {
   
   methods: {
 	  async aaa(){
-		 // let res = await findByListFreight();
+		 // let res = await findByListProduct();
 		 // console.log(res);
 	  },
 	btnShow(){
