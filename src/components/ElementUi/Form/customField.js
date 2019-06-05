@@ -23,7 +23,7 @@ import {
 export const productsName = {
   topType: "productsName",
   bindKey: 'productsId',
-  data_model: '_productsId',
+  data_model: 'productsIds',
   inputType: 5,
   ajax: findByListProducts,
 }
@@ -40,7 +40,7 @@ export const transportTypeName = {
 export const findListWar = {
   topType: "reciveWarehouseId",
   bindKey: 'reciveWarehouseId',
-  data_model: '_reciveWarehouseId',
+  data_model: 'reciveWarehouseIds',
   inputType: 5,
   ajax: findByListWar,
 }
@@ -48,7 +48,7 @@ export const findListWar = {
 export const findListWarP = {
   topType: "recivePositionId",
   bindKey: 'recivePositionId',
-  data_model: '_recivePositionId',
+  data_model: 'recivePositionIds',
   inputType: 5,
   ajax: findByListWarP,
 }
@@ -153,5 +153,5 @@ export const findProduct = {
   key: "productId",
   label: "productCode",
   filterable: true,
-  placeholder: "请选货运公司"
+  placeholder: "请选商品代码"
 }

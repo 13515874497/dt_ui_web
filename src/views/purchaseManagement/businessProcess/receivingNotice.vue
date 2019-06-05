@@ -226,7 +226,7 @@ export default {
       return getReceiving(data); //查询页面的接口
     },
     ajax_add(data) {
-		delete data.entry[0]._reciveWarehouseId;
+		// delete data.entry[0]._reciveWarehouseId;
       return saveReceiving(data); //新增的接口 
     },
 	ajax_update(data) {
@@ -342,7 +342,20 @@ export default {
           this.table.table_data = [...this.table.table_data];
         }
       }
-    }
+    },
+	product_change(val,row,title,option){
+	  console.log(val);
+	  console.log(row);
+	  console.log(title);
+	  console.log(option)
+	  // console.log(this.form.data_model);
+	  // 
+	  // this.form.data_model.contactPerson = option.contactPerson;
+	  // this.form.data_model.telPhone = option.telPhone;
+	  row.model = option.model;
+	  row.productName = option.productName;
+	  row.unitId = option.unitId;
+	}
   },
   watch:{
 	  form_data_model(val,oldVal){
@@ -358,7 +371,8 @@ export default {
 					break;
 				
 			}
-	  }
+	  },
+	  
   },
   beforeCreate() {
     // transportTypeName.hideChild = true;
@@ -368,6 +382,8 @@ export default {
 	  this.btnShow();
 	  this.getDepartment();
 	 this.aaa();
+	 findProduct.required = true;
+	 findProduct.cb = this.product_change;
   }
 };
 </script>
