@@ -4,11 +4,15 @@ import {
   getIcBillStock,
   saveIcBillStock,
   delIcBillStock,
-  uplIcBillStock
+  uplIcBillStock,
+  getSelThisGroup,
+  goClaim,
+  goComplete
 } from "@/api";
 import {
   supplierId, //供应商
-  findListWar //仓库
+  findListWar, //仓库
+  findListWarP //仓位
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -23,7 +27,6 @@ export default {
       queryKey: "purchaseIcBillStockEntry", //后台返回
       customField: [
         supplierId,
-
         //要验证的字段
         {
           topType: "date",
@@ -37,6 +40,7 @@ export default {
 
       customField_table: [
         findListWar,
+        findListWarP,
         //  自定义字段表
         {
           // inputType: 3,
@@ -86,7 +90,7 @@ export default {
     }
   },
   methods: {
-   initTableOperateList() {
+    initTableOperateList() {
       let self = this;
       this.tableOperateList = [
         {
@@ -96,17 +100,19 @@ export default {
           fn(row, mull) {
             self.addRow(row, mull);
           },
-          isShow(row,mull){
-            console.log(row)
-            console.log(mull)
-            return mull.length
+
+          // 这里不写isshow方法操作按钮就默认显示。加入isshow就不显示
+          isShow(row, mull) {
+            // console.log(row);
+            // console.log(mull);
+            return mull.length;
           }
-
         }
-      ];   
+      ];
     },
-
-
+    addRow(row, mull) {
+      console.log("关联发票");
+    },
 
     queryPage(data) {
       return getIcBillStock(data); //查询页面的接口
@@ -115,15 +121,29 @@ export default {
     ajax_add(data) {
       data.mid = 295; //后台需要传入的参数mid就是当前页面的id
       delete data.entry[0]._reciveWarehouseId;
+      delete data.entry[0]._recivePositionId;
       return saveIcBillStock(data); //新增的接口
     },
 
     ajax_update(data) {
       delete data.entry[0]._reciveWarehouseId; //删除级联选择器中返回给后台的不需要的数据
+      delete data.entry[0]._recivePositionId;
       return uplIcBillStock(data); //修改
     },
     ajax_remove(data) {
       return delIcBillStock(data); //删除
+    },
+
+    async aaa() {
+      let resa = await getSelThisGroup();
+      console.log(resa);
+    
+      let taskId = {
+        taskId: resa.data[0].taskId
+      }
+      console.log(taskId)
+    let resb = await goClaim(taskId);
+      console.log(resb);
     }
   },
   beforeCreate() {
@@ -131,6 +151,7 @@ export default {
   },
   async created() {
     this.initTableOperateList();
+    this.aaa();
   }
 };
 </script>
