@@ -121,6 +121,8 @@ export default {
   beforeCreate() {},
 
   async created() {
+    console.log(MxTable2);
+    
     prePayId.cb = this.changeSel_prePayId;
     supplierFullName.cb = this.changeSel_supplierFullName;
     supplierFullName.required = true;
