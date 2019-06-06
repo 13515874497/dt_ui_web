@@ -12,7 +12,8 @@ import {
 import {
   supplierId, //供应商
   findListWar, //仓库
-  findListWarP //仓位
+  findListWarP, //仓位
+  findProduct,//商品代码
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -41,6 +42,7 @@ export default {
       customField_table: [
         findListWar,
         findListWarP,
+        findProduct,
         //  自定义字段表
         {
           // inputType: 3,
@@ -101,33 +103,47 @@ export default {
             self.addRow(row, mull);
           },
 
-          // 这里不写isshow方法操作按钮就默认显示。加入isshow就不显示
+          // 这里不写isshow方法操作按钮就默认显示。加入isshow就点击不显示
           isShow(row, mull) {
             // console.log(row);
             // console.log(mull);
             return mull.length;
           }
-        }
+        },
+        {
+           type: "primary",
+          icon: "",
+          label: "退库",
+          fn(row, mull) {
+            self.redceRow(row, mull);
+          },
+
+          // 这里不写isshow方法操作按钮就默认显示。加入isshow就点击不显示
+          isShow(row, mull) {
+            // console.log(row);
+            // console.log(mull);
+            return mull.length;
+          }
+        },
+       
       ];
     },
     addRow(row, mull) {
       console.log("关联发票");
     },
-
+     redceRow(row, mull){
+       console.log("退库");
+     },
     queryPage(data) {
       return getIcBillStock(data); //查询页面的接口
     },
 
     ajax_add(data) {
       data.mid = 295; //后台需要传入的参数mid就是当前页面的id
-      delete data.entry[0]._reciveWarehouseId;
-      delete data.entry[0]._recivePositionId;
       return saveIcBillStock(data); //新增的接口
     },
 
     ajax_update(data) {
-      delete data.entry[0]._reciveWarehouseId; //删除级联选择器中返回给后台的不需要的数据
-      delete data.entry[0]._recivePositionId;
       return uplIcBillStock(data); //修改
     },
     ajax_remove(data) {
@@ -135,15 +151,18 @@ export default {
     },
 
     async aaa() {
-      let resa = await getSelThisGroup();
-      console.log(resa);
-    
-      let taskId = {
-        taskId: resa.data[0].taskId
-      }
-      console.log(taskId)
-    let resb = await goClaim(taskId);
-      console.log(resb);
+
+    //   let resa = await getSelThisGroup();
+    //   console.log(resa);   
+
+    //   let taskId = {
+    //     taskId: resa.data[0].taskId
+    //   }
+    //   console.log(taskId)
+
+    //   goClaim(taskId).then(res =>{
+    //   console.log(res)
+    // })
     }
   },
   beforeCreate() {
@@ -152,7 +171,23 @@ export default {
   async created() {
     this.initTableOperateList();
     this.aaa();
-  }
+  },
+   watch:{
+	  form_data_model(val,oldVal){
+		  console.log(val);
+		  console.log(oldVal);
+		  console.log(this.form_editing)
+		  switch(this.form_editing){
+			   case 'add':
+					this.form.data_model.date = new Date().getTime();
+					this.form_data_model.empId = this.getCookie("name");
+					console.log('1111')
+					break;
+				
+			}
+	  },
+	  
+  },
 };
 </script>
 
