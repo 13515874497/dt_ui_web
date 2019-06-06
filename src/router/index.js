@@ -68,8 +68,8 @@ import purchase_po_order from '../views/purchaseManagement/businessProcess/purch
 
 import receivingNotice from '../views/purchaseManagement/businessProcess/receivingNotice'
 
-
-
+//仓库管理=>来料处理=>到货通知单
+import arrivalNotice from '../views/warehouseManagement/qualityHandel/arrivalNotice'
 
 
 
@@ -846,7 +846,10 @@ export default new Router({
           component: Outsourced_Warehousing,
           name:'Outsourced_Warehousing',   
         },
-      
+				{
+				  path: '/index/arrivalNotice/:id/:name',   //仓库管理=>来料处理=>到货通知单
+				  component: arrivalNotice,
+				},
 					{
 				  path: '/index/collection_index/:id/:name',  //收藏
 				  component: Collection,
