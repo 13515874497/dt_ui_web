@@ -173,12 +173,12 @@ export default {
 		  // console.log(tkId);
 		 // let resB = await goClaim(tkId);
 		 // console.log(resB);
-		 let resD = await getSelTaskAssignee();
-		 console.log(resD);
-		 // // let tackId = JSON.stringify(tkId);
-		 let aaa = {taskId : resD.data[2].tkId,rNoticerGroup:'供应中心',anExamination :true}
-		 let resC = await goComplete(aaa);
-		 console.log(resC)
+		 // let resD = await getSelTaskAssignee();
+		 // console.log(resD);
+		 // // // let tackId = JSON.stringify(tkId);
+		 // let aaa = {taskId : resD.data[2].tkId,rNoticerGroup:'供应中心',anExamination :true}
+		 // let resC = await goComplete(aaa);
+		 // console.log(resC)
 	  },
 	  initTableOperateList() {
 	    let self = this;

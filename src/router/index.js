@@ -68,8 +68,8 @@ import purchase_po_order from '../views/purchaseManagement/businessProcess/purch
 
 import receivingNotice from '../views/purchaseManagement/businessProcess/receivingNotice'
 
-//品质管理=>品质检验=>来料检验单
-import arrivalNotice from '../views/qualityManagement/qualityRestriction/arrivalNotice'
+//仓库管理=>来料处理=>到货通知单
+import arrivalNotice from '../views/warehouseManagement/qualityHandel/arrivalNotice'
 
 
 
@@ -847,7 +847,7 @@ export default new Router({
           name:'Outsourced_Warehousing',   
         },
 				{
-				  path: '/index/arrivalNotice/:id/:name',   //品质管理=>品质检验=>来料检验单
+				  path: '/index/arrivalNotice/:id/:name',   //仓库管理=>来料处理=>到货通知单
 				  component: arrivalNotice,
 				},
 					{
