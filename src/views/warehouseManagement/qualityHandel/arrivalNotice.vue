@@ -20,7 +20,7 @@ import {
   siteName,
   platformTypeName,
   transportTypeName,
-  supplierId,
+  supplierFullName,
   findListWar,
   findListWarP,
   findFreight,
@@ -39,7 +39,7 @@ export default {
 		nameKey : 'no',
 		primaryKey_child: 'rne_id',
 		customField: [
-		  supplierId,
+		  supplierFullName,
 		//   
   //       {
   //         topType: "date",//单据日期
