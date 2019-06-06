@@ -1,5 +1,5 @@
 <script>
-//出货通知单
+//到货通知单
 import { 
 	getReceiving, 
 	saveReceiving, 
@@ -13,8 +13,7 @@ import {
 	findByListFreight,
 	getSelThisGroup,
 	goClaim,
-	goComplete,
-	getSelTaskAssignee
+	goComplete
 	} from "@/api";
 import {
   shopName,
@@ -41,59 +40,59 @@ export default {
 		primaryKey_child: 'rne_id',
 		customField: [
 		  supplierId,
-		  
-        {
-          topType: "date",//单据日期
-          required: true
-        },
-        {
-          topType: "no",//单据编号
-          required: true
-        },
-        {
-          topType: 'empId',//业务员
-          disabled: true,
-        },
-		{
-		  topType: 'supplierId',//供应商
-		  disabled: true,
-		},
-        {
-          topType: 'mangerId',//主管
-          disabled: true,
-        },
-		{
-		  topType: 'closeUser',//关闭人
-		  disabled: true,
-		},
-        {
-          topType: 'fetchAdd',//交货地点
-          disabled: true,
-        },
-		{
-		  topType: 'explanation',//摘要
-		  disabled: true,
-		},
-		{
-		  topType: 'version',//版本
-		  disabled: true,
-		},
-        {
-          topType: 'status',//状态
-          disabled: true,
-        },
-		{
-		  topType: 'printCount',//打印次数
-		  disabled: true,
-		},
-         {
-          topType: "closeDate",//关闭时间
-          disabled: true,
-        },
-		{
-			topType:'deptId',//部门
-			disabled:true
-		}
+		//   
+  //       {
+  //         topType: "date",//单据日期
+  //         required: true
+  //       },
+  //       {
+  //         topType: "no",//单据编号
+  //         required: true
+  //       },
+  //       {
+  //         topType: 'empId',//业务员
+  //         disabled: true,
+  //       },
+		// {
+		//   topType: 'supplierId',//供应商
+		//   disabled: true,
+		// },
+  //       {
+  //         topType: 'mangerId',//主管
+  //         disabled: true,
+  //       },
+		// {
+		//   topType: 'closeUser',//关闭人
+		//   disabled: true,
+		// },
+  //       {
+  //         topType: 'fetchAdd',//交货地点
+  //         disabled: true,
+  //       },
+		// {
+		//   topType: 'explanation',//摘要
+		//   disabled: true,
+		// },
+		// {
+		//   topType: 'version',//版本
+		//   disabled: true,
+		// },
+  //       {
+  //         topType: 'status',//状态
+  //         disabled: true,
+  //       },
+		// {
+		//   topType: 'printCount',//打印次数
+		//   disabled: true,
+		// },
+  //        {
+  //         topType: "closeDate",//关闭时间
+  //         disabled: true,
+  //       },
+		// {
+		// 	topType:'deptId',//部门
+		// 	disabled:true
+		// }
       ],
       customField_table: [
 		  findListWar,
@@ -106,26 +105,26 @@ export default {
       ],
       editable_field: [
         //表格中哪些字段可以被编辑
-        "remark",
-        "deliveryDate",
-		"sourceTypeId",
-		"sourceId",
-		"eRemark",
-		"arQty",
-		"iqQty",
-		"quQty",
-		"faQty",
-		"loQty",
-		"inQty",
-		"ivQty",
-		"rtQty",
-        "reciveWarehouseId",
-        "recivePositionId",
-        "transportCompanyId",
-        "trackingNumber",
-        "quantity",
-		"productId",
-		"rowClosed"
+  //       "remark",
+  //       "deliveryDate",
+		// "sourceTypeId",
+		// "sourceId",
+		// "eRemark",
+		// "arQty",
+		// "iqQty",
+		// "quQty",
+		// "faQty",
+		// "loQty",
+		// "inQty",
+		// "ivQty",
+		// "rtQty",
+  //       "reciveWarehouseId",
+  //       "recivePositionId",
+  //       "transportCompanyId",
+  //       "trackingNumber",
+  //       "quantity",
+		// "productId",
+		// "rowClosed"
       ],
       parentKey: "purchasePoReceiptNotice", // 点击新增、修改的时候传给后台的 key的名字
       subField: {
@@ -167,18 +166,16 @@ export default {
 	  async aaa(){
 		  // let resA = await getSelThisGroup();
 		  // console.log(resA)
-		  // let tkId = {
-			 //  taskId : resA.data[0].tkId
-		  // }
-		  // console.log(tkId);
+		 //  let tkId = {
+			//   taskId : resA.data[0].tkId
+		 //  }
+		 //  console.log(tkId);
 		 // let resB = await goClaim(tkId);
 		 // console.log(resB);
-		 let resD = await getSelTaskAssignee();
-		 console.log(resD);
 		 // // let tackId = JSON.stringify(tkId);
-		 let aaa = {taskId : resD.data[2].tkId,rNoticerGroup:'供应中心',anExamination :true}
-		 let resC = await goComplete(aaa);
-		 console.log(resC)
+		 // let aaa = {taskId : resA.data[0].tkId,rNoticerGroup:'供应中心'}
+		 // let resC = await goComplete(aaa);
+		 // console.log(resC)
 	  },
 	  initTableOperateList() {
 	    let self = this;
@@ -238,67 +235,7 @@ export default {
 		  }
 	    ];
 	  },
-	btnShow(){
-		let self = this;
-		if(this.procedure.isclosed){//如果关闭了
-			this.tableOperateList = [
-			  //对已上传的文件进行操作的按钮列表
-			  {
-			    type: "",
-			    icon: "",
-			    label: "已完成",
-			    fn(row,mull) {
-			    }
-			  },
-			]
-		}else{//没有关闭
-		
-			if(this.procedure.nowNum == 0){//如果确认数量为0
-				this.tableOperateList = [
-				  //对已上传的文件进行操作的按钮列表
-				  {
-				    type: "",
-				    icon: "",
-				    label: "到货确认",
-				    fn(row,mull) {
-				      self.arrival_confirmation(row,mull);
-				    }
-				  },
-				]
-			}else{//确认数量不为0
-				//各品类数量显示按钮
-				// if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum==0){
-				// 	this.tableOperateList.push({icon: "",label: "不良品入库",fn(row,mull) {self.bad_goods(row,mull);}})
-				// }else if(this.procedure.badNum.badGoodsNum==0&&this.procedure.badNum.goodsNum>0){
-				// 	this.tableOperateList.push({icon: "",label: "良品入库",fn(row,mull) {self.good_warehousing(row,mull);}})
-				// }else if(this.procedure.badNum.badGoodsNum>0&&this.procedure.badNum.goodsNum>0){
-				// 	this.tableOperateList.push({icon: "",label: "良品不良品入库",fn(row,mull) {self.all_goods(row,mull);}})
-				// }
-				//入库数量小于确认数量
-				if( this.procedure.goNum < this.procedure.nowNum){
-					this.tableOperateList.push({icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
-				}else if(this.procedure.goNum == this.procedure.nowNum){
-					this.tableOperateList.push({icon: "",label: "已完成",fn(row,mull) {}})
-				}
-				if(this.procedure.isTesting.noTesting){//如果免检
-					if(this.procedure.nowNum>0&&this.procedure.nowNum<this.procedure.goodNum){//确认数量大于0并且小于数量
-						this.tableOperateList.push({icon: "",label: "到货确认",fn(row,mull) {self.arrival_confirmation(row,mull);}},{icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
-					}else if(this.procedure.nowNum > this.procedure.goodNum || this.procedure.nowNum == this.procedure.goodNum){//确认数量大于等于数量
-						this.tableOperateList.push({icon: "",label: "外购入库",fn(row,mull) {self.outsourced_warehousing(row,mull);}})
-					}
-				}else {
-					if(this.procedure.nowNum>0&&this.procedure.nowNum<this.procedure.goodNum){//确认数量大于0并且小于数量
-						this.tableOperateList.push({icon: "",label: "到货确认",fn(row,mull) {self.arrival_confirmation(row,mull);}},{icon: "",label: "开始检测",fn(row,mull) {self.start_testing(row,mull);}})
-					}else if(this.procedure.nowNum > this.procedure.goodNum || this.procedure.nowNum == this.procedure.goodNum){//确认数量大于等于数量
-						this.tableOperateList.push({icon: "",label: "开始检测",fn(row,mull) {self.start_testing(row,mull);}})
-					}
-			
-				}
-		
-			}
-			
-		}
-	},
+	
 	async getDepartment(){
 		//部门接口有问题 目前先使用数组第一个的充数
 		let res = await getDepartment();
