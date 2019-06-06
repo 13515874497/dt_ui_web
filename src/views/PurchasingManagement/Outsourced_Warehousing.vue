@@ -1,8 +1,17 @@
 <script>
 //外购入库
 import {
- supplierFullName,//供应商
- findListWar //仓库
+  getIcBillStock,
+  saveIcBillStock,
+  delIcBillStock,
+  uplIcBillStock,
+  getDepartment
+} from "@/api";
+import {
+  supplierFullName, //供应商
+  findListWar, //仓库
+  findListWarP, //仓位
+  findProduct //产品代码
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
@@ -17,16 +26,60 @@ export default {
       queryKey: "purchaseIcBillStockEntry", //后台返回
       customField: [
         supplierFullName,
-       
-          //要验证的字段        
+
+        //要验证的字段
         {
           topType: "date",
           required: true
         },
         {
-          topType: "no",
+          topType: "icNo",
           required: true
-        }
+        },
+        {
+          topType: "empId",
+          required: true
+        },
+        // {
+        //   topType: "printCount",
+        //   required: true
+        // },
+        // {
+        //   topType: "explanation",
+        //   required: true
+        // },
+        // {
+        //   topType: "status",
+        //   required: true
+        // },
+        //  {
+        //   topType: "version",
+        //   required: true
+        // },
+        //  {
+        //   topType: "years",
+        //   required: true
+        // },
+        // {
+        //   topType: "period",
+        //   required: true
+        // },
+        //  {
+        //   topType: "deptId",
+        //   required: true
+        // },
+        // {
+        //   topType: "mangerId",
+        //   required: true
+        // },
+        // {
+        //   topType: "closeUser",
+        //   required: true
+        // },
+        // {
+        //   topType: "closeDate",
+        //   required: true
+        // },
       ],
 
       customField_table: [
@@ -52,6 +105,7 @@ export default {
         //表格中哪些字段可以被编辑
         "eRemark",
         "quantity"
+        // "rowClosed"
       ],
       parentKey: "purchaseIcBillStock", // 点击新增、修改的时候传给后台的 父key的名字 (后台让传的参数)
       subField: {
@@ -91,39 +145,38 @@ export default {
           label: "发票",
           fn(row, mull) {
             self.addRow(row, mull);
-          },
-
-          // 这里不写isshow方法操作按钮就默认显示。加入isshow就点击不显示
-          isShow(row, mull) {
-            // console.log(row);
-            // console.log(mull);
-            return mull.length;
           }
+
+          // 这里不写isshow方法操作按钮就默认显示。加入isshow就点击显示
+          // isShow(row, mull) {
+          //   // console.log(row);
+          //   // console.log(mull);
+          //   return mull.length;
+          // }
         },
         {
-           type: "primary",
+          type: "primary",
           icon: "",
-          label: "退库",
+          label: "出库",
           fn(row, mull) {
             self.redceRow(row, mull);
-          },
+          }
 
           // 这里不写isshow方法操作按钮就默认显示。加入isshow就点击不显示
-          isShow(row, mull) {
-            // console.log(row);
-            // console.log(mull);
-            return mull.length;
-          }
-        },
-       
+          // isShow(row, mull) {
+          //   // console.log(row);
+          //   // console.log(mull);
+          //   return mull.length;
+          // }
+        }
       ];
     },
-    addRow(row, mull) {
+    async addRow(row, mull) {
       console.log("关联发票");
     },
-     redceRow(row, mull){
-       console.log("退库");
-     },
+    redceRow(row, mull) {
+      console.log("退库");
+    },
     queryPage(data) {
       return getIcBillStock(data); //查询页面的接口
     },
@@ -141,19 +194,26 @@ export default {
     },
 
     async aaa() {
-
-    //   let resa = await getSelThisGroup();
-    //   console.log(resa);   
-
-    //   let taskId = {
-    //     taskId: resa.data[0].taskId
-    //   }
-    //   console.log(taskId)
-
-    //   goClaim(taskId).then(res =>{
-    //   console.log(res)
-    // })
-    }
+      //   let resa = await getSelThisGroup();
+      //   console.log(resa);
+      //   let taskId = {
+      //     taskId: resa.data[0].taskId
+      //   }
+      //   console.log(taskId)
+      //   goClaim(taskId).then(res =>{
+      //   console.log(res)
+      // })
+    },
+    	async getDepartment(){
+		//部门接口没数据
+    let res = await getDepartment();
+    console.log(res)
+		// if(res.code == 200){
+		// 	this.department = res.data.treeName;
+		// 	console.log(res);
+		// }
+		
+	},
   },
   beforeCreate() {
     // transportTypeName.hideChild = true;
@@ -161,23 +221,23 @@ export default {
   async created() {
     this.initTableOperateList();
     this.aaa();
+    this.getDepartment()
   },
-   watch:{
-	  form_data_model(val,oldVal){
-		  console.log(val);
-		  console.log(oldVal);
-		  console.log(this.form_editing)
-		  switch(this.form_editing){
-			   case 'add':
-					this.form.data_model.date = new Date().getTime();
-					this.form_data_model.empId = this.getCookie("name");
-					console.log('1111')
-					break;
-				
-			}
-	  },
-	  
-  },
+  watch: {
+    form_data_model(val, oldVal) {
+      console.log(val);
+      console.log(oldVal);
+      console.log(this.form_editing);
+      switch (this.form_editing) {
+        case "add":
+          this.form.data_model.date = new Date().getTime(); //获取input框当前日期的默认时间
+          //  this.form_data_model.empId = this.getCookie("name"); //获取当前用户的用户名
+          // this.form_data_model.empId = this.getCookie("uId"); //获取当前用户的id
+          console.log(this.getCookie("uId"));
+          break;
+      }
+    }
+  }
 };
 </script>
 
