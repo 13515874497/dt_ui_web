@@ -115,9 +115,9 @@ export const currencyName = {
   placeholder: "请选择币别"
 }
 //供应商 findSupList
-export const supplierId = {
+export const supplierFullName = {
   inputType: 3,
-  topType: "supplierId",
+  topType: "supplierFullName",
   bindKey: "supplierId",
   ajax: findSupList,
   key: "supplierId",

@@ -59,7 +59,6 @@
           @giveForm="getForm"
           @giveTable="getTable"
           @passData="passData_add"
-          :tableOperateList="tableOperateList"
         ></Mx2Interface>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
@@ -96,7 +95,6 @@
           :primaryKey="primaryKey"
           :primaryKey_child="primaryKey_child"
           :ajax_remove="ajax_remove"
-          :tableOperateList="tableOperateList"
         ></Mx2Interface>
 
         <div slot="footer" class="dialog-footer">
@@ -111,18 +109,17 @@
 
     <!-- 表格操作里显示其他页面的信息 -->
     <section>
-       <el-dialog :title="`其他`" :visible.sync="other.visible" width="90%">
+      <el-dialog :title="`其他`" :visible.sync="other.visible" width="90%">
+        <!-- :data="add.checkedData" -->
         <Mx2Interface
-          :titles="formItems"
-          :data="add.checkedData"
-          :customField="customField"
-          :customField_table="customField_table"
-          :editable_field="editable_field"
-          :radios="subField"
+          :titles="other.titles"
+          :customField="other.customField"
+          :customField_table="other.customField_table"
+          :editable_field="other.editable_field"
+          :radios="other.subField"
           @giveForm="getForm"
           @giveTable="getTable"
-          @passData="passData_add"
-          :tableOperateList="tableOperateList"
+          @passData="passData_other"
         ></Mx2Interface>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
@@ -190,7 +187,7 @@ export default {
         data: null, //表单返回过来的数据
         isPass: false, //表单验证是否通过
         reset: false, //改变就重置表单 无关false true
-        customField: [], //form表单自定义的字段
+        // customField: [], //form表单自定义的字段
         checkedData: [true, null, []], //选中的数据[是否是关联的数据(同一个爹),父数据,子数据列表]
         form: null, //绑定的form
         table: null //绑定的table
@@ -199,8 +196,13 @@ export default {
         visible: false
       },
       other: {
-        tableTitle:[],
+        titles: [],
         visible: false,
+        customField: [],
+        customField_table: [],
+        checkedData: [true, null, []],
+        editable_field: [],
+        subField: {}
       },
       primaryKey: "", //提供一个修改、删除时的主键
       nameKey: "", //提供一个  删除失败时提示给用户那一行的名字
@@ -210,7 +212,7 @@ export default {
         // formData: null,
         data: null,
         isPass: false,
-        customField: [],
+        // customField: [],
         checkedData: [true, null, []],
         form: null,
         table: null
@@ -445,12 +447,6 @@ export default {
       this.add.data = $event[1];
       console.log(this.add.data);
     },
-    // getFormData_add($event) {
-    //   console.log($event);
-    //   this.add.isPass = $event[0];
-    //   this.add.data = $event[2];
-    //   this.handlerFormData(this.add.data);
-    // },
     //需要提供一个新增的接口
     ajax_add(data) {},
     async send_add(isClose, isReset) {
@@ -459,7 +455,7 @@ export default {
         message.errorMessage("表单验证未通过");
         return;
       }
-      if(!this.add.data.entry.length){
+      if (!this.add.data.entry.length) {
         message.errorMessage("表格信息不能为空");
         return;
       }
@@ -499,21 +495,30 @@ export default {
       console.log($event);
       console.log(this.update.data);
     },
-    // getFormData_update($event) {
-    //   console.log($event);
-
-    //   this.update.isPass = $event[0];
-
-    //   this.update.data = $event[2];
-
-    //   this.update.data[this.primaryKey] = $event[1][this.primaryKey];
-
-    //   this.update.data.statusId = $event[1].statusId;
-
-    //   this.update.data.version = $event[1].version;
-
-    //   this.handlerFormData(this.update.data);
-    // },
+    //需要提供一个修改的接口
+    ajax_update(data) {},
+    //发送修改请求
+    async send_update() {
+      console.log(this.update.data);
+      if (!this.update.isPass) {
+        message.errorMessage("表单验证未通过");
+        return;
+      }
+      if (!this.update.data.entry.length) {
+        message.errorMessage("表格信息不能为空");
+        return;
+      }
+      this.setEntryId(this.update.data);
+      let res = await this.ajax_update(this.update.data);
+      console.log(res);
+      if (res.code == 200) {
+        message.successMessage(res.msg);
+        this.search();
+        this.update.visible = false;
+      } else {
+        message.errorMessage(res.msg);
+      }
+    },
     //提供一个删除接口
     ajax_remove(data) {},
     openDialog_remove() {
@@ -587,30 +592,7 @@ export default {
         })
         .catch(() => {});
     },
-    //需要提供一个修改的接口
-    ajax_update(data) {},
-    //发送修改请求
-    async send_update() {
-      console.log(this.update.data);
-      if (!this.update.isPass) {
-        message.errorMessage("表单验证未通过");
-        return;
-      }
-      if(!this.update.data.entry.length){
-        message.errorMessage("表格信息不能为空");
-        return;
-      }
-      this.setEntryId(this.update.data);
-      let res = await this.ajax_update(this.update.data);
-      console.log(res);
-      if (res.code == 200) {
-        message.successMessage(res.msg);
-        this.search();
-        this.update.visible = false;
-      } else {
-        message.errorMessage(res.msg);
-      }
-    },
+
     //reset值发生改变即重置表单
     resetForm_add() {
       this.add.reset = !this.add.reset;
@@ -656,6 +638,21 @@ export default {
     isPubShow($event) {
       console.log($event);
       this.more.visible = $event;
+    },
+    passData_other($event) {},
+    async setOther(id, obj) {
+      if (!this.other.titles.length) {
+        let titles = (await requestAjax.requestGetHead(id)) || [];
+        this.other.titles = titles.filter(item => {
+          return !this.sysLogNotForm.includes(item.topType);
+        });
+      }
+      if (obj) {
+        for (let key in obj) {
+          this.other[key] = obj[key];
+        }
+      }
+      this.other.visible = true;
     }
   },
   async created() {
@@ -664,8 +661,8 @@ export default {
       (await requestAjax.requestGetHead(this.$route.params.id)) || [];
     this.pagination(this.data);
     this.tableTitle_show = [...this.tableTitle];
-    this.add.customField = deepClone(this.customField);
-    this.update.customField = deepClone(this.customField);
+    // this.add.customField = deepClone(this.customField);
+    // this.update.customField = deepClone(this.customField);
   },
   async mounted() {}
 };

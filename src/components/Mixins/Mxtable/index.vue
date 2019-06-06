@@ -533,12 +533,12 @@ export default {
 		this.tableTitle_show = [...this.tableTitle];
 		this.tableTitleUp = [...this.tableTitle];
 
-		this.add.customField = [...this.customField];
-		this.update.customField = [...this.customField];
-		this.add.customField = deepClone(this.customField);
-		this.update.customField = deepClone(this.customField);
-		this.add.customField = deepClone(this.customField);
-		this.update.customField = deepClone(this.customField);
+		// this.add.customField = [...this.customField];
+		// this.update.customField = [...this.customField];
+		// this.add.customField = deepClone(this.customField);
+		// this.update.customField = deepClone(this.customField);
+		// this.add.customField = deepClone(this.customField);
+		// this.update.customField = deepClone(this.customField);
 	 
 	}
 };

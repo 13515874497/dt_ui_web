@@ -2,7 +2,7 @@
 //外购入库
 import { getIcBillStock, saveIcBillStock, delIcBillStock, uplIcBillStock } from "@/api";
 import {
- supplierId,//供应商
+ supplierFullName,//供应商
  findListWar //仓库
 } from "@/components/ElementUi/Form/customField";
 import MxTable2 from "@/components/Mixins/MxTable2";
@@ -17,7 +17,7 @@ export default {
       primaryKey_child: 'sbeId',       //后台返回的
       queryKey: 'purchaseIcBillStockEntry', //后台返回
       customField: [
-        supplierId,
+        supplierFullName,
        
           //要验证的字段        
         {
