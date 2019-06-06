@@ -314,6 +314,8 @@ export const getSelThisGroup = () => ajax(BASE_URL+'/act/selThisGroup')
 export const goClaim = (data)=>ajax(BASE_URL+'/act/claim',data,'GET')
 //流程完成测试
 export const goComplete = (data) => ajax(BASE_URL + '/act/complete',data,'POST')
+//查看签收测试
+export const getSelTaskAssignee = ()=>ajax(BASE_URL+"/act/selTaskAssignee")
 //检验
 export const getFindByListQIMethod = () => ajax(BASE_URL + '/qim/findByListQIMethod') 
 

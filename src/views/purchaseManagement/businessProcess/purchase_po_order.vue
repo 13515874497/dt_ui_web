@@ -5,11 +5,11 @@ import {
   savePoOrder,
   upPoOrder,
   delPoOrder,
-  startProcess
+  startProcess,
 } from "@/api";
 import {
   currencyName,
-  supplierId,
+  supplierFullName,
   prePayId,
   findListWar,
   findListWarP
@@ -27,7 +27,7 @@ export default {
       primaryKey_child: "poeId",
       customField: [
         currencyName,
-        supplierId,
+        supplierFullName,
         prePayId,
         {
           topType: "no",
@@ -84,23 +84,20 @@ export default {
     ajax_remove(data) {
       return delPoOrder(data);
     },
+    //点击生成收货通知单
     async btn_generateReceivingNotice(row, mul) {
-      if(!this.other.tableTitle.length){
-        this.other.tableTitle =
-        (await requestAjax.requestGetHead(this.$route.params.id)) || [];
-        console.log(this.other.tableTitle);
-        
-      }
-
+      this.setOther(294);
     },
-   
-    changeSel_supplierId(val, formItem, option) {
+    //选择供应商后自动填写联系人和联系电话
+    changeSel_supplierFullName(val, formItem, option) {
       this.form.data_model.contactPerson = option.contactPerson;
       this.form.data_model.telPhone = option.telPhone;
     },
+    //选择预付单号后自动填写预付金额
     changeSel_prePayId(val, formItem, option) {
       this.form.data_model.prePayAmt = option.amount;
     },
+    //初始化表格右侧操作按钮
      initTableOperateList() {
       let self = this;
       this.tableOperateList = [
@@ -125,9 +122,9 @@ export default {
 
   async created() {
     prePayId.cb = this.changeSel_prePayId;
-    supplierId.cb = this.changeSel_supplierId;
+    supplierFullName.cb = this.changeSel_supplierFullName;
+    supplierFullName.required = true;
     this.initTableOperateList();
-    supplierId.required = true;
     // let res = await getRPPay();
   }
 };
