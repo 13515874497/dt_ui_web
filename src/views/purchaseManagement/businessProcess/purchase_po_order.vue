@@ -86,14 +86,11 @@ export default {
     ajax_remove(data) {
       return delPoOrder(data);
     },
-    //点击生成收货通知单
+    //点击生成收货通知单 调用通知单页面的新增
     async btn_generateReceivingNotice(row, mul) {
-      // this.setOther(294);
-      this.otherFlow.change = !this.otherFlow.change;
-      otherFlowMixins.pageId = 294;
-      otherFlowMixins.pageCode = receivingNotice;
-      console.log(this.otherFlow.mixin);
-      
+      this.otherFlow.change = !this.otherFlow.change; //change发生改变就会动态导入页面，加载完毕后显示页面
+      otherFlowMixins.pageId = 294; //要引用页面的id
+      otherFlowMixins.pageCode = receivingNotice; //要引用页面的代码
     },
     //选择供应商后自动填写联系人和联系电话
     changeSel_supplierFullName(val, formItem, option) {
