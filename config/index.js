@@ -21,9 +21,9 @@ module.exports = {
       }
     },
     //192.168.1.191  192.168.208.109 192.168.208.123
-    host: '127.0.0.1',
+    // host: '127.0.0.1',
     // host: '192.168.208.156',
-    // host: '192.168.208.123', // can be overwritten by process.env.HOST
+    host: '192.168.208.123', // can be overwritten by process.env.HOST
     port: 8080, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: true,
     errorOverlay: true,
@@ -43,7 +43,8 @@ module.exports = {
      */
 
     // https://webpack.js.org/configuration/devtool/#development
-    devtool: 'cheap-module-eval-source-map',
+    // devtool: 'cheap-module-eval-source-map',
+    devtool: '#source-map',
 
     // If you have problems debugging vue-files in devtools,
     // set this to false - it *may* help

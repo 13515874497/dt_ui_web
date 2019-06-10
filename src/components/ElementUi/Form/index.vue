@@ -223,10 +223,11 @@ export default {
     formData: Object, //有传这个说明是修改
     rule: Object, //某些特殊字段的验证规则
     reset: Boolean, // 改变时重置数据
-    customField: { //某些特殊字段在填写时需要向后台请求数据 如下拉框里的数据
+    customField: {
+      //某些特殊字段在填写时需要向后台请求数据 如下拉框里的数据
       type: Array,
       default: () => []
-    } 
+    }
   },
   data() {
     return {
@@ -251,14 +252,21 @@ export default {
         this.mergeRules();
       }
     },
-    customField:{
-      deep: true,
-      async handler(){
-      await this.initCustomField();
-      this.formItems_ = [...this.formItems_]
+    customField: {
+      // deep: true,
+      async handler() {
+        await this.initCustomField();
+        this.initData_model();
+        this.formItems_ = [...this.formItems_];
       }
     },
-    formItems() {
+    formItems: {
+      async handler(val) {
+        this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
+        await this.initCustomField();
+        this.initData_model();
+      },
+      immediate: true
       // this.initData_model();
     },
 
@@ -279,7 +287,7 @@ export default {
     initCustomField() {
       let self = this;
       return new Promise(async (resolve, reject) => {
-        if (!self.customField) {
+        if (!self.customField.length || !self.formItems.length) {
           resolve(null);
           return;
         }
@@ -290,17 +298,20 @@ export default {
           let formItem = self.formItems_.find(formItem => {
             return formItem.topType === item.topType;
           });
+          if(!formItem) {
+            alert('form这个字段对不上'+ item.topType);
+            continue;
+          }
           for (let key in item) {
             formItem[key] = item[key];
             // this.$set()
           }
-          if(formItem.topType === 'fbaShipmentId'){
-            
+          if (formItem.topType === "fbaShipmentId") {
             console.log(formItem);
           }
-          
+
           if (item.remote) continue; //如果请求需要参数 那么就说明从外部提供数据，没写则需要自己去请求获取,然后绑定到该组件的formItems_上
-          if (item.data) continue; 
+          if (item.data) continue;
           switch (item.inputType) {
             case 3:
               formItem.data = [];
@@ -469,26 +480,26 @@ export default {
     async triggerFormChange() {
       this.giveFormData(await this.isVerifyPass());
     },
-    changeCascader(val,formItem){
-      this.data_model[formItem.bindKey] = val[val.length-1];
+    changeCascader(val, formItem) {
+      this.data_model[formItem.bindKey] = val[val.length - 1];
       this.triggerFormChange();
     },
-    changeSelect(val, formItem,cb) {
+    changeSelect(val, formItem, cb) {
       let option = formItem.data.find(option => {
         return option[formItem.bindKey] === val;
       });
       // this.data_model[formItem.label] = option[formItem.label];
-      if(cb){
-        cb(val,formItem,option);
+      if (cb) {
+        cb(val, formItem, option);
       }
     }
   },
   beforeCreate() {},
   async created() {
     this.$emit("giveForm", [this]);
-    this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
-    await this.initCustomField();
-    this.initData_model();
+    // this.formItems_ = JSON.parse(JSON.stringify(this.formItems));
+    // await this.initCustomField();
+    // this.initData_model();
     this.mergeRules();
   },
   mounted() {}

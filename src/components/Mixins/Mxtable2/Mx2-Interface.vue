@@ -193,6 +193,8 @@ export default {
       this.formItems_parent = this.titles_.filter(item => {
         return item.subField === null;
       });
+      console.log(this.formItems_parent);
+      
     },
     //获取子表要显示的tableTitle
     getChildrenTableTitle() {

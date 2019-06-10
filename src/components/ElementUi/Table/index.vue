@@ -238,7 +238,14 @@ export default {
     tableTitle: {
       handler(val) {
         this.table_title = val;
+        this.initCustomField();
         console.log(this.table_title);
+      },
+      immediate: true
+    },
+    customField_table: {
+      handler(val){
+        this.initCustomField();
       },
       immediate: true
     },
@@ -521,13 +528,19 @@ export default {
     //初始化自定义的字段 //里所有的select数据都放到title上  也就是表格里的每条数据select都是相同的
     initCustomField() {
       // let self = this;
+      if(!this.customField_table.length || !this.table_title.length) return;
       for (let i = 0; i < this.customField_table.length; i++) {
         let cusItem = this.customField_table[i];
         console.log(cusItem);
-
+        console.log(this.table_title);
+        
         let title = this.table_title.find(title => {
           return title.topType === cusItem.topType;
         });
+         if(!title) {
+            alert('table 这个字段对不上: '+ cusItem.topType);
+            continue;
+          }
         console.log(title);
 
         for (let key in cusItem) {
@@ -617,7 +630,7 @@ export default {
     this.readFixedCache();
     this.initOptions();
     this.createTempWarpdom();
-    this.initCustomField();
+    // this.initCustomField();
   },
 
   mounted() {

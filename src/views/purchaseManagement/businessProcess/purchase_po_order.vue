@@ -17,6 +17,8 @@ import {
 import MxTable2 from "@/components/Mixins/MxTable2";
 import { isRepetArr } from "@/utils/Arrays";
 import message from "@/utils/Message";
+import receivingNotice from './receivingNotice'
+import otherFlowMixins from '@/components/Mixins/Mxtable2/otherFlowMixins.js'
 export default {
   mixins: [MxTable2],
   data() {
@@ -30,7 +32,7 @@ export default {
         supplierFullName,
         prePayId,
         {
-          topType: "no",
+          topType: "poNo",
           required: true
         },
         {
@@ -86,7 +88,12 @@ export default {
     },
     //点击生成收货通知单
     async btn_generateReceivingNotice(row, mul) {
-      this.setOther(294);
+      // this.setOther(294);
+      this.otherFlow.mixin = receivingNotice;
+      otherFlowMixins.pageId = 294;
+      otherFlowMixins.pageCode = receivingNotice;
+      console.log(this.otherFlow.mixin);
+      
     },
     //选择供应商后自动填写联系人和联系电话
     changeSel_supplierFullName(val, formItem, option) {

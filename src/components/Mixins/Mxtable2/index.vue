@@ -108,19 +108,9 @@
     </section>
 
     <!-- 表格操作里显示其他页面的信息 -->
-    <section>
-      <el-dialog :title="`其他`" :visible.sync="other.visible" width="90%">
-        <!-- :data="add.checkedData" -->
-        <Mx2Interface
-          :titles="other.titles"
-          :customField="other.customField"
-          :customField_table="other.customField_table"
-          :editable_field="other.editable_field"
-          :radios="other.subField"
-          @giveForm="getForm"
-          @giveTable="getTable"
-          @passData="passData_other"
-        ></Mx2Interface>
+    <section v-if="otherFlow.show">
+      <el-dialog :title="`其他`" :visible.sync="otherFlow.show" width="90%">
+        <otherFlow :mixin="otherFlow.mixin"></otherFlow>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
           <el-button type="primary" @click="send_add(true,true)">确 定</el-button>
@@ -150,9 +140,18 @@ import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
 import tableOperate from "./table-operate";
 import PublicPopUp from "@/components/ElementUi/PublicPopUp";
+// import otherFlow from './otherFlow';
+import Vue from "vue";
+
 export default {
   data() {
     return {
+      otherFlow: { //在当前页面打开其他流程页面
+        mixin: null,
+        show: false
+      },
+      // otherPage: null,
+      showOther: false,
       mode: 2,
       page: {
         name: this.$route.params.name
@@ -195,15 +194,15 @@ export default {
       more: {
         visible: false
       },
-      other: {
-        titles: [],
-        visible: false,
-        customField: [],
-        customField_table: [],
-        checkedData: [true, null, []],
-        editable_field: [],
-        subField: {}
-      },
+      // otherFlow: {
+      //   titles: [],
+      //   visible: false,
+      //   customField: [],
+      //   customField_table: [],
+      //   checkedData: [true, null, []],
+      //   editable_field: [],
+      //   subField: {}
+      // },
       primaryKey: "", //提供一个修改、删除时的主键
       nameKey: "", //提供一个  删除失败时提示给用户那一行的名字
       rule: {},
@@ -283,6 +282,20 @@ export default {
       return [...this.sysLogNotForm, ...this.sysLogForm];
     }
   },
+  watch: {
+    'otherFlow.mixin'(val) {
+      if (val) {
+        let self = this;
+        import("./otherFlow").then(otherFlow => {
+          Vue.component("otherFlow", otherFlow.default);
+          console.log(otherFlow);
+          
+          self.otherFlow.show = true;
+          console.log(Vue);
+        });
+      }
+    }
+  },
   components: {
     Pagination,
     Table,
@@ -294,7 +307,7 @@ export default {
     PopoverFilterFields,
     Mx2Interface,
     PublicPopUp,
-    tableOperate
+    tableOperate,
   },
   methods: {
     setQuery($event) {
@@ -639,21 +652,10 @@ export default {
       console.log($event);
       this.more.visible = $event;
     },
-    passData_other($event) {},
-    async setOther(id, obj) {
-      if (!this.other.titles.length) {
-        let titles = (await requestAjax.requestGetHead(id)) || [];
-        this.other.titles = titles.filter(item => {
-          return !this.sysLogNotForm.includes(item.topType);
-        });
-      }
-      if (obj) {
-        for (let key in obj) {
-          this.other[key] = obj[key];
-        }
-      }
-      this.other.visible = true;
-    }
+    // passData_other($event) {},
+  },
+  async beforeCreate(){
+
   },
   async created() {
     this.initOperateBtn();
