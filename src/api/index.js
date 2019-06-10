@@ -895,3 +895,10 @@ export const delIcBillStock = (data) => ajax(BASE_URL + '/po/delIcBillStock', da
 
 //修改外购入库http://127.0.0.1:9001/api/v1/po/uplIcBillStock
 export const uplIcBillStock = (data) => ajax(BASE_URL + '/po/uplIcBillStock', data, 'POST') 
+
+
+// export const getSelThisGroup = () => ajax(BASE_URL+'/act/selThisGroup')
+// //签收测试
+// export const goClaim = (data)=>ajax(BASE_URL+'/act/claim',data,'GET')
+// //流程完成测试
+// export const goComplete = (data) => ajax(BASE_URL + '/act/complete',data,'POST')
