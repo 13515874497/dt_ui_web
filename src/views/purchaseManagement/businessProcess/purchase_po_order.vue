@@ -89,7 +89,7 @@ export default {
     //点击生成收货通知单
     async btn_generateReceivingNotice(row, mul) {
       // this.setOther(294);
-      this.otherFlow.mixin = receivingNotice;
+      this.otherFlow.change = !this.otherFlow.change;
       otherFlowMixins.pageId = 294;
       otherFlowMixins.pageCode = receivingNotice;
       console.log(this.otherFlow.mixin);

@@ -110,7 +110,7 @@
     <!-- 表格操作里显示其他页面的信息 -->
     <section v-if="otherFlow.show">
       <el-dialog :title="`其他`" :visible.sync="otherFlow.show" width="90%">
-        <otherFlow :mixin="otherFlow.mixin"></otherFlow>
+        <otherFlow :mixin="otherFlow.mixin" @passData="passData_otherFlow"></otherFlow>
         <span slot="footer" class="dialog-footer">
           <el-button @click="add.visible = false">取 消</el-button>
           <el-button type="primary" @click="send_add(true,true)">确 定</el-button>
@@ -140,18 +140,11 @@ import requestAjax from "@/api/requestAjax";
 import Mx2Interface from "./Mx2-Interface";
 import tableOperate from "./table-operate";
 import PublicPopUp from "@/components/ElementUi/PublicPopUp";
-// import otherFlow from './otherFlow';
 import Vue from "vue";
 
 export default {
   data() {
     return {
-      otherFlow: { //在当前页面打开其他流程页面
-        mixin: null,
-        show: false
-      },
-      // otherPage: null,
-      showOther: false,
       mode: 2,
       page: {
         name: this.$route.params.name
@@ -194,15 +187,6 @@ export default {
       more: {
         visible: false
       },
-      // otherFlow: {
-      //   titles: [],
-      //   visible: false,
-      //   customField: [],
-      //   customField_table: [],
-      //   checkedData: [true, null, []],
-      //   editable_field: [],
-      //   subField: {}
-      // },
       primaryKey: "", //提供一个修改、删除时的主键
       nameKey: "", //提供一个  删除失败时提示给用户那一行的名字
       rule: {},
@@ -215,6 +199,14 @@ export default {
         checkedData: [true, null, []],
         form: null,
         table: null
+      },
+      otherFlow: {
+        //在当前页面打开其他流程页面
+        mixin: null, //当前要mixin对象
+        change:false, //改变了则加载页面  成功后才显示页面
+        show: false,
+        isPass: false,
+        data: null
       },
       customField: [], //form中自定义字段的显示类型
       customField_table: [], //表格中自定义字段的显示类型
@@ -268,7 +260,6 @@ export default {
     table() {
       switch (this.form_editing) {
         case "add":
-          console.log(this.add.table);
           return this.add.table;
           break;
         case "update":
@@ -283,17 +274,12 @@ export default {
     }
   },
   watch: {
-    'otherFlow.mixin'(val) {
-      if (val) {
-        let self = this;
-        import("./otherFlow").then(otherFlow => {
-          Vue.component("otherFlow", otherFlow.default);
-          console.log(otherFlow);
-          
-          self.otherFlow.show = true;
-          console.log(Vue);
-        });
-      }
+    "otherFlow.change"(val) {
+      let self = this;
+      import("./otherFlow").then(otherFlow => {
+        Vue.component("otherFlow", otherFlow.default);
+        self.otherFlow.show = true;
+      });
     }
   },
   components: {
@@ -307,7 +293,7 @@ export default {
     PopoverFilterFields,
     Mx2Interface,
     PublicPopUp,
-    tableOperate,
+    tableOperate
   },
   methods: {
     setQuery($event) {
@@ -605,6 +591,12 @@ export default {
         })
         .catch(() => {});
     },
+    passData_otherFlow($event) {
+      this.otherFlow.isPass = $event[0];
+      this.handlerFormData($event[1].parentKey);
+      this.otherFlow.data = $event[1];
+      console.log(this.otherFlow);
+    },
 
     //reset值发生改变即重置表单
     resetForm_add() {
@@ -651,12 +643,9 @@ export default {
     isPubShow($event) {
       console.log($event);
       this.more.visible = $event;
-    },
-    // passData_other($event) {},
+    }
   },
-  async beforeCreate(){
-
-  },
+  async beforeCreate() {},
   async created() {
     this.initOperateBtn();
     this.tableTitle =

@@ -8,7 +8,7 @@
     :radios="subField"
     @giveForm="getForm"
     @giveTable="getTable"
-    @passData="passData_add"
+    @passData="passData"
   ></Mx2Interface>
 </template>
 
@@ -19,21 +19,16 @@ console.log(otherFlowMixins);
 
 let page = null;
 export default {
-  
-  props: {
-    mixin: {
-      type: Object,
-      required: true
-    }
-  },
   mixins: [otherFlowMixins.pageCode],
   data() {
     return {
       titles: [],
     };
   },
-  watch: {
-    mixin(val) {}
+  methods: {
+    passData($event){
+      this.$emit('passData',$event)
+    }
   },
   async created() {
     let titles = (await requestAjax.requestGetHead(otherFlowMixins.pageId)) || [];
@@ -41,10 +36,6 @@ export default {
       return !this.sysLogNotForm.includes(item.topType);
     });
     console.log(this.titles);
-
-    // console.log(this.tableTitle);
-
-    // console.log(this.formItems);
   }
 };
 </script>
