@@ -40,66 +40,15 @@ export default {
           topType: "empId",
           required: true
         },
-        // {
-        //   topType: "printCount",
-        //   required: true
-        // },
-        // {
-        //   topType: "explanation",
-        //   required: true
-        // },
-        // {
-        //   topType: "status",
-        //   required: true
-        // },
-        //  {
-        //   topType: "version",
-        //   required: true
-        // },
-        //  {
-        //   topType: "years",
-        //   required: true
-        // },
-        // {
-        //   topType: "period",
-        //   required: true
-        // },
-        //  {
-        //   topType: "deptId",
-        //   required: true
-        // },
-        // {
-        //   topType: "mangerId",
-        //   required: true
-        // },
-        // {
-        //   topType: "closeUser",
-        //   required: true
-        // },
-        // {
-        //   topType: "closeDate",
-        //   required: true
-        // },
+        {
+          topType: "deptId", //部门
+          disabled: true
+        }
       ],
 
       customField_table: [
         findListWar,
         findListWarP,
-        findProduct,
-        //  自定义字段表
-        {
-          // inputType: 3,
-          // topType: "sku",
-          // bindKey: "skuId",
-          // remote: true,
-          // key: "skuId",
-          // label: "sku",
-          // filterable: true,
-          // placeholder: "选择店铺站点后输入,需鼠标点击",
-          // remoteMethod: this.getSkuList,
-          // data: [],
-          // changeSel: this.changeSku
-        }
       ],
       editable_field: [
         //表格中哪些字段可以被编辑
@@ -153,30 +102,30 @@ export default {
           //   // console.log(mull);
           //   return mull.length;
           // }
-        },
-        {
-          type: "primary",
-          icon: "",
-          label: "出库",
-          fn(row, mull) {
-            self.redceRow(row, mull);
-          }
-
-          // 这里不写isshow方法操作按钮就默认显示。加入isshow就点击不显示
-          // isShow(row, mull) {
-          //   // console.log(row);
-          //   // console.log(mull);
-          //   return mull.length;
-          // }
         }
+        // {
+        //   type: "primary",
+        //   icon: "",
+        //   label: "出库",
+        //   fn(row, mull) {
+        //     self.redceRow(row, mull);
+        //   },
+
+        //   // 这里不写isshow方法操作按钮就默认显示。加入isshow就点击显示
+        // isShow(row, mull) {
+        //   // console.log(row);
+        //   // console.log(mull);
+        //   return mull.length;
+        // }
+        // }
       ];
     },
     async addRow(row, mull) {
       console.log("关联发票");
     },
-    redceRow(row, mull) {
-      console.log("退库");
-    },
+    // redceRow(row, mull) {
+    //   console.log("退库");
+    // },
     queryPage(data) {
       return getIcBillStock(data); //查询页面的接口
     },
@@ -204,16 +153,15 @@ export default {
       //   console.log(res)
       // })
     },
-    	async getDepartment(){
-		//部门接口没数据
-    let res = await getDepartment();
-    console.log(res)
-		// if(res.code == 200){
-		// 	this.department = res.data.treeName;
-		// 	console.log(res);
-		// }
-		
-	},
+    async getDepartment() {
+      //部门接口没数据
+      let res = await getDepartment();
+      console.log(res);
+      // if(res.code == 200){
+      // 	this.department = res.data.treeName;
+      // 	console.log(res);
+      // }
+    }
   },
   beforeCreate() {
     // transportTypeName.hideChild = true;
@@ -221,7 +169,7 @@ export default {
   async created() {
     this.initTableOperateList();
     this.aaa();
-    this.getDepartment()
+    this.getDepartment();
   },
   watch: {
     form_data_model(val, oldVal) {

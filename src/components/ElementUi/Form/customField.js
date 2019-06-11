@@ -1,11 +1,11 @@
 
 import {
-  findByListProducts,
-  repGetShopName,
-  getSelectSiteRole,
-  findByListStarLevel,
-  findByListPlatform,
-  findByListType,
+  findByListProducts, //产品类目
+  repGetShopName,  //  获取店铺列表 
+  getSelectSiteRole, //查询所有站点
+  findByListStarLevel, //星级分页
+  findByListPlatform, //平台类型分页
+  findByListType, 
   findByListCurrency,
   findSupList,
 	findByListWar,
@@ -13,7 +13,8 @@ import {
 	findByListFreight,
 	findByListProduct,
 	getFindByListQIMethod,
-  getRPPay
+  getRPPay,
+  
 
 } from '@/api/api'
 

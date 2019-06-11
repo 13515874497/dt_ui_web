@@ -1,6 +1,6 @@
 <template>
     <div class="tags" v-if="showTags">
-      <div style="position:relative ;height:54px;overflow:hidden">
+      <div style="position:relative ;height:54px;overflow:hidden" >
         <ul id="tablist" ref="ulId" >
               <li class="tags-li" v-for="(item,index) in tagsList" :class="{'active': isActive(item.path)}" :key="index" :title="item.title"  @click="dianji(index,item)"  @mouseleave="leave()">        
                   <router-link :to="item.path" class="tags-li-title">
@@ -20,7 +20,7 @@
             <el-dropdown @command="handleTags">
                 <el-button size="mini" type="primary" class="btnmi">
                     标签选项<i class="el-icon-arrow-down el-icon--right"></i>
-                </el-button> 
+                </el-button>
                 <el-dropdown-menu size="small" slot="dropdown">
                     <el-dropdown-item command="other">关闭其他</el-dropdown-item>
                     <el-dropdown-item command="all">关闭所有</el-dropdown-item>
@@ -97,8 +97,7 @@ export default {
     },
     //刷新页面
     refresh(item) {
-      console.log(item)
-      this.reload()
+      this.reload();
     },
 
     //收藏页面
@@ -340,20 +339,22 @@ margin-bottom:0;
 }
 /*-------滚动条整体样式----*/
 #tablist::-webkit-scrollbar {
-width:5px;
-height:5px;
+width:6px;
+height:6px;
 }
 /*滚动条里面小方块样式*/
 #tablist::-webkit-scrollbar-thumb {
 border-radius:100px;
 -webkit-box-shadow:inset 0 0 8px rgba(0,0,0,0.1);
 background:#ccc;
+
 }
 /*滚动条里面轨道样式*/
 #tablist::-webkit-scrollbar-track {
--webkit-box-shadow:inset 0 0 8px rgba(0,0,0,0.8);
+-webkit-box-shadow:inset 0 0 8px rgba(0,0,0,0.6);
 border-radius:0;
 background:rgba(0,0,0,0.1);
+
 }
 
 </style>
