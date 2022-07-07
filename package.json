@@ -16,7 +16,7 @@
     "babel-polyfill": "^6.26.0",
     "element-ui": "^2.4.9",
     "mint-ui": "^2.2.13",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "mutation": "0.0.1",
     "pubsub-js": "^1.7.0",
     "state": "^0.2.0",
